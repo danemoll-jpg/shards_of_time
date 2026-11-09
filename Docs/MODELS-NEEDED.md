@@ -34,13 +34,6 @@ If a search finds nothing, take the closest clip and keep the table's file name.
 - **Kira** (both forms): rigged and animated by script (`Tools/Blender/kira_rig.py`; Meshy's rigging is humanoid only):
   23 bones, **no ear bones**, nine clips, three LODs. In the game since 0.2.0.
 
-## Later outfits
-
-- **Abi, original film outfit:** red pyjamas with a Santa hat (Dan, 2026-11-09: the woman in the red pyjamas is Abi in
-  her film outfit; the green Santa pyjamas stay for the game). Not modelled yet. **Dan:** please save her image as
-  `SourceArt/Reference/Characters/Abi/abi-red-pyjamas-film.png` (Code can't save images from the chat); Code writes the
-  concept prompt when a round asks for the outfit.
-
 **Round 1, item 12: the first six character models.** Dan, Abi and Kira at home, and in the Ice Age.
 **Step 2 is done:** Dan saved six clean full-body sheets (1024 x 1536 or larger: A-pose, white background, no
 necklace, every paw and the tail in frame). They are now the concept files in `SourceArt/Concepts/`
@@ -74,8 +67,8 @@ The pipeline:
 **Code can't save images from the chat.** Please drop them into the folders above so they sit beside the others.
 
 **Settled by Dan's sheets:** Abi has long wavy brown hair and green eyes. Ice Age outfits are barefoot (Dan with fur
-ankle wraps). **Still open:** the woman in red pyjamas with a Santa hat (shared in chat). Is she another Abi outfit,
-or someone else?
+ankle wraps). **Settled (Dan, 2026-11-09):** the sheets Dan made from these prompts are the official designs and
+override the earlier film stills, including Abi's home outfit (green Santa pyjamas). No red-pyjama model is planned.
 
 The film stills set the style: Pixar-like, warm, a plain green background. They can't go to Meshy as they are. Meshy
 needs a clean full-body sheet: at least 1024 px tall, nothing cut off, a neutral pose, mouth closed and no glow. So
