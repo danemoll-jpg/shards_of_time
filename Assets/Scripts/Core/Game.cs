@@ -157,6 +157,7 @@ namespace ShardsOfTime
             {
                 var area = Area; var prog = SaveGame.Current.World(World.worldId);
                 Necklace.Tick(area.id, area.requirement > 0 && prog.necklaceAwake && !prog.storyShard);
+                ApplyKiraForm(area);
             }
         }
 
@@ -201,6 +202,15 @@ namespace ShardsOfTime
             Hud.Message("The story shard opened the portal to Area B!", 5f);
             SaveGame.Save("story shard");
             Busy = false;
+        }
+
+        // Round 2, item 7: arriving in an area sets Kira's form (AreaData.kiraForm)
+        public static void ApplyKiraForm(AreaData area)
+        {
+            if (!Party.I || area == null) return;
+            var kira = Party.I.Heroes.Find(h => h.Stats.displayName == "Kira");
+            string id = string.IsNullOrEmpty(area.kiraForm) ? KiraForm.Home : area.kiraForm;
+            if (kira && (!kira.Form || kira.Form.id != id)) kira.SetForm(KiraForm.Load(id));
         }
 
         public void OnAreaChanged() { var a = Area; Hud.Message(a.name, 2.5f); PlayLog.Line("area " + a.id); }

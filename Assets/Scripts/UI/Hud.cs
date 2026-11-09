@@ -108,7 +108,9 @@ namespace ShardsOfTime
             necklaceArrow.enabled = Necklace.Awake && Necklace.Target;
             if (necklaceArrow.enabled) necklaceArrow.rectTransform.localRotation = Quaternion.Euler(0, 0, Necklace.ScreenAngle());
             // the gem on Dan pulses too
-            foreach (var hero in Party.I.Heroes) if (hero.NecklaceGem) hero.NecklaceGem.localScale = new Vector3(.09f, .13f, .05f) * (1f + pulse * .5f);
+            foreach (var hero in Party.I.Heroes)
+                if (hero.NecklaceGem && hero.NecklaceGem.name == "Necklace") hero.NecklaceGem.localScale = new Vector3(.09f, .13f, .05f) * (1f + pulse * .5f);   // the Round 1 gem
+                else NecklaceModel.Pulse(hero.NecklaceGem, pulse, Necklace.Target);
             // party
             for (int i = 0; i < 3; i++)
             {

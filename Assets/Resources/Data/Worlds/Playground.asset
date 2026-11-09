@@ -26,6 +26,7 @@ MonoBehaviour:
     storyShardColor: {r: 0.3, g: 0.62, b: 1, a: 1}
     spawn: {x: 0, y: 0.1, z: -48}
     spawnYaw: 0
+    kiraForm: Home
   - id: B
     name: Area B
     requirement: 0
@@ -33,10 +34,12 @@ MonoBehaviour:
     - Dan
     - Abi
     - Kira
+    - ClawIce
     storyShard: {x: 0, y: 0, z: 0}
     storyShardColor: {r: 0.3, g: 0.6, b: 1, a: 1}
     spawn: {x: 400, y: 0.1, z: -12}
     spawnYaw: 0
+    kiraForm: Sabertooth
   shards:
   - id: A01
     area: A
@@ -165,3 +168,10 @@ MonoBehaviour:
     requires:
     - DoubleJump
     note: high pillar
+  - id: B06
+    area: B
+    position: {x: 412.5, y: 1, z: -3}
+    requires:
+    - Kira
+    - ClawIce
+    note: behind the ice wall (sabertooth Kira claws it)

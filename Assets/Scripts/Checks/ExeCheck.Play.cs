@@ -30,6 +30,8 @@ namespace ShardsOfTime
             Head("Play-through, Area A (items 4-11; followers watched all the way, item 7)");
             Log("  " + w.RequirementReport("A").detail);
             yield return Go(new Vector3(0, 0, -42f)); Ok(Has("A01"), "A01 start path");
+            Stick(StickFor(Vector3.back) * .25f); yield return Wait(.3f); Stick(Vector2.zero); yield return Wait(.5f);
+            yield return Shot("02b_dan_necklace");   // Dan turned to the camera: the necklace model on his chest (Round 2, item 8)
             yield return Go(new Vector3(0, 0, -36f)); Ok(Has("A02"), "A02 start path");
             yield return Go(new Vector3(-6f, 0, -30f)); Ok(Has("A03"), "A03 by the slopes");
             yield return FollowersArrive("the start path");
@@ -105,8 +107,17 @@ namespace ShardsOfTime
             yield return Go(new Vector3(0, 0, 26.2f), .4f, 10f, .7f);
             yield return Go(new Vector3(-2f, 0, 27f), .5f); yield return Go(new Vector3(2f, 0, 27f), .5f);
             Ok(Has("A11") && Has("A12"), "A11, A12 in Kira's crawl garden");
+            var kira = Player;
+            Ok(kira.Form && kira.Form.id == KiraForm.Home && kira.Model && kira.Model.activeInHierarchy && !kira.Graybox.gameObject.activeSelf,
+               $"Kira is the home Scottish Fold with her real model ({(kira.Model ? kira.Model.name : "none")}, {(kira.Anim ? kira.Anim.ClipCount : 0)} clips), the capsule hidden (item 9)");
             yield return Shot("09_kira_garden");
-            yield return Go(new Vector3(0, 0, 25.8f), .4f); yield return Go(new Vector3(0, 0, 21f), .5f, 10f, .7f);
+            yield return Go(new Vector3(0, 0, 25.8f), .4f);
+            Stick(StickFor(Vector3.back)); yield return Wait(.5f);
+            string moving = kira.Anim ? kira.Anim.State : "-";
+            Stick(Vector2.zero); yield return Wait(.6f);
+            string still = kira.Anim ? kira.Anim.State : "-";
+            Ok((moving == "run" || moving == "walk") && still == "idle", $"her clips follow the motor: moving '{moving}', standing '{still}'");
+            yield return Go(new Vector3(0, 0, 21f), .5f, 10f, .7f);
             yield return FollowersArrive("out of Kira's garden");
 
             Head("Story shard and the portal (items 9, 11)");
@@ -134,6 +145,30 @@ namespace ShardsOfTime
             Head("Area B: the double jump (item 9)");
             yield return Go(new Vector3(400f, 0, -4f)); Ok(Has("B01"), "B01");
             yield return Go(new Vector3(404f, 0, 4f)); Ok(Has("B02"), "B02");
+
+            Head("Area B: Kira's form and the ice wall (Round 2, items 7 and 9)");
+            var kiraB = P.Heroes[2];
+            Ok(kiraB.Form && kiraB.Form.id == KiraForm.Sabertooth && kiraB.HasAbility(Abilities.ClawIce) && kiraB.Model && kiraB.Model.name.Contains("sabertooth"),
+               $"arriving in Area B made Kira the sabertooth ({(kiraB.Form ? kiraB.Form.displayName : "-")}, model {(kiraB.Model ? kiraB.Model.name : "none")}, abilities [{(kiraB.Form ? string.Join(", ", kiraB.Form.abilities) : "")}])");
+            Log("  " + w.RequirementReport("B").detail);
+            var wall = IceWall.All.FirstOrDefault();
+            Ok(wall, "the ice wall is there");
+            yield return Go(new Vector3(408.6f, 0, -3f), .35f, 15f, .7f);
+            Stick(StickFor(Vector3.right) * .3f); yield return Wait(.25f); Stick(Vector2.zero);
+            yield return Press(GamepadButton.West); yield return Wait(.5f);
+            Ok(wall && wall.gameObject.activeSelf, $"{Player.Stats.displayName}'s {Player.Stats.attackName} doesn't break the ice");
+            yield return SwitchTo(2); Ok(Player == kiraB, "Kira");
+            yield return Go(new Vector3(408.8f, 0, -3f), .35f, 6f, .6f);
+            Stick(StickFor(Vector3.right) * .3f); yield return Wait(.25f); Stick(Vector2.zero);
+            yield return Shot("12b_sabertooth_at_the_ice");
+            yield return Press(GamepadButton.West); yield return Wait(.15f);
+            string clawClip = kiraB.Anim ? kiraB.Anim.State : "-";
+            yield return Wait(.4f);
+            Ok(wall && !wall.gameObject.activeSelf && SaveGame.Current.World(w.worldId).opened.Contains("B-ice"), $"sabertooth Kira's claws break it (clip '{clawClip}'; saved)");
+            yield return Go(new Vector3(412.5f, 0, -3f), .5f, 8f);
+            Ok(Has("B06"), "B06 in the ice cave");
+            yield return Shot("12c_ice_cave");
+            yield return Go(new Vector3(406f, 0, -3f), .6f);
             yield return SwitchTo(1);
             yield return Go(new Vector3(405f, 0, 20f)); yield return Go(new Vector3(400f, 0, 25.6f), .4f);
             Ok(SaveGame.Current.Has(Abilities.DoubleJump) && Player.Motor.CanDoubleJump, "the pickup unlocks Abi's double jump (saved)");
@@ -148,6 +183,8 @@ namespace ShardsOfTime
             yield return WaitFor(() => Player.transform.position.x < 200f, 3f);
             Ok(Player.transform.position.x < 200f, "the portal back to Area A");
             yield return Wait(.5f);
+            Ok(P.Heroes[2].Form && P.Heroes[2].Form.id == KiraForm.Home && P.Heroes[2].Model && !P.Heroes[2].Model.name.Contains("sabertooth"),
+               "back in Area A, Kira is the home cat again (her model swapped back)");
 
             Head("Area A again: the double-jump ledge (rule 6: the move stays useful)");
             yield return Go(new Vector3(9f, 0, 30f)); yield return Go(new Vector3(9f, 0, -14f)); yield return Go(new Vector3(10f, 0, -22f));

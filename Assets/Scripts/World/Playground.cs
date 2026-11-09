@@ -5,7 +5,7 @@ namespace ShardsOfTime
     // Round 1: the graybox playground, built in code from simple boxes (1 unit = 1 m). Area A at the origin: start path, slopes, steps,
     // a moving platform over a pit, the pool (dive), the low-gravity tower, Kira's crawl garden, Dan's push block ledge, the enemy yard
     // and spikes, the double-jump ledge, the "needs Muscle Man" boulder, the story shard and the portal to Area B (at x = 400): the
-    // double jump pickup, a few shards, the portal back. Shards, the story shard and the requirement come from WorldData; anything
+    // double jump pickup, a few shards, the ice cave (Round 2: sabertooth Kira claws its wall), the portal back. Shards, the story shard and the requirement come from WorldData; anything
     // already collected in the save is left out.
     public static class Playground
     {
@@ -204,6 +204,20 @@ namespace ShardsOfTime
             Box("B arch top", new Vector3(400f, 4.25f, 26f), new Vector3(7f, .5f, 1f), Stone);
             Sign("Area B", new Vector3(403f, 2f, -10f), 0);
             Sign("Abi: double jump", new Vector3(404.5f, 2f, 23f), 0, new Color(1f, .85f, .9f));
+
+            // Round 2, item 7: an ice cave on the east side; only sabertooth Kira's claws break its wall (B06 inside). Walls 5 m and a
+            // roof, so no jump gets round it.
+            var rock = new Color(.62f, .6f, .66f);
+            Box("Ice cave N", new Vector3(412.25f, 2.5f, 1.5f), new Vector3(5.5f, 5f, 1f), rock);
+            Box("Ice cave S", new Vector3(412.25f, 2.5f, -7.5f), new Vector3(5.5f, 5f, 1f), rock);
+            Box("Ice cave E", new Vector3(414.5f, 2.5f, -3f), new Vector3(1f, 5f, 10f), rock);
+            Box("Ice cave roof", new Vector3(412.25f, 5.25f, -3f), new Vector3(5.5f, .5f, 10f), rock);
+            if (!SaveGame.Current.World(Game.World.worldId).opened.Contains("B-ice"))
+            {
+                var ice = Box("Ice wall", new Vector3(409.75f, 2.5f, -3f), new Vector3(.8f, 5f, 8f), new Color(.7f, .9f, 1f, .75f), "Water");
+                ice.gameObject.AddComponent<IceWall>().id = "B-ice";
+            }
+            Sign("Sabertooth Kira: claw the ice", new Vector3(406.5f, 2f, -8.5f), 0, new Color(.85f, .95f, 1f));
         }
 
         public static Enemy MakeEnemy(Vector3 a, Vector3 b)

@@ -16,6 +16,7 @@ namespace ShardsOfTime
         public static int HitsTaken, Respawns, Ignored;
         public static string LastRespawn = "";
 
+        public static event System.Action Hurt;   // the player lost a heart (Round 2: the hurt clip)
         public static void Refill() => Hearts = Max;
 
         public static bool Damage(int n, Vector3 knockFrom, string cause)
@@ -27,6 +28,7 @@ namespace ShardsOfTime
             PlayLog.Line($"hurt by {cause}: {Hearts}/{Max} hearts");
             Sfx.Play("hurt", .6f);
             Hud.Flash();
+            Hurt?.Invoke();
             var p = Party.I.Player;
             if (knockFrom != Vector3.zero)
             {

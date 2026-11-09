@@ -24,70 +24,57 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 2: first character models, stage A (Meshy) + Kira forms
-(target 0.2.0)
-Round 1's plan is in `TODO-ARCHIVE.md`. Dan played 0.1.0 (2026-11-09):
-"everything seems ok", no tuning notes. The six concept sheets in
-`SourceArt/Concepts/` were checked by the planning chat: all usable (A-pose,
-full body, plain background, no necklace, Kira's ears folded, paws and tail in
-frame). Report per item: done / not done / deferred, and why.
-
-1. **Meshy, all six models.** `python Tools/meshy_generate.py` on `dan_home`,
-   `dan_iceage`, `abi_home`, `abi_iceage`, `kira`, `kira_sabertooth`
-   (image-to-3D, key from `MESHY_API_KEY`, never written anywhere). Use Kira's
-   reference stills as extra views if the API takes several images.
-2. **Blender clean-up** for each: metres, feet at 0, facing +Z, heights as in
-   `Docs/MODELS-NEEDED.md` (Dan 1.8 m, Abi 1.65 m, Kira the in-game size from
-   Round 1), sensible triangle count for the Steam Deck plus LODs, textures
-   kept. Check Kira's ears came out folded; if not, say so (don't fix by hand
-   yet).
-3. **Previews:** render each model front, side, back and 3/4 into
-   `Data/screenshots/round2/models/`, and look at them: report fused limbs,
-   hair stuck to arms, missing feet/paws, texture smears, per model.
-4. **Mixamo hand-off files:** export one FBX per person (`dan_home`,
-   `dan_iceage`, `abi_home`, `abi_iceage`) ready to upload to Mixamo, in
-   `SourceArt/Mixamo/<model>/upload/`. Put a short checklist at the top of
-   `Docs/MODELS-NEEDED.md`: which file to upload, the clip list (already in the
-   doc), download settings, where to save.
-5. **Kira's rig path:** check whether the Meshy API can rig and animate a
-   four-legged animal. If yes, rig both Kira models with it; if no, build the
-   quadruped rig in Blender by script (no ear bones) and make her clip set
-   (idle, walk, run, jump, fall, land, swim, attack, hurt). Say which path and
-   why.
-6. **STOP for Dan as early as possible (Dan, 2026-11-09: he wants to do Mixamo
-   tonight).** Order: items 1–4 for the **four people first** (Meshy, clean-up,
-   previews, Mixamo FBX + checklist), then stop and tell Dan the files are
-   ready, with the preview renders. Do the two Kira models and items 5, 7–9
-   after that stop; they don't need Dan.
-7. **Kira transformation system.** Each world names Kira's form (data); a form
-   swaps her model and her ability set (e.g. Ice Age: claw through ice walls;
-   Pirate: otter swimming). Arriving in a world sets the form; Kira's lock
-   (folded ears, gray, amber eyes) is a check on every form model. Graybox:
-   Area A = home cat, Area B = sabertooth (with an ice wall only she can claw
-   through).
-8. **Dan's necklace** as its own small model (Blender script, hard-surface):
-   cord + shard. The shard glows and pulses with the necklace logic from
-   Round 1; it shows on Dan's chest in both outfits (a socket that works with
-   the Mixamo skeleton later).
-9. **Kira in the game now:** if item 5 gives a rigged, animated Kira this
-   round, replace her capsule (keep the capsule as fallback). Dan and Abi stay
-   capsules until Dan brings the Mixamo clips (Round 3).
-10. Build, check, publish 0.2.0, update `TODO.md` / `CLAUDE.md`, clean up.
-
-RESOLVED (Dan, 2026-11-09): the woman in red pyjamas with the Santa hat is
-**Abi in her original film outfit**. Dan is happy with the green Santa pyjamas
-for the game ("it doesn't really matter that it is different"), so
-`abi_home` stays as it is. Not modeled this
-round; add it to `Docs/MODELS-NEEDED.md` as a later Abi outfit and file her
-image under `SourceArt/Reference/Characters/Abi/`.
-
-After Round 2, **Round 3:** Dan's Mixamo clips imported, Dan and Abi replace
-their capsules, then the Ice Age as the first real world.
+Current round — Round 3 (to be written by the planning chat)
+Round 2's plan is in `TODO-ARCHIVE.md`. Expected next (from Round 2's plan): Dan's
+and Abi's Mixamo rigs and clips imported (Humanoid, the one shared clip set),
+they replace their capsules, then the Ice Age as the first real world.
+Inputs ready for it: `SourceArt/Mixamo/` (four rigged T-poses, Abi's two as
+`rigged_hairfix.fbx`; 27 clips in the folder root) and `Docs/MODELS-NEEDED.md`.
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 2: first character models + Kira forms (0.2.0, build 200, 2026-11-09)
+Final check `local/round2/final` (built exe, batch mode, muted, no window,
+virtual pad from the title screen, play + measure + perf): RESULT all checks
+passed; audio output 0.000 RMS. Evidence: `Data/screenshots/round2/` (`models/`
+previews, `mixamo/` rig tests, `kira_rig/` clip frames, `game/` exe shots).
+1. Meshy: **done.** All six (30 credits each) + a second `abi_home` (+30, see 6).
+2. Blender clean-up: **done.** Metres, feet at 0, facing front: Dan 1.8 m, Abi
+   1.65 m, Kira 0.5 m; ~20.7k tris (people), ~15k (Kira). Kira's ears came out
+   folded in both forms. LODs: Kira 100/50/20 %; people's LODs in Round 3 from
+   the rigged file (keeps the skin weights).
+3. Previews: **done.** No fused limbs or missing feet/paws. Faint smear on
+   dan_home's trouser (3/4 view). Both Kira heads are turned (as the concept
+   sheets): her rig counter-turns them (max 45 deg; sabertooth stays ~38 deg off).
+4. Mixamo files + checklist: **done.** Dan rigged all four the same night.
+   Abi's hair was tied to her arms: `Tools/Blender/fix_hair_weights.py` fixes it
+   (`rigged_hairfix.fbx`); abi_home remade in Meshy, re-rigged by Dan.
+5. Kira's rig: **done, Blender path** (Meshy's rigging is humanoid only):
+   `Tools/Blender/kira_rig.py`, 23 bones, no ear bones, 9 clips, bone-heat skin.
+6. Stop for Dan: **done** (stopped after the four people; then fixed Abi first).
+7. Kira forms: **done.** `KiraForm` data (Home, Sabertooth), `AreaData.kiraForm`;
+   Area A home cat, Area B sabertooth with `ClawIce`: ice cave + shard B06. Kira
+   lock checked at build on every form model (no ear bones, grey, no white,
+   amber eyes): both OK. Check: Dan's punch doesn't break the ice, Kira's does.
+8. Necklace: **done.** `Tools/Blender/necklace.py` (cord, bail, shard); socket =
+   Mixamo `Spine2` (offset to tune in Round 3), on the capsule meanwhile; pulses.
+9. Kira in the game: **done.** Real model + clips (run/idle follow the motor),
+   form swaps per area; capsule kept as fallback. Dan / Abi stay capsules.
+10. Build / check / publish: **done.** 0.2.0 (123 MB), `game-200` published; a
+   Round 1 starter install updated itself from GitHub to 0.2.0 (ready handshake).
+
+Decisions Code made (Dan can overrule): one Mixamo clip set for everyone;
+Meshy's metallic map dropped (fur came out speckled); the sabertooth's head
+counter-turn capped at 45 deg; cutscene actors are still Round 1's graybox ones.
+
+**For Dan to check:** Kira's look and moves in play (both forms; does the
+sabertooth's turned head bother you?); the ice cave in Area B; the necklace on
+Dan's capsule; the hair fix renders in `Data/screenshots/round2/mixamo/`.
+Delete two test folders Code couldn't: `C:\Data` (empty), `C:\sot200` (launcher test install). Save Abi's
+red-pyjama image (see `Docs/MODELS-NEEDED.md`, "Later outfits").
+
 ### Round 1: project setup + graybox playground (0.1.0, build 100, 2026-11-09)
 Final check `local/round1/release3` (built exe, batch mode, muted, no window,
 virtual pad from the title screen): RESULT all checks passed; audio output
@@ -159,9 +146,6 @@ the MP4s in `Recordings/`; rumble on a real pad; who the red-pyjama woman is.
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Round 2 (likely):** tuning from Dan's notes on Round 1; character models via
-  the art pipeline once Dan has the concept images; Kira transformation system
-  (form per world, swap model + ability set).
 - **Then:** Ice Age as the first real world (the original concept's first
   milestone), with its film moments as in-engine cutscenes; Act I cutscene.
 - Muscle Man companion (Medieval): heavy-object interactions, the "lift Dan"

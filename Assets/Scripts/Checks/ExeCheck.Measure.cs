@@ -270,6 +270,12 @@ namespace ShardsOfTime
 
             Head("Data check: requirements without later abilities (rule 2)");
             foreach (var a in Game.World.areas) { var r = Game.World.RequirementReport(a.id); Ok(r.ok, r.detail); }
+            // Round 2: rule 9 on every Kira form model (checked at build by Editor/CharacterImport.cs) and Dan's necklace model
+            var kiraLock = Resources.Load<TextAsset>("Data/KiraLock");
+            if (kiraLock) { foreach (var l in kiraLock.text.Split('\n')) if (l.Trim().Length > 0) Ok(!l.Contains("FAILED"), l.Trim()); }
+            else Fail("no Kira lock report in the build (Resources/Data/KiraLock.txt)");
+            var dan = Party.I.Heroes[0];
+            Ok(dan.NecklaceGem && dan.NecklaceGem.name == "Shard" && dan.Body.Find("Necklace"), $"Dan wears the necklace model (cord + shard; socket: {(dan.NecklaceGem && dan.NecklaceGem.parent ? dan.NecklaceGem.parent.name : "-")})");
 
             Head("Save (item 10)");
             yield return EnsurePlaying();

@@ -63,6 +63,7 @@ namespace ShardsOfTime
     public static class Abilities
     {
         public const string DoubleJump = "DoubleJump";   // Abi, unlocked in Area B
-        public const string MuscleMan = "MuscleMan";     // the companion from the Medieval Kingdom: moves boulders (not this round)
+        public const string MuscleMan = "MuscleMan";
+        public const string ClawIce = "ClawIce";       // Kira's sabertooth form (Ice Age): her claws break ice walls (Round 2)     // the companion from the Medieval Kingdom: moves boulders (not this round)
     }
 }

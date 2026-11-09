@@ -1,5 +1,46 @@
 # Shards of Time — models needed
 
+## Mixamo checklist for Dan (Round 2, 2026-11-09)
+
+Four uploads, one per person. For each one:
+
+1. **Upload** at mixamo.com (Upload Character): `SourceArt/Mixamo/<model>/upload/<model>.fbx`
+   - `dan_home`, `dan_iceage`, `abi_home`, `abi_iceage`
+2. **Auto-rigger:** the model should show facing you. Place the markers: chin, wrists, elbows, knees, groin.
+   **Skeleton LOD: Standard Skeleton (65)** (fingers included). Next, then Next again.
+3. **Download the clips** in the table at the bottom of this page ("Dan and Abi (Mixamo, step 4)"):
+   - `dan_iceage`, `abi_iceage`: all their rows (`rigged` + 14 clips each: Dan has `push`, Abi has `double_jump`).
+   - `dan_home`, `abi_home`: the first ten rows only (`rigged` ... `cheer`).
+   Search the name, click it, tick **In Place** if the clip shows it, then **Download**.
+4. **Download settings:** Format **FBX for Unity (.fbx)**, Frames per Second **30**, Keyframe Reduction **none**.
+   Skin: first download the rigged character itself, **With Skin**, in its **T-pose** (no animation picked) as
+   `rigged.fbx`. Then every clip **Without Skin**.
+5. **Save as** `SourceArt/Mixamo/<model>/<file>`, for example `SourceArt/Mixamo/dan_iceage/run.fbx`
+   (next to the `upload` folder, not inside it). Rename Mixamo's download to the file name in the table.
+
+If a search finds nothing, take the closest clip and keep the table's file name. Then tell Code; Round 3 imports them.
+
+**Status after Round 2 (2026-11-09): Mixamo is done for all four.** What Dan downloaded, and what Code did with it:
+- Rigged T-poses (With Skin): `SourceArt/Mixamo/dan_home/T-Pose (2).fbx`, `dan_iceage/T-Pose (3).fbx`,
+  `abi_home/T-Pose.fbx`, `abi_iceage/T-Pose (1).fbx`. Skeletons differ in finger detail (Dan 41 bones, Abi home 41,
+  Abi Ice Age 33); fine for Unity's Humanoid rig.
+- **One clip set for all four** (27 files in `SourceArt/Mixamo/`, Without Skin): Unity's Humanoid retargeting plays the
+  same clips on every person. Round 3 maps them to the table's names (Fast Run -> run, Box Jump / Jump -> jump_up, ...).
+- **Abi's hair:** Mixamo tied her long back hair to her arm bones (it stretched out with the arms).
+  `Tools/Blender/fix_hair_weights.py` gives the hair its own weights (head / neck / spine) and cuts the few faces that joined
+  hair to arm: `abi_iceage/rigged_hairfix.fbx` and `abi_home/rigged_hairfix.fbx` are the files Round 3 imports.
+- **abi_home was remade** in Meshy (the first one's hair was fused to the sweater, which no weights could fix); the first
+  version is kept on disk in `SourceArt/Meshy/abi_home_v1/` and `SourceArt/Mixamo/abi_home/v1/` (not in git).
+- **Kira** (both forms): rigged and animated by script (`Tools/Blender/kira_rig.py`; Meshy's rigging is humanoid only):
+  23 bones, **no ear bones**, nine clips, three LODs. In the game since 0.2.0.
+
+## Later outfits
+
+- **Abi, original film outfit:** red pyjamas with a Santa hat (Dan, 2026-11-09: the woman in the red pyjamas is Abi in
+  her film outfit; the green Santa pyjamas stay for the game). Not modelled yet. **Dan:** please save her image as
+  `SourceArt/Reference/Characters/Abi/abi-red-pyjamas-film.png` (Code can't save images from the chat); Code writes the
+  concept prompt when a round asks for the outfit.
+
 **Round 1, item 12: the first six character models.** Dan, Abi and Kira at home, and in the Ice Age.
 **Step 2 is done:** Dan saved six clean full-body sheets (1024 x 1536 or larger: A-pose, white background, no
 necklace, every paw and the tail in frame). They are now the concept files in `SourceArt/Concepts/`
@@ -165,16 +206,17 @@ the two should look like the same cat. **Kira lock** as above. Generic rig. Abou
 ### Dan and Abi (Mixamo, step 4)
 
 You rig each person once in Mixamo: upload the FBX Code gives you after step 3, auto-rig it, then download the clips
-below. The **first** clip is the rigged model: download it **With Skin**; all the others **Without Skin**. Format FBX
+below. First the rigged model itself, **With Skin** in its T-pose (`rigged.fbx`); then every clip **Without Skin**. Format FBX
 for Unity, 30 fps, **In Place** ticked where Mixamo offers it. Save them as `SourceArt/Mixamo/<model>/<file>` (model
 = `dan_home`, `dan_iceage`, `abi_home`, `abi_iceage`). Mixamo's names change now and then: if a search finds nothing,
 take the closest match and keep my file name.
 
-The home outfits only appear in cutscenes and the free roam, so they need fewer clips: the first nine rows.
+The home outfits only appear in cutscenes and the free roam, so they need fewer clips: the first ten rows.
 
 | File | Mixamo search | For |
 |---|---|---|
-| `idle.fbx` | Breathing Idle | standing still (**With Skin**: the rigged model) |
+| `rigged.fbx` | (no animation: the T-pose) | the rigged model, **With Skin** |
+| `idle.fbx` | Breathing Idle | standing still |
 | `idle_look.fbx` | Looking Around | idle variation after a few seconds |
 | `walk.fbx` | Walking | slow stick |
 | `run.fbx` | Running | full stick |

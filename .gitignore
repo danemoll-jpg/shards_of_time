@@ -26,3 +26,11 @@ SourceArt/Meshy/*/*.blend
 *.blend1
 # Suno soundtrack ships through the launcher soundtrack component, not git
 BundleMusic/
+
+# Round 2: rejected / regenerable art (kept on disk, not in git): the first abi_home (hair joined to the sweater), the zipped
+# OBJ backups of the Mixamo uploads, Kira's rig .blend (Tools/Blender/kira_rig.py remakes it)
+SourceArt/Meshy/*_v1/
+SourceArt/Mixamo/*/v1/
+SourceArt/Mixamo/*/upload/*_obj.zip
+SourceArt/Rigged/*/*.blend
+SourceArt/Rigged/*/*.blend1

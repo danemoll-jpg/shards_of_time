@@ -15,6 +15,7 @@ namespace ShardsOfTime
         public List<string> shards = new List<string>();
         public bool storyShard;
         public bool necklaceAwake;
+        public List<string> opened = new List<string>();   // ice walls and the like, opened for good (Round 2)
     }
 
     [Serializable]

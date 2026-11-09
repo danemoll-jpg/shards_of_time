@@ -188,8 +188,13 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
   check run.
 - **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
-  `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py`. Prompts:
-  `Docs/MODELS-NEEDED.md`. Blender: `F:\blender\blender.exe`.
+  `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py` (Kira's forms into
+  `Assets/Resources/Characters/`; people from Round 3). Prompts and Mixamo status: `Docs/MODELS-NEEDED.md`.
+  Blender: `F:\blender\blender.exe`; scripts run as `blender --background --factory-startup --python Tools/Blender/<x>.py -- <args>`:
+  `meshy_cleanup.py <names>` (metres, feet at 0, front; Mixamo upload FBX; previews in `Data/screenshots/round2/models/`),
+  `mixamo_check.py <model>=<rigged fbx>` (renders a rig on a few clips), `fix_hair_weights.py <model>=<rigged fbx>` (long
+  hair off the arm bones -> `rigged_hairfix.fbx`), `kira_rig.py kira kira_sabertooth` (Kira's rig, 9 clips, LODs ->
+  `SourceArt/Rigged/<name>/model.fbx`), `necklace.py` (-> `Assets/Resources/Characters/necklace.fbx`).
 - **Title art / icons (placeholders):** `python Tools/make_title_art.py local/round1/<check>/00_key_art.png` writes
   `SourceArt/Title/Steam/ShardsOfTime-*.png` (launcher cover, Steam art), `Launcher/ShardsOfTime.ico` and
   `Assets/HandMade/Title/GameIcon.png`.
@@ -207,11 +212,32 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
-  extract the starter ZIP to a short folder, then
+  extract the starter ZIP to a short folder inside the repo (e.g. `local\sc`: Code can't delete folders it makes in `C:\`), then
   `ShardsOfTimeLauncher.exe --auto-check --root <extracted ShardsOfTime> --test-save <dir> --evidence <dir>`.
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 2 delivered: 0.2.0 (build 200), 2026-11-09.** Kira's real models (home Scottish Fold, Ice Age sabertooth) with
+her own Blender rig and nine clips are in the game; she changes form per area (Area B: sabertooth, claws through an ice
+wall to shard B06). Dan wears the necklace model. Dan rigged all four people in Mixamo; they go in with Round 3.
+Published: `game-200` on `danemoll-jpg/shards-of-time-releases` (a Round 1 starter install updated itself to it).
+Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 2:
+- Characters in game: `Assets/Resources/Characters/<model>.fbx` + `<model>_albedo/_normal.png` + `<model>.mat` (URP Lit
+  made by `Editor/CharacterImport.cs`, which also sets the import settings and runs the Kira lock check at every build:
+  `Resources/Data/KiraLock.txt`, logged by the exe check). Blender models face -Y; in Unity they get a 180 deg turn
+  (`CharacterModel.BlenderFront`). Meshy's metallic map is noise: not used.
+- Hero bodies: `Body/Graybox` (Round 1 shapes, the fallback) + `Body/Model <name>` when a model exists. Clips play through
+  `CreatureAnimator` (Playables, no Animator Controller asset): loops idle/walk/run/fall/swim, one-shots jump/land/attack/hurt.
+- Kira's forms: `Resources/Data/KiraForms/<id>.asset` (model, abilities); `AreaData.kiraForm` per area; `Game.ApplyKiraForm`
+  swaps on arrival. Abilities from a form: `Hero.HasAbility` (e.g. `Abilities.ClawIce`). `WorldProgress.opened` saves
+  broken ice walls. `DataAssets.Upgrade` adds new default data (areas' forms, new shards) to an existing world asset.
+- Necklace: `NecklaceModel` (socket: a bone ending in `Spine2`, else the capsule); `Hero.NecklaceGem` is the shard.
+- Cutscene actors are still Round 1's graybox prefabs (`Editor/CutsceneAuthoring.cs`).
+- Art in git: Meshy outputs, Mixamo downloads, Kira's rig FBX; ignored: Meshy raw FBX / .blend, rejected `*_v1`, OBJ zips,
+  rig .blend files (the scripts remake them).
+
 **Round 1 delivered: 0.1.0 (build 100), 2026-11-09.** A graybox playground (Area A + Area B) with every core
 system: one motor (Ground / Air / Swim / LowGravity), Cinemachine camera, Dan / Abi / Kira switching with
 followers, shared hearts, enemy, hazards, checkpoints, shards, necklace, story shard, portal, Abi's double jump,

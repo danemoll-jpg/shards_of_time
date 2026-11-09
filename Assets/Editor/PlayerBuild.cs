@@ -42,6 +42,8 @@ namespace ShardsOfTime
         {
             if (Application.isPlaying) throw new InvalidOperationException("Leave Play mode first.");
             DataAssets.Ensure();
+            CharacterImport.MakeMaterials();
+            var kiraLock = CharacterImport.KiraLock();
             CutsceneAuthoring.EnsureAll();
             MakeScene();
             var args = Environment.GetCommandLineArgs(); int vi = Array.IndexOf(args, "-buildVersion");
@@ -81,7 +83,7 @@ namespace ShardsOfTime
                 $"Unity {Application.unityVersion}; Windows x64; development off",
                 $"Settings, save.json and Player.log: {persistent}",
                 "Self-check: python Tools/run_check.py local/<dir> [--only all|mute]",
-            };
+            }.Concat(kiraLock).ToArray();
             File.WriteAllLines(Path.Combine(dir, "BUILD_INFO.txt"), lines.Concat(report.steps.Select(st => $"  step {st.name}: {st.duration.TotalSeconds:0.0} s")));
             Debug.Log(string.Join("\n", lines));
             if (s.result != BuildResult.Succeeded) throw new Exception("Build failed: " + s.result);
