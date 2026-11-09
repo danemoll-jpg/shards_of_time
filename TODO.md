@@ -24,9 +24,51 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none yet. Round 3 is delivered (below); its plan is in
-`TODO-ARCHIVE.md`. Next: the Ice Age as the first real world (the planning chat
-writes the round here).
+Current round — Fix 3.1: sabertooth Kira's face (target 0.3.1)
+Round 3's plan is in `TODO-ARCHIVE.md`. Next after this fix: the Ice Age as the
+first real world (the planning chat writes it here).
+
+**Problem (Dan, 2026-11-09): "Kira's face is messed up in the sabertooth form."**
+Planning chat's diagnosis from `Data/screenshots/round2/kira_rig/kira_sabertooth_idle.png`:
+the concept sheet had her head turned hard toward the viewer, Meshy built the
+head that way, and the rig's counter-turn (Round 2, capped 45 deg) twists the
+face: eyes skewed and cross-eyed, fangs splayed outward. Home Kira looks fine
+(head only slightly turned). Fixing it with more bone tricks won't hold up, so
+the fix is a new model from a straight-headed concept.
+
+1. **New concept (Dan):** Dan makes a new sheet from the prompt below and saves
+   it as `SourceArt/Concepts/kira_sabertooth.png` (keep the old one as
+   `kira_sabertooth_v1.png`). Code checks it before using it: head in line with
+   the body (looking the way she walks), ears folded, mouth closed with both
+   fangs straight down, all paws and tail in frame. If it fails, stop and say
+   exactly why.
+   **Done (2026-11-09):** Dan made it; the planning chat checked it and saved it
+   (1448 x 1086; old one is `kira_sabertooth_v1.png`). It passes. One note: her
+   fur is a warmer, slightly brownish gray than home Kira's cooler gray. Match
+   the sabertooth's fur color to home Kira's texture in the clean-up (item 2)
+   so she's the same cat in both forms.
+2. **Meshy + clean-up** as in Round 2, then the same Blender rig (`kira_rig.py`,
+   no ear bones), **with no head counter-turn** (remove it for this form; check
+   it isn't needed for home Kira either, and keep hers if it is).
+3. **Previews of the face:** front, side and 3/4 close-ups of the head in idle,
+   run and attack, plus an exe shot from the player's view. Look at them and
+   report: both eyes looking the same way, face not stretched, fangs straight
+   down and inside the lip line. Keep the old model as fallback.
+4. Build, check, publish 0.3.1, update `TODO.md` / `CLAUDE.md`, clean up.
+
+Prompt for Dan's image tool (planning chat, 2026-11-09):
+> Pixar-style 3D render of Kira, a tiny gray Scottish Fold kitten transformed
+> into a baby saber-toothed cat. Full body, side view, standing on all four
+> legs, head facing straight ahead in line with her body (looking where she is
+> walking, NOT turned toward the camera), tail up and away from the body.
+> Two small white saber fangs pointing straight down from the upper lip, mouth
+> closed. Folded-down Scottish Fold ears that lie flat and forward, never
+> raised. Solid gray fur over the entire body with absolutely no white fur or
+> markings. Golden-amber eyes. Plain white background, soft even light, no
+> ground shadow, whole body in frame with space around it, at least 1536 px wide.
+Negative: `head turned toward camera, looking at viewer, open mouth, cropped,
+cut off paws, cut off tail, raised ears, pointed ears, white fur, multiple
+views, props, text, watermark, ground shadow`.
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------
