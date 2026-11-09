@@ -1,0 +1,197 @@
+# Shards of Time — models needed
+
+**Round 1, item 12: the first six character models.** Dan, Abi and Kira at home, and in the Ice Age.
+**Step 2 is done:** Dan saved six clean full-body sheets (1024 x 1536 or larger: A-pose, white background, no
+necklace, every paw and the tail in frame). They are now the concept files in `SourceArt/Concepts/`
+(`dan_home`, `dan_iceage`, `abi_home`, `abi_iceage`, `kira`, `kira_sabertooth`). The originals stay in
+`SourceArt/Reference/Characters/`. **Next is step 3 (Meshy), in Round 2.** No Meshy calls were made in Round 1, as asked.
+The prompts below are kept for the next outfits and forms.
+
+The pipeline:
+1. Code writes the prompts (this page). **Done.**
+2. **Dan has the concept images made** and saves them under `SourceArt/Concepts/`.
+3. Code makes the models with the Meshy API (`python Tools/meshy_generate.py`), cleans them up in Blender (metres, feet at
+   0, facing +Z, LODs), renders previews and **stops to show Dan**.
+4. Dan rigs the four people in Mixamo and downloads the clips listed below. Kira can't go through Mixamo: it only rigs
+   two-legged humanoids. Code first checks whether the Meshy API can rig and animate a four-legged animal. If it can't,
+   Code builds Kira's rig and her clips in Blender by script. Her folded ears get no ear bones, so nothing can raise them.
+5. Code imports everything (Humanoid rig for Dan and Abi, Generic for Kira), wires up the animations and replaces the
+   graybox capsules. The capsules stay as a fallback.
+
+## Your references (what exists, what doesn't)
+
+| Model | Reference in `SourceArt/Reference/` | Notes |
+|---|---|---|
+| Dan, Ice Age | `Characters/Dan/dan-iceage-film.png` (349 x 634) | Good front view. It has the necklace, which the concept leaves out, and an open smile. |
+| Abi, Ice Age | `Characters/Abi/abi-iceage-film.png` (169 x 367) | Good front view, but very small. |
+| Kira, Ice Age sabertooth | `Characters/Kira/kira-iceage-sabertooth-film.png` (475 x 382) | Three-quarter front view. Paws and tail tip are cut off. |
+| Dan, home clothes | Dan's full-body Christmas pyjama image (shared in chat, 2026-11-09) | Navy tree sweater, reindeer-pattern trousers. Save as `Characters/Dan/dan-home-film.png`. |
+| Abi, home clothes | Abi's full-body Christmas pyjama image (shared in chat) | Green Santa sweater and trousers, fluffy white slippers. Save as `Characters/Abi/abi-home-film.png`. |
+| Kira, normal Scottish Fold | Kira full-body images (shared in chat) | Three-quarter front, all four paws and the tail in frame. Save as `Characters/Kira/kira-home-film.png`. |
+| Dan / Abi, Ice Age full body | the full-body caveman images (shared in chat) | **Barefoot** (Dan with fur ankle wraps), where the first stills had fur boots. The prompts now follow the full-body images. |
+
+**Code can't save images from the chat.** Please drop them into the folders above so they sit beside the others.
+
+**Settled by Dan's sheets:** Abi has long wavy brown hair and green eyes. Ice Age outfits are barefoot (Dan with fur
+ankle wraps). **Still open:** the woman in red pyjamas with a Santa hat (shared in chat). Is she another Abi outfit,
+or someone else?
+
+The film stills set the style: Pixar-like, warm, a plain green background. They can't go to Meshy as they are. Meshy
+needs a clean full-body sheet: at least 1024 px tall, nothing cut off, a neutral pose, mouth closed and no glow. So
+each prompt below asks for a new image in that pose, **using the film still as the look to match**. If your image tool
+takes a reference image, give it the matching still.
+
+## What makes an image usable (I check these when you've saved them)
+
+- **Full body in frame**, feet (and paws, tail) included, some space round it, nothing cropped.
+- **At least 1024 px tall.**
+- **People:** front view, **A-pose** (arms about 45 degrees out from the body, hands open and not touching the body or
+  the legs, feet shoulder-width apart). Mouth **closed**, relaxed neutral face, eyes open, looking straight ahead.
+- **Kira:** side view, standing on all four legs with the tail up and away from the body. A second image from the front
+  or three-quarter front helps Meshy a lot.
+- **Plain light background** (white, light grey or the film's flat green), soft even light, no shadows on the ground.
+- No props, no necklace (Dan's necklace is its own model and glows in the game), no glow, no text, no second view in
+  the same image.
+
+If your tool has a negative prompt: `cropped, cut off feet, cut off paws, cropped tail, multiple views, necklace,
+pendant, jewelry, held object, prop, glowing, open mouth, teeth showing, text, logo, watermark, background scenery,
+ground shadow, motion blur, depth of field, photorealistic`.
+
+**Kira lock (every Kira image, every form):** Scottish Fold. **Folded ears that lie flat and forward, never raised or
+pointed.** **Solid grey fur with no white anywhere** (no white chest, paws, muzzle or chin). **Golden-amber eyes.** It's
+written into both Kira prompts. Please check it on the images before saving them.
+
+---
+
+### 1. Dan, home clothes — `SourceArt/Concepts/dan_home.png`
+
+> Full-body character concept of Dan from the reference image, a friendly man in his thirties in the style of a Pixar
+> animated film, standing in an A-pose: arms held about 45 degrees out from his sides, hands open and relaxed, not
+> touching his body, feet shoulder-width apart, front view, whole body in frame from the top of his hair to the soles of
+> his slippers with space around him. Short light-brown hair swept up and back, warm brown eyes, light tan skin, mouth
+> closed, gentle friendly expression. He wears Christmas pyjamas: a navy-blue knitted sweater with red collar and cuffs, a
+> big decorated green Christmas tree with a gold star on the chest, white snowflakes; navy pyjama trousers with red, white
+> and green bands of reindeer, trees and snowflakes; dark slippers. No necklace, nothing in his hands. Stylized,
+> colourful, Pixar-like 3D render, soft even studio lighting, plain light background, no shadows on the ground, no text.
+
+**Design note:** the opening and closing cutscenes (the living room, the couch) and the post-credits free roam. The same
+face, hair and build as his Ice Age model (`dan_iceage.png`), so make both from the same reference if your tool allows.
+Mixamo: Humanoid. In-game height **1.8 m**.
+
+### 2. Dan, Ice Age caveman — `SourceArt/Concepts/dan_iceage.png`
+
+Reference: `SourceArt/Reference/Characters/Dan/dan-iceage-film.png`. Match the face, hair and outfit.
+
+> Full-body character concept of Dan from the reference image, in the style of a Pixar animated film, standing in an
+> A-pose: arms held about 45 degrees out from his sides, hands open and relaxed, not touching his body, feet
+> shoulder-width apart, front view, whole body in frame from the top of his hair to the soles of his bare feet with space
+> around him. Short light-brown hair swept up and back, warm brown eyes, light tan skin, athletic build, mouth closed,
+> relaxed friendly expression. He wears a caveman outfit: a sleeveless shaggy fur tunic in tan and brown with dark spots,
+> ending in a ragged hem above the knee; a twisted brown leather belt with a knot at the front; bare feet with small
+> fur wraps round the ankles; bare arms. No necklace, no pendant, nothing glowing, nothing in his hands. Stylized, colourful, Pixar-like
+> 3D render, soft even studio lighting, plain light background, no shadows on the ground, no text.
+
+**Design note:** Dan's model for the whole Ice Age world. His necklace is a separate model the game puts on his chest
+(its shard glows and pulses near shards), so the concept must not have it. The fur hem and boots are short and stiff
+enough for the Mixamo skeleton, so nothing hangs loose. Mixamo: Humanoid. Height **1.8 m**.
+
+### 3. Abi, home clothes — `SourceArt/Concepts/abi_home.png`
+
+> Full-body character concept of Abi from the reference image, a warm, clever woman in her thirties in the style of a
+> Pixar animated film, standing in an A-pose: arms held about 45 degrees out from her sides, hands open and relaxed, not
+> touching her body, feet shoulder-width apart, front view, whole body in frame from the top of her hair to the soles of
+> her slippers with space around her. Long wavy brown hair falling behind her shoulders (not over her arms), big
+> green eyes, light skin, mouth closed, gentle smile. She wears Christmas pyjamas: a green sweater with a big Santa Claus
+> on the chest, red collar and cuffs and white snowflakes; green pyjama trousers printed with little Santas, candy canes
+> and snowflakes, red cuffs at the ankles; fluffy white slippers. No jewellery, nothing in her hands. Stylized, colourful,
+> Pixar-like 3D render, soft even studio lighting, plain light background, no shadows on the ground, no text.
+
+**Design note:** the living-room cutscenes and the post-credits free roam. Same face and hair as `abi_iceage.png`. Her
+hair goes behind her shoulders so Meshy doesn't fuse it to her arms. Mixamo: Humanoid. Height **1.65 m**.
+
+### 4. Abi, Ice Age — `SourceArt/Concepts/abi_iceage.png`
+
+Reference: `SourceArt/Reference/Characters/Abi/abi-iceage-film.png`. Match the face, hair and outfit.
+
+> Full-body character concept of Abi from the reference image, in the style of a Pixar animated film, standing in an
+> A-pose: arms held about 45 degrees out from her sides, hands open and relaxed, not touching her body, feet
+> shoulder-width apart, front view, whole body in frame from the top of her hair to the soles of her bare feet with space
+> around her. Long wavy brown hair falling behind her shoulders (not over her arms), big green eyes, light olive
+> skin, slim and athletic, mouth closed, relaxed friendly expression. She wears an Ice Age outfit: a one-shoulder
+> leopard-spotted fur dress in golden tan with dark brown spots, a pale fringed hem just above the knee, a thin brown
+> leather belt at the waist, bare feet. Nothing in her hands, nothing glowing.
+> Stylized, colourful, Pixar-like 3D render, soft even studio lighting, plain light background, no shadows on the ground,
+> no text.
+
+**Design note:** Abi's model for the whole Ice Age world. She is the fast, agile hero (higher jump, the double jump), so
+the outfit stays short and close to the body. Mixamo: Humanoid. Height **1.65 m**.
+
+### 5. Kira, Scottish Fold — `SourceArt/Concepts/kira.png` (+ `kira_front.png` if you can)
+
+> Full-body character concept of Kira, a small adult Scottish Fold cat, in the style of a Pixar animated film, side
+> view, standing on all four legs, tail raised in a gentle curve away from her body, whole cat in frame from the tip of
+> her nose to the tip of her tail and the bottoms of all four paws, with space around her. Scottish Fold: small ears
+> folded flat and forward against the head, never raised, never pointed. Solid soft grey fur everywhere with absolutely
+> no white: grey chest, grey paws, grey muzzle, grey chin. Big round golden-amber eyes, a small dusty-pink nose, a round
+> chubby face, mouth closed, a curious, mischievous expression. Nothing in her mouth or paws, no collar. Stylized,
+> colourful, Pixar-like 3D render, soft even studio lighting, plain light background, no shadows on the ground, no text.
+
+For `kira_front.png`: the same prompt, but **"three-quarter front view"** instead of "side view".
+
+**Design note:** Kira at home (the cutscenes) and the base every one of her forms is built from. In the game she's
+about **0.5 m** tall at the head and must read on screen next to Dan and Abi. **Kira lock:** folded ears, no white
+anywhere, golden-amber eyes. Not Mixamo: a four-legged rig by Meshy or by Code in Blender. **Generic** rig.
+
+### 6. Kira, Ice Age sabertooth kitten — `SourceArt/Concepts/kira_sabertooth.png` (+ `kira_sabertooth_front.png` if you can)
+
+Reference: `SourceArt/Reference/Characters/Kira/kira-iceage-sabertooth-film.png`. Match her face and fangs.
+
+> Full-body character concept of Kira from the reference image as a tiny saber-toothed kitten, in the style of a Pixar
+> animated film, side view, standing on all four legs, tail raised in a gentle curve away from her body, whole cat in
+> frame from the tip of her nose to the tip of her tail and the bottoms of all four paws, with space around her. The same
+> Scottish Fold cat: small ears folded flat and forward against the head, never raised, never pointed. Solid soft grey
+> fur everywhere with absolutely no white: grey chest, grey paws, grey muzzle, grey chin. Big round golden-amber eyes, a
+> small dusty-pink nose. Two long, curved, cream-coloured sabre fangs hanging down past her chin from a closed mouth
+> (adorable, not scary), a slightly sturdier, fluffier prehistoric build. No collar, nothing glowing. Stylized,
+> colourful, Pixar-like 3D render, soft even studio lighting, plain light background, no shadows on the ground, no text.
+
+**Design note:** Kira's Ice Age form for the whole first world. The fangs are the only change from her home model, so
+the two should look like the same cat. **Kira lock** as above. Generic rig. About **0.5 m** at the head.
+
+---
+
+## Animations
+
+### Dan and Abi (Mixamo, step 4)
+
+You rig each person once in Mixamo: upload the FBX Code gives you after step 3, auto-rig it, then download the clips
+below. The **first** clip is the rigged model: download it **With Skin**; all the others **Without Skin**. Format FBX
+for Unity, 30 fps, **In Place** ticked where Mixamo offers it. Save them as `SourceArt/Mixamo/<model>/<file>` (model
+= `dan_home`, `dan_iceage`, `abi_home`, `abi_iceage`). Mixamo's names change now and then: if a search finds nothing,
+take the closest match and keep my file name.
+
+The home outfits only appear in cutscenes and the free roam, so they need fewer clips: the first nine rows.
+
+| File | Mixamo search | For |
+|---|---|---|
+| `idle.fbx` | Breathing Idle | standing still (**With Skin**: the rigged model) |
+| `idle_look.fbx` | Looking Around | idle variation after a few seconds |
+| `walk.fbx` | Walking | slow stick |
+| `run.fbx` | Running | full stick |
+| `jump_up.fbx` | Jumping Up | take-off and rising |
+| `fall.fbx` | Falling Idle | in the air, coming down |
+| `land.fbx` | Falling To Landing | landing |
+| `hit.fbx` | Hit Reaction | losing a heart |
+| `cheer.fbx` | Cheering | the story shard, cutscenes |
+| `swim.fbx` | Swimming | swimming at the surface and diving |
+| `tread.fbx` | Treading Water | still at the surface |
+| `hard_land.fbx` | Hard Landing | a long fall (and Dan's backward fall in the Ice Age) |
+| `attack.fbx` | Dan: **Punching**. Abi: **Mma Kick** | the basic attack (Dan's punch, Abi's kick) |
+| `push.fbx` | **Dan only:** Pushing | pushing heavy blocks |
+| `double_jump.fbx` | **Abi only:** Front Flip | her double jump |
+
+### Kira (Code, step 4: no Mixamo)
+
+Code makes these on Kira's four-legged rig, either through Meshy's animation API if it handles quadrupeds or by script
+in Blender: **idle, walk, run, jump, fall, land, swim, attack (claw swipe), hurt.** The same set goes on every Kira
+form. The ears have no bones.

@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: Playground
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: Playground
+  displayName: Graybox Playground
+  areas:
+  - id: A
+    name: Area A
+    requirement: 10
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    storyShard: {x: 0, y: 1.4, z: 52}
+    storyShardColor: {r: 0.3, g: 0.62, b: 1, a: 1}
+    spawn: {x: 0, y: 0.1, z: -48}
+    spawnYaw: 0
+  - id: B
+    name: Area B
+    requirement: 0
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    storyShard: {x: 0, y: 0, z: 0}
+    storyShardColor: {r: 0.3, g: 0.6, b: 1, a: 1}
+    spawn: {x: 400, y: 0.1, z: -12}
+    spawnYaw: 0
+  shards:
+  - id: A01
+    area: A
+    position: {x: 0, y: 1, z: -42}
+    requires: []
+    note: start path
+  - id: A02
+    area: A
+    position: {x: 0, y: 1, z: -36}
+    requires: []
+    note: start path
+  - id: A03
+    area: A
+    position: {x: -6, y: 1, z: -30}
+    requires: []
+    note: by the slopes
+  - id: A04
+    area: A
+    position: {x: -18, y: 2, z: -30}
+    requires: []
+    note: step 1
+  - id: A05
+    area: A
+    position: {x: -22, y: 3, z: -30}
+    requires: []
+    note: step 2
+  - id: A06
+    area: A
+    position: {x: -26, y: 4, z: -30}
+    requires: []
+    note: step 3
+  - id: A07
+    area: A
+    position: {x: -42, y: 1, z: -6}
+    requires: []
+    note: far side of the pit (moving platform)
+  - id: A08
+    area: A
+    position: {x: 30, y: -2.8, z: 2}
+    requires: []
+    note: pool bottom (dive)
+  - id: A09
+    area: A
+    position: {x: 34, y: -2.8, z: -4}
+    requires: []
+    note: pool bottom (dive)
+  - id: A10
+    area: A
+    position: {x: 32, y: 6, z: 36}
+    requires: []
+    note: low-gravity tower top (Dan or Abi)
+  - id: A11
+    area: A
+    position: {x: -2, y: 1, z: 27}
+    requires:
+    - Kira
+    note: crawl garden (Kira)
+  - id: A12
+    area: A
+    position: {x: 2, y: 1, z: 27}
+    requires:
+    - Kira
+    note: crawl garden (Kira)
+  - id: A13
+    area: A
+    position: {x: -14, y: 3.9, z: 44}
+    requires:
+    - Dan
+    note: ledge (Dan pushes the block)
+  - id: A14
+    area: A
+    position: {x: -30, y: 1, z: 22}
+    requires: []
+    note: enemy yard
+  - id: A15
+    area: A
+    position: {x: -36, y: 1, z: 30}
+    requires: []
+    note: past the spikes
+  - id: A16
+    area: A
+    position: {x: 12, y: 1, z: -10}
+    requires: []
+    note: behind the pillar
+  - id: A17
+    area: A
+    position: {x: 16, y: 4.2, z: -18}
+    requires:
+    - DoubleJump
+    note: high ledge
+  - id: A18
+    area: A
+    position: {x: 19, y: 4.2, z: -18}
+    requires:
+    - DoubleJump
+    note: high ledge
+  - id: A19
+    area: A
+    position: {x: 22, y: 4.2, z: -18}
+    requires:
+    - DoubleJump
+    note: high ledge
+  - id: B01
+    area: B
+    position: {x: 400, y: 1, z: -4}
+    requires: []
+    note: path
+  - id: B02
+    area: B
+    position: {x: 404, y: 1, z: 4}
+    requires: []
+    note: path
+  - id: B03
+    area: B
+    position: {x: 396, y: 2.4, z: 10}
+    requires: []
+    note: platform
+  - id: B04
+    area: B
+    position: {x: 400, y: 3.4, z: 18}
+    requires: []
+    note: platform
+  - id: B05
+    area: B
+    position: {x: 408, y: 4.1, z: 14}
+    requires:
+    - DoubleJump
+    note: high pillar

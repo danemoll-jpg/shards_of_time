@@ -161,9 +161,72 @@ Same launcher as Chastain Rush / Hostile Horizon, renamed:
   and give disk use before/after in one line.
 
 ## Commands
-(Code fills this in during Round 1: build, play, check, render cutscene,
-publish, save/settings locations.)
+All from the repo root. Unity: `C:\Program Files\Unity\Hub\Editor\6000.6.1f1\Editor\Unity.exe`.
+Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_batch.py <log name> [Unity args]`
+(no window; log in `local/logs/<name>.log`; with no `-executeMethod` it just imports and compiles).
+- **Build the exe:** Unity menu **Shards of Time > Build Executable**, or
+  `python Tools/unity_batch.py build -executeMethod ShardsOfTime.PlayerBuild.BuildFromCommandLine [-buildVersion 0.1.0]`.
+  Remakes `Assets/Scenes/Main.unity` (one `Game` object; everything else is built in code at start), makes missing
+  data / material assets (`Editor/DataAssets.cs`) and missing graybox cutscenes (`Editor/CutsceneAuthoring.cs`), writes
+  `Builds/ShardsOfTime/ShardsOfTime.exe` + `BUILD_INFO.txt`. About 2.5 min.
+- **Play:** `Play Shards of Time.bat` (the exe) or `Play Shards of Time (launcher).bat` (a local launcher install in
+  `Builds/LauncherLocal/`, remade by `python Tools/make_local_launcher.py` when the build is newer).
+- **Save, settings, Player.log:** `%USERPROFILE%\AppData\LocalLow\Shards of Time\Shards of Time\` (`save.json`,
+  `settings.json`, `display.json`). A check run saves into `<check dir>/save` and never touches them.
+- **Check (muted, no window, Below Normal):** `python Tools/run_check.py local/round<N>/<name> [--only all|play|measure|perf|mute] [--extra "-steamDeck 1"] [--size 1280x800]`.
+  Runs `ShardsOfTime.exe -batchmode -mute -exeCheck <dir>` (`Assets/Scripts/Checks/ExeCheck*.cs`): a virtual gamepad
+  plays from the title screen through the real input actions. `play` = the whole playground as a player (about 4 min),
+  `measure` = one measurement per Round 1 item (about 4 min), `perf` = 12 s of frame rate, `all` = the three. Writes
+  `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
+  (vsync can't run off-screen; thousands of fps make the character controller skip moves).
+- **Render a cutscene to MP4:** Unity menu **Shards of Time > Render Cutscene to Video** (`Recordings/<Name>.mp4`,
+  1080p 30 fps, no audio), or with no window
+  `python Tools/unity_batch.py render --gpu -executeMethod ShardsOfTime.CutsceneRender.RenderFromCommandLine -cutscene NecklaceWakes`
+  (`--gpu`: no `-nographics`, no `-quit`; the render exits by itself). How to author: `Docs/CUTSCENES.md`.
+- **Data (edit in the Inspector):** heroes `Assets/Resources/Data/Characters/{Dan,Abi,Kira}.asset` (CharacterStats);
+  the playground's shards / requirement / what each shard needs `Assets/Resources/Data/Worlds/Playground.asset`
+  (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
+  check run.
+- **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
+  `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py`. Prompts:
+  `Docs/MODELS-NEEDED.md`. Blender: `F:\blender\blender.exe`.
+- **Title art / icons (placeholders):** `python Tools/make_title_art.py local/round1/<check>/00_key_art.png` writes
+  `SourceArt/Title/Steam/ShardsOfTime-*.png` (launcher cover, Steam art), `Launcher/ShardsOfTime.ico` and
+  `Assets/HandMade/Title/GameIcon.png`.
+- **Launcher (Hostile Horizon's, renamed):** `powershell -File Tools/Build-Launcher.ps1` (and `-CoreOnly` for
+  `LauncherChecks.exe`) -> `Builds/Launcher/ShardsOfTimeLauncher.exe`. Signing key
+  `Builds/PublisherPrivate/launcher-signing.pem` (made once, key ID `61aa227f...`; never delete, print or replace it).
+  Local self-check (no upload): `python Tools/launcher_selfcheck.py` (two signed local releases, update 1 to 2, start,
+  ready handshake; the game runs hidden with `-batchmode -racerTestSave`).
+- **Releases (every round; version `0.<round>.<fix>`, build `<round>*100+<fix>`).** First release (Round 1, build 100,
+  tag `build-100`): `python Tools/Prepare-LauncherRelease.py --game Builds/ShardsOfTime --bundle-music <dir with placeholder.txt> --out Builds/LauncherRelease-100 --version 0.1.0 --build 100 --music-build 1 --notes "..."`
+  then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
+  (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
+  **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
+  (tag `game-<build>`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  newest). **Starter package** (what a new player downloads):
+  `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
+  published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
+  extract the starter ZIP to a short folder, then
+  `ShardsOfTimeLauncher.exe --auto-check --root <extracted ShardsOfTime> --test-save <dir> --evidence <dir>`.
+- **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
-Nothing built yet. Round 1 is the project setup + graybox playground
-(`TODO.md`).
+**Round 1 delivered: 0.1.0 (build 100), 2026-11-09.** A graybox playground (Area A + Area B) with every core
+system: one motor (Ground / Air / Swim / LowGravity), Cinemachine camera, Dan / Abi / Kira switching with
+followers, shared hearts, enemy, hazards, checkpoints, shards, necklace, story shard, portal, Abi's double jump,
+save, title / pause / settings, and two Timeline cutscenes that also render to MP4. Published on
+`danemoll-jpg/shards-of-time-releases`: `build-100` (Latest: the launcher's catalog) and `starter-100`
+(`ShardsOfTime-Starter.zip`, what a new install downloads). Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 1:
+- The game's one scene holds a `Game` object; the world, party, camera and UI are built in code at start
+  (`Core/Game.cs`, `World/Playground.cs`). Shard data and hero stats are ScriptableObjects in `Resources/Data/`.
+- Layers: 8 Player, 9 Follower, 10 Enemy (followers never collide with the player); 4 Water; 2 for trigger volumes.
+- Kira is 0.5 m; low gravity is x0.3 (jumps 3.3x higher).
+- Art: Dan's six concept sheets are in `SourceArt/Concepts/` (`dan_home`, `dan_iceage`, `abi_home`, `abi_iceage`,
+  `kira`, `kira_sabertooth`). Abi: wavy brown hair, green eyes; Ice Age outfits barefoot. Meshy is the next step
+  (Round 2). Open question: the red-pyjama woman Dan shared.
+- Python file edits on this PC: always pass `encoding='utf-8'` (the default is cp1252).
+- A check on a busy PC: check runs cap a frame at 1/30 s and wait in game time, so OBS / Chrome load doesn't
+  change the result (players: 0.1 s cap).

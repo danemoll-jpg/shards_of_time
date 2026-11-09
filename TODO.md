@@ -24,100 +24,80 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 1: project setup + graybox playground (target 0.1.0)
+Current round: none yet. Round 1 is delivered (below); the planning chat
+writes Round 2 here. Round 1's plan is in `TODO-ARCHIVE.md`.
 ---------------------------------------------------------------------------
-Goal: prove the core systems and the feel in a graybox before any real art.
-No real models, music or worlds this round. Capsules / simple shapes, colored
-per character, are fine. Report per item: done / not done / deferred, and why.
 
-1. **Project setup.** Unity 6000.6.1f1 URP project in this repo, Input System
-   only, packages Cinemachine, Timeline, Unity Recorder, ProBuilder.
-   `.gitignore` from Hostile Horizon (incl. `Builds/PublisherPrivate/`).
-   Namespace `ShardsOfTime`. Folder layout under `Assets/Scripts/` by system.
-2. **Port the standard pieces** from Hostile Horizon (newest) / Chastain Rush:
-   `Core/TestRun.cs` (`-mute`, measured audio level, off-screen batch checks),
-   `Tools/run_check.py`, `Core/ScreenSetting.cs`, the Steam Deck setting,
-   the build menu + command-line build (`PlayerBuild`), `Tools/cleanup_round.py`,
-   `Tools/meshy_generate.py` and `Tools/import_characters.py` (not used until
-   models arrive, but in place). `Play Shards of Time.bat` in the repo root.
-   List what came across in the report.
-3. **Launcher + first release.** Port the launcher as `ShardsOfTimeLauncher.exe`,
-   make the signing key once (`python Tools/New-LauncherKey.py`), catalog repo
-   `danemoll-jpg/shards-of-time-releases`, `Docs/Starter/README-LAUNCHER.md`
-   rewritten for this game, and `Play Shards of Time (launcher).bat`. Publish
-   0.1.0 at the end of the round so Dan can play it on the Steam Deck.
-4. **Character motor with movement modes.** One motor with Ground, Air, Swim
-   and LowGravity modes. Ground/Air: run with analog speed, jump with variable
-   height, coyote time, jump buffering, slopes, landing on moving platforms.
-   Swim: surface swimming and diving in a water volume (up/down controls), with
-   a breath meter that only applies to non-swimmer characters. LowGravity: a
-   volume that scales gravity and jump. All four are shown in the playground.
-5. **Third-person camera.** Cinemachine orbit camera: right stick / mouse orbits,
-   gentle auto-recenter behind the player while running, never clips into
-   walls (pulls in instead), recenter button, works underwater.
-6. **Three characters + switching.** Stats as ScriptableObjects:
-   - Dan: average speed and jump; punch; can push heavy blocks.
-   - Abi: faster, higher jump, more air control; kick. Double jump exists as a
-     locked ability (see item 9).
-   - Kira: small (tune her size so she reads on screen; start ~0.5 m tall),
-     fits through crawl gaps the others can't; claws; best swimmer.
-   Switch instantly with LB/RB (keyboard Q/E, or 1/2/3 for a direct pick). The
-   new character takes the current spot; camera doesn't jump.
-7. **Followers.** The two inactive characters follow at a short distance. A
-   follower that is more than ~12 m behind, falls off, or hasn't reached the
-   player within ~3 s of a jump/climb warps in just behind the player, out of
-   camera view. Followers never block the player (no collision with the player).
-   In water they swim. Check: a run through the whole playground with both
-   followers arriving at the end, no follower stuck.
-8. **Shared health, combat, one enemy.** 3 hearts shared by all characters;
-   damage with brief invincibility; heal pickup; a heart upgrade that raises
-   the max (cap 10). Each character's basic attack. One placeholder enemy
-   (patrols, chases when close, touching hurts, one or two hits defeat it) and
-   one hazard (spikes or a pit). Respawn at the last checkpoint when hearts run
-   out or the player falls out of the world.
-9. **Shards, necklace, story shard, portal, abilities.**
-   - Small shards with a HUD total that persists; collected ones stay collected.
-   - Necklace: a HUD icon on Dan that pulses faster the nearer the closest
-     uncollected shard (plus light controller rumble, on by default with a
-     setting to turn it off).
-   - Area A has a requirement (e.g. 10 shards). Reaching it plays a short
-     in-engine moment (item 11) and wakes the necklace; it now leads to the
-     story shard. Collecting the story shard opens the portal to Area B.
-   - Area B: a pickup that unlocks Abi's double jump, and a portal back to A.
-   - Area A has a ledge with shards only reachable with the double jump, and a
-     boulder marked "needs Muscle Man" (not yet movable; it proves the gate).
-   - A check proves Area A's requirement can be met without the double jump.
-10. **Save.** One save file (`save.json` in the persistent data folder):
-    collected shard ids per world, total, unlocked abilities, opened portals,
-    max hearts, current world. Saved at checkpoints, portals and on quit;
-    loaded on start. A "New game" option clears it.
-11. **Cutscene pipeline, first proof.** Timeline + Cinemachine cutscene system:
-    plays in game, skippable (hold a button), returns control cleanly. Build
-    two short graybox cutscenes with the placeholder characters: the necklace
-    waking (item 9) and the portal opening. Editor menu
-    **Shards of Time > Render Cutscene to Video** renders a chosen cutscene to a
-    1080p MP4 with Unity Recorder (muted render is fine). Write
-    `Docs/CUTSCENES.md`: how to author a scene, add shots, and render it, written
-    so it can be reused for a film project.
-12. **Art references + first model prompts.** Dan is putting his film art in
-    `SourceArt/Reference/` (folders already made; see its README). Write
-    `Docs/MODELS-NEEDED.md` with prompts for: Dan (home clothes + Ice Age
-    caveman outfit), Abi (home clothes + Ice Age outfit), Kira (normal Scottish
-    Fold + Ice Age saber-toothed kitten), using Dan's reference images where
-    they exist and saying so where none exist yet. Follow the art pipeline in
-    `CLAUDE.md`; Kira lock in every Kira prompt; include each model's Mixamo
-    animation list (real search names). **Stop after writing them and tell Dan**
-    (no Meshy calls this round).
-13. **Title screen + pause menu.** Minimal: Continue / New game / Settings
-    (volume, screen, rumble, invert camera X/Y, camera speed) / Credits / Quit.
-    Controls page showing the bindings for the device in use.
-14. **Build, check, publish, report.** Built exe, checks muted and unfocused,
-    release 0.1.0 published, `CLAUDE.md` Commands and Where things stand filled
-    in, round report in this file, disk cleanup.
+---------------------------------------------------------------------------
+Last deliveries
+---------------------------------------------------------------------------
+### Round 1: project setup + graybox playground (0.1.0, build 100, 2026-11-09)
+Final check `local/round1/release3` (built exe, batch mode, muted, no window,
+virtual pad from the title screen): RESULT all checks passed; audio output
+0.000 RMS. Evidence: `Data/screenshots/round1/` (+ the two MP4s in `Recordings/`,
+git-ignored).
+1. Setup: **done.** Unity 6000.6.1f1 URP, Input System only; Cinemachine 6.6.0 and
+   Timeline 6.6.0 (built into 6000.6), Recorder 5.1.7, ProBuilder 6.1.4; HH's
+   .gitignore (+ `Recordings/`); namespace `ShardsOfTime`; scripts by system.
+2. Ported: **done.** From HH: `TestRun.cs`, `ScreenSetting.cs`, `SteamDeck.cs`,
+   `LauncherBridge.cs`, `PlayerBuild`, `run_check.py`, `cleanup_round.py`,
+   `meshy_generate.py`, `import_characters.py` (both adapted to our six models),
+   the GameSettings / UiKit / ExeCheck patterns, `Play Shards of Time.bat`. New:
+   `Tools/unity_batch.py` (Unity batch runs at Below Normal, no window).
+3. Launcher: **done.** `ShardsOfTimeLauncher.exe`, own signing key (ID 61aa227f),
+   README rewritten, `Play Shards of Time (launcher).bat`. Local self-check: update
+   1->2, game started hidden, ready handshake. 0.1.0 published (see item 14).
+4. Motor: **done.** Ground/Air/Swim/LowGravity in one motor. Measured: Dan 7.0 m/s,
+   jump 1.57 m held / 0.41 tapped; coyote jump at 0.07 s yes, 0.25 s no; buffered
+   jump 0.04 s after landing; 20 deg ramp climbed, 55 deg slid back; carried 7.6 m
+   on the moving platform; Dan dives, breath runs out at 10 s (-1 heart); Kira no
+   breath meter; low gravity (x0.3): 5.3 m / 2.2 s jump vs 1.6 m / 0.64 s.
+5. Camera: **done.** Cinemachine orbit: 160 deg/s on the stick, recenter (R3) to
+   0 deg off, auto-recenter while running, a wall behind pulls it to 1.2 m, works
+   and tints under water.
+6. Heroes + switching: **done.** Stats as `Resources/Data/Characters/*.asset`.
+   Dan punch + pushes blocks (4.4 m in 3 s; Abi 0); Abi 8.2 m/s, 2.1 m, double
+   jump 3.6 m once unlocked; Kira 0.5 m, 7.6 m/s, only one through the 0.7 m crawl
+   gap. RB/LB/1/2/3 switch on the spot, camera moved 0.5 m in 4 frames.
+7. Followers: **done.** Trail-following, flanking left/right. Whole-run check:
+   both arrived at every stop, 6 warps (all "not caught up in 3 s", out of view),
+   none stuck.
+8. Health/combat: **done.** 3 shared hearts, 1.3 s invincibility, heal heart,
+   heart upgrade (3->4, cap 10), enemy chases + hurts + dies to one punch, spikes,
+   pit -> checkpoint -1 heart, out of hearts -> checkpoint full hearts.
+9. Shards/necklace/story/portal: **done.** 10 of 16 non-double-jump shards wake
+   the necklace (cutscene), it leads to the story shard (HUD arrow + beam), which
+   opens the portal (cutscene) to Area B (double jump pickup, portal back);
+   double-jump ledge + "needs Muscle Man" boulder. Rule-2 check: data report +
+   the play-through reached 10 without the double jump. Rumble: coded, **not
+   felt** (no real pad in a batch check).
+10. Save: **done.** `save.json`; checked: Quit to title -> Continue restores 19
+    shards, ability, portals, 4 hearts; New game asks, then clears.
+11. Cutscenes: **done.** NecklaceWakes (6.5 s), PortalOpens (6 s), Timeline +
+    Cinemachine prefabs; hold A skips (checked); Shards of Time > Render Cutscene
+    to Video wrote both MP4s (1920x1080, 30 fps); `Docs/CUTSCENES.md`.
+12. Art prompts: **done, stopped for Dan.** `Docs/MODELS-NEEDED.md`: six prompts
+    with the Kira lock and the Mixamo clip list. Dan then saved six clean full-body
+    sheets, now `SourceArt/Concepts/*.png`, ready for Meshy in Round 2. Open: the
+    red-pyjama woman (shared in chat): who is she? No Meshy calls.
+13. Title + pause: **done.** Continue / New game / Settings / Controls / Credits /
+    Quit; pause menu; Settings: volume, effects, screen, resolution, Steam Deck,
+    rumble, invert X/Y, camera speed, reset; Controls follows the device in use.
+14. Build/check/publish: **done.** Exe 0.1.0 (99.8 MB); checks above; release
+    `build-100` + starter `starter-100` on shards-of-time-releases; a fresh
+    starter install from GitHub started 0.1.0 (ready handshake). Disk clean-up:
+    project folders 2.2 GB -> 1.7 GB.
 
-For Dan to check (Code fills in): feel of run/jump/camera on gamepad and Steam
-Deck, character switching, followers, swim and low gravity, the two cutscenes,
-the MP4 render.
+Decisions Code made (Dan can overrule): the world is built in code at start (one
+scene, as HH); requirement 10 of 16; low gravity x0.3; followers flank and hide
+when the camera is pulled in on them; cutscenes anchor at the player (necklace)
+or the portal; skip = hold A / Space 1 s; check runs cap at 144 fps; placeholder
+code-made sounds; title art is a placeholder made from a screenshot.
+
+**For Dan to check:** run / jump / camera feel on a pad and on the Steam Deck
+(install the starter ZIP; Deck frame rate not measured); switching; followers
+(do the warps feel OK?); swim, dive, low gravity; the two cutscenes in play and
+the MP4s in `Recordings/`; rumble on a real pad; who the red-pyjama woman is.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

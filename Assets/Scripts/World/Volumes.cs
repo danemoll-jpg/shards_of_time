@@ -1,0 +1,90 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace ShardsOfTime
+{
+    // Round 1, item 4: the volumes that switch the motor's mode. Boxes (axis-aligned, from the transform's position and scale), found by
+    // a point test, so they need no physics callbacks and work the same for the player and the followers.
+    public abstract class BoxVolume : MonoBehaviour
+    {
+        public Bounds Box => new Bounds(transform.position, transform.lossyScale);
+        public bool Contains(Vector3 p) => Box.Contains(p);
+    }
+
+    public sealed class WaterVolume : BoxVolume
+    {
+        public static readonly List<WaterVolume> All = new List<WaterVolume>();
+        public float Top => Box.max.y;
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
+        public static WaterVolume At(Vector3 p) { foreach (var w in All) if (w.Contains(p)) return w; return null; }
+    }
+
+    public sealed class LowGravityVolume : BoxVolume
+    {
+        public static readonly List<LowGravityVolume> All = new List<LowGravityVolume>();
+        public float gravityScale = .3f;   // Moon-like: gravity x .3, so a jump goes jumpHeight / .3 high (Dan 5.3 m, Abi 7 m, Kira 4.7 m)
+        public float jumpScale = 1f;       // take-off speed multiplier (height x jumpScale squared)
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
+        public static LowGravityVolume At(Vector3 p) { foreach (var v in All) if (v.Contains(p)) return v; return null; }
+    }
+
+    // Moves between two points (or turns) in Update before the characters (execution order), so riders are carried the same frame.
+    [DefaultExecutionOrder(-100)]
+    public sealed class MovingPlatform : MonoBehaviour
+    {
+        public Vector3 a, b; public float period = 6f; public float spinDegPerSec; float t;
+        void Update()
+        {
+            t += Time.deltaTime;
+            if (a != b) transform.position = Vector3.Lerp(a, b, .5f - .5f * Mathf.Cos(t * 2f * Mathf.PI / period));
+            if (spinDegPerSec != 0) transform.Rotate(0, spinDegPerSec * Time.deltaTime, 0, Space.World);
+        }
+    }
+
+    // Round 1, item 6: a heavy block only Dan can push (CharacterStats.canPushHeavy). Slides along the push's main axis, never off a
+    // ledge, never through walls.
+    public sealed class PushBlock : MonoBehaviour
+    {
+        public float speed = 1.6f;
+        public Bounds limits;                 // the block's centre stays inside (the push yard)
+        public float PushedDistance { get; private set; }
+        float lastMessage = -10;
+
+        public void Pushed(CharacterMotor m, Vector3 dir)
+        {
+            if (!m.Stats.canPushHeavy)
+            {
+                if (m.CompareTag("Player") && Time.time - lastMessage > 4) { lastMessage = Time.time; Hud.Message($"Too heavy for {m.Stats.displayName}. Dan can push this."); }
+                return;
+            }
+            if (!m.Grounded) return;
+            dir.y = 0;
+            dir = Mathf.Abs(dir.x) > Mathf.Abs(dir.z) ? new Vector3(Mathf.Sign(dir.x), 0, 0) : new Vector3(0, 0, Mathf.Sign(dir.z));
+            var step = dir * speed * Time.deltaTime;
+            var size = transform.lossyScale;
+            var next = transform.position + step;
+            if (!limits.Contains(new Vector3(next.x, limits.center.y, next.z))) return;
+            // nothing solid in the way
+            var hits = Physics.OverlapBox(next + Vector3.up * .05f, size * .48f, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+            foreach (var h in hits) if (h.transform != transform && !h.GetComponent<CharacterController>() && h.transform.root != transform.root) return;
+            transform.position = next; PushedDistance += step.magnitude;
+        }
+    }
+
+    // Round 1, item 9: a boulder that "needs Muscle Man" (the companion from the Medieval Kingdom). It doesn't move this round; it
+    // proves the gate (and stays reachable later: rule 2, nothing the story needs is behind it).
+    public sealed class Boulder : MonoBehaviour
+    {
+        float lastMessage = -10;
+        public int Touches { get; private set; }
+        public void Touched(CharacterMotor m)
+        {
+            if (!m.CompareTag("Player")) return;
+            if (SaveGame.Current.Has(Abilities.MuscleMan)) return;
+            Touches++;
+            if (Time.time - lastMessage > 4) { lastMessage = Time.time; Hud.Message("Way too heavy. Someone much stronger could move this... (needs Muscle Man)"); }
+        }
+    }
+}
