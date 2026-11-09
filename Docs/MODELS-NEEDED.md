@@ -34,6 +34,12 @@ If a search finds nothing, take the closest clip and keep the table's file name.
 - **Kira** (both forms): rigged and animated by script (`Tools/Blender/kira_rig.py`; Meshy's rigging is humanoid only):
   23 bones, **no ear bones**, nine clips, three LODs. In the game since 0.2.0.
 
+**Round 3 (2026-11-09): all four people are in the game** (Humanoid, Unity mesh LODs), with the shared clip set mapped as
+`idle` Idle, `walk` Walking, `run_slow` Slow Run, `run` Fast Run, `jump` Jump (from take-off), `fall` Falling, `land` Falling
+To Landing, `land_hard` Hard Landing, `swim` Swimming, `tread` Treading Water, `push` Push, `punch` Punching, `kick` Mma Kick,
+`hurt` Hit On Side Of Body (first 0.6 s), `cheer` Cheering (1), `look` Looking Around. Not used yet: Box Jump, Running Jump,
+Jumping, Landing, Cheering, Fall Flat, Falling Down, Hit On Side Of Head, Hit To The Legs, Pushing, Swimming To Edge.
+
 **Round 1, item 12: the first six character models.** Dan, Abi and Kira at home, and in the Ice Age.
 **Step 2 is done:** Dan saved six clean full-body sheets (1024 x 1536 or larger: A-pose, white background, no
 necklace, every paw and the tail in frame). They are now the concept files in `SourceArt/Concepts/`

@@ -8,27 +8,51 @@ using UnityEngine.Timeline;
 
 namespace ShardsOfTime
 {
-    // Round 1, item 11: builds the two graybox cutscenes as real Timeline + Cinemachine assets (Docs/CUTSCENES.md):
-    //   Assets/Cutscenes/<Name>.playable              the Timeline (actor animation tracks, a Cinemachine shot track, activation tracks)
+    // Round 1, item 11: builds the two cutscenes as real Timeline + Cinemachine assets (Docs/CUTSCENES.md):
+    //   Assets/Cutscenes/<Name>.playable              the Timeline (actor animation tracks, clip tracks, a Cinemachine shot track, activation tracks)
     //   Assets/Resources/Cutscenes/<Name>.prefab      the scene: PlayableDirector + actors + shot cameras + effects, bound to the Timeline
-    // Made once if missing (PlayerBuild); after that they are hand-edited in Unity's Timeline window. "Rebuild Graybox Cutscenes"
-    // overwrites them (asks first). Everything is placed relative to the prefab's root, which the game puts at the cutscene's anchor.
+    // Made if missing (PlayerBuild); after that they are hand-edited in Unity's Timeline window. "Rebuild Cutscenes" overwrites them
+    // (asks first). Everything is placed relative to the prefab's root, which the game puts at the cutscene's anchor.
+    // Round 3: the actors are the real models (home outfits: both scenes are in Area A) playing their own clips on Timeline tracks
+    // (idle, look, cheer; Kira idle / jump), Dan with his necklace; the graybox actors stay as the fallback when a model is missing.
+    // Cutscenes built before the models existed are rebuilt once by EnsureAll.
     public static class CutsceneAuthoring
     {
         public const string TimelineDir = "Assets/Cutscenes", PrefabDir = "Assets/Resources/Cutscenes";
 
         public static void EnsureAll()
         {
-            if (!File.Exists($"{PrefabDir}/NecklaceWakes.prefab")) NecklaceWakes();
-            if (!File.Exists($"{PrefabDir}/PortalOpens.prefab")) PortalOpens();
+            if (Stale("NecklaceWakes")) NecklaceWakes();
+            if (Stale("PortalOpens")) PortalOpens();
         }
 
-        [MenuItem("Shards of Time/Cutscenes/Rebuild Graybox Cutscenes")]
+        // missing, or made with graybox actors while Dan's model now exists
+        static bool Stale(string name)
+        {
+            string path = $"{PrefabDir}/{name}.prefab";
+            if (!File.Exists(path)) return true;
+            if (!CharacterModel.Exists("dan_home")) return false;
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            return prefab && !NecklaceModel.Find(prefab.transform, "Model dan_home");
+        }
+
+        [MenuItem("Shards of Time/Cutscenes/Rebuild Cutscenes")]
         static void RebuildMenu()
         {
-            if (!EditorUtility.DisplayDialog("Rebuild graybox cutscenes", "This overwrites NecklaceWakes and PortalOpens (Timeline + prefab) with the code-made graybox versions. Hand edits are lost.", "Rebuild", "Cancel")) return;
+            if (!EditorUtility.DisplayDialog("Rebuild cutscenes", "This overwrites NecklaceWakes and PortalOpens (Timeline + prefab) with the code-made versions. Hand edits are lost.", "Rebuild", "Cancel")) return;
             NecklaceWakes(); PortalOpens();
         }
+
+        // a clip from the people's shared set (Resources/Characters/Clips/<name>.fbx) or from a Kira model's own takes
+        static AnimationClip ClipAsset(string file, string clip)
+        {
+            foreach (var o in AssetDatabase.LoadAllAssetsAtPath(file))
+                if (o is AnimationClip c && !c.name.StartsWith("__preview__") && (c.name == clip || c.name.EndsWith("|" + clip))) return c;
+            Debug.LogWarning($"[Cutscene] no clip {clip} in {file}");
+            return null;
+        }
+        public static AnimationClip PeopleClip(string clip) => ClipAsset($"Assets/Resources/Characters/Clips/{clip}.fbx", clip);
+        public static AnimationClip KiraClip(string clip) => ClipAsset("Assets/Resources/Characters/kira.fbx", clip);
 
         // ---- a small authoring kit: an actor / camera / prop is a holder (Animator) with an animated child, so the clips animate
         // child paths only (no root-motion offsets) and the holder stays where it was placed.
@@ -36,8 +60,9 @@ namespace ShardsOfTime
         {
             public GameObject root; public PlayableDirector dir; public TimelineAsset tl; public CinemachineTrack shots; public string name;
             readonly Dictionary<GameObject, AnimationClip> clips = new Dictionary<GameObject, AnimationClip>();
-            readonly Dictionary<GameObject, AnimationTrack> tracks = new Dictionary<GameObject, AnimationTrack>();
             public float duration;
+            public readonly Dictionary<GameObject, Animator> Models = new Dictionary<GameObject, Animator>();
+            public readonly Dictionary<GameObject, Transform> Necklaces = new Dictionary<GameObject, Transform>();
 
             public Kit(string name, float duration)
             {
@@ -61,11 +86,43 @@ namespace ShardsOfTime
                 return h;
             }
 
-            public GameObject Actor(string hero, Vector3 pos, float yaw)
+            // an actor: the hero's real model under "Body" (graybox shapes if the model is missing); Models[actor] = its Animator
+            public GameObject Actor(string hero, string model, Vector3 pos, float yaw)
             {
                 var h = Holder(hero, pos, yaw);
-                Placeholders.HeroBody(CharacterStats.Defaults(hero), h.transform);
+                if (!CharacterModel.Exists(model)) { Placeholders.HeroBody(CharacterStats.Defaults(hero), h.transform); return h; }
+                var body = new GameObject("Body").transform; body.SetParent(h.transform, false);
+                var m = CharacterModel.Spawn(model, body);
+                var anim = m.GetComponentInChildren<Animator>(); anim.applyRootMotion = false; anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                Models[h] = anim;
+                if (hero == "Dan")
+                {
+                    var shard = NecklaceModel.Attach(body, CharacterStats.Defaults(hero), m);
+                    if (shard)
+                    {
+                        var glow = Placeholders.Mat(NecklaceModel.Bright, "Glow");   // a saved tint (prefab-safe)
+                        shard.GetComponent<Renderer>().sharedMaterial = glow;
+                        var neck = shard.parent.gameObject; neck.AddComponent<Animator>();   // its own Animator: the glow keys stay out of the rig's
+                        Necklaces[h] = neck.transform;
+                    }
+                }
                 return h;
+            }
+
+            // clips on the actor's model, one after another (each runs to the next start + a short overlap that blends them)
+            public void Clips(GameObject actor, params (AnimationClip clip, float start)[] list)
+            {
+                if (!Models.TryGetValue(actor, out var anim)) return;
+                var tr = tl.CreateTrack<AnimationTrack>(null, actor.name + " clips");
+                tr.trackOffset = TrackOffset.ApplySceneOffsets;
+                for (int i = 0; i < list.Length; i++)
+                {
+                    if (!list[i].clip) continue;
+                    float end = i + 1 < list.Length ? list[i + 1].start + .25f : duration;
+                    var c = tr.CreateClip(list[i].clip); c.start = list[i].start; c.duration = Mathf.Max(.1f, end - list[i].start);
+                    ((AnimationPlayableAsset)c.asset).removeStartOffset = true;
+                }
+                dir.SetGenericBinding(tr, anim);
             }
 
             // a shot: a Cinemachine camera at pos looking at `look` (both in the root's space), used from t0 to t1; `dollyTo` moves it
@@ -146,7 +203,7 @@ namespace ShardsOfTime
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 Object.DestroyImmediate(root);
                 AssetDatabase.SaveAssets();
-                Debug.Log($"[Cutscene] built {name}: {path} + {TimelineDir}/{name}.playable ({duration} s)");
+                Debug.Log($"[Cutscene] built {name}: {path} + {TimelineDir}/{name}.playable ({duration} s, {Models.Count} model actors)");
             }
         }
 
@@ -155,31 +212,47 @@ namespace ShardsOfTime
         {
             DataAssets.Ensure();
             var k = new Kit("NecklaceWakes", 6.5f);
-            var dan = k.Actor("Dan", Vector3.zero, 0);
-            var abi = k.Actor("Abi", new Vector3(-1.3f, 0, -1.1f), 30);
-            var kira = k.Actor("Kira", new Vector3(1.2f, 0, -.8f), -30);
+            var dan = k.Actor("Dan", "dan_home", Vector3.zero, 0);
+            var abi = k.Actor("Abi", "abi_home", new Vector3(-1.3f, 0, -1.1f), 30);
+            var kira = k.Actor("Kira", "kira", new Vector3(1.2f, 0, -.8f), -30);
             // the gem grows and glows; an aura blooms; a beam reaches out toward the story shard
-            k.Key(dan, "Body/Necklace", "m_LocalScale", 0f, new Vector3(.09f, .13f, .05f));
-            k.Key(dan, "Body/Necklace", "m_LocalScale", 1.2f, new Vector3(.2f, .3f, .1f));
-            k.Key(dan, "Body/Necklace", "m_LocalScale", 1.5f, new Vector3(.16f, .24f, .08f));
-            k.Key(dan, "Body/Necklace", "m_LocalScale", 6.5f, new Vector3(.16f, .24f, .08f));
-            var aura = k.Holder("Aura", new Vector3(0, 1.15f, .35f), 0);
+            k.Necklaces.TryGetValue(dan, out var neck);
+            if (neck)
+            {
+                var holder = neck.gameObject;
+                k.Key(holder, "Shard", "m_LocalScale", 0f, Vector3.one); k.Key(holder, "Shard", "m_LocalScale", 1.2f, Vector3.one * 2.4f);
+                k.Key(holder, "Shard", "m_LocalScale", 1.5f, Vector3.one * 1.8f); k.Key(holder, "Shard", "m_LocalScale", 6.5f, Vector3.one * 1.8f);
+            }
+            else
+            {
+                k.Key(dan, "Body/Necklace", "m_LocalScale", 0f, new Vector3(.09f, .13f, .05f));
+                k.Key(dan, "Body/Necklace", "m_LocalScale", 1.2f, new Vector3(.2f, .3f, .1f));
+                k.Key(dan, "Body/Necklace", "m_LocalScale", 1.5f, new Vector3(.16f, .24f, .08f));
+                k.Key(dan, "Body/Necklace", "m_LocalScale", 6.5f, new Vector3(.16f, .24f, .08f));
+            }
+            // the aura blooms round the shard on his chest (a small glow on the real model; the capsule's big one otherwise)
+            var gemAt = neck ? k.root.transform.InverseTransformPoint(neck.Find("Shard").position) + new Vector3(0, 0, .03f) : new Vector3(0, 1.15f, .35f);
+            float big = neck ? .3f : .7f;
+            var aura = k.Holder("Aura", gemAt, 0);
             Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(.55f, .9f, 1f), "Glow"), name: "Glow");
-            k.Key(aura, "Glow", "m_LocalScale", .6f, Vector3.one * .05f); k.Key(aura, "Glow", "m_LocalScale", 1.6f, Vector3.one * .7f); k.Key(aura, "Glow", "m_LocalScale", 2.2f, Vector3.one * .25f);
+            k.Key(aura, "Glow", "m_LocalScale", .6f, Vector3.one * .03f); k.Key(aura, "Glow", "m_LocalScale", 1.6f, Vector3.one * big); k.Key(aura, "Glow", "m_LocalScale", 2.2f, Vector3.one * big * .35f);
             k.Show(aura, .6f, 2.4f);
-            var beam = k.Holder("Beam", new Vector3(0, 1.15f, .4f), 0);
+            var beam = k.Holder("Beam", gemAt + new Vector3(0, 0, .05f), 0);
             Placeholders.Prim(PrimitiveType.Cube, beam.transform, Vector3.zero, new Vector3(.08f, .08f, .01f), Placeholders.Mat(new Color(.6f, .95f, 1f), "Glow"), name: "Ray");
             k.Key(beam, "Ray", "m_LocalPosition", 2.3f, Vector3.zero); k.Key(beam, "Ray", "m_LocalScale", 2.3f, new Vector3(.08f, .08f, .01f));
             k.Key(beam, "Ray", "m_LocalPosition", 4.2f, new Vector3(0, .4f, 14f)); k.Key(beam, "Ray", "m_LocalScale", 4.2f, new Vector3(.1f, .1f, 28f));
             k.Key(beam, "Ray", "m_LocalPosition", 6.5f, new Vector3(0, .6f, 20f)); k.Key(beam, "Ray", "m_LocalScale", 6.5f, new Vector3(.1f, .1f, 40f));
             k.Show(beam, 2.3f, 6.5f);
-            // the others react: Kira hops, Abi turns to Dan, Dan looks down at the gem then up
+            // the others react: Kira hops, Abi turns to Dan, Dan looks round for where the light leads
             k.Key(kira, "Body", "m_LocalPosition", 2.4f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 2.65f, new Vector3(0, .45f, 0)); k.Key(kira, "Body", "m_LocalPosition", 2.9f, Vector3.zero);
             k.Key(kira, "Body", "m_LocalPosition", 3.1f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 3.35f, new Vector3(0, .35f, 0)); k.Key(kira, "Body", "m_LocalPosition", 3.6f, Vector3.zero);
             k.KeyYaw(abi, "Body", 0f, 0); k.KeyYaw(abi, "Body", 1.4f, 0); k.KeyYaw(abi, "Body", 2.0f, 25f); k.KeyYaw(abi, "Body", 4.0f, 25f); k.KeyYaw(abi, "Body", 4.6f, -30f);
-            k.KeyQ(dan, "Body/Head", 0f, Quaternion.identity); k.KeyQ(dan, "Body/Head", .5f, Quaternion.Euler(25, 0, 0)); k.KeyQ(dan, "Body/Head", 2.2f, Quaternion.Euler(25, 0, 0)); k.KeyQ(dan, "Body/Head", 2.7f, Quaternion.identity);
+            if (!k.Models.ContainsKey(dan)) { k.KeyQ(dan, "Body/Head", 0f, Quaternion.identity); k.KeyQ(dan, "Body/Head", .5f, Quaternion.Euler(25, 0, 0)); k.KeyQ(dan, "Body/Head", 2.2f, Quaternion.Euler(25, 0, 0)); k.KeyQ(dan, "Body/Head", 2.7f, Quaternion.identity); }
+            k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("look"), 2.4f));
+            k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("look"), 4.2f));
+            k.Clips(kira, (KiraClip("idle"), 0f), (KiraClip("jump"), 2.35f), (KiraClip("idle"), 3.7f));
             // shots
-            k.Shot("Dan's necklace", 0f, 2.3f, new Vector3(.25f, 1.35f, 1.5f), new Vector3(0, 1.15f, 0), 38f, new Vector3(.15f, 1.25f, 1.05f));
+            k.Shot("Dan's necklace", 0f, 2.3f, new Vector3(.25f, 1.45f, 1.5f), new Vector3(0, 1.3f, 0), 38f, new Vector3(.15f, 1.38f, 1.05f));
             k.Shot("The heroes", 2.3f, 4.4f, new Vector3(3.8f, 1.7f, 4.2f), new Vector3(-.2f, 1f, -.2f), 48f);
             k.Shot("Follow the light", 4.4f, 6.5f, new Vector3(.3f, 2.1f, -4.8f), new Vector3(0, 1.5f, 12f), 52f, new Vector3(.3f, 2.6f, -2.8f));
             k.Save();
@@ -190,9 +263,9 @@ namespace ShardsOfTime
         {
             DataAssets.Ensure();
             var k = new Kit("PortalOpens", 6f);
-            var dan = k.Actor("Dan", new Vector3(0, 0, 7.2f), 180);
-            var abi = k.Actor("Abi", new Vector3(-1.4f, 0, 8f), 170);
-            var kira = k.Actor("Kira", new Vector3(1.3f, 0, 7.8f), 195);
+            var dan = k.Actor("Dan", "dan_home", new Vector3(0, 0, 7.2f), 180);
+            var abi = k.Actor("Abi", "abi_home", new Vector3(-1.4f, 0, 8f), 170);
+            var kira = k.Actor("Kira", "kira", new Vector3(1.3f, 0, 7.8f), 195);
             // the story shard flies from Dan into the ring
             var shard = k.Holder("Story shard", Vector3.zero, 0);
             var crystal = Placeholders.CrystalObject("Crystal", new Color(.3f, .62f, 1f), 1.2f); crystal.transform.SetParent(shard.transform, false);
@@ -214,9 +287,13 @@ namespace ShardsOfTime
             Placeholders.Prim(PrimitiveType.Sphere, flash.transform, Vector3.zero, Vector3.one, Placeholders.Mat(new Color(.9f, .85f, 1f), "Glow"), name: "Glow");
             k.Key(flash, "Glow", "m_LocalScale", 2.0f, Vector3.one * .2f); k.Key(flash, "Glow", "m_LocalScale", 2.4f, Vector3.one * 2.8f); k.Key(flash, "Glow", "m_LocalScale", 2.9f, Vector3.one * .1f);
             k.Show(flash, 2.0f, 2.9f);
-            // the heroes cheer
+            // the heroes cheer: Dan and Abi their cheer clip; Kira (and graybox actors) hop
+            k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("cheer"), 3.9f));
+            k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("cheer"), 3.7f));
+            k.Clips(kira, (KiraClip("idle"), 0f), (KiraClip("jump"), 3.55f), (KiraClip("jump"), 4.25f), (KiraClip("idle"), 4.9f));
             foreach (var (actor, t0) in new[] { (kira, 3.6f), (abi, 3.8f), (dan, 4.0f) })
             {
+                if (actor != kira && k.Models.ContainsKey(actor)) continue;
                 k.Key(actor, "Body", "m_LocalPosition", t0, Vector3.zero); k.Key(actor, "Body", "m_LocalPosition", t0 + .25f, new Vector3(0, .5f, 0)); k.Key(actor, "Body", "m_LocalPosition", t0 + .5f, Vector3.zero);
                 k.Key(actor, "Body", "m_LocalPosition", t0 + .7f, Vector3.zero); k.Key(actor, "Body", "m_LocalPosition", t0 + .95f, new Vector3(0, .35f, 0)); k.Key(actor, "Body", "m_LocalPosition", t0 + 1.2f, Vector3.zero);
             }

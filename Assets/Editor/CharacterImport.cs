@@ -7,8 +7,10 @@ using UnityEngine;
 namespace ShardsOfTime
 {
     // Round 2, items 7-9: the characters in Assets/Resources/Characters (copied there by Tools/import_characters.py).
-    //  - Import settings: Kira's forms Generic (her own rig, clips as takes, loops: idle walk run fall swim), people Humanoid
-    //    (Round 3), the necklace a plain mesh. No materials from the FBX (URP materials are made below).
+    //  - Import settings: Kira's forms Generic (her own rig, clips as takes, loops: idle walk run fall swim); people (dan_*, abi_*)
+    //    Humanoid with Unity's mesh LODs (made from the rigged mesh, so they keep the skin weights); the people's shared Mixamo
+    //    clips in Characters/Clips Humanoid, trimmed / looped per PeopleClips (Round 3); the necklace a plain mesh. No materials
+    //    from the FBX (URP materials are made below).
     //  - MakeMaterials: <name>.mat (URP Lit) from Meshy's textures <name>_albedo / _normal / _mask.png.
     //  - KiraLock: rule 9 checked on every Kira form model: no ear bones, solid grey fur with no white, golden-amber eyes.
     //    Written to Resources/Data/KiraLock.txt (the exe check logs it) and to BUILD_INFO.txt.
@@ -19,6 +21,26 @@ namespace ShardsOfTime
 
         static bool Ours(string path) => path.Replace('\\', '/').StartsWith(Dir + "/");
         static bool IsKira(string path) => Path.GetFileNameWithoutExtension(path).StartsWith("kira");
+        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_");
+        static bool IsClip(string path) => path.Replace('\\', '/').StartsWith(Dir + "/Clips/");
+
+        // The people's clips (Round 3; frames as Blender / Mixamo number them, 30 fps; 0 = the whole take). loop; the vertical
+        // motion kept in the pose (false: the motor does the height: jump, fall); XZ kept in the pose (false: clips that travel
+        // are held in place: swim, push, hurt). Measured on the clips in Blender (Docs/MODELS-NEEDED.md, Round 3).
+        public sealed class ClipSpec { public bool loop, bakeY = true, bakeXZ = true; public int first, last; }
+        public static readonly Dictionary<string, ClipSpec> PeopleClips = new Dictionary<string, ClipSpec>
+        {
+            ["idle"] = new ClipSpec { loop = true }, ["walk"] = new ClipSpec { loop = true }, ["run_slow"] = new ClipSpec { loop = true },
+            ["run"] = new ClipSpec { loop = true }, ["look"] = new ClipSpec { loop = true },
+            ["jump"] = new ClipSpec { first = 23, last = 37, bakeY = false },          // from take-off (the wind-up cut) to the top
+            ["fall"] = new ClipSpec { loop = true, bakeY = false },
+            ["land"] = new ClipSpec { first = 9, last = 33 },                          // from touch-down
+            ["land_hard"] = new ClipSpec { first = 2, last = 61 },
+            ["swim"] = new ClipSpec { loop = true, bakeXZ = false }, ["tread"] = new ClipSpec { loop = true },
+            ["push"] = new ClipSpec { loop = true, first = 25, last = 199, bakeXZ = false },
+            ["punch"] = new ClipSpec(), ["kick"] = new ClipSpec(), ["cheer"] = new ClipSpec(),
+            ["hurt"] = new ClipSpec { first = 1, last = 20, bakeXZ = false },          // the first 0.6 s (the stumble back cut)
+        };
 
         void OnPreprocessModel()
         {
@@ -30,6 +52,16 @@ namespace ShardsOfTime
             {
                 m.animationType = ModelImporterAnimationType.None; m.importAnimation = false; return;
             }
+            string n = Path.GetFileNameWithoutExtension(assetPath);
+            if (IsPerson(n) || IsClip(assetPath))
+            {
+                m.animationType = ModelImporterAnimationType.Human;
+                m.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                m.importAnimation = IsClip(assetPath);
+                m.optimizeGameObjects = false;              // the necklace needs Dan's Spine2 bone
+                if (IsPerson(n)) m.generateMeshLods = true; // Unity's mesh LODs from the rigged mesh (skin weights kept)
+                return;
+            }
             if (IsKira(assetPath))
             {
                 m.animationType = ModelImporterAnimationType.Generic;
@@ -40,8 +72,27 @@ namespace ShardsOfTime
 
         void OnPreprocessAnimation()
         {
-            if (!Ours(assetPath) || !IsKira(assetPath)) return;
+            if (!Ours(assetPath)) return;
             var m = (ModelImporter)assetImporter;
+            if (IsClip(assetPath))
+            {
+                string game = Path.GetFileNameWithoutExtension(assetPath);
+                if (!PeopleClips.TryGetValue(game, out var spec)) spec = new ClipSpec();
+                var takes = m.defaultClipAnimations;
+                if (takes.Length == 0) return;
+                var c = takes[0];
+                float f0 = c.firstFrame;   // the take's first frame = Blender's frame 1
+                c.name = game;
+                if (spec.first > 0) c.firstFrame = f0 + spec.first - 1;
+                if (spec.last > 0) c.lastFrame = Mathf.Min(c.lastFrame, f0 + spec.last - 1);
+                c.loopTime = spec.loop; c.loopPose = spec.loop && game == "push";
+                c.lockRootRotation = true; c.keepOriginalOrientation = true;
+                c.lockRootHeightY = spec.bakeY; c.keepOriginalPositionY = true; c.heightFromFeet = false;
+                c.lockRootPositionXZ = spec.bakeXZ; c.keepOriginalPositionXZ = true;
+                m.clipAnimations = new[] { c };
+                return;
+            }
+            if (!IsKira(assetPath)) return;
             var clips = m.defaultClipAnimations;
             foreach (var c in clips)
             {
@@ -82,6 +133,38 @@ namespace ShardsOfTime
                 if (fresh) AssetDatabase.CreateAsset(m, path); else EditorUtility.SetDirty(m);
             }
             AssetDatabase.SaveAssets();
+        }
+
+        // ---- Round 3: the people's models and clips as imported (rig, size, LODs, clip lengths). Written to Resources/Data/Models.txt
+        // (the exe check logs it) and to BUILD_INFO.txt.
+        [MenuItem("Shards of Time/Report Character Imports")]
+        public static List<string> PeopleReport()
+        {
+            var lines = new List<string>();
+            foreach (var n in new[] { "dan_home", "dan_iceage", "abi_home", "abi_iceage" })
+            {
+                var go = AssetDatabase.LoadAssetAtPath<GameObject>($"{Dir}/{n}.fbx");
+                if (!go) { lines.Add($"MODEL {n}: missing (graybox)"); continue; }
+                var avatar = AssetDatabase.LoadAllAssetsAtPath($"{Dir}/{n}.fbx").OfType<Avatar>().FirstOrDefault();
+                var smr = go.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+                var mesh = smr.Length > 0 ? smr[0].sharedMesh : null;
+                var b = mesh ? mesh.bounds : default;
+                int bones = go.GetComponentsInChildren<Transform>(true).Count(t => t.name.StartsWith("mixamorig"));
+                bool ok = avatar && avatar.isValid && avatar.isHuman && mesh;
+                lines.Add($"MODEL {n}: {(ok ? "OK" : "FAILED")}: humanoid {(avatar ? avatar.isHuman && avatar.isValid : false)}, {bones} bones, " +
+                          $"{(mesh ? mesh.triangles.Length / 3 : 0)} triangles, mesh LODs {(mesh ? mesh.lodCount : 0)}, mesh height {b.size.y:0.00} (local units), " +
+                          $"material {(File.Exists($"{Dir}/{n}.mat") ? "yes" : "NO")}");
+            }
+            foreach (var f in Directory.GetFiles(Dir + "/Clips", "*.fbx").OrderBy(x => x))
+            {
+                var clip = AssetDatabase.LoadAllAssetsAtPath(f.Replace('\\', '/')).OfType<AnimationClip>().FirstOrDefault(c => !c.name.StartsWith("__preview__"));
+                lines.Add(clip ? $"CLIP {clip.name}: {clip.length:0.00} s, {(clip.isLooping ? "loop" : "once")}, humanoid {clip.isHumanMotion}" : $"CLIP {Path.GetFileName(f)}: FAILED (no clip)");
+            }
+            Directory.CreateDirectory("Assets/Resources/Data");
+            File.WriteAllLines("Assets/Resources/Data/Models.txt", lines);
+            AssetDatabase.ImportAsset("Assets/Resources/Data/Models.txt");
+            foreach (var l in lines) if (l.Contains("FAILED")) Debug.LogError(l); else Debug.Log(l);
+            return lines;
         }
 
         // ---- rule 9, the Kira lock

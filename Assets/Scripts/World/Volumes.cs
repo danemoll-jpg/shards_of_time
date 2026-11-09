@@ -60,6 +60,7 @@ namespace ShardsOfTime
                 return;
             }
             if (!m.Grounded) return;
+            m.LastPush = Time.time;   // Dan leans into it (the push clip), moving or not
             dir.y = 0;
             dir = Mathf.Abs(dir.x) > Mathf.Abs(dir.z) ? new Vector3(Mathf.Sign(dir.x), 0, 0) : new Vector3(0, 0, Mathf.Sign(dir.z));
             var step = dir * speed * Time.deltaTime;

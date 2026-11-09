@@ -37,6 +37,8 @@ namespace ShardsOfTime
         public float LastJumpHeight { get; private set; } // apex over take-off of the last finished jump (checks)
         public float LastAirTime { get; private set; }
         public int JumpsThisAir { get; private set; }
+        public float LandSpeed { get; private set; }     // falling speed at the last landing (m/s): hard landings (Round 3)
+        public float LastPush = -10f;                    // Time.time of the last push against a heavy block (the push clip)
         public event Action<string> Event;               // "jump", "doublejump", "land", "splash", "outofbreath", "leap"
 
         float coyote, buffer, leapTimer, takeoffY, apexY, airTime;
@@ -118,7 +120,7 @@ namespace ShardsOfTime
             }
 
             Velocity = new Vector3(hv.x, vy, hv.z);
-            bool wasGrounded = Grounded;
+            bool wasGrounded = Grounded; float vyBefore = Velocity.y;
             groundNormal = Vector3.up; GroundCollider = null;
             var flags = Cc.Move(Velocity * dt);
             bool below = (flags & CollisionFlags.Below) != 0;
@@ -130,7 +132,7 @@ namespace ShardsOfTime
             if (!Grounded) { airTime += Time.deltaTime; apexY = Mathf.Max(apexY, transform.position.y); }
             if (Grounded && !wasGrounded)
             {
-                LastJumpHeight = apexY - takeoffY; LastAirTime = airTime; JumpsThisAir = 0;
+                LastJumpHeight = apexY - takeoffY; LastAirTime = airTime; JumpsThisAir = 0; LandSpeed = -vyBefore;
                 Event?.Invoke("land");
             }
             if (!Grounded && wasGrounded && !rising) { takeoffY = apexY = transform.position.y; airTime = 0; JumpsThisAir = Mathf.Max(JumpsThisAir, 0); }

@@ -173,10 +173,10 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   `Builds/LauncherLocal/`, remade by `python Tools/make_local_launcher.py` when the build is newer).
 - **Save, settings, Player.log:** `%USERPROFILE%\AppData\LocalLow\Shards of Time\Shards of Time\` (`save.json`,
   `settings.json`, `display.json`). A check run saves into `<check dir>/save` and never touches them.
-- **Check (muted, no window, Below Normal):** `python Tools/run_check.py local/round<N>/<name> [--only all|play|measure|perf|mute] [--extra "-steamDeck 1"] [--size 1280x800]`.
+- **Check (muted, no window, Below Normal):** `python Tools/run_check.py local/round<N>/<name> [--only all|play|models|measure|perf|mute] [--extra "-steamDeck 1"] [--size 1280x800]`.
   Runs `ShardsOfTime.exe -batchmode -mute -exeCheck <dir>` (`Assets/Scripts/Checks/ExeCheck*.cs`): a virtual gamepad
   plays from the title screen through the real input actions. `play` = the whole playground as a player (about 4 min),
-  `measure` = one measurement per Round 1 item (about 4 min), `perf` = 12 s of frame rate, `all` = the three. Writes
+  `models` = Dan and Abi animated, both outfits (Round 3, about 3 min), `measure` = one measurement per Round 1 item (about 4 min), `perf` = 12 s of frame rate, `all` = the four. Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
   (vsync can't run off-screen; thousands of fps make the character controller skip moves).
 - **Render a cutscene to MP4:** Unity menu **Shards of Time > Render Cutscene to Video** (`Recordings/<Name>.mp4`,
@@ -188,8 +188,8 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
   check run.
 - **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
-  `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py` (Kira's forms into
-  `Assets/Resources/Characters/`; people from Round 3). Prompts and Mixamo status: `Docs/MODELS-NEEDED.md`.
+  `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py` (all six models + the people's shared clips into
+  `Assets/Resources/Characters/`). Prompts and Mixamo status: `Docs/MODELS-NEEDED.md`.
   Blender: `F:\blender\blender.exe`; scripts run as `blender --background --factory-startup --python Tools/Blender/<x>.py -- <args>`:
   `meshy_cleanup.py <names>` (metres, feet at 0, front; Mixamo upload FBX; previews in `Data/screenshots/round2/models/`),
   `mixamo_check.py <model>=<rigged fbx>` (renders a rig on a few clips), `fix_hair_weights.py <model>=<rigged fbx>` (long
@@ -217,6 +217,26 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 3 delivered: 0.3.0 (build 300), 2026-11-09.** Dan and Abi are their real models in the game (player and followers),
+animated from one shared Mixamo clip set, dressed per area (A home, B Ice Age); Dan's necklace sits on his chest in both
+outfits; both cutscenes use the real models and were rendered again. Published: `game-300` (a Round 1 starter install
+updated itself to it). Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 3:
+- People: `Resources/Characters/{dan,abi}_{home,iceage}.fbx` (Humanoid, Unity mesh LODs) + `.mat`; clips shared in
+  `Resources/Characters/Clips/<game name>.fbx` (Mixamo name map: `Tools/import_characters.py PEOPLE_CLIPS`; trims, loops,
+  root settings: `Editor/CharacterImport.cs PeopleClips`). Import report at every build: `Resources/Data/Models.txt`.
+- `CreatureAnimator` plays both Kira (Generic, her FBX's takes) and people (Humanoid): gait blend walk / run_slow / run at
+  the rate of the measured clip speeds (x hips height / 0.88), upper-body layer for punch / cheer / hurt while moving.
+  Heroes always animate (no culling: a batch-mode check only renders at screenshots, culling froze the bones).
+- Outfits: `AreaData.outfit` -> `Hero.SetOutfit` (model `<name>_<outfit>`), applied in `Game.ApplyOutfits` like Kira's form.
+  Humanoid models are turned to face +Z from their legs (`CharacterModel.HumanFront`); feet go down by the controller's
+  skin width.
+- Necklace: `NecklaceModel.Fit` measures each model's chest in its bind pose and parents to `Spine2` (3 cm off the clothes).
+- Cutscene actors are the real models with clip tracks (`CutsceneAuthoring.Kit.Actor/Clips`); Menu: Shards of Time >
+  Cutscenes > Rebuild Cutscenes.
+- Exe check: `--only models` = Round 3's per-hero checks (also part of `all`).
+
 **Round 2 delivered: 0.2.0 (build 200), 2026-11-09.** Kira's real models (home Scottish Fold, Ice Age sabertooth) with
 her own Blender rig and nine clips are in the game; she changes form per area (Area B: sabertooth, claws through an ice
 wall to shard B06). Dan wears the necklace model. Dan rigged all four people in Mixamo; they go in with Round 3.
@@ -234,7 +254,6 @@ Standing facts from Round 2:
   swaps on arrival. Abilities from a form: `Hero.HasAbility` (e.g. `Abilities.ClawIce`). `WorldProgress.opened` saves
   broken ice walls. `DataAssets.Upgrade` adds new default data (areas' forms, new shards) to an existing world asset.
 - Necklace: `NecklaceModel` (socket: a bone ending in `Spine2`, else the capsule); `Hero.NecklaceGem` is the shard.
-- Cutscene actors are still Round 1's graybox prefabs (`Editor/CutsceneAuthoring.cs`).
 - Art in git: Meshy outputs, Mixamo downloads, Kira's rig FBX; ignored: Meshy raw FBX / .blend, rejected `*_v1`, OBJ zips,
   rig .blend files (the scripts remake them).
 

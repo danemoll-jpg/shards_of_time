@@ -275,7 +275,7 @@ namespace ShardsOfTime
             if (kiraLock) { foreach (var l in kiraLock.text.Split('\n')) if (l.Trim().Length > 0) Ok(!l.Contains("FAILED"), l.Trim()); }
             else Fail("no Kira lock report in the build (Resources/Data/KiraLock.txt)");
             var dan = Party.I.Heroes[0];
-            Ok(dan.NecklaceGem && dan.NecklaceGem.name == "Shard" && dan.Body.Find("Necklace"), $"Dan wears the necklace model (cord + shard; socket: {(dan.NecklaceGem && dan.NecklaceGem.parent ? dan.NecklaceGem.parent.name : "-")})");
+            Ok(dan.NecklaceGem && dan.NecklaceGem.name == "Shard" && NecklaceModel.Find(dan.Body, "Necklace"), $"Dan wears the necklace model (cord + shard; socket: {(dan.NecklaceGem && dan.NecklaceGem.parent ? dan.NecklaceGem.parent.name : "-")})");
 
             Head("Save (item 10)");
             yield return EnsurePlaying();

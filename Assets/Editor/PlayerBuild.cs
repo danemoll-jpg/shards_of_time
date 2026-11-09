@@ -44,6 +44,7 @@ namespace ShardsOfTime
             DataAssets.Ensure();
             CharacterImport.MakeMaterials();
             var kiraLock = CharacterImport.KiraLock();
+            kiraLock.AddRange(CharacterImport.PeopleReport());
             CutsceneAuthoring.EnsureAll();
             MakeScene();
             var args = Environment.GetCommandLineArgs(); int vi = Array.IndexOf(args, "-buildVersion");

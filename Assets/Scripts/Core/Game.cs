@@ -158,6 +158,7 @@ namespace ShardsOfTime
                 var area = Area; var prog = SaveGame.Current.World(World.worldId);
                 Necklace.Tick(area.id, area.requirement > 0 && prog.necklaceAwake && !prog.storyShard);
                 ApplyKiraForm(area);
+                ApplyOutfits(area);
             }
         }
 
@@ -165,6 +166,8 @@ namespace ShardsOfTime
         public void OnCollected(Pickup p)
         {
             var prog = SaveGame.Current.World(World.worldId);
+            if (p.kind == Pickup.Kind.StoryShard) foreach (var h in Party.I.Heroes) h.Cheer();   // Round 3: everyone cheers the story shard
+            else if (p.kind == Pickup.Kind.Shard) Party.I.Player.Cheer();
             if (p.kind == Pickup.Kind.Shard)
             {
                 var area = World.Area(p.area);
@@ -211,6 +214,14 @@ namespace ShardsOfTime
             var kira = Party.I.Heroes.Find(h => h.Stats.displayName == "Kira");
             string id = string.IsNullOrEmpty(area.kiraForm) ? KiraForm.Home : area.kiraForm;
             if (kira && (!kira.Form || kira.Form.id != id)) kira.SetForm(KiraForm.Load(id));
+        }
+
+        // Round 3: arriving in an area dresses Dan and Abi for it (AreaData.outfit)
+        public static void ApplyOutfits(AreaData area)
+        {
+            if (!Party.I || area == null) return;
+            string outfit = string.IsNullOrEmpty(area.outfit) ? Outfits.Home : area.outfit;
+            foreach (var h in Party.I.Heroes) if (h.IsPerson && h.Outfit != outfit) h.SetOutfit(outfit);
         }
 
         public void OnAreaChanged() { var a = Area; Hud.Message(a.name, 2.5f); PlayLog.Line("area " + a.id); }

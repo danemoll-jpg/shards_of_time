@@ -52,12 +52,13 @@ namespace ShardsOfTime
             {
                 var a = w.Area(da.id); if (a == null) continue;
                 if (string.IsNullOrEmpty(a.kiraForm)) { a.kiraForm = da.kiraForm; changed = true; }
+                if (string.IsNullOrEmpty(a.outfit)) { a.outfit = da.outfit; changed = true; }   // Round 3
                 foreach (var x in da.firstVisit)
                     if (System.Array.IndexOf(a.firstVisit, x) < 0) { a.firstVisit = a.firstVisit.Concat(new[] { x }).ToArray(); changed = true; }
             }
             foreach (var ds in d.shards)
                 if (!w.shards.Any(s => s.id == ds.id)) { w.shards.Add(ds); changed = true; }
-            if (changed) { EditorUtility.SetDirty(w); Debug.Log("DataAssets: Playground world data upgraded for Round 2"); }
+            if (changed) { EditorUtility.SetDirty(w); Debug.Log("DataAssets: Playground world data upgraded (new defaults added)"); }
         }
 
         static void BaseMaterial(string name, string shader, bool transparent)

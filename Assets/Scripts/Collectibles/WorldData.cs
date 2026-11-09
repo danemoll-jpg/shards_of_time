@@ -30,6 +30,7 @@ namespace ShardsOfTime
         public Color storyShardColor = new Color(.3f, .6f, 1f);
         public Vector3 spawn; public float spawnYaw;
         [Tooltip("Kira's form here (Resources/Data/KiraForms/<id>); empty = Home")] public string kiraForm = "";
+        [Tooltip("Dan's and Abi's outfit here (models <name>_<outfit>: home, iceage); empty = home")] public string outfit = "";
     }
 
     [CreateAssetMenu(menuName = "Shards of Time/World Data")]
@@ -61,9 +62,9 @@ namespace ShardsOfTime
         {
             var w = CreateInstance<WorldData>(); w.name = "Playground";
             string[] heroes = { "Dan", "Abi", "Kira" };
-            w.areas.Add(new AreaData { id = "A", name = "Area A", requirement = 10, firstVisit = heroes, storyShard = new Vector3(0, 1.4f, 52f), storyShardColor = new Color(.3f, .62f, 1f), spawn = new Vector3(0, .1f, -48f), spawnYaw = 0, kiraForm = KiraForm.Home });
+            w.areas.Add(new AreaData { id = "A", name = "Area A", requirement = 10, firstVisit = heroes, storyShard = new Vector3(0, 1.4f, 52f), storyShardColor = new Color(.3f, .62f, 1f), spawn = new Vector3(0, .1f, -48f), spawnYaw = 0, kiraForm = KiraForm.Home, outfit = Outfits.Home });
             // Area B: Kira arrives as the sabertooth (Round 2), so her ClawIce is there on the first visit
-            w.areas.Add(new AreaData { id = "B", name = "Area B", requirement = 0, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce }, spawn = new Vector3(400, .1f, -12f), spawnYaw = 0, kiraForm = KiraForm.Sabertooth });
+            w.areas.Add(new AreaData { id = "B", name = "Area B", requirement = 0, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce }, spawn = new Vector3(400, .1f, -12f), spawnYaw = 0, kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge });
             void S(string id, string area, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = area, position = new Vector3(x, y, z), requires = req, note = note });
             // Area A: the start path
             S("A01", "A", 0, 1f, -42f, "start path");

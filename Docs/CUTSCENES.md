@@ -27,8 +27,12 @@ The game's code only does this (`Assets/Scripts/Cutscenes/Cutscenes.cs`, `Cutsce
    back behind the player.
 
 The actors are the prefab's own copies of the heroes, so a cutscene doesn't depend on where the followers happen to be.
-Round 1's actors are the graybox bodies (`Placeholders.HeroBody`). When the real models arrive, swap each actor's body
-for the model. The tracks don't change.
+Since Round 3 the actors are the real models (Dan and Abi in their home clothes, Kira the home cat; the graybox bodies
+only when a model is missing). Each actor is a holder (Animator, moves and turns the `Body` child) with the model under
+`Body`; the model's own Animator plays its clips on a **clip track** ("Dan clips": idle, look, cheer from
+`Resources/Characters/Clips/`; Kira's from `kira.fbx`). Dan's necklace sits on his chest bone and has its own small
+Animator, so the shard's glow keys stay out of the rig's. To act a moment: drop another clip on the actor's clip track
+(clips that overlap blend), or key the holder's `Body` to move the whole actor.
 
 ## Making a new cutscene
 
@@ -59,9 +63,9 @@ for the model. The tracks don't change.
    story moment's code (see `Game.WakeNecklace` / `Game.OpenPortal` in `Assets/Scripts/Core/Game.cs`). Test it with
    **Render Cutscene to Video** (below) or in Play mode.
 
-The two Round 1 cutscenes were made by code (`Assets/Editor/CutsceneAuthoring.cs`) only to have them on day one. From
-now on they're ordinary assets: edit them by hand. **Shards of Time > Cutscenes > Rebuild Graybox Cutscenes** would
-overwrite hand edits (it asks first).
+The two first cutscenes were made by code (`Assets/Editor/CutsceneAuthoring.cs`) only to have them on day one (and
+remade once in Round 3 with the real models). From now on they're ordinary assets: edit them by hand.
+**Shards of Time > Cutscenes > Rebuild Cutscenes** would overwrite hand edits (it asks first).
 
 ## Rendering a cutscene to an MP4
 

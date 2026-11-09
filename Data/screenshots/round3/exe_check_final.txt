@@ -1,0 +1,306 @@
+Shards of Time exe check 2026-11-09 10:23, version 0.3.0; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 40960 samples); master volume 0.00
+
+== Title screen (item 13)
+  ok    title screen shows the menu
+  ok    no save yet: Continue greyed out, New game selected
+  screenshot 00_key_art.png
+  screenshot 01_title.png
+  ok    A on New game starts the game (save.json written)
+  screenshot 02_start.png
+
+== Play-through, Area A (items 4-11; followers watched all the way, item 7)
+  area A (Area A): 16 of 19 shards reachable with [Dan, Abi, Kira], requirement 10; locked: A17 needs DoubleJump, A18 needs DoubleJump, A19 needs DoubleJump
+  ok    A01 start path
+  screenshot 02b_dan_necklace.png
+  ok    A02 start path
+  ok    A03 by the slopes
+  ok    followers arrived at the start path: Abi 2.7 m (0 warps); Kira 3.8 m (0 warps); 
+  ok    A04 step 1 (landed at (-17.9, 1.0, -30.0))
+  ok    A05 step 2 (at (-21.8, 2.0, -30.0))
+  ok    A06 step 3 (at (-25.8, 3.0, -30.0))
+  screenshot 03_steps.png
+  ok    A16 behind the pillar
+  ok    followers arrived at the pillar: Abi 2.5 m (0 warps); Kira 3.7 m (0 warps); 
+  ok    RB twice: Kira
+  ok    in the pool: mode Swim
+  ok    A08 on the pool bottom (dived to y -1.7)
+  ok    A09 on the pool bottom
+  screenshot 04_underwater.png
+  ok    out of the pool (leap at the surface), at (43.4, 0.0, -1.2)
+  ok    followers arrived at after the pool (they swim): Dan 4.0 m (0 warps); Abi 4.0 m (0 warps); 
+  ok    Abi
+  ok    low gravity on the way up (mode LowGravity, y 5.5)
+  ok    A10 on the low-gravity tower (jump 2.0 m, 0.7 s in the air)
+  ok    the 10th shard was reached without the double jump (rule 2)
+
+== The necklace wakes (items 9, 11)
+  ok    10 shards in Area A start the cutscene NecklaceWakes
+  screenshot 05_cutscene_necklace_1.png
+  screenshot 06_cutscene_necklace_2.png
+  screenshot 07_cutscene_necklace_3.png
+  ok    played to the end (6.5 s), not skipped
+  ok    the story shard appears; the save says the necklace is awake
+  (could not reach (32.0, 0.0, 30.0) in 6 s, at (32.0, 0.0, 37.8))
+  ok    control comes back after the cutscene
+  ok    the necklace leads to the story shard (35 m, beat every 1.45 s)
+  screenshot 08_necklace_awake_hud.png
+  ok    A11, A12 in Kira's crawl garden
+  ok    Kira is the home Scottish Fold with her real model (Model kira, 9 clips), the capsule hidden (item 9)
+  screenshot 09_kira_garden.png
+  ok    her clips follow the motor: moving 'run', standing 'idle'
+  ok    followers arrived at out of Kira's garden: Dan 2.2 m (1 warps, last: not caught up in 3 s); Abi 2.4 m (2 warps, last: not caught up in 3 s); 
+
+== Story shard and the portal (items 9, 11)
+  ok    the story shard starts the cutscene PortalOpens
+  screenshot 10_cutscene_portal_1.png
+  screenshot 10b_cutscene_portal_2.png
+  ok    holding A skips it (after 3.9 s)
+  ok    the portal to Area B is open; control is back
+  screenshot 11_portal_open.png
+  ok    walking into the portal goes to Area B
+  screenshot 12_area_b.png
+  ok    followers arrived at Area B: Abi 0.4 m (2 warps, last: not caught up in 3 s); Kira 0.5 m (0 warps); 
+
+== Area B: the double jump (item 9)
+  ok    B01
+  ok    B02
+
+== Area B: Kira's form and the ice wall (Round 2, items 7 and 9)
+  ok    arriving in Area B made Kira the sabertooth (Sabertooth Kira, model Model kira_sabertooth, abilities [ClawIce])
+  area B (Area B): 5 of 6 shards reachable with [Dan, Abi, Kira, ClawIce], requirement 0; locked: B05 needs DoubleJump
+  ok    the ice wall is there
+  ok    Dan's Punch doesn't break the ice
+  ok    Kira
+  screenshot 12b_sabertooth_at_the_ice.png
+  ok    sabertooth Kira's claws break it (clip 'attack'; saved)
+  ok    B06 in the ice cave
+  screenshot 12c_ice_cave.png
+  ok    the pickup unlocks Abi's double jump (saved)
+  ok    B05 on the high pillar with a double jump (jumps this air 0, at (408.0, 3.1, 13.8))
+  screenshot 13_double_jump.png
+  ok    the portal back to Area A
+  ok    back in Area A, Kira is the home cat again (her model swapped back)
+
+== Area A again: the double-jump ledge (rule 6: the move stays useful)
+  ok    A17-A19 on the high ledge (at (21.6, 3.2, -18.0))
+  ok    followers arrived at the high ledge (end of the run): Dan 5.0 m (1 warps, last: not caught up in 3 s); Kira 4.9 m (3 warps, last: not caught up in 3 s); 
+  screenshot 14_high_ledge.png
+  ok    no follower stuck; warps over the whole run: Dan 1, Abi 2, Kira 3
+  shards collected: 19 (A01 A02 A03 A04 A05 A06 A16 A08 A09 A10 A11 A12 B01 B02 B06 B05 A17 A18 A19)
+
+== Round 3: the imported models and clips (item 1)
+  ok    MODEL dan_home: OK: humanoid True, 41 bones, 20770 triangles, mesh LODs 10, mesh height 0.38 (local units), material yes
+  ok    MODEL dan_iceage: OK: humanoid True, 41 bones, 20845 triangles, mesh LODs 10, mesh height 0.41 (local units), material yes
+  ok    MODEL abi_home: OK: humanoid True, 41 bones, 20370 triangles, mesh LODs 10, mesh height 0.45 (local units), material yes
+  ok    MODEL abi_iceage: OK: humanoid True, 33 bones, 20257 triangles, mesh LODs 11, mesh height 0.40 (local units), material yes
+  ok    CLIP cheer: 1.90 s, once, humanoid True
+  ok    CLIP fall: 4.50 s, loop, humanoid True
+  ok    CLIP hurt: 0.63 s, once, humanoid True
+  ok    CLIP idle: 8.33 s, loop, humanoid True
+  ok    CLIP jump: 0.47 s, once, humanoid True
+  ok    CLIP kick: 1.60 s, once, humanoid True
+  ok    CLIP land: 0.80 s, once, humanoid True
+  ok    CLIP land_hard: 1.97 s, once, humanoid True
+  ok    CLIP look: 6.33 s, loop, humanoid True
+  ok    CLIP punch: 1.03 s, once, humanoid True
+  ok    CLIP push: 5.80 s, loop, humanoid True
+  ok    CLIP run: 0.53 s, loop, humanoid True
+  ok    CLIP run_slow: 0.73 s, loop, humanoid True
+  ok    CLIP swim: 4.53 s, loop, humanoid True
+  ok    CLIP tread: 3.00 s, loop, humanoid True
+  ok    CLIP walk: 0.97 s, loop, humanoid True
+
+== Round 3: Dan and Abi in Area A, home clothes (items 2, 3, 5)
+  ok    Dan is the home model (Model dan_home, humanoid True, 15 of 15 clips, hips 0.92 m), the capsule hidden
+  ok    Dan standing: clip 'idle', lowest toe -2.1 cm off the ground (sinking < 0, floating > 0)
+    (toes L -0.001 R 0.007, feet L 0.099 R 0.102, hips 0.916, root 0.032, model 0.000)
+  ok    Dan's model faces the hero's way (model forward . hero forward = 1.00)
+  screenshot r3_dan_home_idle_front.png
+  screenshot r3_dan_home_necklace_closeup.png (inspection close-up, not the player's view)
+  screenshot r3_dan_home_run_front.png
+  ok    Dan running 7.0 m/s: clip 'run' at x1.27 (made for 5.5 m/s); planted foot slides 0.53 m/s (median of 84; +0.08 m/s along his run: + = the clip is too slow; limit 12% of the speed)
+  ok    the necklace's shard stays outside the home clothes while running (deepest -1.5 cm in front; sampled every 6th frame)
+  ok    running: model forward . hero forward = 1.00
+  screenshot r3_dan_home_jump.png
+  ok    Dan jumps: 'jump' going up, 'land' on landing (9.5 m/s)
+  screenshot r3_dan_home_attack.png
+  ok    Punch: clip 'punch'
+  screenshot r3_dan_home_run_side.png
+  screenshot r3_dan_home_punch_running.png
+  ok    punch while running: 'punch' on the upper body, legs still running
+  screenshot r3_dan_home_tread.png
+  screenshot r3_dan_home_swim.png
+  ok    Dan in the pool: 'tread' still, 'swim' moving (model raised 0.47 m to the surface)
+  screenshot r3_dan_home_push.png
+  ok    Dan at the heavy block: clip 'push'
+  ok    a 4.5 m drop lands hard: 'land_hard' (16.6 m/s)
+  screenshot r3_dan_home_cheer.png
+  ok    cheer: 'cheer'
+  ok    Abi is the home model (Model abi_home, humanoid True, 15 of 15 clips, hips 0.93 m), the capsule hidden
+  ok    Abi standing: clip 'idle', lowest toe -2.4 cm off the ground (sinking < 0, floating > 0)
+    (toes L -0.004 R 0.005, feet L 0.102 R 0.105, hips 0.933, root 0.030, model 0.000)
+  ok    Abi's model faces the hero's way (model forward . hero forward = 1.00)
+  screenshot r3_abi_home_idle_front.png
+  screenshot r3_abi_home_run_front.png
+  ok    Abi running 8.2 m/s: clip 'run' at x1.46 (made for 5.6 m/s); planted foot slides 0.39 m/s (median of 99; +0.31 m/s along his run: + = the clip is too slow; limit 12% of the speed)
+  ok    running: model forward . hero forward = 0.98
+  screenshot r3_abi_home_jump.png
+  ok    Abi jumps: 'jump' going up, 'land' on landing (10.6 m/s)
+  screenshot r3_abi_home_attack.png
+  ok    Kick: clip 'kick'
+  screenshot r3_abi_home_run_side.png
+  screenshot r3_abi_home_tread.png
+  screenshot r3_abi_home_swim.png
+  ok    Abi in the pool: 'tread' still, 'swim' moving (model raised 0.43 m to the surface)
+  ok    a 4.5 m drop lands hard: 'land_hard' (16.5 m/s)
+  screenshot r3_abi_home_cheer.png
+  ok    cheer: 'cheer'
+  screenshot r3_followers_home_running.png
+  screenshot r3_followers_home.png
+  ok    followers (home): Dan 'idle', toe -2.4 cm, facing 1.00; Abi 'idle', toe -2.5 cm, facing 0.99
+    (Dan: toes L -0.004 R 0.007, feet L 0.096 R 0.103, hips 0.916, root 0.032, model 0.000)
+    (Abi: toes L -0.005 R 0.006, feet L 0.100 R 0.106, hips 0.933, root 0.030, model 0.000)
+  screenshot r3_switch_home.png
+  ok    RB from Kira: Dan (Model dan_home)
+
+== Round 3: Area B, Ice Age outfits (item 2)
+  ok    arriving in Area B dresses them for the Ice Age (Dan Model dan_iceage, Abi Model abi_iceage); Kira Sabertooth
+  ok    Dan is the iceage model (Model dan_iceage, humanoid True, 15 of 15 clips, hips 0.87 m), the capsule hidden
+  ok    Dan standing: clip 'idle', lowest toe -1.3 cm off the ground (sinking < 0, floating > 0)
+    (toes L 0.007 R 0.015, feet L 0.109 R 0.113, hips 0.873, root 0.032, model 0.000)
+  ok    Dan's model faces the hero's way (model forward . hero forward = 1.00)
+  screenshot r3_dan_iceage_idle_front.png
+  screenshot r3_dan_iceage_necklace_closeup.png (inspection close-up, not the player's view)
+  screenshot r3_dan_iceage_run_front.png
+  ok    Dan running 7.0 m/s: clip 'run' at x1.34 (made for 5.2 m/s); planted foot slides 0.66 m/s (median of 79; -0.08 m/s along his run: + = the clip is too slow; limit 12% of the speed)
+  ok    the necklace's shard stays outside the iceage clothes while running (deepest 0.2 cm inside; sampled every 6th frame)
+  ok    running: model forward . hero forward = 1.00
+  screenshot r3_dan_iceage_jump.png
+  ok    Dan jumps: 'jump' going up, 'land' on landing (9.4 m/s)
+  screenshot r3_dan_iceage_attack.png
+  ok    Punch: clip 'punch'
+  ok    Abi is the iceage model (Model abi_iceage, humanoid True, 15 of 15 clips, hips 0.84 m), the capsule hidden
+  ok    Abi standing: clip 'idle', lowest toe -1.9 cm off the ground (sinking < 0, floating > 0)
+    (toes L 0.001 R 0.012, feet L 0.084 R 0.091, hips 0.843, root 0.030, model 0.000)
+  ok    Abi's model faces the hero's way (model forward . hero forward = 1.00)
+  screenshot r3_abi_iceage_idle_front.png
+  screenshot r3_abi_iceage_run_front.png
+  ok    Abi running 8.2 m/s: clip 'run' at x1.62 (made for 5.1 m/s); planted foot slides 0.32 m/s (median of 87; +0.02 m/s along his run: + = the clip is too slow; limit 12% of the speed)
+  ok    running: model forward . hero forward = 1.00
+  screenshot r3_abi_iceage_jump.png
+  ok    Abi jumps: 'jump' going up, 'land' on landing (10.8 m/s)
+  screenshot r3_abi_iceage_attack.png
+  ok    Kick: clip 'kick'
+  screenshot r3_followers_iceage_running.png
+  screenshot r3_followers_iceage.png
+  ok    followers (iceage): Dan 'idle', toe -1.3 cm, facing 1.00; Abi 'idle', toe -1.6 cm, facing 1.00
+    (Dan: toes L 0.007 R 0.015, feet L 0.109 R 0.113, hips 0.873, root 0.032, model 0.000)
+    (Abi: toes L 0.004 R 0.010, feet L 0.087 R 0.090, hips 0.843, root 0.030, model 0.000)
+  screenshot r3_switch_iceage.png
+  ok    RB from Kira: Dan (Model dan_iceage)
+  ok    back in Area A: home clothes again, the necklace moved onto the home model
+
+== Motor: run, analog, variable jump (items 4, 6)
+  ok    Dan: run 7.0 m/s (stats 7), half stick 3.3; jump held 1.57 m (stats 1.6), tapped 0.42 m
+  ok    Abi: run 8.2 m/s (stats 8.2), half stick 3.8; jump held 2.06 m (stats 2.1), tapped 0.53 m
+  ok    Kira: run 7.6 m/s (stats 7.6), half stick 3.6; jump held 1.37 m (stats 1.4), tapped 0.37 m
+  ok    Abi's double jump: 3.57 m (the high ledge is 3.2 m)
+
+== Coyote time and jump buffering (item 4)
+  ok    jump pressed 0.07 s after running off the edge: jumped (coyote time 0.12 s)
+  ok    jump pressed 0.25 s after running off the edge: no jump (coyote time 0.12 s)
+  ok    jump pressed just before landing: buffered, jumped 0.05 s after the press (buffer 0.15 s)
+
+== Slopes (item 4)
+  ok    up the 20 degree ramp to the plateau (y 2.9)
+  ok    the 55 degree slope can't be climbed, even jumping (highest 0.4 m, slid back to 0.3)
+  screenshot 20_slopes.png
+
+== Moving platform (item 4)
+  ok    rides the platform: carried 7.7 m with the stick released (on it: True)
+  screenshot 21_moving_platform.png
+  ok    off the platform onto the island
+
+== Swim and breath (item 4)
+  ok    Dan floats at the surface (mode Swim, head out)
+  ok    B dives (y -4.0); breath meter drains (0.82)
+  screenshot 22_breath.png
+  ok    out of breath costs a heart (3 -> 2) after 10 s
+  ok    breath refills at the surface (1.00)
+  ok    Kira under water for 4 s: no breath meter (the best swimmer)
+  ok    the camera works under water (tinted; 0.9 m from Kira)
+  screenshot 23_camera_underwater.png
+
+== Low gravity (item 4)
+  ok    Dan's jump: 1.6 m / 0.64 s outside, 5.3 m / 2.16 s in low gravity (x 0.3 gravity)
+  screenshot 24_low_gravity.png
+
+== Camera (item 5)
+  ok    right stick orbits: 161 degrees in 1 s (setting 100 %, 160 deg/s)
+  ok    right stick click recenters behind the player (off by 0 degrees)
+  ok    auto-recenter while running: camera 0 degrees off the running direction after 4 s (was 79)
+  ok    a wall behind: the camera pulls in to 1.2 m (free 6.5 m) and stays on the player's side (z 23.7, inside a wall: False)
+  screenshot 25_camera_wall.png
+
+== Switching and fitting (item 6)
+  ok    RB while running: Dan -> Abi on the same spot (0.56 m), camera moved 0.50 m in 4 frames (running 8.2 m/s)
+  ok    LB switches back
+  ok    keyboard 3 picks Kira
+  ok    keyboard 1 picks Dan
+  ok    no switch to a bigger hero inside the crawl gap ("No room for Dan here.")
+  ok    out of the gap, Dan again
+  ok    Dan doesn't fit through the crawl gap (stopped at z 23.6)
+  ok    Dan pushes the heavy block (3.9 m in 3 s); Abi can't (0.00 m)
+  ok    the boulder doesn't move and says "Way too heavy. Someone much stronger could move this... (needs Muscle Man)"
+  screenshot 26_boulder.png
+
+== Health, combat, enemy, hazards, respawn (item 8)
+  ok    the enemy chases the player when close
+  ok    touching it hurts: 3 -> 2 hearts
+  screenshot 27_hurt.png
+  ok    brief invincibility after a hit (1.3 s)
+  ok    Dan's punch (X) defeats it in 1 hit(s)
+  ok    a heal heart: 2 -> 3
+  ok    spikes hurt: 3 -> 2
+  ok    falling into the pit: back at checkpoint A-west, 3 -> 2 hearts
+  ok    out of hearts: back at the checkpoint with full hearts (3/3)
+  ok    the hidden heart upgrade raises the max: 3 -> 4 (cap 10)
+  screenshot 28_hearts.png
+
+== Necklace (item 9)
+  necklace beat: every 0.22 s next to a shard, 1.8 s at 45 m or more; rumble on by default (light: 0.04-0.25 motor, 60 ms a beat)
+
+== Data check: requirements without later abilities (rule 2)
+  ok    area A (Area A): 16 of 19 shards reachable with [Dan, Abi, Kira], requirement 10; locked: A17 needs DoubleJump, A18 needs DoubleJump, A19 needs DoubleJump
+  ok    area B (Area B): 5 of 6 shards reachable with [Dan, Abi, Kira, ClawIce], requirement 0; locked: B05 needs DoubleJump
+  ok    KIRA LOCK Home (kira): OK: ear bones 0; grey fur 99% of the texture (need > 35%); white 0.0% (need < 1.5%); golden-amber eyes 0.09% (need > 0.05%)
+  ok    KIRA LOCK Sabertooth (kira_sabertooth): OK: ear bones 0; grey fur 99% of the texture (need > 35%); white 0.0% (need < 1.5%); golden-amber eyes 0.29% (need > 0.05%)
+  ok    Dan wears the necklace model (cord + shard; socket: Necklace)
+
+== Save (item 10)
+  ok    Menu pauses the game
+  screenshot 29_pause.png
+  screenshot 30_settings.png
+  ok    Settings: Volume, Effects volume, Screen, Resolution, Steam Deck mode, Rumble, Invert camera X, Invert camera Y, Camera speed, Reset to defaults, Back
+  screenshot 31_controls_gamepad.png
+  ok    Controls shows the gamepad's buttons
+  screenshot 32_controls_keyboard.png
+  ok    after a key press it shows the keyboard's keys
+  ok    Quit to title
+  save.json: { "version": 1, "worlds": [ { "world": "Playground", "shards": [ "A01", "A02", "A03", "A04", "A05", "A06", "A16", "A08", "A09", "A10", "A11", "A12", "B01", "B02", "B06", "B05", "A17", "A18", "A19", "A07" ], "storyShard": true, "necklaceAwake": true, "opened": [ "B-ice" ] } ], "totalShards": 20, "abilities": [ "DoubleJump" ], "portals": [ "A-B", "B-A" ], "heartUpgrades": [ "H1" ], "maxHearts": 4, "currentWorld": "Playground", "checkpoint": "A-west", "savedAt": "2026-11-09 10:27:44" }
+  screenshot 33_title_with_save.png
+  ok    Continue is offered and selected
+  ok    Continue restores 20 shards (collected ones stay collected), abilities [DoubleJump], portals [A-B,B-A], max hearts 4, at checkpoint A-west
+  ok    New game with a save asks first
+  screenshot 34_new_game_confirm.png
+  ok    "Yes, start over" clears the save: 0 shards, no abilities, 3 hearts, every shard back
+  screenshot 35_credits.png
+  ok    Credits page
+
+== Frame rate (off-screen 1920 x 1080, batch mode: no present to a window)
+  ok    2027 fps average running round Area A with both followers, slowest frame 96 ms (NVIDIA GeForce GTX 1660 Ti)
+  screenshot 40_perf_view.png
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 27754496 samples); master volume 0.00

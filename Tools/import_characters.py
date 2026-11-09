@@ -9,7 +9,7 @@ SourceArt/Meshy/<name>/ (Meshy's textures) to Assets/Resources/Characters/:
                                 Kira's forms: model.fbx from Tools/Blender/kira_rig.py, every clip as a take inside it)
   <name>_albedo.png             base colour
   <name>_normal.png             normal map
-  Clips/<name>_<clip>.fbx       animations (Without Skin)
+  Clips/<clip>.fbx              the people's shared Mixamo clips (Without Skin), named as the game calls them
 The Unity import settings (Humanoid for people, Generic for Kira, loops, LODs) come with the import editor script in the round
 that wires the models in.
 """
@@ -21,7 +21,14 @@ ROOT = Path(__file__).resolve().parent.parent
 MIX, RIGGED, MESHY = ROOT / "SourceArt" / "Mixamo", ROOT / "SourceArt" / "Rigged", ROOT / "SourceArt" / "Meshy"
 OUT = ROOT / "Assets" / "Resources" / "Characters"
 NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_sabertooth"]
-KIRA_NOW = {"kira", "kira_sabertooth"}   # Round 2 puts Kira's forms in the game; Dan and Abi follow in Round 3
+# Round 3: one Mixamo clip set for all four people (Without Skin, SourceArt/Mixamo/<Mixamo name>.fbx), copied as
+# Assets/Resources/Characters/Clips/<game clip>.fbx. Unity's Humanoid retargeting plays them on every person; trims, loops and
+# root settings per clip are in Assets/Editor/CharacterImport.cs (PeopleClips).
+PEOPLE_CLIPS = {
+    "idle": "Idle", "walk": "Walking", "run_slow": "Slow Run", "run": "Fast Run", "jump": "Jump", "fall": "Falling",
+    "land": "Falling To Landing", "land_hard": "Hard Landing", "swim": "Swimming", "tread": "Treading Water", "push": "Push",
+    "punch": "Punching", "kick": "Mma Kick", "hurt": "Hit On Side Of Body", "cheer": "Cheering (1)", "look": "Looking Around",
+}
 
 
 def textures(n):
@@ -42,16 +49,17 @@ def main():
             src, model = RIGGED / n, RIGGED / n / "model.fbx"
         else:
             src = MIX / n
-            model = next((src / f for f in ("rigged_hairfix.fbx", "rigged.fbx", "T-Pose.fbx") if (src / f).exists()), None)
+            model = next((src / f for f in ("rigged_hairfix.fbx", "rigged.fbx") if (src / f).exists()), None)                 or next(iter(sorted(src.glob("T-Pose*.fbx"))), None)   # Mixamo names the T-pose download "T-Pose (2).fbx" etc.
         if not model:
             print(f"{n}: no rigged model yet ({MIX / n} or {RIGGED / n}), skipped"); continue
-        if n not in KIRA_NOW and src.parent == MIX:
-            print(f"{n}: rigged ({model.name}); people go in with their clips in Round 3, skipped"); continue
         shutil.copy2(model, OUT / f"{n}.fbx")
         textures(n)
-        clips = [f for f in sorted(src.glob("*.fbx")) if f != model and src.parent == MIX]
-        for f in clips: shutil.copy2(f, OUT / "Clips" / f"{n}_{f.stem}.fbx")
-        print(f"{n}: model + {len(clips)} clips")
+        print(f"{n}: model {model.relative_to(ROOT)}")
+    missing = [m for m in PEOPLE_CLIPS.values() if not (MIX / f"{m}.fbx").exists()]
+    if missing: print("MISSING Mixamo clips:", ", ".join(missing))
+    for game, m in PEOPLE_CLIPS.items():
+        if (MIX / f"{m}.fbx").exists(): shutil.copy2(MIX / f"{m}.fbx", OUT / "Clips" / f"{game}.fbx")
+    print(f"people's clips: {len(PEOPLE_CLIPS) - len(missing)} of {len(PEOPLE_CLIPS)}")
     print("copied:", len(list(OUT.rglob("*.fbx"))), "fbx,", len(list(OUT.rglob("*.png"))), "png")
 
 

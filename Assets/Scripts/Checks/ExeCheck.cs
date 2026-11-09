@@ -32,7 +32,7 @@ namespace ShardsOfTime
             Log(TestRun.WindowReport() + "; " + TestRun.Report());
             yield return null; yield return null;
             string only = CheckRun.Only;
-            IEnumerator run = only == "coyote" ? CoyoteDiag() : only == "mute" ? MuteCheck() : only == "play" ? Play() : only == "measure" ? Measure() : only == "perf" ? Perf() : All();
+            IEnumerator run = only == "coyote" ? CoyoteDiag() : only == "mute" ? MuteCheck() : only == "play" ? Play() : only == "models" ? Models() : only == "measure" ? Measure() : only == "perf" ? Perf() : All();
             while (true)
             {
                 object cur;
@@ -64,6 +64,7 @@ namespace ShardsOfTime
         IEnumerator All()
         {
             yield return Play();
+            yield return Models();
             yield return Measure();
             yield return Perf();
         }

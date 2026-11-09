@@ -164,3 +164,36 @@ image under `SourceArt/Reference/Characters/Abi/`.
 After Round 2, **Round 3:** Dan's Mixamo clips imported, Dan and Abi replace
 their capsules, then the Ice Age as the first real world.
 ---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+Round 3 plan (as written by the planning chat, 2026-11-09)
+---------------------------------------------------------------------------
+Current round — Round 3: Dan and Abi in the game, animated (target 0.3.0)
+Round 2's plan is in `TODO-ARCHIVE.md`. **Priority: Dan sees Dan and Abi
+animated in the game in this round.** Dan already rigged all four in Mixamo
+and downloaded the clips (`SourceArt/Mixamo/`). Report per item: done / not
+done / deferred, and why.
+
+**Standing rule (Dan, 2026-11-09):** the concept sheets Dan made from Code's
+prompts (`SourceArt/Concepts/`) are the official designs. They override the
+earlier film stills. The red-pyjama Abi is not planned; don't raise it again.
+
+1. **Import Dan and Abi** (both outfits each): Humanoid rig from the rigged
+   FBX (`rigged_hairfix.fbx` for Abi), the shared clip set wired to the motor:
+   idle, walk, run (speed-blended), jump, fall, land / hard landing, swim and
+   tread water, push, punch (Dan), kick (Abi), hit, cheer for shard pickups.
+   LODs from the rigged file (keeps skin weights).
+2. **Replace the capsules** for Dan and Abi as player and as followers. Outfit
+   per area, the same way Kira's form works: Area A = home clothes, Area B =
+   Ice Age. Capsules kept as fallback.
+3. **Necklace on Dan's chest** at the `Spine2` socket in both outfits, offset
+   tuned so it sits right and doesn't clip through the clothes when he runs.
+4. **Cutscenes use the real models:** NecklaceWakes and PortalOpens with Dan,
+   Abi and Kira instead of graybox actors; render both MP4s again.
+5. **Check it as Dan sees it:** exe screenshots from the player's view of each
+   character running, jumping, swimming and switching, plus the followers;
+   look for foot sliding, sinking into the floor, clipping hair, and wrong
+   facing; fix what's found or list it.
+6. Build, check, publish 0.3.0, update `TODO.md` / `CLAUDE.md`, clean up.
+
+After Round 3: the Ice Age as the first real world.
