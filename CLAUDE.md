@@ -226,7 +226,7 @@ Standing facts from Round 1:
 - Kira is 0.5 m; low gravity is x0.3 (jumps 3.3x higher).
 - Art: Dan's six concept sheets are in `SourceArt/Concepts/` (`dan_home`, `dan_iceage`, `abi_home`, `abi_iceage`,
   `kira`, `kira_sabertooth`). Abi: wavy brown hair, green eyes; Ice Age outfits barefoot. Meshy is the next step
-  (Round 2). Open question: the red-pyjama woman Dan shared.
+  (Round 2). The red-pyjama woman with the Santa hat is Abi's original film outfit; the green Santa pyjamas are fine for the game (Dan, 2026-11-09).
 - Python file edits on this PC: always pass `encoding='utf-8'` (the default is cp1252).
 - A check on a busy PC: check runs cap a frame at 1/30 s and wait in game time, so OBS / Chrome load doesn't
   change the result (players: 0.1 s cap).

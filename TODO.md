@@ -24,8 +24,65 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none yet. Round 1 is delivered (below); the planning chat
-writes Round 2 here. Round 1's plan is in `TODO-ARCHIVE.md`.
+Current round — Round 2: first character models, stage A (Meshy) + Kira forms
+(target 0.2.0)
+Round 1's plan is in `TODO-ARCHIVE.md`. Dan played 0.1.0 (2026-11-09):
+"everything seems ok", no tuning notes. The six concept sheets in
+`SourceArt/Concepts/` were checked by the planning chat: all usable (A-pose,
+full body, plain background, no necklace, Kira's ears folded, paws and tail in
+frame). Report per item: done / not done / deferred, and why.
+
+1. **Meshy, all six models.** `python Tools/meshy_generate.py` on `dan_home`,
+   `dan_iceage`, `abi_home`, `abi_iceage`, `kira`, `kira_sabertooth`
+   (image-to-3D, key from `MESHY_API_KEY`, never written anywhere). Use Kira's
+   reference stills as extra views if the API takes several images.
+2. **Blender clean-up** for each: metres, feet at 0, facing +Z, heights as in
+   `Docs/MODELS-NEEDED.md` (Dan 1.8 m, Abi 1.65 m, Kira the in-game size from
+   Round 1), sensible triangle count for the Steam Deck plus LODs, textures
+   kept. Check Kira's ears came out folded; if not, say so (don't fix by hand
+   yet).
+3. **Previews:** render each model front, side, back and 3/4 into
+   `Data/screenshots/round2/models/`, and look at them: report fused limbs,
+   hair stuck to arms, missing feet/paws, texture smears, per model.
+4. **Mixamo hand-off files:** export one FBX per person (`dan_home`,
+   `dan_iceage`, `abi_home`, `abi_iceage`) ready to upload to Mixamo, in
+   `SourceArt/Mixamo/<model>/upload/`. Put a short checklist at the top of
+   `Docs/MODELS-NEEDED.md`: which file to upload, the clip list (already in the
+   doc), download settings, where to save.
+5. **Kira's rig path:** check whether the Meshy API can rig and animate a
+   four-legged animal. If yes, rig both Kira models with it; if no, build the
+   quadruped rig in Blender by script (no ear bones) and make her clip set
+   (idle, walk, run, jump, fall, land, swim, attack, hurt). Say which path and
+   why.
+6. **STOP for Dan as early as possible (Dan, 2026-11-09: he wants to do Mixamo
+   tonight).** Order: items 1–4 for the **four people first** (Meshy, clean-up,
+   previews, Mixamo FBX + checklist), then stop and tell Dan the files are
+   ready, with the preview renders. Do the two Kira models and items 5, 7–9
+   after that stop; they don't need Dan.
+7. **Kira transformation system.** Each world names Kira's form (data); a form
+   swaps her model and her ability set (e.g. Ice Age: claw through ice walls;
+   Pirate: otter swimming). Arriving in a world sets the form; Kira's lock
+   (folded ears, gray, amber eyes) is a check on every form model. Graybox:
+   Area A = home cat, Area B = sabertooth (with an ice wall only she can claw
+   through).
+8. **Dan's necklace** as its own small model (Blender script, hard-surface):
+   cord + shard. The shard glows and pulses with the necklace logic from
+   Round 1; it shows on Dan's chest in both outfits (a socket that works with
+   the Mixamo skeleton later).
+9. **Kira in the game now:** if item 5 gives a rigged, animated Kira this
+   round, replace her capsule (keep the capsule as fallback). Dan and Abi stay
+   capsules until Dan brings the Mixamo clips (Round 3).
+10. Build, check, publish 0.2.0, update `TODO.md` / `CLAUDE.md`, clean up.
+
+RESOLVED (Dan, 2026-11-09): the woman in red pyjamas with the Santa hat is
+**Abi in her original film outfit**. Dan is happy with the green Santa pyjamas
+for the game ("it doesn't really matter that it is different"), so
+`abi_home` stays as it is. Not modeled this
+round; add it to `Docs/MODELS-NEEDED.md` as a later Abi outfit and file her
+image under `SourceArt/Reference/Characters/Abi/`.
+
+After Round 2, **Round 3:** Dan's Mixamo clips imported, Dan and Abi replace
+their capsules, then the Ice Age as the first real world.
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------
