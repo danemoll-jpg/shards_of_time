@@ -17,7 +17,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 # heights in metres (Docs/MODELS-NEEDED.md); Kira's is her head height in game (Round 1: 0.5 m)
 HEIGHT = {'dan_home': 1.8, 'dan_iceage': 1.8, 'abi_home': 1.65, 'abi_iceage': 1.65, 'kira': 0.5, 'kira_sabertooth': 0.5}
 PEOPLE = {'dan_home', 'dan_iceage', 'abi_home', 'abi_iceage'}
-YAW = {'kira_sabertooth': 90}   # degrees about Z: Meshy turned her side-on (her concept is a side view); nose to -Y
+YAW = {}   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'models')
 
 
@@ -42,6 +42,11 @@ def clean(name):
     if len(meshes) > 1: bpy.ops.object.join()
     ob = bpy.context.view_layer.objects.active
     ob.name = name; ob.data.name = name
+    if os.path.exists(os.path.join(d, 'base_color_meshy.png')):   # Fix 3.1: fur recoloured by Tools/match_fur.py
+        for m in ob.data.materials:
+            for l in (m.node_tree.links if m and m.use_nodes else []):
+                if l.to_socket.name == 'Base Color' and l.from_node.type == 'TEX_IMAGE':
+                    l.from_node.image = bpy.data.images.load(os.path.join(d, 'base_color.png'))
     ob.rotation_mode = 'XYZ'; ob.rotation_euler = (0, 0, math.radians(YAW.get(name, 0)))
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     lo, hi = bounds(ob)

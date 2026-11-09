@@ -168,6 +168,20 @@ namespace ShardsOfTime
             yield return Go(new Vector3(412.5f, 0, -3f), .5f, 8f);
             Ok(Has("B06"), "B06 in the ice cave");
             yield return Shot("12c_ice_cave");
+            // Fix 3.1: sabertooth Kira's face, turned to the camera (the player's view, then inspection close-ups of her head)
+            var toCam = CameraRig.I.Cam.transform.position - Player.transform.position;
+            Stick(StickFor(toCam) * .25f); yield return Wait(.3f); Stick(Vector2.zero); yield return Wait(.8f);
+            yield return Shot("12d_sabertooth_face");
+            var kiraHead = kiraB.Model.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Head");
+            Ok(kiraHead, $"sabertooth Kira has a Head bone (clip '{kiraB.Anim.State}')");
+            if (kiraHead)
+            {
+                yield return CloseUp(kiraHead, kiraB.transform.forward, .9f, "12e_sabertooth_face_closeup");
+                yield return CloseUp(kiraHead, Quaternion.Euler(0, 40f, 0) * kiraB.transform.forward, .9f, "12f_sabertooth_face_34");
+                yield return Press(GamepadButton.West); yield return Wait(.12f);
+                yield return CloseUp(kiraHead, kiraB.transform.forward, .9f, "12g_sabertooth_face_attack");
+                yield return Wait(.5f);
+            }
             yield return Go(new Vector3(406f, 0, -3f), .6f);
             yield return SwitchTo(1);
             yield return Go(new Vector3(405f, 0, 20f)); yield return Go(new Vector3(400f, 0, 25.6f), .4f);

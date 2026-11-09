@@ -10,11 +10,14 @@ Reads SourceArt/Meshy/<name>/<name>.blend (Tools/Blender/meshy_cleanup.py: metre
    folded ears are part of the head and can never rise).
 3. Skin: Blender's bone heat on a closed remeshed copy, copied back to the real mesh (a distance-based skin, limited by region,
    is the fallback). Ears go with the head.
-4. Head forward: Meshy kept the concept's turned head; the neck and head get a fixed counter-turn (at most 45 deg) in every clip.
+4. Head forward: home Kira's concept had her head turned, Meshy kept it; her neck and head get a fixed counter-turn (at most
+   45 deg) in every clip. Only models in COUNTER_TURN get it: the sabertooth (Fix 3.1) is modelled with a straight head, and a
+   counter-turn twisted her face.
 5. Clips (30 fps): idle, walk, run, jump, fall, land, swim, attack (claw swipe), hurt. In place (the game moves her).
 6. LODs: <name>_LOD0 (full), _LOD1 (50 %), _LOD2 (20 %), skinned the same.
 Writes SourceArt/Rigged/<name>/model.fbx (mesh + skeleton + every clip as a take), <name>_rig.blend, and
-Data/screenshots/round2/kira_rig/<name>_<clip>.png (a frame of each clip).
+Data/screenshots/<shots>/<name>_<clip>.png (a frame of each clip) and face close-ups <name>_face_<clip>_<view>.png for idle, run
+and attack from the front, side and 3/4. Optional argument shots=<folder under Data/screenshots> (default round2/kira_rig).
 """
 import bpy, bmesh, math, os, sys
 from mathutils import Vector, Quaternion, Matrix
@@ -22,6 +25,7 @@ from mathutils.kdtree import KDTree
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
+COUNTER_TURN = {'kira'}   # models whose head Meshy built turned (see 4. above)
 FPS = 30
 LEGS = ('FL', 'FR', 'BL', 'BR')
 
@@ -93,7 +97,7 @@ def landmarks(ob, name):
         tip = max(tail, key=lambda c: (c - base).length)
     else:
         base = Vector((0, yb + .05, hi_b)); tip = base + Vector((0, .1, .15))
-    L = dict(H=H, paws=paws, yf=yf, yb=yb, hips=hips, chest=chest, head=head_c, head_top=head_top, face=face, turn=turn,
+    L = dict(name=name, H=H, paws=paws, yf=yf, yb=yb, hips=hips, chest=chest, head=head_c, head_top=head_top, face=face, turn=turn,
              tail=tail, tail_base=base, tail_tip=tip, hi_b=hi_b, hi_f=hi_f, eyes=len(eyes))
     log(f'{name}: height {H:.3f}, front paws y {yf:.3f}, back paws y {yb:.3f}, hips z {hips.z:.3f}, chest z {chest.z:.3f}, '
         f'head ({head_c.x:.3f},{head_c.y:.3f},{head_c.z:.3f}), {len(eyes)} eye points, head turned {math.degrees(turn):.0f} deg, '
@@ -251,6 +255,7 @@ X, Z = (1, 0, 0), (0, 0, 1)   # X: pitch (legs swing fore / aft), Z: yaw
 
 
 def base_pose(L):
+    if L['name'] not in COUNTER_TURN: return {}
     t = -max(-45, min(45, math.degrees(L['turn'])))   # turn the face back toward -Y (at most 45 deg, so the face never tears): neck 40 %, head 60 %
     return {'Neck': [(Z, t * .4)], 'Head': [(Z, t * .6)]}
 
@@ -389,10 +394,26 @@ def render(arm, L, name, acts):
         arm.animation_data.action = act
         sc.frame_set(int(frames * (.25 if n in ('walk', 'run', 'swim', 'idle', 'fall') else .5)))
         sc.render.filepath = os.path.join(SHOTS, f'{name}_{n}.png'); bpy.ops.render.render(write_still=True)
+    face_shots(arm, L, name, acts, cam)
     arm.animation_data.action = None
     for pb in arm.pose.bones: pb.rotation_quaternion = Quaternion(); pb.location = (0, 0, 0)
     sc.frame_set(0)
     sc.render.filepath = os.path.join(SHOTS, f'{name}_rest.png'); bpy.ops.render.render(write_still=True)
+
+
+def face_shots(arm, L, name, acts, cam):
+    """Close-ups of the head (Fix 3.1): front, side, 3/4 in idle, run and attack, the camera aimed at the posed Head bone."""
+    sc = bpy.context.scene; scale = cam.data.ortho_scale; cam.data.ortho_scale = .3
+    for n in ('idle', 'run', 'attack'):
+        act, frames = acts[n]; arm.animation_data.action = act
+        sc.frame_set(int(frames * (.5 if n == 'attack' else .25))); bpy.context.view_layer.update()
+        pb = arm.pose.bones['Head']; c = arm.matrix_world @ pb.head   # the base of the head: eyes to chin in frame
+        for view, ang in (('front', 0), ('side', 90), ('34', 40)):
+            a = math.radians(ang); d = Vector((math.sin(a), -math.cos(a), .15)).normalized()
+            cam.location = c + d * 2
+            cam.rotation_euler = (-d).to_track_quat('-Z', 'Y').to_euler()
+            sc.render.filepath = os.path.join(SHOTS, f'{name}_face_{n}_{view}.png'); bpy.ops.render.render(write_still=True)
+    cam.data.ortho_scale = scale
 
 
 def run(name):
@@ -419,4 +440,5 @@ def run(name):
 
 
 for n in sys.argv[sys.argv.index('--') + 1:]:
+    if n.startswith('shots='): SHOTS = os.path.join(ROOT, 'Data', 'screenshots', *n[6:].split('/')); continue
     run(n)

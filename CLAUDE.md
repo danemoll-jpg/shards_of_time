@@ -193,7 +193,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   Blender: `F:\blender\blender.exe`; scripts run as `blender --background --factory-startup --python Tools/Blender/<x>.py -- <args>`:
   `meshy_cleanup.py <names>` (metres, feet at 0, front; Mixamo upload FBX; previews in `Data/screenshots/round2/models/`),
   `mixamo_check.py <model>=<rigged fbx>` (renders a rig on a few clips), `fix_hair_weights.py <model>=<rigged fbx>` (long
-  hair off the arm bones -> `rigged_hairfix.fbx`), `kira_rig.py kira kira_sabertooth` (Kira's rig, 9 clips, LODs ->
+  hair off the arm bones -> `rigged_hairfix.fbx`), `kira_rig.py [shots=<dir>] kira kira_sabertooth` (Kira's rig, 9 clips, LODs, face close-ups ->
   `SourceArt/Rigged/<name>/model.fbx`), `necklace.py` (-> `Assets/Resources/Characters/necklace.fbx`).
 - **Title art / icons (placeholders):** `python Tools/make_title_art.py local/round1/<check>/00_key_art.png` writes
   `SourceArt/Title/Steam/ShardsOfTime-*.png` (launcher cover, Steam art), `Launcher/ShardsOfTime.ico` and
@@ -217,6 +217,21 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 3.1 delivered: 0.3.1 (build 301), 2026-11-09.** Sabertooth Kira is a new Meshy model from a straight-headed
+concept (her face no longer twists), fur matched to home Kira's gray. Published: `game-301` (a Round 1 starter install
+updated itself to it). Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Fix 3.1:
+- `kira_rig.py` counter-turns the head only for models in `COUNTER_TURN` (home Kira); new forms are modelled with a
+  straight head instead. `shots=<folder under Data/screenshots>` sets where its renders go; it also renders face
+  close-ups (front / side / 3/4 in idle, run, attack).
+- `python Tools/match_fur.py <form> [--to kira]` moves a form's fur colour to home Kira's (keeps Meshy's texture as
+  `base_color_meshy.png`; `meshy_cleanup.py` then uses the recoloured `base_color.png`). `meshy_cleanup.py` `YAW` is now
+  empty (the new sabertooth faces front).
+- Old sabertooth: `SourceArt/Rigged/kira_sabertooth_v1/model.fbx` (swap back by copying it over `model.fbx` and running
+  `import_characters.py --only kira_sabertooth`).
+- Exe check `play` now shoots sabertooth Kira's face in Area B (`12d` player's view, `12e`-`12g` close-ups).
+
 **Round 3 delivered: 0.3.0 (build 300), 2026-11-09.** Dan and Abi are their real models in the game (player and followers),
 animated from one shared Mixamo clip set, dressed per area (A home, B Ice Age); Dan's necklace sits on his chest in both
 outfits; both cutscenes use the real models and were rendered again. Published: `game-300` (a Round 1 starter install

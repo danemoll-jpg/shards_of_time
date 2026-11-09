@@ -219,6 +219,20 @@ namespace ShardsOfTime
             return deepest;
         }
 
+        // an inspection close-up (not the player's view): a camera dist m from the target along `along`, a little above (Fix 3.1)
+        IEnumerator CloseUp(Transform target, Vector3 along, float dist, string name)
+        {
+            if (!TestRun.Headless) yield break;
+            yield return new WaitForEndOfFrame();
+            var go = new GameObject("Close-up camera"); var cam = go.AddComponent<Camera>();
+            cam.targetTexture = TestRun.View; cam.fieldOfView = 20f; cam.nearClipPlane = .05f;
+            go.transform.position = target.position + along.normalized * dist + Vector3.up * .1f;
+            go.transform.LookAt(target.position);
+            TestRun.SaveView(cam, Path.Combine(dir, name + ".png"));
+            Object.Destroy(go);
+            Log($"  screenshot {name}.png (inspection close-up, not the player's view)");
+        }
+
         // an inspection close-up (not the player's view): a camera 0.8 m in front of Dan's chest
         IEnumerator NecklaceCloseUp(Hero dan, string name)
         {

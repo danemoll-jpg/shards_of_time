@@ -1,0 +1,98 @@
+Shards of Time exe check 2026-11-09 11:20, version 0.3.1; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 63488 samples); master volume 0.00
+
+== Title screen (item 13)
+  ok    title screen shows the menu
+  ok    no save yet: Continue greyed out, New game selected
+  screenshot 00_key_art.png
+  screenshot 01_title.png
+  ok    A on New game starts the game (save.json written)
+  screenshot 02_start.png
+
+== Play-through, Area A (items 4-11; followers watched all the way, item 7)
+  area A (Area A): 16 of 19 shards reachable with [Dan, Abi, Kira], requirement 10; locked: A17 needs DoubleJump, A18 needs DoubleJump, A19 needs DoubleJump
+  ok    A01 start path
+  screenshot 02b_dan_necklace.png
+  ok    A02 start path
+  ok    A03 by the slopes
+  ok    followers arrived at the start path: Abi 2.7 m (0 warps); Kira 3.8 m (0 warps); 
+  ok    A04 step 1 (landed at (-17.9, 1.0, -30.0))
+  ok    A05 step 2 (at (-21.8, 2.0, -30.0))
+  ok    A06 step 3 (at (-25.8, 3.0, -30.0))
+  screenshot 03_steps.png
+  ok    A16 behind the pillar
+  ok    followers arrived at the pillar: Abi 2.5 m (0 warps); Kira 3.7 m (0 warps); 
+  ok    RB twice: Kira
+  ok    in the pool: mode Swim
+  ok    A08 on the pool bottom (dived to y -1.6)
+  ok    A09 on the pool bottom
+  screenshot 04_underwater.png
+  ok    out of the pool (leap at the surface), at (43.4, 0.0, -1.2)
+  ok    followers arrived at after the pool (they swim): Dan 4.0 m (0 warps); Abi 4.1 m (0 warps); 
+  ok    Abi
+  ok    low gravity on the way up (mode LowGravity, y 5.5)
+  ok    A10 on the low-gravity tower (jump 2.0 m, 0.7 s in the air)
+  ok    the 10th shard was reached without the double jump (rule 2)
+
+== The necklace wakes (items 9, 11)
+  ok    10 shards in Area A start the cutscene NecklaceWakes
+  screenshot 05_cutscene_necklace_1.png
+  screenshot 06_cutscene_necklace_2.png
+  screenshot 07_cutscene_necklace_3.png
+  ok    played to the end (6.5 s), not skipped
+  ok    the story shard appears; the save says the necklace is awake
+  (could not reach (32.0, 0.0, 30.0) in 6 s, at (32.0, 0.0, 37.8))
+  ok    control comes back after the cutscene
+  ok    the necklace leads to the story shard (35 m, beat every 1.45 s)
+  screenshot 08_necklace_awake_hud.png
+  ok    A11, A12 in Kira's crawl garden
+  ok    Kira is the home Scottish Fold with her real model (Model kira, 9 clips), the capsule hidden (item 9)
+  screenshot 09_kira_garden.png
+  ok    her clips follow the motor: moving 'run', standing 'idle'
+  ok    followers arrived at out of Kira's garden: Dan 2.2 m (1 warps, last: not caught up in 3 s); Abi 2.3 m (2 warps, last: not caught up in 3 s); 
+
+== Story shard and the portal (items 9, 11)
+  ok    the story shard starts the cutscene PortalOpens
+  screenshot 10_cutscene_portal_1.png
+  screenshot 10b_cutscene_portal_2.png
+  ok    holding A skips it (after 3.8 s)
+  ok    the portal to Area B is open; control is back
+  screenshot 11_portal_open.png
+  ok    walking into the portal goes to Area B
+  screenshot 12_area_b.png
+  ok    followers arrived at Area B: Abi 0.5 m (2 warps, last: not caught up in 3 s); Kira 0.5 m (1 warps, last: not caught up in 3 s); 
+
+== Area B: the double jump (item 9)
+  ok    B01
+  ok    B02
+
+== Area B: Kira's form and the ice wall (Round 2, items 7 and 9)
+  ok    arriving in Area B made Kira the sabertooth (Sabertooth Kira, model Model kira_sabertooth, abilities [ClawIce])
+  area B (Area B): 5 of 6 shards reachable with [Dan, Abi, Kira, ClawIce], requirement 0; locked: B05 needs DoubleJump
+  ok    the ice wall is there
+  ok    Dan's Punch doesn't break the ice
+  ok    Kira
+  screenshot 12b_sabertooth_at_the_ice.png
+  ok    sabertooth Kira's claws break it (clip 'attack'; saved)
+  ok    B06 in the ice cave
+  screenshot 12c_ice_cave.png
+  screenshot 12d_sabertooth_face.png
+  ok    sabertooth Kira has a Head bone (clip 'idle')
+  screenshot 12e_sabertooth_face_closeup.png (inspection close-up, not the player's view)
+  screenshot 12f_sabertooth_face_34.png (inspection close-up, not the player's view)
+  screenshot 12g_sabertooth_face_attack.png (inspection close-up, not the player's view)
+  ok    the pickup unlocks Abi's double jump (saved)
+  ok    B05 on the high pillar with a double jump (jumps this air 0, at (408.0, 3.1, 13.8))
+  screenshot 13_double_jump.png
+  ok    the portal back to Area A
+  ok    back in Area A, Kira is the home cat again (her model swapped back)
+
+== Area A again: the double-jump ledge (rule 6: the move stays useful)
+  ok    A17-A19 on the high ledge (at (21.6, 3.2, -18.0))
+  ok    followers arrived at the high ledge (end of the run): Dan 5.0 m (1 warps, last: not caught up in 3 s); Kira 4.9 m (3 warps, last: not caught up in 3 s); 
+  screenshot 14_high_ledge.png
+  ok    no follower stuck; warps over the whole run: Dan 1, Abi 2, Kira 3
+  shards collected: 19 (A01 A02 A03 A04 A05 A06 A16 A08 A09 A10 A11 A12 B01 B02 B06 B05 A17 A18 A19)
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 11044864 samples); master volume 0.00

@@ -24,56 +24,47 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Fix 3.1: sabertooth Kira's face (target 0.3.1)
-Round 3's plan is in `TODO-ARCHIVE.md`. Next after this fix: the Ice Age as the
-first real world (the planning chat writes it here).
-
-**Problem (Dan, 2026-11-09): "Kira's face is messed up in the sabertooth form."**
-Planning chat's diagnosis from `Data/screenshots/round2/kira_rig/kira_sabertooth_idle.png`:
-the concept sheet had her head turned hard toward the viewer, Meshy built the
-head that way, and the rig's counter-turn (Round 2, capped 45 deg) twists the
-face: eyes skewed and cross-eyed, fangs splayed outward. Home Kira looks fine
-(head only slightly turned). Fixing it with more bone tricks won't hold up, so
-the fix is a new model from a straight-headed concept.
-
-1. **New concept (Dan):** Dan makes a new sheet from the prompt below and saves
-   it as `SourceArt/Concepts/kira_sabertooth.png` (keep the old one as
-   `kira_sabertooth_v1.png`). Code checks it before using it: head in line with
-   the body (looking the way she walks), ears folded, mouth closed with both
-   fangs straight down, all paws and tail in frame. If it fails, stop and say
-   exactly why.
-   **Done (2026-11-09):** Dan made it; the planning chat checked it and saved it
-   (1448 x 1086; old one is `kira_sabertooth_v1.png`). It passes. One note: her
-   fur is a warmer, slightly brownish gray than home Kira's cooler gray. Match
-   the sabertooth's fur color to home Kira's texture in the clean-up (item 2)
-   so she's the same cat in both forms.
-2. **Meshy + clean-up** as in Round 2, then the same Blender rig (`kira_rig.py`,
-   no ear bones), **with no head counter-turn** (remove it for this form; check
-   it isn't needed for home Kira either, and keep hers if it is).
-3. **Previews of the face:** front, side and 3/4 close-ups of the head in idle,
-   run and attack, plus an exe shot from the player's view. Look at them and
-   report: both eyes looking the same way, face not stretched, fangs straight
-   down and inside the lip line. Keep the old model as fallback.
-4. Build, check, publish 0.3.1, update `TODO.md` / `CLAUDE.md`, clean up.
-
-Prompt for Dan's image tool (planning chat, 2026-11-09):
-> Pixar-style 3D render of Kira, a tiny gray Scottish Fold kitten transformed
-> into a baby saber-toothed cat. Full body, side view, standing on all four
-> legs, head facing straight ahead in line with her body (looking where she is
-> walking, NOT turned toward the camera), tail up and away from the body.
-> Two small white saber fangs pointing straight down from the upper lip, mouth
-> closed. Folded-down Scottish Fold ears that lie flat and forward, never
-> raised. Solid gray fur over the entire body with absolutely no white fur or
-> markings. Golden-amber eyes. Plain white background, soft even light, no
-> ground shadow, whole body in frame with space around it, at least 1536 px wide.
-Negative: `head turned toward camera, looking at viewer, open mouth, cropped,
-cut off paws, cut off tail, raised ears, pointed ears, white fur, multiple
-views, props, text, watermark, ground shadow`.
+Current round: none yet. Fix 3.1 is delivered (below); its plan is in
+`TODO-ARCHIVE.md`. Next: the Ice Age as the first real world (the planning chat
+writes the round here).
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 3.1: sabertooth Kira's face (0.3.1, build 301, 2026-11-09)
+Check `local/round3/fix31_play` (built exe, batch mode, muted, no window, virtual
+pad from the title screen, `--only play`): RESULT all checks passed; audio output
+0.000 RMS. Evidence: `Data/screenshots/round3/fix3.1/` (`kira_sabertooth_face_sheet.png`
+= the 9 close-ups, clip frames, `12d`-`12g` exe shots, `exe_check_play.txt`).
+1. New concept: **done** (checked again by Code before use: head in profile in line
+   with the body, ears folded, mouth closed, both fangs straight down, all paws and
+   tail in frame, amber eyes, no white: passes).
+2. Meshy + clean-up + rig: **done.** New Meshy model (30 credits), 14.7k tris, 0.5 m;
+   it came out facing front, so the old 90 deg turn in `meshy_cleanup.py` is gone.
+   Fur matched to home Kira by `Tools/match_fur.py` (fur average rgb 115,100,97 ->
+   118,111,109; home Kira 117,110,109; eyes / nose / fangs left alone). Rig: head
+   measured 6 deg off straight (old model: 83 deg); **no counter-turn** for the
+   sabertooth. Home Kira keeps hers (her head is 34 deg turned; she isn't re-rigged).
+   Kira lock at build: OK (no ear bones, 0% white, amber eyes).
+3. Face previews: **done.** Front / side / 3/4 of the head in idle, run and attack
+   (Blender) and in the exe (player's view `12d`, close-ups `12e`-`12g`): both eyes
+   look the same way in every shot, face not stretched, fangs straight down from
+   under the upper lip. Her pupils sit slightly outward, mirrored (Meshy's eyes, not
+   the rig). Old model kept: `SourceArt/Rigged/kira_sabertooth_v1/model.fbx` (in git)
+   and `SourceArt/Meshy/kira_sabertooth_v1/` (local only, git-ignored).
+4. Build / check / publish: **done.** 0.3.1 (166 MB), `game-301` published; a fresh
+   Round 1 starter install from GitHub updated itself to 0.3.1 (ready handshake;
+   game hidden, batch mode, master volume 0). Disk: 2.7 GB -> 2.3 GB.
+
+Decisions Code made (Dan can overrule): the counter-turn is now per model
+(`COUNTER_TURN` in `kira_rig.py`, home Kira only); the fur match also moves the
+fur's brightness spread to home Kira's.
+
+**For Dan to check:** sabertooth Kira in Area B on a pad, face toward the camera
+(idle, running, clawing the ice); whether her gray now reads as the same cat as
+home Kira.
+
 ### Round 3: Dan and Abi in the game, animated (0.3.0, build 300, 2026-11-09)
 Final check `local/round3/final` (built exe, batch mode, muted, no window,
 virtual pad from the title screen; play + Round 3 models + measure + perf):
@@ -157,74 +148,6 @@ counter-turn capped at 45 deg; cutscene actors are still Round 1's graybox ones.
 sabertooth's turned head bother you?); the ice cave in Area B; the necklace on
 Dan's capsule; the hair fix renders in `Data/screenshots/round2/mixamo/`.
 Delete two test folders Code couldn't: `C:\Data` (empty), `C:\sot200` (launcher test install).
-
-### Round 1: project setup + graybox playground (0.1.0, build 100, 2026-11-09)
-Final check `local/round1/release3` (built exe, batch mode, muted, no window,
-virtual pad from the title screen): RESULT all checks passed; audio output
-0.000 RMS. Evidence: `Data/screenshots/round1/` (+ the two MP4s in `Recordings/`,
-git-ignored).
-1. Setup: **done.** Unity 6000.6.1f1 URP, Input System only; Cinemachine 6.6.0 and
-   Timeline 6.6.0 (built into 6000.6), Recorder 5.1.7, ProBuilder 6.1.4; HH's
-   .gitignore (+ `Recordings/`); namespace `ShardsOfTime`; scripts by system.
-2. Ported: **done.** From HH: `TestRun.cs`, `ScreenSetting.cs`, `SteamDeck.cs`,
-   `LauncherBridge.cs`, `PlayerBuild`, `run_check.py`, `cleanup_round.py`,
-   `meshy_generate.py`, `import_characters.py` (both adapted to our six models),
-   the GameSettings / UiKit / ExeCheck patterns, `Play Shards of Time.bat`. New:
-   `Tools/unity_batch.py` (Unity batch runs at Below Normal, no window).
-3. Launcher: **done.** `ShardsOfTimeLauncher.exe`, own signing key (ID 61aa227f),
-   README rewritten, `Play Shards of Time (launcher).bat`. Local self-check: update
-   1->2, game started hidden, ready handshake. 0.1.0 published (see item 14).
-4. Motor: **done.** Ground/Air/Swim/LowGravity in one motor. Measured: Dan 7.0 m/s,
-   jump 1.57 m held / 0.41 tapped; coyote jump at 0.07 s yes, 0.25 s no; buffered
-   jump 0.04 s after landing; 20 deg ramp climbed, 55 deg slid back; carried 7.6 m
-   on the moving platform; Dan dives, breath runs out at 10 s (-1 heart); Kira no
-   breath meter; low gravity (x0.3): 5.3 m / 2.2 s jump vs 1.6 m / 0.64 s.
-5. Camera: **done.** Cinemachine orbit: 160 deg/s on the stick, recenter (R3) to
-   0 deg off, auto-recenter while running, a wall behind pulls it to 1.2 m, works
-   and tints under water.
-6. Heroes + switching: **done.** Stats as `Resources/Data/Characters/*.asset`.
-   Dan punch + pushes blocks (4.4 m in 3 s; Abi 0); Abi 8.2 m/s, 2.1 m, double
-   jump 3.6 m once unlocked; Kira 0.5 m, 7.6 m/s, only one through the 0.7 m crawl
-   gap. RB/LB/1/2/3 switch on the spot, camera moved 0.5 m in 4 frames.
-7. Followers: **done.** Trail-following, flanking left/right. Whole-run check:
-   both arrived at every stop, 6 warps (all "not caught up in 3 s", out of view),
-   none stuck.
-8. Health/combat: **done.** 3 shared hearts, 1.3 s invincibility, heal heart,
-   heart upgrade (3->4, cap 10), enemy chases + hurts + dies to one punch, spikes,
-   pit -> checkpoint -1 heart, out of hearts -> checkpoint full hearts.
-9. Shards/necklace/story/portal: **done.** 10 of 16 non-double-jump shards wake
-   the necklace (cutscene), it leads to the story shard (HUD arrow + beam), which
-   opens the portal (cutscene) to Area B (double jump pickup, portal back);
-   double-jump ledge + "needs Muscle Man" boulder. Rule-2 check: data report +
-   the play-through reached 10 without the double jump. Rumble: coded, **not
-   felt** (no real pad in a batch check).
-10. Save: **done.** `save.json`; checked: Quit to title -> Continue restores 19
-    shards, ability, portals, 4 hearts; New game asks, then clears.
-11. Cutscenes: **done.** NecklaceWakes (6.5 s), PortalOpens (6 s), Timeline +
-    Cinemachine prefabs; hold A skips (checked); Shards of Time > Render Cutscene
-    to Video wrote both MP4s (1920x1080, 30 fps); `Docs/CUTSCENES.md`.
-12. Art prompts: **done, stopped for Dan.** `Docs/MODELS-NEEDED.md`: six prompts
-    with the Kira lock and the Mixamo clip list. Dan then saved six clean full-body
-    sheets, now `SourceArt/Concepts/*.png`, ready for Meshy in Round 2. Open: the
-    red-pyjama woman (shared in chat): who is she? No Meshy calls.
-13. Title + pause: **done.** Continue / New game / Settings / Controls / Credits /
-    Quit; pause menu; Settings: volume, effects, screen, resolution, Steam Deck,
-    rumble, invert X/Y, camera speed, reset; Controls follows the device in use.
-14. Build/check/publish: **done.** Exe 0.1.0 (99.8 MB); checks above; release
-    `build-100` + starter `starter-100` on shards-of-time-releases; a fresh
-    starter install from GitHub started 0.1.0 (ready handshake). Disk clean-up:
-    project folders 2.2 GB -> 1.7 GB.
-
-Decisions Code made (Dan can overrule): the world is built in code at start (one
-scene, as HH); requirement 10 of 16; low gravity x0.3; followers flank and hide
-when the camera is pulled in on them; cutscenes anchor at the player (necklace)
-or the portal; skip = hold A / Space 1 s; check runs cap at 144 fps; placeholder
-code-made sounds; title art is a placeholder made from a screenshot.
-
-**For Dan to check:** run / jump / camera feel on a pad and on the Steam Deck
-(install the starter ZIP; Deck frame rate not measured); switching; followers
-(do the warps feel OK?); swim, dive, low gravity; the two cutscenes in play and
-the MP4s in `Recordings/`; rumble on a real pad; who the red-pyjama woman is.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
