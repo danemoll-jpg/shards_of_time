@@ -21,8 +21,15 @@ Design sources (read these when a round touches story, worlds or characters):
 - **Toolchain (paid licences, use freely):** Blender (scripted, `Tools/Blender/*.py`),
   **Meshy** API for characters/creatures (image-to-3D, key from the
   `MESHY_API_KEY` environment variable, never written to the repo, logs or
-  chat), **Mixamo** for rigging/animation, **Suno** for long music,
-  **ElevenLabs** for sound effects and short music/stings.
+  chat), **Mixamo** for rigging/animation, **ElevenLabs** for sound effects and short music (stings, the Violinist's tune).
+- **Level music is Dan's (standing rule, Dan 2026-11-09).** For every world /
+  level song (and other full-length tracks: title, vortex, credits), Code never
+  generates the music, stand-ins included. Code writes a Suno prompt in
+  `Docs/MUSIC.md` (style text, length, instrumental, where it plays, loop
+  needs) and the path to save it as; Dan makes it in Suno, picks the take he
+  likes and saves it there. Until then that spot plays silence. **Short music
+  stays with Code via ElevenLabs:** stings, jingles and short tunes such as
+  the Violinist's tune, plus all sound effects.
 - **Platforms:** Windows PC + Steam Deck (Proton). No VR planned.
 - **Dan's PC:** Dell XPS 8930, i7-9700, GTX 1660 Ti 6 GB, 64 GB RAM, Win 11.
   Target 60 fps at 1080p there; 40+ fps on the Steam Deck.

@@ -24,7 +24,116 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none. Round 4 is delivered (below); the planning chat writes Round 5.
+Current round — Round 5: Ice Age polish, a bigger valley, creature models (target 0.5.0)
+Round 4's plan is in `TODO-ARCHIVE.md`. Dan played 0.4.0 (2026-11-09): "for a
+start not too bad", clean-up needed, and the notes below. Report per item:
+done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can
+overrule after playing.
+
+**Dan's notes on 0.4.0**
+1. **Rewrite `IceAgeArrival` (Dan's story beat).** They land in the snow. Dan
+   gets up and sees what looks like a **sabertooth about to attack him**: shoot
+   Kira from a low angle in silhouette / shadow against the bright sky so she
+   reads as big and dangerous, a growl, fangs. Dan scrambles backward and
+   **falls flat on his back in fright**. Kira leaps onto his chest; close-up:
+   he sees the folded ears and amber eyes and realizes it's **Kira**: big
+   relief (he laughs, slumps back). She paws at his chest, **pointing out the
+   necklace** he didn't know he had; he holds it up, it pulses blue. Abi
+   laughs. Comedy is situational, no dialogue needed. Keep it about the same
+   length (13–16 s) and skippable; render the MP4 again.
+1b. **Kira still has see-through spots (Dan, 2026-11-09, after 0.4.0).**
+   Round 4's reversed-twin faces cut it down but didn't finish it (sabertooth
+   still 168 px in the exe). Get to **zero** see-through pixels, both forms,
+   any angle, in the exe. If the Meshy mesh itself is open or non-manifold,
+   don't patch it again: rebuild a closed mesh in Blender (voxel remesh or
+   shrink-wrap to a solid body), re-bake the texture onto it, re-skin to the
+   same rig, keep the Kira lock checks. Also check the material isn't using
+   alpha / transparency anywhere. Check: turntable at 16 angles + close-ups of
+   ears, tail, paws and fangs, and a player's-view run, with the measured
+   see-through count (must be 0). Same check for Abi's hair (32 / 30 px left).
+2. **The trees are lying down** ("Why were all the trees down?"). Find the
+   cause (likely the pine prop's up-axis from Blender, not its placement) and
+   fix it at the source. Then check **every** Ice Age prop is upright and
+   sitting on the ground (pines, rocks, bones, crystals, stones), with a shot.
+3. **Clean-up pass.** Before adding anything: go through Round 4's own exe
+   screenshots and new ones from the player's view across the whole valley,
+   and list every visual problem found (things lying wrong, floating or sunk
+   props, clipping, seams, stretched textures, holes, popping). Fix them, and
+   put the list (fixed / not fixed) in the report. Dan will add his own list
+   after playing.
+
+**Music (standing rule in `CLAUDE.md`: level songs are Dan's)**
+4. Remove Code's Ice Age stand-in (`Music/iceage.mp3`, and from
+   `make_sounds.py`). Play Dan's files when they exist, silence until then:
+   - `Music/title.mp3`: **title screen (new, Dan 2026-11-09)**: its own main
+     theme, different from Act I and the Ice Age. Prompt in `Docs/MUSIC.md`.
+   - `Music/act1.mp3`: during `ActOne`, fade out at the white-out.
+   - `Music/iceage.mp3`: starts with `IceAgeArrival`, then loops in the world.
+   - `Music/vortex.mp3`: **inside the vortex space (new, Dan 2026-11-09)**,
+     loops; crossfade in when the party enters, back to the world's theme
+     when they leave.
+   The Violinist's tune and the sound effects stay (ElevenLabs).
+   **Dan's four tracks are in (2026-11-09):** `Music/title.mp3` (3:00),
+   `act1.mp3` (22.4 s), `iceage.mp3` (3:00, replaces Code's stand-in: don't
+   regenerate it; remove the iceage entry from `make_sounds.py`), `vortex.mp3`
+   (3:00). Act I's track runs 3.4 s past the 19 s scene: fade it out over the
+   white-out (or hold the white-out a moment longer if it ends on a nicer
+   note). Check all four load and play in the right places (muted run, level
+   reported); Dan judges the sound.
+
+**A bigger Ice Age with places for later (Dan, 2026-11-09)**
+5. **Grow the valley** (DEFAULT): about 10–15 minutes for a first visit (now
+   6.6). Keep what's there and add three zones:
+   - **Frozen lake:** wide ice with skating slides, holes in the ice, and a deep
+     part under the ice for later (see the gates below).
+   - **Glacier climb:** a tall wall of ice and ledges up to a summit with a view
+     over the whole valley and the volcanoes.
+   - **Hot-spring grotto:** a warm hidden cave by the volcano side, behind a
+     cracked rock wall.
+6. **Places that open with later moves.** Every one is visible on the first
+   visit so the player knows to come back, and holds shards, a heart upgrade
+   or both. Use the move roadmap below (DEFAULT, see open question):
+   - double-jump ledges (Abi, Egypt): keep the two, add one;
+   - boulders (Muscle Man, Medieval): keep the one, add one;
+   - cracked rock walls (Dan's charged punch, Medieval): the grotto entrance;
+   - the deep lake under the ice (deep dive, Pirate Seas);
+   - wall-jump chimneys in the glacier (Abi's wall jump, Steampunk).
+   Build the gates now as data (which move opens each); the moves themselves
+   come in their worlds.
+7. **Shards and hearts:** grow to about 60 small shards (DEFAULT) with the
+   requirement about 35; Rule 2 must still hold (35 reachable with the moves
+   you have on the first visit: no double jump, no Muscle Man, and the ground
+   pound only after the Violinist). Hide two heart upgrades in the valley, at
+   least one behind a later-move gate.
+
+**Creature models**
+8. **Meshy + Mixamo for the Violinist first, then stop for Dan.** Dan's concept
+   `SourceArt/Concepts/violinist_iceage.png` → Meshy → clean-up → Mixamo upload
+   FBX + clip list (idle, play-instrument idle, walk, a small bow/nod). Stop and
+   tell Dan as soon as his file is ready (Dan does Mixamo the same day).
+   **When Dan's clips arrive, import them in this same round** (don't wait for
+   a later round).
+9. **Wolf, snow critter, mammoth:** Meshy from Dan's concepts, Blender rig and
+   clips by script (four-legged, like Kira): wolf (idle, walk, run, circle,
+   lunge, hit, stunned), critter (idle, waddle, hit, stunned), mammoth (walk,
+   idle; ride collider stays flat). Replace the placeholders; keep them as
+   fallback.
+10. Build, check (a full run from New game: Act I, the new arrival, the whole
+    valley, story shard, vortex), publish 0.5.0, update `TODO.md` / `CLAUDE.md`,
+    clean up.
+
+**Move roadmap (DEFAULT, open for Dan; moves are kept across worlds, so later
+moves reopen earlier worlds):**
+| World | The Violinist teaches | Also |
+|---|---|---|
+| Ice Age | Dan: ground pound | |
+| Egypt | Abi: double jump | |
+| Bethlehem | Kira: pounce (long leap) | |
+| Medieval | Dan: charged punch | Muscle Man joins (boulders, lifts Dan to high ledges) |
+| Pirate Seas | everyone: deep dive (longer breath) | |
+| Steampunk | Abi: wall jump | |
+| Tomorrowland | Abi: air dash | |
+| Moon | none (the finale) | |
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------
