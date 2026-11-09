@@ -24,9 +24,102 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none yet. Fix 3.1 is delivered (below); its plan is in
-`TODO-ARCHIVE.md`. Next: the Ice Age as the first real world (the planning chat
-writes the round here).
+Current round — Round 4: the Ice Age, first real world (target 0.4.0)
+Fix 3.1's plan is in `TODO-ARCHIVE.md`. Dan played 0.3.1 (2026-11-09): new
+sabertooth Kira "looks good". Report per item: done / not done / deferred, and
+why. Defaults the planning chat chose are marked DEFAULT: Dan can overrule
+them after playing.
+
+**Carried-over fixes (Dan, 2026-11-09)**
+1. **Kira has see-through holes** from some angles (sabertooth form; check home
+   Kira too). Find the cause per hole (back-face culling on thin or one-sided
+   geometry, flipped normals, real gaps in the Meshy mesh) and fix it at the
+   source: recalculate normals, close gaps in Blender, two-sided material only
+   where the geometry is genuinely thin. Check: a turntable of each form at
+   8 angles plus close-ups, no background showing through.
+2. **Abi's hair has see-through holes,** worst in her home outfit. Same
+   approach (hair is often one-sided cards from Meshy: two-sided hair
+   material, normals fixed, gaps closed). Check: turntable at 8 angles, both
+   outfits, plus the player's-view camera while she runs.
+
+**The Ice Age**
+3. **Game start = the film's opening.** New game plays Act I as an in-engine
+   cutscene (Christmas evening, Kira knocks the ornament off the tree, it
+   shatters, the vortex pulls them in), then the Ice Age arrival (they land in
+   the snow in caveman outfits; Dan falls backward; sabertooth Kira jumps on his
+   chest and paws at the necklace, which starts pulsing blue), then play
+   starts. Both skippable. Living room set from Dan's references in
+   `SourceArt/Reference/Worlds/00-Home/` (added 2026-11-09): purple-magenta
+   walls in warm golden light, red velvet curtains tied back, a tall window with
+   snow outside and a garland of lights on the sill, a cream couch with red and
+   lime cushions, a lit wreath around a framed picture, a decorated tree with
+   red / purple / silver baubles, warm fairy lights and a red heart ornament
+   with initials. **The ornament that shatters is the dark silver glass bauble
+   Dan is holding** in `home-decorating-tree-ornament.png`: model it as its own
+   prop (it reappears whole in Act XI). Stylized to match the characters, not
+   photo-real. Our characters wear their concept-sheet outfits, not the film's. The Round 1 graybox
+   playground stays reachable only from a debug option (test area).
+4. **Level layout** (DEFAULT, from the film + concept): one connected frozen
+   valley with distant volcanic mountains, about 5–8 minutes to cross, in zones:
+   - **Landing snowfield:** start; teaches run / jump / switch / swim (a
+     half-frozen pond) with a few easy shards.
+   - **Mammoth ridge:** a slow herd of mammoths you can ride on the back of
+     (moving platforms) to reach high shelves.
+   - **Ice bridges and a frozen river:** jumping, a cracked bridge that breaks.
+   - **Ice caves:** Kira-only crawl tunnels and ice walls only sabertooth Kira
+     can claw through; a dark section lit by the necklace's glow.
+   - **Volcano vents** at the valley edge: warm steam that lifts the player
+     (a vertical route).
+   - **Future-ability gates**, visible but closed: a high ledge for Abi's
+     double jump, a big boulder for Muscle Man.
+5. **Shards, story shard and the vortex** (numbers DEFAULT): 40 small shards
+   in the Ice Age, 25 needed. At 25 the necklace wakes (Round 1 cutscene, now
+   with the real characters) and leads to the **blue story shard**; collecting
+   it **opens a vortex** (blue, the shard's color). **Vortex = travel between
+   worlds (DECIDED, Dan 2026-11-09):** every world's story shard opens a vortex;
+   stepping into it shows the paths: every world unlocked so far, the next
+   world, and **Home**. Home is visible but **blocked until all shards are
+   rebuilt** (shows how many story shards are still missing). Build the vortex
+   space and its path choice now: paths = Ice Age, Egypt ("to be continued"
+   this round, saves), Home (blocked, 1 / 8). The vortex replaces Round 1's
+   portal. Rule-2 check: 25 reachable without double jump or
+   Muscle Man, proved by data + a play-through.
+6. **One new move this round** (DEFAULT): Dan's **ground pound**, learned in
+   the Ice Age (breaks cracked ice floors to reach hidden shards, stuns
+   enemies). **The Violinist teaches moves (DECIDED, Dan 2026-11-09):** he
+   appears somewhere in each world (in the Ice Age with a bone flute or a
+   simple prehistoric fiddle, DEFAULT), plays a short tune when a character
+   reaches him, and that character learns the move (short in-engine moment,
+   no dialogue: he never explains himself). Placeholder figure until his model
+   exists; add the Violinist (Ice Age look) to item 9's prompts.
+7. **Enemies:** wolves (circle, then lunge) and snow critters (simple
+   patrollers). Placeholder shapes until their models exist (item 9). Light
+   combat, per the concept. No boss this world (DEFAULT).
+8. **Look:** stylized and colorful, matching the characters. Dan's reference
+   `SourceArt/Reference/Worlds/01-IceAge/iceage-valley-volcanoes.jpg` sets the
+   layout and palette: a wide snowy valley between warm brown rock cliffs,
+   **two erupting volcanoes** with glowing lava and ash plumes at the far end,
+   mammoths in the blowing snow, a rock cave mouth lit by firelight, standing
+   stones and stone ruins in the snow. The reference is semi-realistic; make it
+   stylized like the characters. Soft blue-white light, fog for depth. Terrain and ice by Blender script; rocks, bones and trees as
+   simple stylized props (Meshy text-to-3D allowed for props). Must hold 60 fps
+   at 1080p on Dan's PC and 40+ on the Steam Deck: measure both settings.
+9. **Creature models: prompts only, then stop for Dan.** Add concept prompts to
+   `Docs/MODELS-NEEDED.md` for: wolf, snow critter (design it: small, round,
+   cute-grumpy), mammoth (rideable, big flat back), plus any prop Meshy can't
+   do from text. Same rules as before (full body, side view for animals, plain
+   background). Tell Dan when they're ready; he makes the images, and the
+   models come in the next round. Keep building with placeholders meanwhile.
+10. **Music and sound:** an Ice Age theme with Suno (whimsical, adventurous;
+    loops cleanly), ambience (wind), and ElevenLabs effects for footsteps on
+    snow, ice cracking, shard pickup, necklace pulse, wolf growl. Sound checks
+    as short as possible, then mute again.
+11. Build, check (as Dan plays it: a full run from New game to the Egypt
+    portal), publish 0.4.0, update `TODO.md` / `CLAUDE.md`, clean up.
+
+**Decided this round (Dan, 2026-11-09):** the Violinist teaches moves; the
+vortex is the travel hub (path home blocked until all shards are rebuilt).
+
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------

@@ -43,6 +43,15 @@ changed for gameplay.
 - **Publish a release every round** (the default for new games; Dan didn't
   change it).
 
+- **The Violinist teaches new moves** (Dan, 2026-11-09). He appears in every
+  world (the game adds him to the Ice Age), plays a short tune, and a character
+  learns a move. He never explains himself.
+- **Travel = the vortex** (Dan, 2026-11-09). Every world's story shard opens a
+  vortex; inside, the player picks a path: any unlocked world, the next world,
+  or Home. The path home is blocked until all the shards are rebuilt.
+- **The ornament that shatters** is the dark silver glass bauble Dan holds in
+  `SourceArt/Reference/Worlds/00-Home/home-decorating-tree-ornament.png`.
+
 ## Kira — fixed in every form
 Scottish Fold, folded ears that never rise, solid gray with no white, and
 golden-amber eyes. Every concept-art prompt states this.
