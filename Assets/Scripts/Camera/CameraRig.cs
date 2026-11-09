@@ -124,8 +124,8 @@ namespace ShardsOfTime
             Underwater = w;
             Hud.SetUnderwater(Underwater);
             RenderSettings.fogColor = Underwater ? new Color(.12f, .35f, .5f) : Look.FogColor;
-            RenderSettings.fogStartDistance = Underwater ? 0f : 90f;
-            RenderSettings.fogEndDistance = Underwater ? 28f : 420f;
+            RenderSettings.fogStartDistance = Underwater ? 0f : Look.FogStart;
+            RenderSettings.fogEndDistance = Underwater ? 28f : Look.FogEnd;
         }
 
         // the camera's distance from the focus (checks: pulled in by walls)

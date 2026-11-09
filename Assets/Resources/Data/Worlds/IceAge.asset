@@ -1,0 +1,247 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: IceAge
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: IceAge
+  displayName: The Ice Age
+  heightsAreHints: 1
+  areas:
+  - id: V
+    name: The Ice Age
+    requirement: 25
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - ClawIce
+    storyShard: {x: 0, y: 1, z: 490}
+    storyShardColor: {r: 0.25, g: 0.55, b: 1, a: 1}
+    spawn: {x: 0, y: 0.3, z: 12}
+    spawnYaw: 0
+    kiraForm: Sabertooth
+    outfit: iceage
+    box:
+      m_Center: {x: 0, y: 0, z: 265}
+      m_Extent: {x: 200, y: 150, z: 360}
+  shards:
+  - id: S01
+    area: V
+    position: {x: 0, y: 0, z: 24}
+    requires: []
+    note: snowfield path
+  - id: S02
+    area: V
+    position: {x: -6, y: 0, z: 36}
+    requires: []
+    note: snowfield path
+  - id: S03
+    area: V
+    position: {x: 6, y: 0, z: 46}
+    requires: []
+    note: snowfield path
+  - id: S04
+    area: V
+    position: {x: -14, y: 0, z: 62}
+    requires: []
+    note: by the rocks
+  - id: S05
+    area: V
+    position: {x: -4, y: 0, z: 80}
+    requires: []
+    note: snowfield path
+  - id: S06
+    area: V
+    position: {x: 10, y: 0, z: 96}
+    requires: []
+    note: snowfield path
+  - id: S07
+    area: V
+    position: {x: 22, y: -3.2, z: 55}
+    requires: []
+    note: pond bottom (dive)
+  - id: S08
+    area: V
+    position: {x: 27, y: -2.4, z: 60}
+    requires: []
+    note: pond bottom (dive)
+  - id: S09
+    area: V
+    position: {x: 17, y: -0.25, z: 52}
+    requires: []
+    note: on an ice floe in the pond
+  - id: R01
+    area: V
+    position: {x: 30, y: 0, z: 120}
+    requires: []
+    note: ridge
+  - id: R02
+    area: V
+    position: {x: 20, y: 0, z: 150}
+    requires: []
+    note: ridge
+  - id: R03
+    area: V
+    position: {x: 28, y: 0, z: 190}
+    requires: []
+    note: ridge
+  - id: R04
+    area: V
+    position: {x: 51, y: 5, z: 158}
+    requires: []
+    note: the high shelf (ride a mammoth)
+  - id: R05
+    area: V
+    position: {x: 55, y: 5, z: 180}
+    requires: []
+    note: the high shelf (ride a mammoth)
+  - id: R06
+    area: V
+    position: {x: 51, y: 5, z: 202}
+    requires: []
+    note: the high shelf (ride a mammoth)
+  - id: R07
+    area: V
+    position: {x: 51, y: 4, z: 120}
+    requires: []
+    note: the loading rock
+  - id: R08
+    area: V
+    position: {x: 8, y: 3.2, z: 206}
+    requires:
+    - DoubleJump
+    note: high ledge
+  - id: V01
+    area: V
+    position: {x: 20, y: 0, z: 243.5}
+    requires: []
+    note: ice pillar 1
+  - id: V02
+    area: V
+    position: {x: 20, y: 0, z: 248}
+    requires: []
+    note: ice pillar 2
+  - id: V03
+    area: V
+    position: {x: 20, y: 0, z: 252.5}
+    requires: []
+    note: ice pillar 3
+  - id: V04
+    area: V
+    position: {x: 20, y: 0, z: 257}
+    requires: []
+    note: ice pillar 4
+  - id: V05
+    area: V
+    position: {x: -10, y: -10, z: 250}
+    requires: []
+    note: river bottom under the bridge (dive)
+  - id: V06
+    area: V
+    position: {x: 49, y: -5, z: 236}
+    requires: []
+    note: the ramp out of the gorge
+  - id: C01
+    area: V
+    position: {x: -38, y: 0, z: 316}
+    requires: []
+    note: dark hall (the necklace lights it)
+  - id: C02
+    area: V
+    position: {x: -38, y: 0, z: 352}
+    requires: []
+    note: dark hall (the necklace lights it)
+  - id: C03
+    area: V
+    position: {x: -58, y: 0, z: 316}
+    requires:
+    - Kira
+    note: crawl chamber (Kira)
+  - id: C04
+    area: V
+    position: {x: -58, y: 0, z: 324}
+    requires:
+    - Kira
+    note: crawl chamber (Kira)
+  - id: C05
+    area: V
+    position: {x: -31, y: 0, z: 362}
+    requires:
+    - Kira
+    - ClawIce
+    note: behind the ice wall (sabertooth Kira)
+  - id: C06
+    area: V
+    position: {x: -33, y: -4.5, z: 338}
+    requires:
+    - GroundPound
+    note: the pit under the cracked ice (ground pound)
+  - id: C07
+    area: V
+    position: {x: -26, y: -4.5, z: 347}
+    requires:
+    - GroundPound
+    note: the pit under the cracked ice (ground pound)
+  - id: H01
+    area: V
+    position: {x: 47, y: 8, z: 436}
+    requires: []
+    note: terrace 1 (steam)
+  - id: H02
+    area: V
+    position: {x: 58, y: 16, z: 437}
+    requires: []
+    note: terrace 2 (steam)
+  - id: H03
+    area: V
+    position: {x: 60, y: 24, z: 414}
+    requires: []
+    note: terrace 3 (steam)
+  - id: H04
+    area: V
+    position: {x: 60, y: 24, z: 426}
+    requires: []
+    note: terrace 3 (steam)
+  - id: H05
+    area: V
+    position: {x: 60, y: 27.3, z: 420}
+    requires:
+    - DoubleJump
+    note: ice shelf over terrace 3
+  - id: T01
+    area: V
+    position: {x: -12, y: 0, z: 476}
+    requires: []
+    note: standing stones
+  - id: T02
+    area: V
+    position: {x: 12, y: 0, z: 500}
+    requires: []
+    note: standing stones
+  - id: T03
+    area: V
+    position: {x: -49, y: 0, z: 484}
+    requires:
+    - MuscleMan
+    note: grotto behind the boulder
+  - id: T04
+    area: V
+    position: {x: 18, y: -3.5, z: 478}
+    requires:
+    - GroundPound
+    note: the frozen well (ground pound)
+  - id: T05
+    area: V
+    position: {x: -7, y: 3.3, z: 497}
+    requires:
+    - DoubleJump
+    note: on the stone lintel

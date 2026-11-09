@@ -12,6 +12,7 @@ Run:  F:\\blender\\blender.exe --background --factory-startup --python Tools/Ble
 3b. The body under the hair (the sweater's back panel), between the shoulder joints and far from the arm bones, also comes
    off the arm bones.
 4. Cut the faces that join hair to an arm (Meshy fuses hair and sleeve; those strips would stretch). They sit behind the hair.
+5. (Round 4) Faces seen from behind (single-sheet hair strands, the view through the cut in 4) get a reversed twin (mesh_fix.py).
 Writes SourceArt/Mixamo/<model>/rigged_hairfix.fbx (rigged, With Skin) and prints the counts.
 """
 import bpy, os, sys
@@ -136,6 +137,10 @@ def fix(model, fbx):
         bm = bmesh.new(); bm.from_mesh(me); bm.faces.ensure_lookup_table()
         bmesh.ops.delete(bm, geom=[bm.faces[i] for i in cut], context='FACES_ONLY'); bm.to_mesh(me); bm.free()
     print(f'HAIR {model}: cut {len(cut)} faces joining hair to the arms')
+    # 5. (Round 4, item 2) hair strands are single sheets: those seen from behind get a reversed twin, which also closes the view
+    #    through the strip cut in 4 (Tools/Blender/mesh_fix.py)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import mesh_fix
+    mesh_fix.double_sheets(ob)
     out = os.path.join(ROOT, 'SourceArt', 'Mixamo', model, 'rigged_hairfix.fbx')
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.export_scene.fbx(filepath=out, use_selection=True, object_types={'ARMATURE', 'MESH'}, add_leaf_bones=False,

@@ -32,7 +32,7 @@ namespace ShardsOfTime
             Log(TestRun.WindowReport() + "; " + TestRun.Report());
             yield return null; yield return null;
             string only = CheckRun.Only;
-            IEnumerator run = only == "coyote" ? CoyoteDiag() : only == "mute" ? MuteCheck() : only == "play" ? Play() : only == "models" ? Models() : only == "measure" ? Measure() : only == "perf" ? Perf() : All();
+            IEnumerator run = only == "coyote" ? CoyoteDiag() : only == "mute" ? MuteCheck() : only == "diag" ? Diag() : only == "play" ? IceAgePlay() : only == "playground" ? Play() : only == "fixes" ? Fixes() : only == "models" ? Models() : only == "measure" ? Measure() : only == "perf" ? PerfIceAge() : only == "perfplayground" ? Perf() : All();
             while (true)
             {
                 object cur;
@@ -63,10 +63,9 @@ namespace ShardsOfTime
 
         IEnumerator All()
         {
-            yield return Play();
-            yield return Models();
-            yield return Measure();
-            yield return Perf();
+            yield return IceAgePlay();
+            yield return Fixes();
+            yield return PerfIceAge();
         }
 
         // ---------------------------------------------------------------- the virtual pad

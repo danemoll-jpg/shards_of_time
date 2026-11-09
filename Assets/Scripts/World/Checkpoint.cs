@@ -8,6 +8,7 @@ namespace ShardsOfTime
     {
         public static readonly Dictionary<string, Checkpoint> All = new Dictionary<string, Checkpoint>();
         public string id; public float yaw;
+        public bool silent;   // Round 4: an invisible checkpoint (the vortex space): no message when touched
         Renderer flag;
         public bool Active => SaveGame.Current.checkpoint == id;
 
@@ -23,8 +24,7 @@ namespace ShardsOfTime
             {
                 SaveGame.Current.checkpoint = id;
                 Health.Refill();
-                Sfx.Play("checkpoint", .5f);
-                Hud.Message("Checkpoint");
+                if (!silent) { Sfx.Play("checkpoint", .5f); Hud.Message("Checkpoint"); }
                 SaveGame.Save("checkpoint " + id);
             }
         }
@@ -35,9 +35,17 @@ namespace ShardsOfTime
         {
             var c = Current;
             if (c) Party.I.PlaceAll(c.transform.position + Vector3.up * .1f + Quaternion.Euler(0, c.yaw, 0) * Vector3.forward * 3f, Quaternion.Euler(0, c.yaw, 0));
-            else { var a = Game.World.Area("A"); Party.I.PlaceAll(a.spawn, Quaternion.Euler(0, a.spawnYaw, 0)); }
+            else { var a = Game.World.areas[0]; Party.I.PlaceAll(a.spawn, Quaternion.Euler(0, a.spawnYaw, 0)); }
             CameraRig.I?.SnapBehind();
         }
+    }
+
+    // Round 4: the vortex gate's glow, on while it is open
+    public sealed class PortalLight : MonoBehaviour
+    {
+        public GameObject lightObject; Portal p;
+        void Start() { p = GetComponent<Portal>(); }
+        void Update() { if (lightObject && p) lightObject.SetActive(p.Open); }
     }
 
     // Round 1, item 9: a portal ring. Closed until its id is in the save's opened portals; walking in takes the party to the other
@@ -62,6 +70,7 @@ namespace ShardsOfTime
 
         public void Use()
         {
+            if (!string.IsNullOrEmpty(toCheckpoint) && toCheckpoint == Vortex.Checkpoint) { Game.I.EnterVortex(this); return; }
             if (!Checkpoint.All.TryGetValue(toCheckpoint, out var to)) return;
             Uses++; cool = 2f;
             if (!SaveGame.Current.portals.Contains(id)) SaveGame.Current.portals.Add(id);

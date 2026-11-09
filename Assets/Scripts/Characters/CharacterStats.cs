@@ -43,6 +43,7 @@ namespace ShardsOfTime
                     s.color = new Color(.22f, .48f, .92f); s.height = 1.8f; s.radius = .32f; s.runSpeed = 7f; s.acceleration = 45f; s.airControl = .5f;
                     s.jumpHeight = 1.6f; s.swimSpeed = 3.6f; s.swimmer = false; s.breathSeconds = 10f;
                     s.attackName = "Punch"; s.attackDamage = 2; s.attackRange = 1.0f; s.attackRadius = .7f; s.attackCooldown = .45f; s.canPushHeavy = true;
+                    s.lockedAbility = Abilities.GroundPound;
                     break;
                 case "Abi":
                     s.color = new Color(.93f, .36f, .62f); s.height = 1.65f; s.radius = .3f; s.runSpeed = 8.2f; s.acceleration = 55f; s.airControl = .85f;
@@ -63,7 +64,8 @@ namespace ShardsOfTime
     public static class Abilities
     {
         public const string DoubleJump = "DoubleJump";   // Abi, unlocked in Area B
-        public const string MuscleMan = "MuscleMan";
-        public const string ClawIce = "ClawIce";       // Kira's sabertooth form (Ice Age): her claws break ice walls (Round 2)     // the companion from the Medieval Kingdom: moves boulders (not this round)
+        public const string MuscleMan = "MuscleMan";   // the companion from the Medieval Kingdom: moves boulders (not yet)
+        public const string ClawIce = "ClawIce";       // Kira's sabertooth form (Ice Age): her claws break ice walls (Round 2)
+        public const string GroundPound = "GroundPound"; // Dan, taught by the Violinist in the Ice Age (Round 4): slam down, break cracked ice, stun enemies
     }
 }

@@ -31,6 +31,7 @@ namespace ShardsOfTime
         public Vector3 spawn; public float spawnYaw;
         [Tooltip("Kira's form here (Resources/Data/KiraForms/<id>); empty = Home")] public string kiraForm = "";
         [Tooltip("Dan's and Abi's outfit here (models <name>_<outfit>: home, iceage); empty = home")] public string outfit = "";
+        [Tooltip("Round 4: the space this area covers (the player inside it is in this area)")] public Bounds box;
     }
 
     [CreateAssetMenu(menuName = "Shards of Time/World Data")]
@@ -38,10 +39,13 @@ namespace ShardsOfTime
     {
         public string worldId = "Playground";
         public string displayName = "Graybox Playground";
+        [Tooltip("Round 4: shard y values are the height of the surface the shard stands on (the game puts it 1 m above the ground found there)")]
+        public bool heightsAreHints;
         public List<AreaData> areas = new List<AreaData>();
         public List<ShardSpot> shards = new List<ShardSpot>();
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
+        public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
         public IEnumerable<ShardSpot> InArea(string id) => shards.Where(s => s.area == id);
 
         // Rule 2's check: the shards of an area reachable with only what the party has there on its first visit.
@@ -55,16 +59,57 @@ namespace ShardsOfTime
                 $"area {a.id} ({a.name}): {ok.Count} of {inArea.Count} shards reachable with [{string.Join(", ", a.firstVisit)}], requirement {a.requirement}" + (locked.Any() ? $"; locked: {string.Join(", ", locked)}" : ""));
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? Defaults();
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground";
+
+        // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
+        // area, the valley "V". 40 small shards, 25 wake the necklace (DEFAULT). Shard y = the height of the surface it sits on (a hint:
+        // the game raycasts down from 4 m above it and puts the shard 1 m over what it finds). Rule 2: the first visit has the three
+        // heroes and sabertooth Kira's claws; no double jump (Abi learns it later), no Muscle Man, and not the ground pound (Dan learns it
+        // here from the Violinist, so it isn't counted): 33 of 40 are reachable without them.
+        public static WorldData IceAgeDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = IceAge; w.worldId = IceAge; w.displayName = "The Ice Age"; w.heightsAreHints = true;
+            w.areas.Add(new AreaData { id = "V", name = "The Ice Age", requirement = 25, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce },
+                storyShard = new Vector3(0, 1.0f, 490f), storyShardColor = new Color(.25f, .55f, 1f), spawn = new Vector3(0, .3f, 12f), spawnYaw = 0,
+                kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(0, 0, 265), new Vector3(400, 300, 720)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "V", position = new Vector3(x, y, z), requires = req, note = note });
+            // the landing snowfield (z 0..110): the path, the half-frozen pond
+            S("S01", 0, 0, 24, "snowfield path"); S("S02", -6, 0, 36, "snowfield path"); S("S03", 6, 0, 46, "snowfield path");
+            S("S04", -14, 0, 62, "by the rocks"); S("S05", -4, 0, 80, "snowfield path"); S("S06", 10, 0, 96, "snowfield path");
+            S("S07", 22, -3.2f, 55, "pond bottom (dive)"); S("S08", 27, -2.4f, 60, "pond bottom (dive)"); S("S09", 17, -.25f, 52, "on an ice floe in the pond");
+            // the mammoth ridge (z 110..220): ride a mammoth along the shelves
+            S("R01", 30, 0, 120, "ridge"); S("R02", 20, 0, 150, "ridge"); S("R03", 28, 0, 190, "ridge");
+            S("R04", 51, 5f, 158, "the high shelf (ride a mammoth)"); S("R05", 55, 5f, 180, "the high shelf (ride a mammoth)"); S("R06", 51, 5f, 202, "the high shelf (ride a mammoth)");
+            S("R07", 51, 4f, 120, "the loading rock"); S("R08", 8, 3.2f, 206, "high ledge", Abilities.DoubleJump);
+            // ice bridges and the frozen river (gorge z 240..264)
+            S("V01", 20, 0, 243.5f, "ice pillar 1"); S("V02", 20, 0, 248, "ice pillar 2"); S("V03", 20, 0, 252.5f, "ice pillar 3"); S("V04", 20, 0, 257, "ice pillar 4");
+            S("V05", -10, -10, 250, "river bottom under the bridge (dive)"); S("V06", 49, -5, 236, "the ramp out of the gorge");
+            // the ice caves (x -62..-22, z 312..368): dark hall, Kira's crawl tunnel, the ice wall, the pit under the cracked ice
+            S("C01", -38, 0, 316, "dark hall (the necklace lights it)"); S("C02", -38, 0, 352, "dark hall (the necklace lights it)");
+            S("C03", -58, 0, 316, "crawl chamber (Kira)", "Kira"); S("C04", -58, 0, 324, "crawl chamber (Kira)", "Kira");
+            S("C05", -31, 0, 362, "behind the ice wall (sabertooth Kira)", "Kira", Abilities.ClawIce);
+            S("C06", -33, -4.5f, 338, "the pit under the cracked ice (ground pound)", Abilities.GroundPound);
+            S("C07", -26, -4.5f, 347, "the pit under the cracked ice (ground pound)", Abilities.GroundPound);
+            // the volcano vents (x 30..64, z 392..452): steam lifts you up three terraces
+            S("H01", 47, 8, 436, "terrace 1 (steam)"); S("H02", 58, 16, 437, "terrace 2 (steam)"); S("H03", 60, 24, 414, "terrace 3 (steam)"); S("H04", 60, 24, 426, "terrace 3 (steam)");
+            S("H05", 60, 27.3f, 420, "ice shelf over terrace 3", Abilities.DoubleJump);
+            // the standing stones (z 460..510)
+            S("T01", -12, 0, 476, "standing stones"); S("T02", 12, 0, 500, "standing stones");
+            S("T03", -49, 0, 484, "grotto behind the boulder", Abilities.MuscleMan);
+            S("T04", 18, -3.5f, 478, "the frozen well (ground pound)", Abilities.GroundPound);
+            S("T05", -7, 3.3f, 497, "on the stone lintel", Abilities.DoubleJump);
+            return w;
+        }
 
         // The graybox playground's layout (positions match World/Playground.cs; 1 unit = 1 m). Area A at the origin, Area B at x = 400.
         public static WorldData Defaults()
         {
-            var w = CreateInstance<WorldData>(); w.name = "Playground";
+            var w = CreateInstance<WorldData>(); w.name = Playground;
             string[] heroes = { "Dan", "Abi", "Kira" };
-            w.areas.Add(new AreaData { id = "A", name = "Area A", requirement = 10, firstVisit = heroes, storyShard = new Vector3(0, 1.4f, 52f), storyShardColor = new Color(.3f, .62f, 1f), spawn = new Vector3(0, .1f, -48f), spawnYaw = 0, kiraForm = KiraForm.Home, outfit = Outfits.Home });
+            w.areas.Add(new AreaData { id = "A", name = "Area A", requirement = 10, firstVisit = heroes, storyShard = new Vector3(0, 1.4f, 52f), storyShardColor = new Color(.3f, .62f, 1f), spawn = new Vector3(0, .1f, -48f), spawnYaw = 0, kiraForm = KiraForm.Home, outfit = Outfits.Home, box = new Bounds(Vector3.zero, new Vector3(400, 400, 400)) });
             // Area B: Kira arrives as the sabertooth (Round 2), so her ClawIce is there on the first visit
-            w.areas.Add(new AreaData { id = "B", name = "Area B", requirement = 0, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce }, spawn = new Vector3(400, .1f, -12f), spawnYaw = 0, kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge });
+            w.areas.Add(new AreaData { id = "B", name = "Area B", requirement = 0, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce }, spawn = new Vector3(400, .1f, -12f), spawnYaw = 0, kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(400, 0, 0), new Vector3(400, 400, 400)) });
             void S(string id, string area, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = area, position = new Vector3(x, y, z), requires = req, note = note });
             // Area A: the start path
             S("A01", "A", 0, 1f, -42f, "start path");

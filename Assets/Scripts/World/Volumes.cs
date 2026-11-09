@@ -35,8 +35,34 @@ namespace ShardsOfTime
     public sealed class MovingPlatform : MonoBehaviour
     {
         public Vector3 a, b; public float period = 6f; public float spinDegPerSec; float t;
+        // Round 4: or a closed loop of points walked at `speed` m/s, turning to face the way it goes (the mammoths)
+        public Vector3[] path; public float speed = 2f, startDistance, turnDegPerSec = 30f; float along;
+        void Start() { along = startDistance; if (path != null && path.Length > 1) { transform.position = PathPoint(along, out var dir); transform.rotation = Quaternion.LookRotation(dir); } }
+        Vector3 PathPoint(float d, out Vector3 dir)
+        {
+            float total = 0; for (int i = 0; i < path.Length; i++) total += Vector3.Distance(path[i], path[(i + 1) % path.Length]);
+            d = Mathf.Repeat(d, total);
+            for (int i = 0; i < path.Length; i++)
+            {
+                var p0 = path[i]; var p1 = path[(i + 1) % path.Length]; float l = Vector3.Distance(p0, p1);
+                if (d <= l) { dir = (p1 - p0).normalized; return Vector3.Lerp(p0, p1, d / Mathf.Max(.001f, l)); }
+                d -= l;
+            }
+            dir = Vector3.forward; return path[0];
+        }
         void Update()
         {
+            if (path != null && path.Length > 1)
+            {
+                // slow down while turning a corner, so the back stays easy to stand on
+                var facing = transform.forward;
+                PathPoint(along, out var want);
+                float off = Vector3.Angle(facing, want);
+                along += speed * Time.deltaTime * Mathf.Lerp(1f, .25f, Mathf.Clamp01(off / 60f));
+                transform.position = PathPoint(along, out want);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(new Vector3(want.x, 0, want.z)), turnDegPerSec * Time.deltaTime);
+                return;
+            }
             t += Time.deltaTime;
             if (a != b) transform.position = Vector3.Lerp(a, b, .5f - .5f * Mathf.Cos(t * 2f * Mathf.PI / period));
             if (spinDegPerSec != 0) transform.Rotate(0, spinDegPerSec * Time.deltaTime, 0, Space.World);

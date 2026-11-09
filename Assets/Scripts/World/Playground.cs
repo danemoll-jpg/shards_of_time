@@ -67,21 +67,31 @@ namespace ShardsOfTime
             tgo.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;   // TextMesh reads correctly from -z: the sign's front
         }
 
-        static void CheckpointAt(string id, Vector3 at, float yaw)
+        static void CheckpointAt(string id, Vector3 at, float yaw) => CheckpointHere(id, at, yaw, root);
+
+        // a checkpoint flag (Round 4: any world, or an invisible one: the vortex space)
+        public static Checkpoint CheckpointHere(string id, Vector3 at, float yaw, Transform parent, bool visible = true)
         {
-            var go = new GameObject("Checkpoint " + id); go.transform.SetParent(root, false); go.transform.position = at;
-            Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, 1.1f, 0), new Vector3(.12f, 1.1f, .12f), Placeholders.Mat(Stone));
-            var flag = Placeholders.Prim(PrimitiveType.Cube, go.transform, new Vector3(.4f, 1.9f, 0), new Vector3(.7f, .45f, .05f), Placeholders.Mat(new Color(.9f, .85f, .3f)), name: "Flag");
-            flag.GetComponent<Renderer>().material = new Material(flag.GetComponent<Renderer>().sharedMaterial);
-            Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, .03f, 0), new Vector3(1.6f, .03f, 1.6f), Placeholders.Mat(new Color(.9f, .85f, .55f)));
-            var c = go.AddComponent<Checkpoint>(); c.id = id; c.yaw = yaw;
+            var go = new GameObject("Checkpoint " + id); go.transform.SetParent(parent, false); go.transform.position = at;
+            if (visible)
+            {
+                Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, 1.1f, 0), new Vector3(.12f, 1.1f, .12f), Placeholders.Mat(Stone));
+                var flag = Placeholders.Prim(PrimitiveType.Cube, go.transform, new Vector3(.4f, 1.9f, 0), new Vector3(.7f, .45f, .05f), Placeholders.Mat(new Color(.9f, .85f, .3f)), name: "Flag");
+                flag.GetComponent<Renderer>().material = new Material(flag.GetComponent<Renderer>().sharedMaterial);
+                Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, .03f, 0), new Vector3(1.6f, .03f, 1.6f), Placeholders.Mat(new Color(.9f, .85f, .55f)));
+            }
+            var c = go.AddComponent<Checkpoint>(); c.id = id; c.yaw = yaw; c.silent = !visible;
             Checkpoint.All[id] = c;
+            return c;
         }
 
-        static Portal PortalAt(string id, Vector3 at, float yaw, string to, bool open)
+        static Portal PortalAt(string id, Vector3 at, float yaw, string to, bool open) => PortalHere(id, at, yaw, to, open, root, new Color(.55f, .4f, 1f));
+
+        // a portal ring (Round 4: any world; vortex = the Ice Age's vortex gate: ice ring, the vortex's swirl in it)
+        public static Portal PortalHere(string id, Vector3 at, float yaw, string to, bool open, Transform parent, Color color, bool vortex = false)
         {
-            var go = new GameObject("Portal " + id); go.transform.SetParent(root, false); go.transform.SetPositionAndRotation(at, Quaternion.Euler(0, yaw, 0));
-            var stone = Placeholders.Mat(new Color(.55f, .52f, .6f));
+            var go = new GameObject("Portal " + id); go.transform.SetParent(parent, false); go.transform.SetPositionAndRotation(at, Quaternion.Euler(0, yaw, 0));
+            var stone = vortex ? WorldArt.Mat("Ice") : Placeholders.Mat(new Color(.55f, .52f, .6f));
             for (int i = 0; i < 16; i++)   // a ring of stones, 2 m radius, centre 2.2 m up
             {
                 float a = i * Mathf.PI * 2 / 16;
@@ -89,8 +99,14 @@ namespace ShardsOfTime
                 var s = Placeholders.Prim(PrimitiveType.Cube, go.transform, new Vector3(Mathf.Cos(a) * 2f, 2.2f + Mathf.Sin(a) * 2f, 0), new Vector3(.8f, .8f, .6f), stone, true);
                 s.transform.localRotation = Quaternion.Euler(0, 0, a * Mathf.Rad2Deg);
             }
-            var disc = Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, 2.2f, 0), new Vector3(3.6f, .02f, 3.6f), Placeholders.Mat(new Color(.55f, .4f, 1f), "Glow"), name: "Disc");
+            var disc = Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, 2.2f, 0), new Vector3(3.6f, .02f, 3.6f), vortex ? Vortex.SwirlMaterial() : Placeholders.Mat(color, "Glow"), name: "Disc");
             disc.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            if (vortex)
+            {
+                var l = new GameObject("Vortex light"); l.transform.SetParent(disc.transform.parent, false); l.transform.localPosition = new Vector3(0, 2.2f, -1.5f);
+                var lt = l.AddComponent<Light>(); lt.type = LightType.Point; lt.color = color; lt.range = 14f; lt.intensity = 2.5f; l.SetActive(false);
+                go.AddComponent<PortalLight>().lightObject = l;
+            }
             Placeholders.Prim(PrimitiveType.Cube, go.transform, new Vector3(0, -.1f, 0), new Vector3(5.5f, .3f, 2f), stone, true);
             var p = go.AddComponent<Portal>(); p.id = id; p.toCheckpoint = to; p.startsOpen = open;
             return p;

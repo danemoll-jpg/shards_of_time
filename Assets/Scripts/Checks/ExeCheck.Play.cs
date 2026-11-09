@@ -12,19 +12,11 @@ namespace ShardsOfTime
 
         IEnumerator Play()
         {
-            Head("Title screen (item 13)");
-            yield return Wait(1.5f);
-            Ok(Game.I.State == Game.Mode.Title && Menu.I.Open, "title screen shows the menu");
-            Ok(!SaveGame.Exists && Menu.I.Current.sel == 1, "no save yet: Continue greyed out, New game selected");
-            var menuCanvas = Menu.I.GetComponent<Canvas>(); menuCanvas.enabled = false;
-            yield return Shot("00_key_art");   // menu-free: Tools/make_title_art.py makes the launcher cover and Steam art from it
-            menuCanvas.enabled = true;
-            yield return Shot("01_title");
-            yield return Press(GamepadButton.South);
-            yield return Wait(1f);
-            Ok(Game.I.State == Game.Mode.Playing && SaveGame.Exists, "A on New game starts the game (save.json written)");
+            Head("The Round 1 playground (Round 4: the debug test area, Settings > Test area)");
+            yield return EnsurePlaying(true);
+            Ok(Game.TestArea && Game.I.State == Game.Mode.Playing, "the test area starts (its own save file)");
             yield return Wait(.6f);
-            yield return Shot("02_start");
+            yield return Shot("p02_start");
             var w = Game.World;
 
             Head("Play-through, Area A (items 4-11; followers watched all the way, item 7)");

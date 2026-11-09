@@ -12,7 +12,8 @@ namespace ShardsOfTime
     {
         static Hud I;
         Canvas canvas; RectTransform heartsRow; readonly List<Image> hearts = new List<Image>();
-        Text shardText, areaText, messageText, skipText, partyHint; Image flash, water, fade, necklace, necklaceGem, necklaceArrow, breathBack, breathFill, skipFill;
+        Text shardText, areaText, messageText, skipText, partyHint, titleBig, titleSmall;
+        Image tint; Image flash, water, fade, necklace, necklaceGem, necklaceArrow, breathBack, breathFill, skipFill;
         RectTransform necklaceRt, partyRow; readonly List<Text> partyNames = new List<Text>(); readonly List<Image> partyBacks = new List<Image>();
         GameObject playLayer, cutLayer; float messageUntil, flashT;
         public static string LastMessage { get; private set; } = "";
@@ -66,6 +67,11 @@ namespace ShardsOfTime
             skipFill = UiKit.Image(skipBack.transform, "Fill", UiKit.Accent, Vector2.zero, new Vector2(0, 1), Vector2.zero, Vector2.zero);
             cutLayer.SetActive(false);
             fade = UiKit.Image(root, "Fade", new Color(0, 0, 0, 0), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            tint = UiKit.Image(root, "Cutscene tint", new Color(1, 1, 1, 0), Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero); tint.raycastTarget = false;
+            // Round 4: a title card over the fade ("Ancient Egypt / To be continued...")
+            titleBig = UiKit.Label(root, "Title card", 96, TextAnchor.MiddleCenter, new Color(1f, .9f, .6f), new Vector2(0, .5f), new Vector2(1, .7f), Vector2.zero, Vector2.zero);
+            titleSmall = UiKit.Label(root, "Title card small", 44, TextAnchor.MiddleCenter, UiKit.Ink, new Vector2(0, .36f), new Vector2(1, .5f), Vector2.zero, Vector2.zero);
+            titleBig.enabled = titleSmall.enabled = false;
         }
 
         void Update()
@@ -97,7 +103,7 @@ namespace ShardsOfTime
             if (area != null && area.requirement > 0)
             {
                 int have = g.AreaShards(area.id);
-                areaText.text = wp.storyShard ? $"{area.name}: story shard found, the portal is open" : wp.necklaceAwake ? $"{area.name}: the necklace is awake - follow it to the story shard" : $"{area.name}: {have} / {area.requirement} shards to wake the necklace";
+                areaText.text = wp.storyShard ? $"{area.name}: story shard found, the {(Game.TestArea ? "portal" : "vortex")} is open" : wp.necklaceAwake ? $"{area.name}: the necklace is awake - follow it to the story shard" : $"{area.name}: {have} / {area.requirement} shards to wake the necklace";
             }
             else areaText.text = area != null ? $"{area.name}: {g.AreaShards(area.id)} / {Game.World.InArea(area.id).Count()} shards" : "";
             // necklace
@@ -128,6 +134,14 @@ namespace ShardsOfTime
 
         public static void Message(string s, float seconds = 3.5f) { if (!I) return; I.messageText.text = s; I.messageUntil = Time.unscaledTime + seconds; LastMessage = s; PlayLog.Line("message: " + s); }
         public static void Flash() { if (I) I.flashT = 1f; }
+        public static void Tint(Color c, float amount) { if (I) I.tint.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(amount)); }
+        public static string TitleShown { get; private set; }
+        public static void Title(string big, string small)
+        {
+            if (!I) return; TitleShown = big;
+            I.titleBig.enabled = I.titleSmall.enabled = big != null;
+            I.titleBig.text = big ?? ""; I.titleSmall.text = small ?? "";
+        }
         public static void SetUnderwater(bool on) { if (I) I.water.enabled = on && Game.I && Game.I.State != Game.Mode.Title; }
         public static void SetFade(float a) => FadeAmount = Mathf.Clamp01(a);
         public static Canvas Canvas => I ? I.canvas : null;

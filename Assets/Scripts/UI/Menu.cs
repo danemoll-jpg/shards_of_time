@@ -35,12 +35,12 @@ namespace ShardsOfTime
             var sub = UiKit.Label(titleArt.transform, "Subtitle", 30, TextAnchor.MiddleCenter, UiKit.Ink, new Vector2(0, .64f), new Vector2(1, .7f), Vector2.zero, Vector2.zero);
             sub.text = "Dan, Abi and Kira chase the shards of a broken ornament through time";
             var ver = UiKit.Label(titleArt.transform, "Version", 22, TextAnchor.LowerRight, UiKit.Dim, new Vector2(.5f, 0), new Vector2(1, 0), new Vector2(0, 16), new Vector2(-24, 50));
-            ver.text = $"Round 1 graybox · version {Application.version}";
-            panel = UiKit.Image(root, "Panel", UiKit.Panel, new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(-460, -330), new Vector2(460, 300)).gameObject;
+            ver.text = $"Round 4: the Ice Age · version {Application.version}";
+            panel = UiKit.Image(root, "Panel", UiKit.Panel, new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(-460, -380), new Vector2(460, 320)).gameObject;
             var p = panel.transform;
             title = UiKit.Label(p, "Title", 44, TextAnchor.UpperCenter, UiKit.Accent, new Vector2(0, 1), new Vector2(1, 1), new Vector2(20, -80), new Vector2(-20, -18));
-            for (int i = 0; i < 12; i++)
-                rowTexts.Add(UiKit.Label(p, "Row " + i, 32, TextAnchor.MiddleLeft, UiKit.Ink, new Vector2(0, 1), new Vector2(1, 1), new Vector2(60, -130 - 44 * i), new Vector2(-40, -88 - 44 * i)));
+            for (int i = 0; i < 14; i++)
+                rowTexts.Add(UiKit.Label(p, "Row " + i, 30, TextAnchor.MiddleLeft, UiKit.Ink, new Vector2(0, 1), new Vector2(1, 1), new Vector2(60, -126 - 40 * i), new Vector2(-40, -88 - 40 * i)));
             body = UiKit.Label(p, "Body", 26, TextAnchor.UpperLeft, UiKit.Ink, new Vector2(0, 0), new Vector2(1, 1), new Vector2(50, 70), new Vector2(-40, -96));
             footer = UiKit.Label(p, "Footer", 22, TextAnchor.LowerCenter, UiKit.Dim, new Vector2(0, 0), new Vector2(1, 0), new Vector2(20, 14), new Vector2(-20, 52));
             panel.SetActive(false); titleArt.SetActive(false);
@@ -135,6 +135,7 @@ namespace ShardsOfTime
             var s = GameSettings.S; var p = new Page { title = "Settings" };
             p.rows.Add(new Row { label = "Volume", value = () => s.volume + " %", change = d => { s.volume = Mathf.Clamp(s.volume + 10 * d, 0, 100); Sfx.ApplyVolume(); } });
             p.rows.Add(new Row { label = "Effects volume", value = () => s.effectsVolume + " %", change = d => { s.effectsVolume = Mathf.Clamp(s.effectsVolume + 10 * d, 0, 100); Sfx.ApplyVolume(); } });
+            p.rows.Add(new Row { label = "Music volume", value = () => s.musicVolume + " %", change = d => { s.musicVolume = Mathf.Clamp(s.musicVolume + 10 * d, 0, 100); Music.ApplyVolume(); } });
             p.rows.Add(new Row { label = "Screen", value = () => ScreenSetting.ScreenLabel, change = d => ScreenSetting.Set(!ScreenSetting.Fullscreen) });
             p.rows.Add(new Row { label = "Resolution", value = () => ScreenSetting.ResolutionLabel, change = d => ScreenSetting.StepResolution(d) });
             p.rows.Add(new Row { label = "Steam Deck mode", value = () => SteamDeck.Label, change = d => { s.steamDeck = (s.steamDeck + d + 3) % 3; Look.ApplyQuality(); } });
@@ -143,6 +144,8 @@ namespace ShardsOfTime
             p.rows.Add(new Row { label = "Invert camera Y", value = () => s.invertY ? "On" : "Off", change = d => s.invertY = !s.invertY });
             p.rows.Add(new Row { label = "Camera speed", value = () => s.cameraSpeed + " %", change = d => s.cameraSpeed = Mathf.Clamp(s.cameraSpeed + 10 * d, 50, 200) });
             p.rows.Add(new Row { label = "Reset to defaults", submit = () => { GameSettings.ResetToDefaults(); Sfx.ApplyVolume(); Look.ApplyQuality(); I.Back(); I.Push(SettingsPage()); } });
+            // Round 4: the Round 1 graybox playground, a debug option (its own save; from the title screen only)
+            p.rows.Add(new Row { label = "Test area (debug)", enabled = () => Game.I && Game.I.State == Game.Mode.Title, submit = () => { GameSettings.Save(); Game.I.StartTestArea(); } });
             p.rows.Add(new Row { label = "Back", submit = () => I.Back() });
             return p;
         }
@@ -170,7 +173,7 @@ namespace ShardsOfTime
                 "<color=#ffd27a>Shards of Time</color>, based on the animated short film <i>The Shards of Time</i> by Dan.\n" +
                 "Game design and art direction: Dan.   Code: Claude Code (Anthropic), from Dan's design.\n\n" +
                 "<color=#ffd27a>Made with</color>  Unity 6000.6.1f1 (URP, Input System, Cinemachine, Timeline, Unity Recorder, ProBuilder);\n" +
-                "Blender, Meshy, Mixamo, Suno and ElevenLabs (from the next rounds on).\n\n" +
+                "Blender, Meshy, Mixamo, Suno and ElevenLabs.\n\n" +
                 "<color=#ffd27a>Licences (launcher)</color>  miniz, MIT licence (Rich Geldreich, RAD Game Tools, Valve);\n" +
                 "JSON for Modern C++, MIT licence (Niels Lohmann).\n" +
                 "Unity packages under the Unity Companion License.";

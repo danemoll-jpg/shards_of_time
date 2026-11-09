@@ -27,13 +27,17 @@ namespace ShardsOfTime
         public List<string> abilities = new List<string>();
         public List<string> portals = new List<string>();
         public List<string> heartUpgrades = new List<string>();
+        public List<string> worldsReached = new List<string>();   // Round 4: worlds the vortex has taken the party to ("Egypt": to be continued)
         public int maxHearts = Health.StartHearts;
-        public string currentWorld = "Playground";
+        public string currentWorld = WorldData.IceAge;
         public string checkpoint = "";
         public string savedAt = "";
 
         public static SaveGame Current { get; private set; } = new SaveGame();
-        public static string FilePath => Path.Combine(GameSettings.Folder, "save.json");
+        public static string Slot = "";   // Round 4: "testarea" = the graybox playground (a debug option), in its own file
+        public static string FilePath => Path.Combine(GameSettings.Folder, Slot == "" ? "save.json" : $"save_{Slot}.json");
+        // story shards found in the real worlds (the vortex's way home needs all eight)
+        public int StoryShards { get { int n = 0; foreach (var w in worlds) if (w.storyShard && w.world != WorldData.Playground) n++; return n; } }
         public static bool Exists => File.Exists(FilePath);
 
         public WorldProgress World(string id)

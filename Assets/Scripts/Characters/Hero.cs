@@ -109,6 +109,24 @@ namespace ShardsOfTime
             if (e == "doublejump") { squash = -.18f; if (IsPlayer) Sfx.Play("jump", .6f, 1.3f); Placeholders.Puff(transform.position, Stats.color); }
             if (e == "splash" && IsPlayer) Sfx.Play("splash", .5f);
             if (e == "outofbreath" && IsPlayer) Health.Damage(1, Vector3.zero, "out of breath");
+            if (e == "pound") Pound();
+        }
+
+        // Round 4: the ground pound lands: a shockwave stuns (and hits) enemies round Dan, and cracked ice under him breaks
+        public const float PoundRadius = 3.2f;
+        void Pound()
+        {
+            squash = .3f;
+            if (IsPlayer) Sfx.Play("pound", .7f);
+            Placeholders.Puff(transform.position + Vector3.up * .1f, new Color(.9f, .95f, 1f));
+            foreach (var col in Physics.OverlapSphere(transform.position + Vector3.up * .5f, PoundRadius, ~0, QueryTriggerInteraction.Collide))
+            {
+                var e = col.GetComponentInParent<Enemy>();
+                if (e) { e.Stun(2.5f); var away = e.transform.position - transform.position; e.Hit(1, away, "Ground pound"); }
+            }
+            var crack = Motor.GroundCollider ? Motor.GroundCollider.GetComponentInParent<CrackedFloor>() : null;
+            if (crack) crack.Pound(this);
+            PlayLog.Line($"{Stats.displayName}: ground pound at {transform.position}{(crack ? ", cracked ice " + crack.id : "")}");
         }
 
         // Each hero's basic attack: a short sweep in front that hits enemies (Punch, Kick, Claws).
@@ -125,14 +143,25 @@ namespace ShardsOfTime
                 var e = col.GetComponentInParent<Enemy>();
                 if (e) e.Hit(Stats.attackDamage, transform.forward, Stats.attackName);
                 var ice = col.GetComponentInParent<IceWall>();
-                if (ice) ice.Claw(this);
+                if (ice) { PlayLog.Line($"{Stats.displayName}'s {Stats.attackName} reaches ice wall {ice.id}"); ice.Claw(this); }
             }
             return true;
         }
 
+        float stepTimer;
         void Update()
         {
             attackTimer -= Time.deltaTime;
+            // Round 4: footsteps in the snow (the player only)
+            if (IsPlayer && Motor.Grounded && Game.Playing && !Game.TestArea)
+            {
+                var hv = Motor.Velocity; hv.y = 0;
+                if (hv.magnitude > 1.5f && (stepTimer -= Time.deltaTime) <= 0)
+                {
+                    stepTimer = Mathf.Lerp(.42f, .27f, hv.magnitude / Stats.runSpeed);
+                    Sfx.Play("footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
+                }
+            }
             if (swipeTimer > 0) { swipeTimer -= Time.deltaTime; if (swipeTimer <= 0) swipe.gameObject.SetActive(false); }
             // a little squash and stretch on jumps and landings (placeholder life)
             squash = Mathf.MoveTowards(squash, 0, Time.deltaTime * 1.2f);

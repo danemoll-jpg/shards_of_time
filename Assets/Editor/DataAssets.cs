@@ -29,6 +29,12 @@ namespace ShardsOfTime
             string wp = Data + "/Worlds/Playground.asset";
             if (!File.Exists(wp)) AssetDatabase.CreateAsset(WorldData.Defaults(), wp);
             else Upgrade(AssetDatabase.LoadAssetAtPath<WorldData>(wp));
+            // Round 4: the Ice Age (made once; then Dan's to edit)
+            string ia = Data + "/Worlds/IceAge.asset";
+            if (!File.Exists(ia)) AssetDatabase.CreateAsset(WorldData.IceAgeDefaults(), ia);
+            // Round 4: Dan learns the ground pound (an existing Dan.asset had no locked ability)
+            var danStats = AssetDatabase.LoadAssetAtPath<CharacterStats>(Data + "/Characters/Dan.asset");
+            if (danStats && string.IsNullOrEmpty(danStats.lockedAbility)) { danStats.lockedAbility = Abilities.GroundPound; EditorUtility.SetDirty(danStats); }
             Directory.CreateDirectory(Data + "/KiraForms");
             foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth })
             {
@@ -38,6 +44,7 @@ namespace ShardsOfTime
             BaseMaterial("Lit", "Universal Render Pipeline/Lit", false);
             BaseMaterial("Glow", "Universal Render Pipeline/Unlit", false);
             BaseMaterial("Water", "Universal Render Pipeline/Lit", true);
+            ParticleMaterial();
             AssetDatabase.SaveAssets();
             HookPlaceholders();
         }
@@ -59,6 +66,33 @@ namespace ShardsOfTime
             foreach (var ds in d.shards)
                 if (!w.shards.Any(s => s.id == ds.id)) { w.shards.Add(ds); changed = true; }
             if (changed) { EditorUtility.SetDirty(w); Debug.Log("DataAssets: Playground world data upgraded (new defaults added)"); }
+        }
+
+        // Round 4: the particles' material (snow, steam, the Violinist's notes): a soft round dot, unlit, alpha-blended
+        static void ParticleMaterial()
+        {
+            string path = $"{Mats}/Particle.mat";
+            if (File.Exists(path)) return;
+            string texPath = $"{Mats}/ParticleDot.png";
+            if (!File.Exists(texPath))
+            {
+                var t = new Texture2D(64, 64, TextureFormat.RGBA32, false);
+                for (int y = 0; y < 64; y++) for (int x = 0; x < 64; x++)
+                    {
+                        float d = Vector2.Distance(new Vector2(x + .5f, y + .5f), new Vector2(32, 32)) / 32f;
+                        t.SetPixel(x, y, new Color(1, 1, 1, Mathf.Clamp01(1 - d) * Mathf.Clamp01(1 - d)));
+                    }
+                File.WriteAllBytes(texPath, t.EncodeToPNG()); Object.DestroyImmediate(t);
+                AssetDatabase.ImportAsset(texPath);
+                var ti = (TextureImporter)AssetImporter.GetAtPath(texPath); ti.alphaIsTransparency = true; ti.mipmapEnabled = false; ti.SaveAndReimport();
+            }
+            var m = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit")) { name = "Particle" };
+            m.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(texPath));
+            m.SetColor("_BaseColor", Color.white);
+            m.SetFloat("_Surface", 1); m.SetFloat("_Blend", 0);
+            m.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha); m.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha); m.SetFloat("_ZWrite", 0);
+            m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT"); m.renderQueue = (int)RenderQueue.Transparent; m.SetOverrideTag("RenderType", "Transparent");
+            AssetDatabase.CreateAsset(m, path);
         }
 
         static void BaseMaterial(string name, string shader, bool transparent)

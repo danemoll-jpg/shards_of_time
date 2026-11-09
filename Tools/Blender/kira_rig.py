@@ -423,6 +423,9 @@ def run(name):
     arm = build(L)
     skin(ob, arm, L, co)
     acts = clips(arm, L)
+    # Round 4, item 1: fur tufts and whiskers are single sheets; the ones seen from behind get a reversed twin (Tools/Blender/mesh_fix.py)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import mesh_fix
+    mesh_fix.double_sheets(ob, log=log)
     parts = lods(ob)
     out = os.path.join(ROOT, 'SourceArt', 'Rigged', name); os.makedirs(out, exist_ok=True)
     arm.animation_data.action = acts['idle'][0]

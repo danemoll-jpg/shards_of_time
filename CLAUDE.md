@@ -173,10 +173,13 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   `Builds/LauncherLocal/`, remade by `python Tools/make_local_launcher.py` when the build is newer).
 - **Save, settings, Player.log:** `%USERPROFILE%\AppData\LocalLow\Shards of Time\Shards of Time\` (`save.json`,
   `settings.json`, `display.json`). A check run saves into `<check dir>/save` and never touches them.
-- **Check (muted, no window, Below Normal):** `python Tools/run_check.py local/round<N>/<name> [--only all|play|models|measure|perf|mute] [--extra "-steamDeck 1"] [--size 1280x800]`.
+- **Check (muted, no window, Below Normal):** `python Tools/run_check.py local/round<N>/<name> [--only all|play|fixes|perf|playground|models|measure|perfplayground|diag|mute] [--extra "-steamDeck 1"] [--size 1280x800]`.
   Runs `ShardsOfTime.exe -batchmode -mute -exeCheck <dir>` (`Assets/Scripts/Checks/ExeCheck*.cs`): a virtual gamepad
-  plays from the title screen through the real input actions. `play` = the whole playground as a player (about 4 min),
-  `models` = Dan and Abi animated, both outfits (Round 3, about 3 min), `measure` = one measurement per Round 1 item (about 4 min), `perf` = 12 s of frame rate, `all` = the four. Writes
+  plays from the title screen through the real input actions. `play` = the Ice Age from New game to the Egypt path as a
+  player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
+  running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
+  use `--minutes 40`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
+  teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
   (vsync can't run off-screen; thousands of fps make the character controller skip moves).
 - **Render a cutscene to MP4:** Unity menu **Shards of Time > Render Cutscene to Video** (`Recordings/<Name>.mp4`,
@@ -184,7 +187,8 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   `python Tools/unity_batch.py render --gpu -executeMethod ShardsOfTime.CutsceneRender.RenderFromCommandLine -cutscene NecklaceWakes`
   (`--gpu`: no `-nographics`, no `-quit`; the render exits by itself). How to author: `Docs/CUTSCENES.md`.
 - **Data (edit in the Inspector):** heroes `Assets/Resources/Data/Characters/{Dan,Abi,Kira}.asset` (CharacterStats);
-  the playground's shards / requirement / what each shard needs `Assets/Resources/Data/Worlds/Playground.asset`
+  the Ice Age's shards / requirement / what each needs `Assets/Resources/Data/Worlds/IceAge.asset` (made once from
+  `WorldData.IceAgeDefaults()`; delete it to remake it after changing the defaults); the playground's shards / requirement / what each shard needs `Assets/Resources/Data/Worlds/Playground.asset`
   (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
   check run.
 - **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
@@ -195,6 +199,13 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   `mixamo_check.py <model>=<rigged fbx>` (renders a rig on a few clips), `fix_hair_weights.py <model>=<rigged fbx>` (long
   hair off the arm bones -> `rigged_hairfix.fbx`), `kira_rig.py [shots=<dir>] kira kira_sabertooth` (Kira's rig, 9 clips, LODs, face close-ups ->
   `SourceArt/Rigged/<name>/model.fbx`), `necklace.py` (-> `Assets/Resources/Characters/necklace.fbx`).
+  Round 4: `iceage_world.py` (the valley's terrain, volcanoes, props -> `Assets/Resources/World/iceage_*.fbx`; the layout numbers
+  match `World/IceAge.cs`), `home_room.py` (the living room + the ornament -> `World/home_room.fbx`), `mesh_holes.py [fix=1]
+  [out=<dir>] <label>=<fbx> ...` (see-through report + turntable), `mesh_fix.py` (gives faces seen from behind a reversed twin;
+  used by `kira_rig.py` and `fix_hair_weights.py`).
+- **Sounds and music:** `python Tools/make_sounds.py [--only a,b] [--force]` (ElevenLabs, key from `ELEVENLABS_API_KEY`;
+  prompts in `Docs/SOUNDS.md`; effects -> `Assets/Resources/Sounds/`, the music stand-in -> `Assets/Resources/Music/iceage.mp3`).
+  Dan's Suno theme: `Docs/MUSIC.md`.
 - **Title art / icons (placeholders):** `python Tools/make_title_art.py local/round1/<check>/00_key_art.png` writes
   `SourceArt/Title/Steam/ShardsOfTime-*.png` (launcher cover, Steam art), `Launcher/ShardsOfTime.ico` and
   `Assets/HandMade/Title/GameIcon.png`.
@@ -217,6 +228,31 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 4 delivered: 0.4.0 (build 400), 2026-11-09.** The Ice Age is the game: New game plays Act I (the living room) and the
+arrival in the snow, then one valley (snowfield and pond, mammoth ridge, gorge, ice caves, steam vents, standing stones) with
+40 shards, the necklace, the blue story shard, the vortex (Ice Age / Egypt "to be continued" / Home blocked), the Violinist
+teaching Dan the ground pound, wolves and snow critters (placeholders), music and sounds. Kira's and Abi's see-through holes
+fixed. Dan's four creature concept images are in `SourceArt/Concepts/` (models next). Published: `game-400` (a Round 1 starter
+install updated itself to it). Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 4:
+- Worlds: `Game.World` is the Ice Age (`WorldData.IceAge`, `World/IceAge.cs` places the gameplay on the Blender terrain by
+  raycasting; shard y in its data = the surface height hint, `heightsAreHints`). Areas have a `box`; `Game.Area` = the area the
+  player is in (null in the vortex space). The playground = Settings > Test area (debug), `SaveGame.Slot = "testarea"`
+  (`save_testarea.json`).
+- Vortex: `World/Vortex.cs` (space at y 600, z 2500; checkpoint `VX`; doors per world; `SaveGame.StoryShards`, `worldsReached`).
+  A world's gate is a `Portal` whose `toCheckpoint` is `VX` (`Game.EnterVortex`).
+- Moves and world pieces: Dan's ground pound (`CharacterMotor`, Dive in the air; `Hero.Pound`; `Abilities.GroundPound`, Dan's
+  `lockedAbility`), `UpdraftVolume` (steam), `CrumblePlatform`, `CrackedFloor`, `DarkVolume` (+ the necklace's light),
+  `HintZone`, `MovingPlatform.path` (mammoths), `Violinist` (teaches a move via the cutscene `ViolinistTeaches`).
+  Enemy kinds: Blob (playground), Critter, Wolf; `Enemy.Stun`.
+- Cutscenes carry a `CutsceneVersion`; bump `CutsceneAuthoring.Version` when their code changes (older ones rebuild at the
+  next build). `CutsceneMood` (a cutscene's own light), `ScreenTint` (white-outs). Docs: `Docs/CUTSCENES.md`.
+- Look per world (`Look.ApplyWorld`), fog to 1.7 km and far clip 2.2 km in the Ice Age; `Look.SetDark`, `Look.InVortex`.
+- World art: `Assets/Resources/World/*.fbx`, parts named `<part>__<Material>`, coloured by `World/WorldArt.cs` (import:
+  `Editor/WorldImport.cs`).
+- Frame-rate checks must draw the view every frame (batch mode only draws on request): `PerfIceAge` does.
+
 **Fix 3.1 delivered: 0.3.1 (build 301), 2026-11-09.** Sabertooth Kira is a new Meshy model from a straight-headed
 concept (her face no longer twists), fur matched to home Kira's gray. Published: `game-301` (a Round 1 starter install
 updated itself to it). Report and "For Dan to check": `TODO.md`.

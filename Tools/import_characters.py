@@ -28,6 +28,7 @@ PEOPLE_CLIPS = {
     "idle": "Idle", "walk": "Walking", "run_slow": "Slow Run", "run": "Fast Run", "jump": "Jump", "fall": "Falling",
     "land": "Falling To Landing", "land_hard": "Hard Landing", "swim": "Swimming", "tread": "Treading Water", "push": "Push",
     "punch": "Punching", "kick": "Mma Kick", "hurt": "Hit On Side Of Body", "cheer": "Cheering (1)", "look": "Looking Around",
+    "fall_back": "Falling Down",   # Round 4: Dan's backward fall (the Ice Age arrival cutscene)
 }
 
 

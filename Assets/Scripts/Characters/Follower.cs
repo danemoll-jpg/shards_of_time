@@ -57,7 +57,7 @@ namespace ShardsOfTime
             // warps
             FarFor = toPlayer > NearEnough ? FarFor + Time.deltaTime : 0;
             belowFor = ppos.y - pos.y > 4f ? belowFor + Time.deltaTime : 0;
-            if (pos.y < Party.KillY) WarpNearPlayer("fell out of the world");
+            if (pos.y < Party.KillY || pos.y < Party.I.Player.transform.position.y - 25f) WarpNearPlayer("fell out of the world");
             else if (toPlayer > WarpDistance) WarpNearPlayer($"{toPlayer:0} m behind");
             else if (belowFor > 1.5f) WarpNearPlayer("fell below");
             else if (FarFor > StuckSeconds) WarpNearPlayer($"not caught up in {StuckSeconds:0} s");

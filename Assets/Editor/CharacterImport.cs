@@ -40,6 +40,7 @@ namespace ShardsOfTime
             ["push"] = new ClipSpec { loop = true, first = 25, last = 199, bakeXZ = false },
             ["punch"] = new ClipSpec(), ["kick"] = new ClipSpec(), ["cheer"] = new ClipSpec(),
             ["hurt"] = new ClipSpec { first = 1, last = 20, bakeXZ = false },          // the first 0.6 s (the stumble back cut)
+            ["fall_back"] = new ClipSpec(),                                            // Round 4: Dan's backward fall in the snow (cutscene)
         };
 
         void OnPreprocessModel()

@@ -72,6 +72,22 @@ namespace ShardsOfTime
         }
 
         // pulse: 0..1 (Necklace.Pulse); lit: a shard to lead to
+        // Round 4: in dark places (the ice cave) the shard gives a light: the party sees by it
+        public static void Light(Transform shard, bool on)
+        {
+            if (!shard) return;
+            var l = shard.Find("Necklace light");
+            if (!l)
+            {
+                if (!on) return;
+                l = new GameObject("Necklace light").transform; l.SetParent(shard, false); l.localPosition = Vector3.zero;
+                var lt = l.gameObject.AddComponent<UnityEngine.Light>(); lt.type = LightType.Point; lt.color = new Color(.45f, .8f, 1f);
+                lt.range = 13f; lt.intensity = 3.2f; lt.shadows = LightShadows.None;
+            }
+            if (l.gameObject.activeSelf != on) l.gameObject.SetActive(on);
+            if (on) l.GetComponent<UnityEngine.Light>().intensity = 2.8f + Necklace.Pulse * 1.2f;
+        }
+
         public static void Pulse(Transform shard, float pulse, bool lit)
         {
             if (!shard) return;

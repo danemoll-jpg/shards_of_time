@@ -37,7 +37,11 @@ namespace ShardsOfTime
 
         public void ApplyAbilities()
         {
-            foreach (var h in Heroes) h.Motor.CanDoubleJump = !string.IsNullOrEmpty(h.Stats.lockedAbility) && h.Stats.lockedAbility == Abilities.DoubleJump && SaveGame.Current.Has(Abilities.DoubleJump);
+            foreach (var h in Heroes)
+            {
+                h.Motor.CanDoubleJump = h.Stats.lockedAbility == Abilities.DoubleJump && SaveGame.Current.Has(Abilities.DoubleJump);
+                h.Motor.CanGroundPound = h.Stats.lockedAbility == Abilities.GroundPound && SaveGame.Current.Has(Abilities.GroundPound);   // Round 4
+            }
         }
 
         void SetPlayer(int i)
@@ -84,6 +88,7 @@ namespace ShardsOfTime
                 input.jumpPressed = Controls.Jump.WasPressedThisFrame();
                 input.jumpHeld = Controls.Jump.IsPressed();
                 input.diveHeld = Controls.Dive.IsPressed();
+                input.divePressed = Controls.Dive.WasPressedThisFrame();
                 if (Controls.Attack.WasPressedThisFrame()) Player.TryAttack();
                 if (Controls.SwitchNext.WasPressedThisFrame()) Switch((Index + 1) % 3);
                 else if (Controls.SwitchPrev.WasPressedThisFrame()) Switch((Index + 2) % 3);
@@ -94,7 +99,9 @@ namespace ShardsOfTime
             Player.Motor.SpeedScale = 1f;
             Player.Motor.Step(input, Time.deltaTime);
             RecordTrail();
-            if (Player.transform.position.y < KillY) Health.FellOut();
+            var pp = Player.transform.position; var vc = Vortex.Centre;
+            bool offVortex = Mathf.Abs(pp.x - vc.x) < 300 && Mathf.Abs(pp.z - vc.z) < 300 && pp.y < vc.y - 25f;   // Round 4: off the vortex platform
+            if (pp.y < KillY || offVortex) Health.FellOut();
         }
 
         void RecordTrail()

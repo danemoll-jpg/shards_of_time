@@ -96,3 +96,27 @@ The film setup is the same thing without the game:
   `StartRecorder` into your film project's own menu.
 - Longer films: one Timeline per scene, then a master Timeline with **Control Tracks** that play the scene Timelines
   one after another.
+
+## Round 4: the cutscenes in the game now
+
+| Name | Where (its root) | Length | What |
+|---|---|---|---|
+| `ActOne` | `Game.HomeAnchor` (far from every world) | 19 s | Act I: the living room (`home_room.fbx`), Kira bats the dark silver bauble off the tree, it shatters, a vortex pulls them in, white-out |
+| `IceAgeArrival` | the Ice Age landing spot | 13.5 s | they land in the snow; Dan's backward fall (`fall_back` = Mixamo "Falling Down"); sabertooth Kira on his chest paws the necklace, which pulses blue; Abi laughs |
+| `NecklaceWakes` | where the player stands (out of caves) | 6.5 s | the 25th Ice Age shard: the necklace wakes (Ice Age outfits, sabertooth Kira) |
+| `ViolinistTeaches` | the Violinist, +z toward Dan | 6.5 s | he plays (the world's own figure), Dan glows, learns the ground pound |
+| `VortexOpens` | the vortex gate | 6.5 s | the blue story shard flies into the ring, the vortex opens |
+| `PortalOpens` | the test area's portal | 6 s | Round 1's (the debug test area only) |
+
+New-game order: `ActOne` -> `IceAgeArrival` -> play. All are skippable (hold A / Space).
+
+**Rebuilt automatically when the code changes:** each prefab carries a `CutsceneVersion`; `CutsceneAuthoring.Version` is
+bumped when a cutscene's authoring code changes, and the next build remakes the older ones. **To keep a hand-edited
+cutscene**, set its `CutsceneVersion` to 999 in the Inspector.
+
+**A cutscene's own light:** a `CutsceneMood` on the prefab's root (`ActOne`: warm interior, no fog, no falling snow) is applied
+while it plays and undone after. **White-outs:** a `ScreenTint` whose amount is its object's scale x, keyed like anything else.
+**Sets:** a Blender file in `Assets/Resources/World/` can be dropped in and unpacked (`ActOne` does this with the room; the
+ornament is moved under its own holder so it can be keyed).
+
+Render any of them to MP4 the same way: `python Tools/unity_batch.py render --gpu -executeMethod ShardsOfTime.CutsceneRender.RenderFromCommandLine -cutscene ActOne`.

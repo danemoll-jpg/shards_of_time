@@ -10,9 +10,13 @@ namespace ShardsOfTime
     // One measurement per Round 1 item, each set up by a teleport, played with the pad.
     public sealed partial class ExeCheck
     {
-        IEnumerator EnsurePlaying()
+        // testArea: the Round 1-3 checks run in the graybox playground (Round 4: a debug test area)
+        IEnumerator EnsurePlaying(bool testArea = true)
         {
-            if (Game.I.State == Game.Mode.Title) { Game.I.StartGame(!SaveGame.Exists); yield return Wait(.5f); }
+            if (testArea && !Game.TestArea) { if (Game.I.State == Game.Mode.Paused) Game.I.Resume(); Game.I.StartTestArea(); yield return Wait(.5f); }
+            if (!testArea && Game.TestArea) { Game.I.LeaveTestArea(false); }
+            if (Game.I.State == Game.Mode.Title) { Game.I.StartGame(!SaveGame.Exists); yield return Wait(.5f); yield return Hold(GamepadButton.South, 1.3f); yield return Wait(.3f); yield return Hold(GamepadButton.South, 1.3f); }
+            yield return WaitFor(() => !Game.I.Busy, 45f);
             if (Game.I.State == Game.Mode.Paused) Game.I.Resume();
             yield return WaitFor(() => !Game.InCutscene, 10f);
         }

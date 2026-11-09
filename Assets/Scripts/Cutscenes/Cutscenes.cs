@@ -41,6 +41,8 @@ namespace ShardsOfTime
                 foreach (var t in tl.GetOutputTracks().OfType<CinemachineTrack>()) dir.SetGenericBinding(t, CameraRig.I.Brain);
             var party = Party.I;
             if (party) { party.Frozen = true; party.SetVisible(false); }
+            var mood = inst.GetComponent<CutsceneMood>();   // Round 4: the cutscene's own light (the living room)
+            if (mood) Look.Mood(mood);
             PlayLog.Line($"cutscene {name} starts ({dir.duration:0.0} s)");
             float start = Time.time;
             Started?.Invoke(name);
@@ -57,6 +59,7 @@ namespace ShardsOfTime
             LastDuration = Time.time - start;
             dir.time = dir.duration; dir.Evaluate(); dir.Stop();
             UnityEngine.Object.Destroy(inst);
+            if (mood) Look.Mood(null);
             if (party) { party.SetVisible(true); party.Frozen = false; }
             CameraRig.I?.SnapBehind();
             Director = null; Playing = null; SkipHeld01 = 0;
@@ -64,4 +67,19 @@ namespace ShardsOfTime
             Finished?.Invoke(name);
         }
     }
+}
+
+namespace ShardsOfTime
+{
+    // Round 4: a full-screen tint a cutscene keys (the white-out into the vortex and out of it): the amount is this object's local
+    // scale x (0..1), so it is an ordinary Timeline key like any other.
+    public sealed class ScreenTint : UnityEngine.MonoBehaviour
+    {
+        public UnityEngine.Color color = UnityEngine.Color.white;
+        void LateUpdate() => Hud.Tint(color, transform.localScale.x);
+        void OnDisable() => Hud.Tint(color, 0);
+    }
+
+    // Round 4: which version of the authoring code made a cutscene prefab (Editor/CutsceneAuthoring.cs rebuilds older ones)
+    public sealed class CutsceneVersion : UnityEngine.MonoBehaviour { public int version; }
 }

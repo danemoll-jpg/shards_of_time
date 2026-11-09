@@ -12,6 +12,7 @@ namespace ShardsOfTime
         public int version = 1;
         public int volume = 80;            // master, percent
         public int effectsVolume = 100;    // percent of master
+        public int musicVolume = 70;       // percent of master (Round 4)
         public bool rumble = true;         // the necklace's light pulse on the controller
         public bool invertX, invertY;      // camera
         public int cameraSpeed = 100;      // percent, 50-200
