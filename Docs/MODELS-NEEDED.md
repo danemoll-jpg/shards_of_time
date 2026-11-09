@@ -1,5 +1,100 @@
 # Shards of Time — models needed
 
+## Round 4 (2026-11-09): Ice Age creatures and the Violinist: images needed from Dan
+
+**Ready for Dan.** Four concept images, made like the six character sheets (same rules as "What makes an image usable"
+below): at least 1024 px tall, the whole body in frame (every paw, foot and tail), plain light background, soft even
+light, no ground shadow, no props, mouth closed, no glow, no text, one view per image. **Animals: side view**, standing on
+all fours, tail away from the body; a second image from the three-quarter front (`<name>_front.png`) helps Meshy a lot.
+**The Violinist: front view, A-pose** (he goes through Mixamo like Dan and Abi). Save each as the file named in its heading.
+The game uses stand-in shapes for all four until the models arrive (next round: Meshy, clean-up, rigs, as before).
+
+Negative prompt, if your tool has one: `cropped, cut off feet, cut off paws, cut off tail, multiple views, held object,
+prop, weapon, instrument, saddle, rider, glowing, open mouth, teeth showing, text, logo, watermark, background scenery,
+snow on the ground, ground shadow, motion blur, depth of field, photorealistic, scary, horror`.
+
+They must look like they live in the same film as Kira and the heroes: stylized, rounded, colourful, Pixar-like, never
+realistic or scary. The valley's palette (Dan's reference `SourceArt/Reference/Worlds/01-IceAge/iceage-valley-volcanoes.jpg`):
+snow white and pale blue, warm brown rock, orange lava glow.
+
+### 7. Wolf — `SourceArt/Concepts/wolf.png` (+ `wolf_front.png`)
+
+> Full-body character concept of a prehistoric Ice Age wolf in the style of a Pixar animated film, side view, standing on
+> all four legs, tail held low and away from the body, whole animal in frame from the tip of the nose to the tip of the
+> tail and the bottoms of all four paws, with space around it. A lean, shaggy wolf with thick blue-grey and charcoal fur,
+> a pale cream belly and muzzle, a bushy tail, big expressive yellow eyes with a sly, mischievous look, ears up and
+> alert, long legs with big paws. Cartoon proportions: a slightly oversized head and paws, rounded shapes. Mouth closed.
+> Menacing in a funny way, not scary. No collar, nothing glowing. Stylized, colourful, Pixar-like 3D render, soft even
+> studio lighting, plain light background, no shadows on the ground, no text.
+
+**Design note:** the Ice Age's main enemy. Wolves come in twos or threes, circle the player at a distance, then lunge one
+at a time (light combat: a punch, kick or claw swipe chases one off). About **0.9 m** at the shoulder, **1.6 m** nose to
+tail, so it reads as a threat next to Dan (1.8 m) and huge next to Kira (0.5 m). Its fur must not look like Kira's solid
+grey (blue-grey with a cream belly). Not Mixamo: a four-legged rig by Code in Blender (as Kira's). Animations: idle,
+walk, trot (circling), run, lunge (attack), hurt, stunned (Dan's ground pound), flee.
+
+### 8. Snow critter — `SourceArt/Concepts/snow_critter.png` (+ `snow_critter_front.png`)
+
+> Full-body character concept of a small round Ice Age snow critter in the style of a Pixar animated film, side view,
+> standing on its two short stubby legs, whole creature in frame from the top of its head to its feet and the tip of its
+> little tail, with space around it. Its body is almost a ball of thick fluffy white-and-pale-blue fur, about the size of
+> a beach ball, with a grumpy little face: two small dark eyes under heavy furry eyebrows set in a permanent frown, a
+> small pink nose, a short flat mouth, closed. Two tiny round ears, two short stubby legs with big flat feet, a short
+> fluffy tail. A tuft of frosty fur sticks up on top of its head. Cute but cross, like a pom-pom with a bad attitude.
+> Nothing glowing. Stylized, colourful, Pixar-like 3D render, soft even studio lighting, plain light background, no
+> shadows on the ground, no text.
+
+**Design note:** a new creature for the game (not in the film): the simple patrolling enemy. It waddles back and forth
+on a path, bumps into you if you're in the way, and pops in a puff of snow when hit. About **0.6 m** tall, so Kira looks
+it in the eye. Animations (Code's Blender rig: two legs, but not a person, so not Mixamo): idle (huffing), waddle, bump
+(attack), hurt, poof (defeated), stunned.
+
+### 9. Mammoth — `SourceArt/Concepts/mammoth.png` (+ `mammoth_front.png`)
+
+> Full-body character concept of a woolly mammoth in the style of a Pixar animated film, side view, standing on all four
+> legs, trunk hanging relaxed in a gentle curl, whole animal in frame from the tip of the trunk to the tail and the
+> bottoms of all four feet, with space around it. Huge and gentle: long shaggy warm reddish-brown fur hanging in thick
+> locks, a darker brown face, small kind dark eyes, a calm sleepy expression, big curved cream tusks curling up and
+> inward, small rounded ears. Important: a **broad, flat, level back** with the fur lying flat on top, like a big woolly
+> table, so characters can stand on it. Thick round legs. Mouth closed. No saddle, no rider, nothing on its back,
+> nothing glowing. Stylized, colourful, Pixar-like 3D render, soft even studio lighting, plain light background, no
+> shadows on the ground, no text.
+
+**Design note:** the mammoths on the ridge are friendly: a slow herd that walks a fixed route, and the heroes ride on
+their backs (moving platforms) to reach high shelves. About **3.5 m** at the shoulder, **6 m** long; the flat back about
+**2 m x 3.5 m**. In the film they walk through the blowing snow in the background. Four-legged rig by Code in Blender.
+Animations: idle (trunk sway, ear flap), walk (slow and steady: the back must stay level enough to stand on), trumpet.
+
+### 10. The Violinist, Ice Age — `SourceArt/Concepts/violinist_iceage.png`
+
+No film picture of him is in `SourceArt/Reference/Characters/Violinist/` yet: if you have one, please save it there and
+give it to your image tool (his face should stay the same in every era).
+
+> Full-body character concept of a mysterious travelling musician in the style of a Pixar animated film, standing in an
+> A-pose: arms held about 45 degrees out from his sides, hands open and relaxed, not touching his body, feet
+> shoulder-width apart, front view, whole body in frame from the top of his head to his feet with space around him. A
+> tall, slim older man with a kind, knowing face, a neat silver-grey beard and swept-back silver hair, bright pale-blue
+> eyes, a faint calm smile with his mouth closed. Ice Age clothes: a short hooded cloak of shaggy white-and-grey fur
+> thrown back from his head, ending at his hips, a simple tan hide tunic tied with a leather cord, fur-wrapped lower legs
+> and feet. Something about him doesn't quite belong in the Stone Age: his clothes are a little too neat. Nothing in his
+> hands (his bone fiddle is its own model), no jewellery, nothing glowing. Stylized, colourful, Pixar-like 3D render,
+> soft even studio lighting, plain light background, no shadows on the ground, no text.
+
+**Design note:** he appears in every world and teaches a move: he plays a short tune, and the hero who reached him learns
+it (in the Ice Age: Dan's ground pound). He never speaks or explains himself. The cloak ends at the hips and stays away
+from the arms, so Mixamo's rig doesn't tie it to them. Height **1.85 m**. Mixamo: Humanoid. Clips: **Idle** (`idle.fbx`);
+for playing, search **"Playing Violin"** (`play.fbx`); if Mixamo has nothing by that name, download **Idle** only and tell
+Code, who will animate the bow arm in Blender. His **bone fiddle** (a hollow bone body, gut strings, a curved stick bow)
+is made by Code in Blender, like Dan's necklace: no image needed.
+
+### Props (no images needed)
+
+Rocks, cliffs, ice, snow drifts, bones, pine trees, standing stones, the cave mouth, the volcanoes and the **dark silver
+glass bauble** (the ornament that shatters in Act I) are made by Code: terrain and ice by Blender script, props as simple
+stylized shapes. Meshy's text-to-3D stays an option for props later if they need more detail.
+
+---
+
 ## Mixamo checklist for Dan (Round 2, 2026-11-09)
 
 Four uploads, one per person. For each one:
