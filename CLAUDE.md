@@ -162,6 +162,18 @@ Same launcher as Chastain Rush / Hostile Horizon, renamed:
      rendering; otherwise minimized / not activated with run-in-background on.
      If a test truly needs a visible or focused window, stop and ask Dan first.
   Port Hostile Horizon's `Core/TestRun.cs` and `Tools/run_check.py` for this.
+  **This covers every process Code starts, not just exe checks (Dan,
+  2026-11-09, Round 5: the cutscene render played sound and he noticed it while
+  working).** Unity editor batch jobs (builds, cutscene renders, imports) mute
+  the editor's audio (`EditorUtility.audioMasterMute = true` and
+  `AudioListener.volume = 0` before Play mode) and report the level like a
+  check; Blender always `-b`; the launcher self-check and any helper exe start
+  hidden / minimized without activation; no media players. Every tool that
+  starts a process goes through one helper (`Tools/quiet.py`: hidden window,
+  no focus, Below Normal). If something can't be made silent and windowless,
+  stop and ask Dan first. **Cutscene videos are rendered from the built exe**
+  (batch mode, off-screen, fixed 30 fps frames encoded with ffmpeg), never by
+  the Unity editor with graphics: that run took Dan's focus and played sound.
 - **One heavy job at a time** (Unity build, exe check) at Below Normal priority
   with fewer worker threads.
 - **Clean up the disk at the end of every round** (`Tools/cleanup_round.py`)
@@ -189,10 +201,15 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
   (vsync can't run off-screen; thousands of fps make the character controller skip moves).
-- **Render a cutscene to MP4:** Unity menu **Shards of Time > Render Cutscene to Video** (`Recordings/<Name>.mp4`,
-  1080p 30 fps, no audio), or with no window
-  `python Tools/unity_batch.py render --gpu -executeMethod ShardsOfTime.CutsceneRender.RenderFromCommandLine -cutscene NecklaceWakes`
-  (`--gpu`: no `-nographics`, no `-quit`; the render exits by itself). How to author: `Docs/CUTSCENES.md`.
+- **Render a cutscene to MP4 (Round 5: from the built exe, never the editor):** `python Tools/render_cutscene.py <Name> [...]`
+  (or the menu **Shards of Time > Render Cutscene to Video**, which runs it): the exe in batch mode, muted, frames off-screen at a
+  fixed 30 fps, ffmpeg -> `Recordings/<Name>.mp4` (1080p, no audio); prints the audio level and the window watcher's report.
+  Uses the last build. How to author: `Docs/CUTSCENES.md`.
+- **Every process goes through `Tools/quiet.py`** (Round 5): a desktop of its own that is never shown (nothing can appear or take
+  focus), hidden, Below Normal; Blender only with `-b`, Unity only with `-batchmode`. Shell use:
+  `python Tools/quiet.py --log <file> -- <exe> <args>` (prints the watcher's report). `unity_batch.py`, `run_check.py`,
+  `launcher_selfcheck.py`, `render_cutscene.py` and the release tools all use it. The editor mutes itself in batch mode
+  (`Editor/QuietEditor.cs`).
 - **Data (edit in the Inspector):** heroes `Assets/Resources/Data/Characters/{Dan,Abi,Kira}.asset` (CharacterStats);
   the Ice Age's shards / requirement / what each needs `Assets/Resources/Data/Worlds/IceAge.asset` (made once from
   `WorldData.IceAgeDefaults()`; delete it to remake it after changing the defaults); the playground's shards / requirement / what each shard needs `Assets/Resources/Data/Worlds/Playground.asset`

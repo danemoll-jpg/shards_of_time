@@ -11,6 +11,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import quiet   # every process hidden (Tools/quiet.py)
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -84,7 +85,7 @@ def main():
         if os.path.isdir(p):
             gone.append(rel)
             if not dry: shutil.rmtree(p, ignore_errors=True)
-    if not dry: subprocess.run(["git", "-C", ROOT, "gc", "-q"])
+    if not dry: quiet.sub(["git", "-C", ROOT, "gc", "-q"])
     after = {f: size_mb(os.path.join(ROOT, f)) for f in FOLDERS}
     for f in FOLDERS:
         print(f"{f:20s} {before[f] / 1000:6.2f} GB -> {after[f] / 1000:6.2f} GB")

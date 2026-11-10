@@ -1,11 +1,12 @@
 """Deliberate publisher operation. Default is dry run; never called by game builds."""
 import argparse, hashlib, json, os, pathlib, subprocess, urllib.request
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import quiet   # every process hidden (Tools/quiet.py)
 REPO='danemoll-jpg/shards-of-time-releases'
 LATEST_CATALOG='https://github.com/'+REPO+'/releases/latest/download/update-catalog.json'
 # Round 81 (J): the GitHub CLI: $GH, else Woodstock Rush's bundled one (Builds/PublisherTools, used as a tool, read only), else 'gh' on the path
 GH=os.environ.get('GH') or next((str(p) for p in [pathlib.Path(r'C:/Users/danmo/Racer/Builds/PublisherTools/gh-2.101.0/bin/gh.exe')] if p.is_file()),'gh')
 def gh(*args):
-    return subprocess.run([GH,*args],check=True,capture_output=True,text=True).stdout
+    return quiet.sub([GH,*args],check=True,capture_output=True,text=True).stdout
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('draft',type=pathlib.Path);p.add_argument('--publish',action='store_true');p.add_argument('--confirm-repository');p.add_argument('--resume-draft',action='store_true');p.add_argument('--replace-assets',action='store_true',help='replace changed assets of an existing published, not-Latest release (same tag and file names)');a=p.parse_args()
     inventory=json.loads((a.draft/'INVENTORY.json').read_text());assets=a.draft/'assets';tag=inventory.get('tag','build-'+str(inventory['game']['build']))

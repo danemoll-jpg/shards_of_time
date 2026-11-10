@@ -78,7 +78,7 @@ namespace ShardsOfTime
         {
             bool play = Game.I && Game.I.State == Game.Mode.Playing || Game.I && Game.I.State == Game.Mode.Paused;
             playLayer.SetActive(play && !Game.InCutscene);
-            cutLayer.SetActive(Game.InCutscene);
+            cutLayer.SetActive(Game.InCutscene && Cutscenes.AllowSkip);   // a film render (no skipping) shows no skip prompt
             if (Game.InCutscene) { skipText.text = $"Hold {Controls.Btn(Controls.Act.Skip)} to skip"; skipFill.rectTransform.anchorMax = new Vector2(Cutscenes.SkipHeld01, 1); }
             messageText.enabled = Time.unscaledTime < messageUntil && !Game.InCutscene && Game.Playing;
             flashT = Mathf.MoveTowards(flashT, 0, Time.unscaledDeltaTime * 2.5f);

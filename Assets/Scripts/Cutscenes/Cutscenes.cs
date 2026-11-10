@@ -68,36 +68,3 @@ namespace ShardsOfTime
         }
     }
 }
-
-namespace ShardsOfTime
-{
-    // Round 4: a full-screen tint a cutscene keys (the white-out into the vortex and out of it): the amount is this object's local
-    // scale x (0..1), so it is an ordinary Timeline key like any other.
-    public sealed class ScreenTint : UnityEngine.MonoBehaviour
-    {
-        public UnityEngine.Color color = UnityEngine.Color.white;
-        void LateUpdate() => Hud.Tint(color, transform.localScale.x);
-        void OnDisable() => Hud.Tint(color, 0);
-    }
-
-    // Round 4: which version of the authoring code made a cutscene prefab (Editor/CutsceneAuthoring.cs rebuilds older ones)
-    public sealed class CutsceneVersion : UnityEngine.MonoBehaviour { public int version; }
-}
-
-namespace ShardsOfTime
-{
-    // Round 5: a cutscene's sound effects (its Timeline audio track) at the effects volume
-    public sealed class CutsceneAudio : UnityEngine.MonoBehaviour
-    {
-        void OnEnable() { var s = GetComponent<UnityEngine.AudioSource>(); if (s) s.volume = GameSettings.S.effectsVolume / 100f; }
-    }
-
-    // Round 5: the arrival's silhouette shot: the sun behind the subject, the sky bright, the light on the near side down. The amount is
-    // this object's local scale x (0..1), keyed like ScreenTint.
-    public sealed class Backlight : UnityEngine.MonoBehaviour
-    {
-        float last = -1;
-        void LateUpdate() { float a = transform.localScale.x; if (!UnityEngine.Mathf.Approximately(a, last)) { last = a; Look.Backlit(a); } }
-        void OnDisable() { last = -1; Look.Backlit(0); }
-    }
-}

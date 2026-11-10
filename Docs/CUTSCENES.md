@@ -1,7 +1,7 @@
 # Cutscenes: making them, and rendering them to video
 
 Every cutscene in Shards of Time is made in Unity with **Timeline** and **Cinemachine**, using the game's own characters,
-and plays live in the game (CLAUDE.md rule 8). The same cutscene renders to an MP4 file from the editor. This page is
+and plays live in the game (CLAUDE.md rule 8). The same cutscene renders to an MP4 file (from the built game, Round 5). This page is
 written so the same setup can be copied into a film project: nothing in it depends on gameplay.
 
 ## What a cutscene is
@@ -69,21 +69,23 @@ remade once in Round 3 with the real models). From now on they're ordinary asset
 
 ## Rendering a cutscene to an MP4
 
-**Shards of Time > Render Cutscene to Video**, then click **Render <Name>**.
-
-The editor enters Play mode in the game's scene. The game builds the playground and places everyone. It plays the
-cutscene with no title screen, no saving and no skipping, and **Unity Recorder** records the main camera. Play mode
-ends by itself when the cutscene does. The file is `Recordings/<Name>.mp4` (1920 x 1080, 30 fps, H.264, no audio;
-`Recordings/` is git-ignored). **Open the Recordings folder** is in the same window.
-
-From a command line, with no window (close the editor first; `--gpu` keeps the graphics card the recorder needs):
+**Shards of Time > Render Cutscene to Video**, then click **Render <Name>** (it uses the last build: build first if the
+cutscene changed). Or, with no editor open:
 
 ```
-python Tools/unity_batch.py render --gpu -executeMethod ShardsOfTime.CutsceneRender.RenderFromCommandLine -cutscene NecklaceWakes
+python Tools/render_cutscene.py ActOne IceAgeArrival
 ```
 
-Settings live in `Assets/Editor/CutsceneRender.cs` (`Width`, `Height`, `Fps`). Sound: none for now. When the game has
-music and voices, turn on the recorder's audio (`AudioInputSettings.PreserveAudio`) and render unmuted on purpose.
+**Round 5: videos are rendered from the built game, never by the editor's Play mode** (that run played the music on Dan's
+speakers and took his focus). `Tools/render_cutscene.py` starts `Builds/ShardsOfTime/ShardsOfTime.exe -batchmode -mute
+-exeCheck <dir> -exeCheckOnly film -film <Name>` through `Tools/quiet.py` (a desktop of its own that is never shown, so
+nothing can appear or take focus; Below Normal). The game plays the cutscene at a fixed 30 frames a second
+(`Time.captureFramerate`), draws every frame off-screen and saves it (`Assets/Scripts/Checks/ExeCheck.Film.cs`); white-outs
+are kept, the skip prompt is not drawn. ffmpeg (hidden too) encodes `Recordings/<Name>.mp4` (1920 x 1080, 30 fps, H.264,
+no audio). The script prints the measured audio output (must be 0.000) and what the window watcher saw (must be "none
+visible, never in the foreground"); a still every 1.5 s stays in `local/film/<Name>/stills/`.
+
+Sound: none in the video. When it should have music and voices, that is a separate, deliberate step Dan asks for.
 
 ## Using this for a film
 
@@ -91,9 +93,9 @@ The film setup is the same thing without the game:
 - one prefab per **scene** (set, actors, shot cameras, director);
 - one Timeline per scene, its **Shots** track as the edit;
 - to render, an empty scene with a **Main Camera** that has a **CinemachineBrain**, the scene prefab dropped in, and
-  the Shots track bound to that brain. Then **Window > General > Recorder > Recorder Window**, add a **Movie** recorder
-  (Targeted camera: MainCamera, MP4) and set **Recording Mode: Timeline**, or copy `CutsceneRender.cs`'s
-  `StartRecorder` into your film project's own menu.
+  the Shots track bound to that brain. Render it from a build the same way as the game does (`ExeCheck.Film.cs`: fixed
+  30 fps, frames off-screen, ffmpeg), or for hand use in the editor Unity Recorder's Movie recorder (Recording Mode:
+  Timeline) works too, but never on Dan's PC by script.
 - Longer films: one Timeline per scene, then a master Timeline with **Control Tracks** that play the scene Timelines
   one after another.
 
@@ -119,4 +121,4 @@ while it plays and undone after. **White-outs:** a `ScreenTint` whose amount is 
 **Sets:** a Blender file in `Assets/Resources/World/` can be dropped in and unpacked (`ActOne` does this with the room; the
 ornament is moved under its own holder so it can be keyed).
 
-Render any of them to MP4 the same way: `python Tools/unity_batch.py render --gpu -executeMethod ShardsOfTime.CutsceneRender.RenderFromCommandLine -cutscene ActOne`.
+Render any of them to MP4 the same way: `python Tools/render_cutscene.py ActOne`.

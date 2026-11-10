@@ -4,11 +4,12 @@ Layout as the 0.21 Full ZIP: ShardsOfTime/ launcher, cover, README, state.json, 
 plus the Steam library artwork beside the launcher (Fix 8.3: SourceArt/Title/Steam/ShardsOfTime-*.png from Tools/make_steam_art.py:
 Portrait, Wide, Hero, Logo, Icon; the launcher's cover ShardsOfTime-Cover.png = the portrait; plain copies)."""
 import argparse,importlib.util,json,pathlib,shutil,subprocess,zipfile
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import quiet   # every process hidden (Tools/quiet.py)
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('release',ROOT/'Tools/Prepare-LauncherRelease.py');r=importlib.util.module_from_spec(spec);spec.loader.exec_module(r)
 def verify(checks,work,envelope):
     # The launcher's own signature check (pinned key); returns the signed payload.
-    p=subprocess.run([str(checks),str(work/'verify-root'),str(work/'verify-saves'),'verify',str(envelope)],capture_output=True,text=True)
+    p=quiet.sub([str(checks),str(work/'verify-root'),str(work/'verify-saves'),'verify',str(envelope)],capture_output=True,text=True)
     if p.returncode:raise ValueError(f'Signature check failed for {envelope}: {p.stderr.strip()}')
     return json.loads(p.stdout)
 def copy_exact(source,target,files):
@@ -55,7 +56,7 @@ def main():
     with zipfile.ZipFile(archive) as z:z.extractall(extracted)
     if r.inventory(extracted/'ShardsOfTime')!=files:raise ValueError('Extracted starter differs')
     # The launcher's own store opens the extracted starter and finds its game.
-    s=subprocess.run([str(a.checks),str(extracted/'ShardsOfTime'),str(work/'status-saves'),'status'],capture_output=True,text=True)
+    s=quiet.sub([str(a.checks),str(extracted/'ShardsOfTime'),str(work/'status-saves'),'status'],capture_output=True,text=True)
     if s.returncode or json.loads(s.stdout)['game']['manifest']['build']!=gm['build']:raise ValueError('Launcher cannot open the extracted starter: '+s.stderr)
     shutil.rmtree(extracted);shutil.rmtree(starter.parent)
     inventory=dict(tag=a.tag,title=a.title,latest=not a.not_latest,game=dict(version=gm['version'],build=gm['build'],notes=a.notes),assets=r.inventory(assets),starterFiles=len(files),publication='LOCAL DRAFT ONLY')

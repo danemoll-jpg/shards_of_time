@@ -22,7 +22,7 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 5;
+        public const int Version = 7;
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
@@ -507,7 +507,8 @@ namespace ShardsOfTime
             var bl = k.Holder("Backlight", Vector3.zero, 0);
             var amount = new GameObject("Amount"); amount.transform.SetParent(bl.transform, false); amount.AddComponent<Backlight>();
             foreach (var (t, v) in new[] { (0f, 0f), (3.98f, 0f), (4.0f, 1f), (5.95f, 1f), (5.97f, 0f) }) k.Key(bl, "Amount", "m_LocalScale", t, new Vector3(v, 1, 1));
-            var camC = new Vector3(.05f, .22f, 1.55f); var kiraHead = rockAt + Vector3.up * (rockTop + .35f);
+            // close under the rock's front edge, looking up at her against the sky: she fills the top of the frame
+            var kiraHead = rockAt + Vector3.up * (rockTop + .32f); var camC = rockAt + new Vector3(.12f, rockTop - .1f, -1.4f);
             var sunAt = camC + (kiraHead - camC).normalized * 60f + Vector3.up * 2f;
             var sun = k.Holder("Sun disk", sunAt, 0);
             Placeholders.Prim(PrimitiveType.Sphere, sun.transform, Vector3.zero, Vector3.one * 7f, Placeholders.Mat(new Color(1f, .97f, .85f), "Glow"), name: "Disk");
@@ -527,13 +528,13 @@ namespace ShardsOfTime
             // shots
             k.Shot("They land", 0f, 2.6f, new Vector3(3.2f, 1.4f, .2f), new Vector3(-.5f, .8f, .3f), 50f);
             k.Shot("Dan gets up", 2.6f, 4.0f, new Vector3(.55f, 1.6f, 1.9f), new Vector3(0, 1.45f, 0), 40f, new Vector3(.45f, 1.58f, 1.6f));
-            k.Shot("Something on the rock", 4.0f, 5.95f, camC, kiraHead + Vector3.up * .15f, 58f, camC + new Vector3(0, -.05f, -.25f));
+            k.Shot("Something on the rock", 4.0f, 5.95f, camC, kiraHead + Vector3.up * .05f, 34f, camC + new Vector3(0, -.04f, -.15f));
             k.Shot("Dan falls", 5.95f, 8.3f, new Vector3(3.6f, 1.3f, .2f), new Vector3(.35f, .5f, -.6f), 50f);
             // Dan's view: from just behind and over his head, down at her face (she stands on his chest facing his head)
             var toHead = face - chest; toHead.y = 0; toHead = toHead.sqrMagnitude > .0001f ? toHead.normalized : Vector3.back;
-            var kiraFace = chest + Vector3.up * .32f + toHead * .16f;
-            var eye = face + toHead * .3f + Vector3.up * .32f;
-            k.Shot("It's Kira", 8.3f, 10.6f, eye, kiraFace, 38f, Vector3.Lerp(eye, kiraFace, .3f));
+            var kiraFace = chest + Vector3.up * .3f + toHead * .18f;
+            var eye = face + toHead * .55f + Vector3.up * .5f;   // over his head, about 0.7 m from her face: her ears and eyes fill the frame
+            k.Shot("It's Kira", 8.3f, 10.6f, eye, kiraFace, 40f, Vector3.Lerp(eye, kiraFace, .2f));
             k.Shot("The necklace", 10.6f, 13.0f, chest + new Vector3(1.25f, 1.05f, .35f), chest, 40f, chest + new Vector3(.95f, .8f, .25f));
             k.Shot("Abi laughs", 13.0f, ArrivalLength, new Vector3(2.4f, 1.7f, 2.4f), new Vector3(-.6f, .7f, -.2f), 48f);
             k.Save();

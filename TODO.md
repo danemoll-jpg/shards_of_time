@@ -30,6 +30,18 @@ start not too bad", clean-up needed, and the notes below. Report per item:
 done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can
 overrule after playing.
 
+**Testing incident (2026-11-09, during Round 5), fixed:** Code rendered `IceAgeArrival` with the Unity editor in batch
+mode *with graphics* (`unity_batch.py --gpu`, Play mode + Unity Recorder): the editor (and the licensing client it starts)
+took Dan's focus and the cutscene's music came out of his speakers (the recorder only kept audio out of the file). Changed:
+every process now starts through `Tools/quiet.py` (a separate, never-shown Windows desktop, so no window can appear or take
+focus; hidden; Below Normal; Blender only with `-b`, Unity only with `-batchmode`; a watcher reports any visible window or
+foreground grab); the editor mutes itself in batch mode (`Editor/QuietEditor.cs`); `--gpu` is refused; cutscene videos are
+rendered from the built exe in batch mode (`Tools/render_cutscene.py`: muted, frames off-screen at a fixed 30 fps, ffmpeg
+hidden); the editor menu calls the same script. Found on the way: even a batch-mode exe check's hidden
+`Unity.BatchModeWindow` briefly took the foreground (no window shown) before the separate desktop. Check: ActOne and
+IceAgeArrival re-rendered this way: measured output 0.000 RMS / peak 0.000 for both, and the watcher (every 0.25 s) saw no
+visible window and no foreground grab for the game exe or ffmpeg; the build and the exe checks report the same.
+
 **Dan's notes on 0.4.0**
 1. **Rewrite `IceAgeArrival` (Dan's story beat).** They land in the snow. Dan
    gets up and sees what looks like a **sabertooth about to attack him**: shoot

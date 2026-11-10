@@ -11,6 +11,7 @@
 4. Prints what happened: the launcher's status lines, the startup handshake, the installed build.
 Output: Builds/LauncherCheck/ (deleted by the round clean-up). Usage: python Tools/launcher_selfcheck.py"""
 import functools, http.server, json, pathlib, shutil, socketserver, subprocess, sys, threading
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import quiet   # every process hidden (Tools/quiet.py)
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'Builds/LauncherCheck'
@@ -25,7 +26,7 @@ def main():
     server = socketserver.TCPServer(('127.0.0.1', 0), handler); port = server.server_address[1]
     threading.Thread(target=server.serve_forever, daemon=True).start()
     for build, version in ((1, '0.1.0'), (2, '0.1.1')):
-        subprocess.run([sys.executable, str(ROOT / 'Tools/Prepare-LauncherRelease.py'), '--game', str(ROOT / 'Builds/ShardsOfTime'), '--bundle-music', str(music),
+        quiet.sub([sys.executable, str(ROOT / 'Tools/Prepare-LauncherRelease.py'), '--game', str(ROOT / 'Builds/ShardsOfTime'), '--bundle-music', str(music),
                         '--out', str(OUT / f'r{build}'), '--version', version, '--build', str(build), '--music-build', str(build),
                         '--notes', f'Launcher self-check build {build}', '--base-url', f'http://127.0.0.1:{port}/r{build}/assets'], check=True)
     install = OUT / 'install'
@@ -36,11 +37,9 @@ def main():
     evidence = OUT / 'evidence'; saves = OUT / 'saves'
     cmd = [str(install / 'ShardsOfTimeLauncher.exe'), '--auto-check', '--root', str(install), '--test-save', str(saves), '--evidence', str(evidence),
            '--catalog', f'http://127.0.0.1:{port}/r2/assets/update-catalog.json']
-    p = subprocess.Popen(cmd, creationflags=0x00004000)   # BELOW_NORMAL_PRIORITY_CLASS
-    try: code = p.wait(timeout=600)
-    except subprocess.TimeoutExpired: p.kill(); code = 'timeout'
+    code = quiet.run(cmd, timeout=600)   # Round 5: hidden, never activated (it used to open the launcher's window)
     server.shutdown()
-    print('launcher exit:', code)
+    print('launcher exit:', code); print(quiet.watch_report())
     for name in ('auto-status.txt', 'startup.json', 'failure.txt'):
         f = evidence / name
         if f.exists(): print(f'--- {name}\n' + f.read_text(encoding='utf-8', errors='replace').strip())

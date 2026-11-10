@@ -4,6 +4,7 @@ Builds/ShardsOfTime (build 1). The launcher checks the real catalog (github.com/
 release there yet it says it couldn't check and starts the installed game. Re-run after every build ("Play Shards of Time
 (launcher).bat" does it for you when the build is newer). Usage: python Tools/make_local_launcher.py"""
 import pathlib, shutil, subprocess, sys
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import quiet   # every process hidden (Tools/quiet.py)
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'Builds/LauncherLocal'
@@ -13,7 +14,7 @@ def main():
     if OUT.exists(): shutil.rmtree(OUT)
     work = OUT / 'release'; music = OUT / 'music'; music.mkdir(parents=True); (music / 'placeholder.txt').write_text('No soundtrack yet.')
     if (ROOT / 'BundleMusic').is_dir(): shutil.rmtree(music); shutil.copytree(ROOT / 'BundleMusic', music)   # Round 4: the soundtrack (Dan's tracks)
-    subprocess.run([sys.executable, str(ROOT / 'Tools/Prepare-LauncherRelease.py'), '--game', str(ROOT / 'Builds/ShardsOfTime'), '--bundle-music', str(music),
+    quiet.sub([sys.executable, str(ROOT / 'Tools/Prepare-LauncherRelease.py'), '--game', str(ROOT / 'Builds/ShardsOfTime'), '--bundle-music', str(music),
                     '--out', str(work), '--version', '0.1.0', '--build', '1', '--music-build', '1', '--notes', 'Local build'], check=True)
     home = OUT / 'ShardsOfTime'
     shutil.move(str(work / 'starter'), str(home))
