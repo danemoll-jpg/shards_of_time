@@ -22,8 +22,11 @@ changed for gameplay.
   X: Muscle Man goes home and pulls the sword. XI: rewind, couch, violinist,
   "NO, KIRA, NO!")
 - **Shards:** each world has many small shards plus one colored story shard.
-  Once the player has collected the required number of small shards, the
-  story shard becomes findable, and the story shard opens the portal.
+  **The small shards are universal (Dan, 2026-11-10):** one total across all
+  worlds, never spent. Each world has a cumulative threshold on that total
+  (DEFAULT Ice Age 35, Egypt 75); reaching it wakes the necklace there, which
+  leads to the story shard, and the story shard opens the vortex. Extra shards
+  anywhere count toward later worlds, which is what makes them worth hunting.
   (Framing: the shards charge Dan's necklace; at the threshold it wakes up and
   leads to the story shard.)
 - **All cutscenes are remade in-engine.** Film clips are not reused (Grok

@@ -24,9 +24,49 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none yet. Round 6 is delivered (0.6.0); its plan is in
-`TODO-ARCHIVE.md`. The planning chat writes Round 7 (Bethlehem next in film
-order) after Dan plays 0.6.0.
+Current round — Fix 6.1: universal shards + the Violinist's lyre arms (target 0.6.1)
+Round 6's plan is in `TODO-ARCHIVE.md`. Dan played 0.6.0 (2026-11-10). Report
+per item: done / not done / deferred, and why. Bethlehem (Round 7) comes after
+this fix.
+
+1. **Shards are universal (Dan, 2026-11-10; the original concept, section 5:
+   "a shared collection total, not consumed").** Rounds 4–6 wrongly made each
+   world's requirement count only that world's shards (35 of Egypt's 60), so
+   extra shards had no purpose. Change it:
+   - The player has **one shard total** across all worlds (every small shard
+     ever collected, never spent).
+   - Each world's necklace wakes when the **total** reaches that world's
+     threshold (cumulative). DEFAULT thresholds: Ice Age 35, Egypt 75. Later
+     worlds get theirs when they're built, about 60–65% of all shards that
+     exist up to that world.
+   - So extra shards from any world (e.g. Ice Age ledges reopened by the double
+     jump) count toward later worlds: collecting more means less hunting later.
+   - **Rule 2, updated:** a world's threshold must be reachable with the shards
+     available on arrival there: all earlier worlds with the moves you have by
+     then, plus this world's first-visit shards. Report the numbers per world
+     (e.g. Egypt: Ice Age 43 + Egypt 50 = 93 available on arrival >= 75).
+   - **HUD:** the big number is the total; under it "Next: N" (the current
+     world's threshold) until the necklace wakes there. The per-world count
+     ("Egypt: 41 / 60") stays in the pause menu as the completion tracker.
+   - **Saves:** existing saves keep their collected shards; the total is just
+     their sum. If a save already has a world's story shard, nothing relocks.
+   - Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md` to say
+     this, so it doesn't drift back.
+   - Check: a play-through where the Egypt necklace wakes from the total (with
+     Ice Age extras counted), and a save from 0.6.0 loaded into 0.6.1.
+2. **The Violinist's arms look wrong playing the lyre (Dan, 2026-11-10).** The
+   Mixamo clip is a violin pose (left arm up under the chin, bow arm sawing),
+   which the two-arm IK bends round a lyre. The lyre needs its own playing
+   animation: hold the lyre upright against his chest / left hip with the left
+   arm wrapped round the frame, the right hand plucking the strings in front of
+   it, a gentle body sway, head tilted toward the strings. Make it per
+   instrument (data next to `violinistInstrument`): fiddle keeps the violin clip,
+   lyre gets the new one (author it in Blender or with Animation Rigging; no
+   new Mixamo download needed unless Code finds a fitting clip, then say which).
+   Check: close-ups from the front, side and the player's camera during
+   `ViolinistTeachesEgypt` and his idle playing, hands on the instrument, no
+   arm through the body or the lyre.
+3. Build, check, publish 0.6.1, update `TODO.md` / `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
