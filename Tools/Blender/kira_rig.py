@@ -27,13 +27,16 @@ from mathutils.kdtree import KDTree
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
-COUNTER_TURN = {'kira'}
-THIN = {'kira': 1}
+COUNTER_TURN = {'kira', 'kira_mummy'}   # Round 6: mummy Kira's head measures 14 deg turned (home Kira 34)
+THIN = {'kira': 1, 'kira_mummy': 1}   # Round 6: mummy Kira's whiskers too
 # Round 5, item 9: the Ice Age creatures get the same four-legged rig. Their real heights (metres): each is rigged at Kira's size
 # (0.5 m: every number here was tuned for her), then the armature is scaled back up for the export.
-CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4}
-TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
+CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7}   # Round 6: Egypt's camel and temple guardian
+TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
 FPS = 30
+# Round 6: mummy Kira's cream bandages pass the eye colour test; her amber eyes are much more saturated
+EYE_RB = {'kira_mummy': .33}
+TURN_MEASURED = {'kira_mummy': 14.0}   # mummy Kira's head, measured on Meshy's original texture (7 eye points); her amber recolour hides them
 LEGS = ('FL', 'FR', 'BL', 'BR')
 
 
@@ -83,7 +86,7 @@ def landmarks(ob, name):
             if vi in seen: continue
             u, w = uv[l.index].uv; x = min(W - 1, int(u % 1 * W)); y = min(Hh - 1, int(w % 1 * Hh)); i = (y * W + x) * 4
             r, g, b = px[i:i + 3]
-            if r > .7 and g > .55 and r - b > .15 and g - b > .1 and r - g < .2 and co[vi].z > H * .62:   # pale gold, upper head (not the fangs)
+            if r > .7 and g > .55 and r - b > EYE_RB.get(name, .15) and g - b > .1 and r - g < .2 and co[vi].z > H * .62:   # pale gold, upper head (not the fangs)
                 seen.add(vi); eyes.append(co[vi])
     face = Vector((0, -1, 0)); turn = 0.0
     if len(eyes) >= 6:
@@ -97,6 +100,7 @@ def landmarks(ob, name):
         if f.dot((e0 - head_c).xy.to_3d()) < 0: f = -f
         face = f
         turn = math.atan2(face.x, -face.y)   # 0 = looking along -Y; + = turned toward +X
+    if len(eyes) < 6 and name in TURN_MEASURED: turn = math.radians(TURN_MEASURED[name])   # Round 6: measured before the eyes were recoloured
     # tail: behind the hips and above them
     tail = [c for c in co if c.y > yb and c.z > hi_b + .015]
     if not tail:   # Round 5: a hanging tail (the wolf's) is below the back: behind the hind legs instead
@@ -444,13 +448,19 @@ def run(name):
     L, co = landmarks(ob, name)
     # Round 5, item 1b: the mesh is rebuilt as one closed surface (Tools/Blender/closed_mesh.py) with Meshy's maps baked onto it,
     # so no camera sees a back face; the landmarks above come from Meshy's mesh (its texture finds the eyes)
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import closed_mesh
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import closed_mesh, hard_parts
     out = os.path.join(ROOT, 'SourceArt', 'Rigged', name)
+    # Round 6, item 3: tusks / fangs / claws out of the fur first (clean pieces, a plain material), joined back after the rebuild
+    hard, hinfo = hard_parts.split(ob, name, L, log=log)
+    if os.path.exists(os.path.join(out, 'hard.txt')) and not hard: os.remove(os.path.join(out, 'hard.txt'))
     ob = closed_mesh.rebuild(ob, L['H'] * .005, TRIS.get(name, 20000), out, thin=THIN.get(name, 0), log=log)   # 20k: fewer and the thin parts fold through themselves
+    first = None
+    if hard: first = hard_parts.join(ob, hard_parts.close(hard, hinfo, L, out, name, log=log))
     co = [ob.matrix_world @ v.co for v in ob.data.vertices]
     L['tail'] = [c for c in co if c.y > L['yb'] and c.z > L['hi_b'] + .015]
     arm = build(L)
     skin(ob, arm, L, co)
+    if first is not None: hard_parts.rigid(ob, first, hinfo, L, log=log)
     acts = clips(arm, L)
     # Round 4, item 1: fur tufts and whiskers are single sheets; the ones seen from behind get a reversed twin (Tools/Blender/mesh_fix.py)
     # (Round 4's reversed twins, mesh_fix.double_sheets, are not needed on a closed mesh: Round 5)

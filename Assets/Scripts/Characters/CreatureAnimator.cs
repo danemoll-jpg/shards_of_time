@@ -63,7 +63,9 @@ namespace ShardsOfTime
             foreach (var n in human ? PeopleClips : KiraClips)
             {
                 AnimationClip clip = null;
-                foreach (var a in all) if (a.name == n || a.name.EndsWith("|" + n)) { clip = a; break; }
+                // Round 6: a humanoid with its own clip of this name (Clips/<model>_<clip>: the mummy's shamble) plays that instead
+                if (human) foreach (var a in Resources.LoadAll<AnimationClip>("Characters/Clips/" + resource + "_" + n)) if (!a.name.StartsWith("__preview__")) { clip = a; break; }
+                if (!clip) foreach (var a in all) if (a.name == n || a.name.EndsWith("|" + n)) { clip = a; break; }
                 if (!clip) continue;
                 c.index[n] = c.clips.Count; c.clips.Add(clip);
                 if (human && UpperBody.Contains(n)) { c.upperIndex[n] = c.upperClips.Count; c.upperClips.Add(clip); }

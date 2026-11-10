@@ -1,5 +1,45 @@
 # Shards of Time — models needed
 
+## Round 6 (2026-11-10): Mixamo for Egypt — for Dan, now
+
+Your nine Egypt images became Meshy models (all usable; previews `Data/screenshots/round6/models/`). Four of them are
+people-shaped and go through Mixamo, the same steps as the Violinist in Round 5. The upload files are ready:
+
+| Model | Upload this (mixamo.com > Upload Character) | Height |
+|---|---|---|
+| Dan, Egypt | `SourceArt/Mixamo/dan_egypt/upload/dan_egypt.fbx` | 1.8 m |
+| Abi, Egypt | `SourceArt/Mixamo/abi_egypt/upload/abi_egypt.fbx` | 1.65 m |
+| The Violinist, Egypt | `SourceArt/Mixamo/violinist_egypt/upload/violinist_egypt.fbx` | 1.85 m |
+| Mummy (enemy) | `SourceArt/Mixamo/mummy/upload/mummy.fbx` | 1.75 m |
+
+For **each of the four**:
+1. **Upload**, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**. Next, Next.
+2. **Download the rigged character** with no animation picked: Format **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
+   Save it in that model's folder, next to `upload` (not inside it): `SourceArt/Mixamo/<model>/T-Pose.fbx`.
+
+Then the **clips** (each: FBX for Unity, 30 fps, Keyframe Reduction none, **Without Skin**, **In Place** ticked where
+offered). Save each under the name in the first column (Mixamo's own name, as you did before):
+
+| Save as | Mixamo search | Where to save | For |
+|---|---|---|---|
+| `Laughing.fbx` | **Laughing** | `SourceArt/Mixamo/` (the shared people clips) | Dan's relieved laugh in the Ice Age arrival (Round 5 left it out) |
+| `HoldUp.fbx` | **Holding up** / **Showing** (a one-hand raise to look at something; if nothing fits: **Looking At Item**) | `SourceArt/Mixamo/` | Dan holding up the necklace in the arrival |
+| `Zombie Idle.fbx` | **Zombie Idle** | `SourceArt/Mixamo/mummy/` | the mummy asleep on its feet |
+| `Zombie Walk.fbx` | **Zombie Walk** | `SourceArt/Mixamo/mummy/` | the shamble |
+| `Zombie Attack.fbx` | **Zombie Attack** | `SourceArt/Mixamo/mummy/` | the grab |
+| `Zombie Scream.fbx` | **Zombie Scream** | `SourceArt/Mixamo/mummy/` | waking up |
+| `Zombie Reaction Hit.fbx` | **Zombie Reaction Hit** | `SourceArt/Mixamo/mummy/` | hit |
+
+The shared clips (`Laughing`, `HoldUp`) can be downloaded with any of the four on screen (Unity retargets them to everyone).
+**Nothing else to download:** Dan and Abi use the shared clip set already in `SourceArt/Mixamo/`; the Violinist plays
+his lyre with his Round 5 clips (play / bow / nod, retargeted) and his arms are placed on the lyre by code.
+Abi's long hair: if Mixamo ties it to her arms again, Code fixes it (as in Round 2). When the files are there, tell Code:
+they go into the game this same round. Until then Egypt shows Dan and Abi in their home models, the Violinist in his Ice
+Age model with the lyre, and placeholder mummies.
+
+Not Mixamo (Code's rigs, done this round): mummy Kira, the camel and the temple guardian (four-legged rig in Blender); the
+scarab (moved by code); the Sphinx (a statue).
+
 ## Round 6 (2026-11-09): Ancient Egypt — images needed from Dan (prompts by the planning chat)
 
 Dan's film art for Egypt is in `SourceArt/Reference/` (characters: `Characters/*/…-egypt-film.png`,

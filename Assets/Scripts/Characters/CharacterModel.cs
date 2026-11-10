@@ -52,14 +52,19 @@ namespace ShardsOfTime
             var anim = go.GetComponentInChildren<Animator>();
             go.transform.localRotation = anim && anim.avatar && anim.avatar.isHuman ? HumanFront(go, anim) : BlenderFront;
             var mat = Resources.Load<Material>("Characters/" + model);
+            var hard = HardMat(model);
             foreach (var r in go.GetComponentsInChildren<Renderer>(true))
             {
-                if (mat) { var ms = r.sharedMaterials; for (int i = 0; i < ms.Length; i++) ms[i] = mat; r.sharedMaterials = ms; }
+                if (mat) { var ms = r.sharedMaterials; for (int i = 0; i < ms.Length; i++) ms[i] = i > 0 && hard ? hard : mat; r.sharedMaterials = ms; }
                 r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
                 if (r is SkinnedMeshRenderer s) s.updateWhenOffscreen = false;
             }
             return go;
         }
+
+        // Round 6, item 3: tusks, fangs and claws are submesh 1 with a plain material of their own (Characters/<model>_hard.mat, made by
+        // Editor/CharacterImport.cs from <model>_hard.txt)
+        public static Material HardMat(string model) => Resources.Load<Material>("Characters/" + model + "_hard");
 
         // A humanoid faces +Z whatever its file did (Mixamo's own FBX faces +Z, a Blender re-export may not): its right leg on its right.
         static Quaternion HumanFront(GameObject go, Animator anim)

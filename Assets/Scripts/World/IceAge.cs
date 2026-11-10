@@ -203,7 +203,7 @@ namespace ShardsOfTime
             foreach (var (x, z, s) in new[] { (-26.5f, 314f, .8f), (-37f, 330f, 1f), (-25.5f, 352f, .7f), (-38f, 366f, .9f), (-60f, 314f, .6f) })
                 WorldArt.Prop("iceage_props", "IceCrystal", root, new Vector3(x, 0, z), x * 13, s);
             Campfire.Make(root, OnGround(-15, 333));
-            var v = Violinist.Make(root, OnGround(ViolinistAt.x, ViolinistAt.z), 135f);
+            var v = Violinist.Make(root, OnGround(ViolinistAt.x, ViolinistAt.z), 135f, Game.World ? Game.World.violinistInstrument : "Fiddle");
             _ = v;
         }
 
@@ -298,8 +298,23 @@ namespace ShardsOfTime
             deepW.gameObject.layer = 4; deepW.gameObject.AddComponent<WaterVolume>();
             var deep = Box("Deep water (deep dive)", new Vector3(-118, -19f, 133), new Vector3(32, 22f, 32), Color.clear, "Water", false);
             deep.GetComponent<Renderer>().enabled = false; deep.gameObject.layer = 2; deep.gameObject.AddComponent<DeepWater>();
-            // the ice sheet (top 0) with three holes: near (dive under the ice), far, and over the deep part
-            IceSheet(-142, -94, 58, 192, new[] { new Rect(-121, 82, 6, 6), new Rect(-104, 157, 6, 6), new Rect(-121, 130, 6, 6) });
+            // the ice sheet (top 0) with four 8 m holes: the near hole and the exit hole joined by one short channel under the ice (16 m, lit
+            // at both ends: Round 6, item 2), the far hole, and the hole over the deep part. Everywhere else the ice is solid to the bottom,
+            // so nobody can wander off under it.
+            var holes = new[] { new Rect(-122, 80, 8, 8), new Rect(-122, 104, 8, 8), new Rect(-105, 156, 8, 8), new Rect(-122, 129, 8, 8) };
+            IceSheet(-142, -94, 58, 192, holes, new[] { new Rect(-121, 88, 6, 16) });
+            IceHole.Region = new Bounds(new Vector3(-118, -4, 125), new Vector3(48, 10, 134));
+            foreach (var h in holes)
+            {
+                var go = new GameObject("Ice hole"); go.transform.SetParent(root, false);
+                var ih = go.AddComponent<IceHole>(); ih.area = h; ih.iceTop = .05f;
+                // a shaft of daylight down through the hole, and a light under it: the way up is always the bright spot
+                Box("Light shaft", new Vector3(h.center.x, -4.2f, h.center.y), new Vector3(h.width - .6f, 7.6f, h.height - .6f), new Color(1f, .97f, .8f, .16f), "Water", false)
+                    .GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                var lg = new GameObject("Hole light"); lg.transform.SetParent(root, false); lg.transform.position = new Vector3(h.center.x, -3f, h.center.y);
+                var l = lg.AddComponent<Light>(); l.type = LightType.Point; l.range = 14f; l.intensity = 6f; l.color = new Color(1f, .95f, .8f); l.shadows = LightShadows.None;
+            }
+            Hint(new Vector3(-118, 0, 84), 5f, () => "Dive under the ice! The tunnel's short, and the next hole shines ahead.");
             // slick ice over the whole lake; the skating lane drives you north to the ramp and the island
             var slick = Box("Slick ice", new Vector3(-118, .5f, 125), new Vector3(48, 2f, 134), Color.clear, "Water", false);
             slick.GetComponent<Renderer>().enabled = false; slick.gameObject.layer = 2; slick.gameObject.AddComponent<SlickIce>().grip = .3f;
@@ -320,19 +335,33 @@ namespace ShardsOfTime
             foreach (var (x, z, s) in new[] { (-146f, 200f, 1.4f), (-158f, 70f, 1.1f), (-92f, 90f, .9f) }) Rock(x, z, s, x * 7, 2);
         }
 
-        // the lake's ice: a sheet (top 0, 0.5 m thick) over x0..x1, z0..z1 with rectangular holes, as strips
-        static void IceSheet(float x0, float x1, float z0, float z1, Rect[] holes)
+        // the lake's ice over x0..x1, z0..z1 (top 0.05): open over the holes, a 0.55 m sheet over the swim channels, solid down to the
+        // lake bed (-8.5) everywhere else (Round 6, item 2). Cut into a grid on every rectangle's edges, neighbouring cells of a row merged.
+        static void IceSheet(float x0, float x1, float z0, float z1, Rect[] holes, Rect[] channels)
         {
-            var zs = new List<float> { z0, z1 };
-            foreach (var h in holes) { zs.Add(h.yMin); zs.Add(h.yMax); }
-            zs = zs.Distinct().OrderBy(v => v).ToList();
+            var all = holes.Concat(channels).ToList();
+            var xs = new List<float> { x0, x1 }; var zs = new List<float> { z0, z1 };
+            foreach (var h in all) { xs.Add(h.xMin); xs.Add(h.xMax); zs.Add(h.yMin); zs.Add(h.yMax); }
+            xs = xs.Distinct().OrderBy(v => v).ToList(); zs = zs.Distinct().OrderBy(v => v).ToList();
             for (int i = 0; i < zs.Count - 1; i++)
             {
-                float a = zs[i], b = zs[i + 1]; float mid = (a + b) / 2;
-                var cuts = holes.Where(h => mid > h.yMin && mid < h.yMax).OrderBy(h => h.xMin).ToList();
-                float x = x0;
-                foreach (var h in cuts) { if (h.xMin > x) Slab("Lake ice", x, h.xMin, a, b, .05f, -.5f, "Ice"); x = Mathf.Max(x, h.xMax); }
-                if (x1 > x) Slab("Lake ice", x, x1, a, b, .05f, -.5f, "Ice");
+                float a = zs[i], b = zs[i + 1];
+                float runX = xs[0]; float runBottom = float.NaN;
+                for (int j = 0; j <= xs.Count - 1; j++)
+                {
+                    float bottom = float.NaN;   // NaN = open (a hole) or past the end
+                    if (j < xs.Count - 1)
+                    {
+                        var c = new Vector2((xs[j] + xs[j + 1]) / 2, (a + b) / 2);
+                        bottom = holes.Any(h => h.Contains(c)) ? float.NaN : channels.Any(h => h.Contains(c)) ? -.5f : -8.5f;
+                    }
+                    bool same = (float.IsNaN(bottom) && float.IsNaN(runBottom)) || bottom == runBottom;
+                    if (j == xs.Count - 1 || !same)
+                    {
+                        if (!float.IsNaN(runBottom) && xs[j] > runX) Slab("Lake ice", runX, xs[j], a, b, .05f, runBottom, "Ice");
+                        runX = xs[j]; runBottom = bottom;
+                    }
+                }
             }
         }
 

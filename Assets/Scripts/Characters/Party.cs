@@ -99,6 +99,7 @@ namespace ShardsOfTime
             }
             Player.Motor.SpeedScale = 1f;
             Player.Motor.Step(input, Time.deltaTime);
+            if (Game.Playing) IceHole.Watch(Player);   // Round 6, item 2: nobody stays stuck under the ice
             RecordTrail();
             var pp = Player.transform.position; var vc = Vortex.Centre;
             bool offVortex = Mathf.Abs(pp.x - vc.x) < 300 && Mathf.Abs(pp.z - vc.z) < 300 && pp.y < vc.y - 25f;   // Round 4: off the vortex platform

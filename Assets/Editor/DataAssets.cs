@@ -34,11 +34,13 @@ namespace ShardsOfTime
             // Round 5: the bigger valley (60 shards, requirement 35, gates as data): a Round 4 asset (no gates) is made again
             if (File.Exists(ia) && AssetDatabase.LoadAssetAtPath<WorldData>(ia) is WorldData old && old.gates.Count == 0) { AssetDatabase.DeleteAsset(ia); Debug.Log("DataAssets: IceAge.asset remade for Round 5"); }
             if (!File.Exists(ia)) AssetDatabase.CreateAsset(WorldData.IceAgeDefaults(), ia);
+            string eg = Data + "/Worlds/" + WorldData.Egypt + ".asset";   // Round 6
+            if (!File.Exists(eg)) AssetDatabase.CreateAsset(WorldData.EgyptDefaults(), eg);
             // Round 4: Dan learns the ground pound (an existing Dan.asset had no locked ability)
             var danStats = AssetDatabase.LoadAssetAtPath<CharacterStats>(Data + "/Characters/Dan.asset");
             if (danStats && string.IsNullOrEmpty(danStats.lockedAbility)) { danStats.lockedAbility = Abilities.GroundPound; EditorUtility.SetDirty(danStats); }
             Directory.CreateDirectory(Data + "/KiraForms");
-            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth })
+            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy })
             {
                 string path = $"{Data}/KiraForms/{f}.asset";
                 if (!File.Exists(path)) AssetDatabase.CreateAsset(KiraForm.Defaults(f), path);

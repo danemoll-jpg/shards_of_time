@@ -39,6 +39,12 @@ namespace ShardsOfTime
                 Sun.color = new Color(1f, .95f, .86f); sunIntensity = 1.25f; Sun.transform.rotation = Quaternion.Euler(48f, -35f, 0);
                 ambSky = new Color(.62f, .72f, .88f); ambEq = new Color(.58f, .6f, .62f); ambGround = new Color(.32f, .3f, .28f);
             }
+            else if (world == WorldData.Egypt)   // Round 6, item 12: golden dunes under a deep blue sky, a warm high sun, a light golden haze far off
+            {
+                Sky = new Color(.28f, .55f, .92f); FogColor = new Color(.86f, .8f, .68f); FogStart = 120f; FogEnd = 1500f; FarClip = 2000f;
+                Sun.color = new Color(1f, .93f, .78f); sunIntensity = 1.3f; Sun.transform.rotation = Quaternion.Euler(52f, -40f, 0);
+                ambSky = new Color(.6f, .72f, .92f); ambEq = new Color(.78f, .7f, .58f); ambGround = new Color(.62f, .52f, .38f);
+            }
             else   // the Ice Age (Dan's reference: a wide snowy valley, soft blue-white light, warm rock, fog for depth)
             {
                 Sky = new Color(.66f, .79f, .94f); FogColor = new Color(.8f, .87f, .95f); FogStart = 45f; FogEnd = 1700f; FarClip = 2200f;
@@ -81,7 +87,7 @@ namespace ShardsOfTime
         {
             if (on == vortex) return; vortex = on;
             if (CameraRig.I) CameraRig.I.Cam.backgroundColor = on ? new Color(.08f, .06f, .2f) : Sky;
-            FogColor = on ? new Color(.2f, .15f, .4f) : (world == WorldData.Playground ? new Color(.72f, .86f, .98f) : new Color(.8f, .87f, .95f));
+            FogColor = on ? new Color(.2f, .15f, .4f) : (world == WorldData.Playground ? new Color(.72f, .86f, .98f) : world == WorldData.Egypt ? new Color(.86f, .8f, .68f) : new Color(.8f, .87f, .95f));
             SnowFall.Show(!on);
             Refresh();
         }

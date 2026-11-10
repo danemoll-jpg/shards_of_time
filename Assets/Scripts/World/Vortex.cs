@@ -20,9 +20,11 @@ namespace ShardsOfTime
         public sealed class PathInfo { public string id, label, world; public Color color; public float yaw; }
         public static readonly PathInfo[] Paths =
         {
-            new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -42f },
-            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = "Egypt", color = new Color(1f, .62f, .2f), yaw = 0f },
-            new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 42f },
+            new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -54f },
+            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -18f },
+            // Round 6: Egypt is real; Bethlehem is next (to be continued once Egypt's red story shard is found)
+            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = "Bethlehem", color = new Color(.95f, .9f, .55f), yaw = 18f },
+            new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 54f },
         };
 
         public static void Build(Transform root)
@@ -72,7 +74,7 @@ namespace ShardsOfTime
                 tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = Color.Lerp(p.color, Color.white, .5f);
                 label.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
                 var d = door.AddComponent<VortexDoor>(); d.info = p; d.label = tm;
-                if (p.id == "Home")
+                if (p.id == "Home" || p.id == "Bethlehem")
                 {
                     var bar = Placeholders.Prim(PrimitiveType.Cube, door.transform, new Vector3(0, 2.4f, -.6f), new Vector3(4.6f, 4.6f, .2f), Placeholders.Mat(new Color(1f, .85f, .6f, .35f), "Water"), true, "Barrier");
                     d.barrier = bar;
@@ -144,11 +146,13 @@ namespace ShardsOfTime
         float cool;
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
-        public bool Blocked => info.id == "Home" && SaveGame.Current.StoryShards < Vortex.StoryShardsTotal;
+        public bool Blocked => (info.id == "Home" && SaveGame.Current.StoryShards < Vortex.StoryShardsTotal) ||
+                               (info.id == "Bethlehem" && !SaveGame.Current.World(WorldData.Egypt).storyShard);
 
         void Update()
         {
             if (info.id == "Home" && label) label.text = Blocked ? $"Home\n{SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards" : "Home";
+            if (info.id == "Bethlehem" && label) label.text = Blocked ? "Bethlehem\n(after Egypt's red shard)" : "Bethlehem";
             if (barrier) barrier.SetActive(Blocked);
             cool -= Time.deltaTime;
             if (cool > 0 || !Game.Playing || !Party.I || Game.I.Busy) return;

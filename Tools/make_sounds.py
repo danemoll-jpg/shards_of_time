@@ -31,6 +31,25 @@ SOUNDS = [
      'A heavy cartoon body slam onto packed snow and ice: a deep thud with a crunchy snow burst, punchy, no music.'),
     ('violinist_tune', 6.0, 'sfx', 'the Violinist plays (he teaches a move)',
      'A short mysterious gentle melody on a rustic wooden fiddle, a few slow lilting notes rising, warm and magical, solo instrument, music cue.'),
+    # Round 6: Egypt (item 13)
+    ('footstep_sand', 0.5, 'sfx', 'a step on sand (Egypt, per step while running)',
+     'A single soft footstep in dry desert sand, a gentle sandy crunch and shift, close, no reverb, no music.'),
+    ('trap_click', 0.8, 'sfx', 'a trap fires in the tomb (darts, pressure plates)',
+     'An ancient stone pressure plate clicking and a hidden mechanism snapping inside a tomb wall, short and crisp, no music.'),
+    ('stone_grind', 2.0, 'sfx', 'stone grinding (cat doors sinking, guardians waking, the lift)',
+     'A heavy stone block grinding and sliding against stone in an ancient temple, deep rumble, slow, no music.'),
+    ('mummy_groan', 1.6, 'sfx', 'a mummy wakes',
+     'A cartoon mummy waking with a long dusty sleepy groan, muffled through bandages, silly not scary, for a family animated film, no music.'),
+    ('scarab_skitter', 1.2, 'sfx', 'scarabs skitter',
+     'A few small beetles skittering quickly over stone, tiny clicking legs, light and comic, no music.'),
+    ('camel_snort', 1.2, 'sfx', 'the judgmental camel snorts',
+     'A camel giving one big unimpressed snort through its lips, a wet dismissive blubbery huff, comic, close, no music.'),
+    ('guard_halt', 1.2, 'sfx', 'a guard spots you',
+     'A short sharp whistle blast and a stomp of a spear butt on stone, an ancient palace guard alert, comic, no words, no music.'),
+    ('sand_sink', 1.5, 'sfx', 'sinking into quicksand',
+     'Sinking into quicksand, a soft sucking sandy slurp and gloop, comic, no music.'),
+    ('lyre_tune', 6.0, 'sfx', 'the Violinist plays his lyre (Egypt: he teaches Abi the double jump)',
+     'A short mysterious gentle melody plucked on an ancient Egyptian lyre, a few slow bright rising notes, warm and magical, solo instrument, music cue.'),
 ]
 
 

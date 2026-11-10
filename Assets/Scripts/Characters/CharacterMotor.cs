@@ -49,6 +49,10 @@ namespace ShardsOfTime
         public event Action<string> Event;               // "jump", "doublejump", "land", "splash", "outofbreath", "leap", "poundstart", "pound"
 
         float coyote, buffer, leapTimer, takeoffY, apexY, airTime, poundHang;
+        // Round 6, item 2: lifted out of an ice hole onto the ice (scripted: up until clear of the edge, then across onto it)
+        public bool Climbing { get; private set; }
+        public int ClimbOuts { get; private set; }
+        Vector3 climbTo; float climbTime, swimDeepest, swimTime; bool cameFromUnderIce;
         bool rising; Vector3 groundNormal = Vector3.up; bool steep;
         Transform platform; Vector3 platformLocal; Quaternion platformRot;
         public Collider GroundCollider { get; private set; }
@@ -68,7 +72,7 @@ namespace ShardsOfTime
         public void Teleport(Vector3 pos, Quaternion rot)
         {
             Cc.enabled = false; transform.SetPositionAndRotation(pos, rot); Cc.enabled = true;
-            Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false;
+            Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false; Climbing = false; swimDeepest = 0; swimTime = 0;
             if (!Stats.swimmer) Breath = Stats.breathSeconds;
         }
 
@@ -77,13 +81,14 @@ namespace ShardsOfTime
         public void Step(MotorInput input, float dt)
         {
             if (dt <= 0) return;
+            if (Climbing) { ClimbStep(dt); Breathe(dt); return; }
             CarryWithPlatform();
             Water = WaterVolume.At(transform.position + Vector3.up * Stats.height * .45f);
             LowGravity = LowGravityVolume.At(Center);
             Updraft = UpdraftVolume.At(Center);
             leapTimer -= dt;
             bool swim = Water && leapTimer <= 0 && Water.Top - transform.position.y > Stats.height * .55f;
-            if (swim && Mode != MoveMode.Swim) { if (Velocity.y < -4f) Event?.Invoke("splash"); rising = false; JumpsThisAir = 0; Pounding = false; }
+            if (swim && Mode != MoveMode.Swim) { if (Velocity.y < -4f) Event?.Invoke("splash"); rising = false; JumpsThisAir = 0; Pounding = false; swimDeepest = 0; swimTime = 0; cameFromUnderIce = false; }
             Mode = swim ? MoveMode.Swim : LowGravity ? MoveMode.LowGravity : Grounded ? MoveMode.Ground : MoveMode.Air;
             if (swim) SwimStep(input, dt); else WalkStep(input, dt);
             Breathe(dt);
@@ -180,6 +185,14 @@ namespace ShardsOfTime
             else if (input.jumpHeld && !atSurface) target.y = s.swimSpeed * .8f;
             else if (atSurface || y > surfaceFeet - 1.2f) target.y = Mathf.Clamp((surfaceFeet - y) * 4f, -2f, 2.5f);   // float up to and at the surface
             else target.y = .5f;                                                                          // gentle rise
+            swimTime += dt; swimDeepest = Mathf.Max(swimDeepest, surfaceFeet - y);
+            // Round 6, item 2: up into an ice hole from under the ice = lifted out onto the ice; Jump in a hole = out too (just dropped in)
+            var hole = IceHole.At(transform.position);
+            if (!hole && IceHole.UnderIce(this)) cameFromUnderIce = true;
+            if (hole && !input.diveHeld && (y > surfaceFeet - .6f && cameFromUnderIce && Velocity.y > .1f || y > surfaceFeet - 1.5f && input.jumpPressed))
+            {
+                ClimbOut(hole.ExitFrom(transform.position, input.move)); return;
+            }
             var deep = DeepWater.At(transform.position);                                                   // Round 5: too deep without the deep dive
             if (deep && !CanDeepDive) { target.y = Mathf.Max(target.y, 2.6f); if (CompareTag("Player")) deep.Hint(); }
             if (atSurface && input.jumpPressed && !input.diveHeld)
@@ -197,6 +210,31 @@ namespace ShardsOfTime
             if (transform.position.y > surfaceFeet + .05f && !input.jumpPressed) { var p = transform.position; p.y = Mathf.Max(surfaceFeet, p.y - 3f * dt); Cc.enabled = false; transform.position = p; Cc.enabled = true; }
             Face(new Vector3(Velocity.x, 0, Velocity.z), dt);
             _ = flags;
+        }
+
+        public void ClimbOut(Vector3 onIce)
+        {
+            climbTo = onIce; climbTime = 0; Climbing = true; ClimbOuts++; swimDeepest = 0; swimTime = 0; cameFromUnderIce = false;
+            Velocity = Vector3.zero; Pounding = false; rising = false; Event?.Invoke("leap");
+        }
+
+        void ClimbStep(float dt)
+        {
+            climbTime += dt;
+            var p = transform.position; var flat = climbTo - p; flat.y = 0;
+            bool clear = p.y > climbTo.y + .15f;
+            float vy = clear ? 0f : 6f;
+            var hv = flat.magnitude > .05f ? flat.normalized * Mathf.Min(4.5f, flat.magnitude / dt) : Vector3.zero;
+            if (!clear && flat.magnitude < 1.4f) hv = Vector3.zero;   // still below the edge: straight up first
+            Velocity = new Vector3(hv.x, vy, hv.z);
+            Cc.Move(Velocity * dt);
+            Mode = MoveMode.Air; Grounded = false; platform = null;
+            Face(hv, dt);
+            if ((clear && flat.magnitude < .25f) || climbTime > 2.5f)
+            {
+                Climbing = false; Velocity = Vector3.zero; leapTimer = .3f;
+                takeoffY = apexY = transform.position.y; airTime = 0;
+            }
         }
 
         void Breathe(float dt)

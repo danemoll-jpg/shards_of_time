@@ -15,8 +15,11 @@ API = "https://api.meshy.ai/openapi/v1/image-to-3d"
 # triangle budgets: people 20k, Kira's forms 15k (she's small on screen)
 MODELS = {"dan_home": 20000, "dan_iceage": 20000, "abi_home": 20000, "abi_iceage": 20000, "kira": 15000, "kira_sabertooth": 15000,
           # Round 5: the Violinist (Mixamo) and the Ice Age creatures (Code's Blender rigs)
-          "violinist_iceage": 20000, "wolf": 12000, "snow_critter": 8000, "mammoth": 15000}
-CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage", "violinist_iceage"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
+          "violinist_iceage": 20000, "wolf": 12000, "snow_critter": 8000, "mammoth": 15000,
+          # Round 6: Egypt (people + mummy -> Mixamo; Kira, camel, scarab, guardian -> Code's rigs; the Sphinx is a static landmark)
+          "dan_egypt": 20000, "abi_egypt": 20000, "violinist_egypt": 20000, "mummy": 15000, "kira_mummy": 15000,
+          "camel": 15000, "scarab": 6000, "guardian": 12000, "sphinx_kira": 30000}
+CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage", "violinist_iceage", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
 
 
 def key():

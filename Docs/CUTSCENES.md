@@ -122,3 +122,23 @@ while it plays and undone after. **White-outs:** a `ScreenTint` whose amount is 
 ornament is moved under its own holder so it can be keyed).
 
 Render any of them to MP4 the same way: `python Tools/render_cutscene.py ActOne`.
+
+## Round 6: Egypt, and the story cutscenes per world
+
+| Name | Where (its root) | Length | What |
+|---|---|---|---|
+| `EgyptArrival` | Egypt's plaza (`Egypt.Start`), +z north to the pyramids | 13.5 s | the vortex drops them among the pyramids and busy workers; Egyptian clothes; Kira is a little mummy cat (she trots a circle); Dan and Abi react; the necklace's shard glows red |
+| `SphinxGag` | `Egypt.GagSpot`, +z toward the Sphinx | 10.5 s | they walk up; the camera tilts up to its face (Kira's); Dan's double-take between the Sphinx and mummy Kira (sitting in the same pose); Abi turns away, unimpressed. Uses the world's Sphinx (not in the prefab). Plays once (`EG-sphinx-gag` in the save) |
+| `NecklaceWakesEgypt` | where the player stands | 6.5 s | as `NecklaceWakes`, Egypt's cast, red |
+| `VortexOpensEgypt` | Egypt's gate (in the burial chamber) | 6.5 s | as `VortexOpens`, the red story shard |
+| `ViolinistTeachesEgypt` | the Violinist (market) | 6.5 s | Abi learns the double jump (he plays his lyre) |
+
+The story cutscenes are made per world from one function each (`NecklaceWakesIn`, `VortexOpensIn`, `ViolinistTeachesIn`)
+with a cast (`CutsceneAuthoring.Cast`: the models; a model not in yet falls back to the home models) and the story shard's
+colour (`NecklaceModel.Tint`). `Game` picks the world's version. **After new models arrive** (e.g. Dan's Egypt Mixamo
+files), bump `CutsceneAuthoring.Version` so the next build remakes them with the real models.
+
+`IceAgeArrival` gets 4 s more at its end (Dan on his feet laughing, then holding the shard up in his hand) once the shared
+clips `laugh` and `hold_up` are in `Resources/Characters/Clips/` (Dan's Mixamo list, Round 6); until then it is as in Round 5.
+
+Render: `python Tools/render_cutscene.py EgyptArrival SphinxGag` (Round 5's way: the built exe, muted, off-screen).

@@ -9,9 +9,9 @@ namespace ShardsOfTime
     // the player, circles at a distance, then lunges; only one wolf lunges at a time). Dan's ground pound stuns any of them (Stun).
     // Placeholder shapes until their models exist (Docs/MODELS-NEEDED.md #7, #8).
     [RequireComponent(typeof(CharacterController))]
-    public sealed class Enemy : MonoBehaviour
+    public sealed partial class Enemy : MonoBehaviour
     {
-        public enum Kind { Blob, Critter, Wolf }
+        public enum Kind { Blob, Critter, Wolf, Mummy, Scarab, Guardian }   // Round 6: Egypt's (Combat/EnemyEgypt.cs)
         public static readonly List<Enemy> All = new List<Enemy>();
         public Kind kind = Kind.Blob;
         public Vector3 a, b; public int hp = 2;
@@ -34,7 +34,7 @@ namespace ShardsOfTime
 
         void Start()
         {
-            cc = GetComponent<CharacterController>(); rends = GetComponentsInChildren<Renderer>(); home = transform.position;
+            cc = GetComponent<CharacterController>(); rends = GetComponentsInChildren<Renderer>(); home = transform.position; if (kind != Kind.Guardian) homeRot = transform.rotation;
             baseColor = rends.Length > 0 ? rends[0].material.color : Color.red;
             circleDir = Random.value < .5f ? 1 : -1;
         }
@@ -45,7 +45,7 @@ namespace ShardsOfTime
             var party = Party.I; if (!party || party.Frozen) return;
             var player = party.Player.transform.position;
             var pos = transform.position;
-            Vector3 move = kind == Kind.Wolf ? WolfMove(player, pos) : PatrolMove(player, pos);
+            Vector3 move = kind == Kind.Wolf ? WolfMove(player, pos) : kind >= Kind.Mummy ? EgyptMove(player, pos) : PatrolMove(player, pos);
             if (stun > 0) { stun -= Time.deltaTime; move = Vector3.zero; if (!Anim) transform.Rotate(0, 400f * Time.deltaTime, 0); }
             speedNow = new Vector3(move.x, 0, move.z).magnitude;
             vy = cc.isGrounded ? -2f : vy - 30f * Time.deltaTime;
@@ -61,7 +61,7 @@ namespace ShardsOfTime
             var d = player - pos; float h = d.y; d.y = 0;
             if (stun <= 0 && d.magnitude < reach && h > -pc.Stats.height && h < cc.height && Game.Playing)
             {
-                if (Health.Damage(1, pos, kind == Kind.Wolf ? "wolf" : kind == Kind.Critter ? "snow critter" : "enemy")) { stun = .8f; if (kind == Kind.Wolf) { wolf = W.Recover; wolfT = 0; if (lunger == this) lunger = null; } }
+                if ((kind != Kind.Mummy || Awake) && (kind != Kind.Guardian || Awake) && Health.Damage(1, pos, kind == Kind.Wolf ? "wolf" : kind == Kind.Critter ? "snow critter" : kind == Kind.Mummy ? "a mummy's grab" : kind == Kind.Scarab ? "a scarab" : kind == Kind.Guardian ? "a temple guardian" : "enemy")) { stun = .8f; if (kind == Kind.Wolf) { wolf = W.Recover; wolfT = 0; if (lunger == this) lunger = null; } }
             }
             if (flash > 0) { flash -= Time.deltaTime; if (rends.Length > 0) rends[0].material.color = flash > 0 ? Color.white : baseColor; }
             if (transform.position.y < Party.KillY) Die(false);
@@ -128,7 +128,7 @@ namespace ShardsOfTime
         void Die(bool drop)
         {
             Dead = true; if (lunger == this) lunger = null;
-            Placeholders.Puff(transform.position + Vector3.up * .6f, kind == Kind.Critter ? new Color(.92f, .96f, 1f) : kind == Kind.Wolf ? new Color(.55f, .62f, .75f) : new Color(.9f, .3f, .2f));
+            Placeholders.Puff(transform.position + Vector3.up * .6f, kind == Kind.Critter ? new Color(.92f, .96f, 1f) : kind == Kind.Wolf ? new Color(.55f, .62f, .75f) : kind >= Kind.Mummy ? new Color(.88f, .78f, .55f) : new Color(.9f, .3f, .2f));
             PlayLog.Line($"{kind} defeated");
             if (drop) Pickup.HealHeart(transform.position + Vector3.up * .6f, transform.parent);
             gameObject.SetActive(false);

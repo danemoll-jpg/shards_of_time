@@ -1,0 +1,405 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: Egypt
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: Egypt
+  displayName: Ancient Egypt
+  heightsAreHints: 1
+  areas:
+  - id: E
+    name: Ancient Egypt
+    requirement: 35
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - MummyHush
+    storyShard: {x: 500, y: 61.6, z: 127}
+    storyShardColor: {r: 1, g: 0.18, b: 0.14, a: 1}
+    spawn: {x: 0, y: 0.3, z: 8}
+    spawnYaw: 0
+    kiraForm: Mummy
+    outfit: egypt
+    box:
+      m_Center: {x: 160, y: 0, z: 160}
+      m_Extent: {x: 400, y: 300, z: 350}
+  shards:
+  - id: E01
+    area: E
+    position: {x: 0, y: 0, z: 18}
+    requires: []
+    note: the arrival plaza
+  - id: E02
+    area: E
+    position: {x: 0, y: 0, z: 32}
+    requires: []
+    note: main street
+  - id: E03
+    area: E
+    position: {x: -4, y: 0, z: 44}
+    requires: []
+    note: main street
+  - id: E04
+    area: E
+    position: {x: 4, y: 0, z: 96}
+    requires: []
+    note: main street
+  - id: E05
+    area: E
+    position: {x: 0, y: 0, z: 114}
+    requires: []
+    note: the north gate
+  - id: E06
+    area: E
+    position: {x: -20, y: 0, z: 58}
+    requires: []
+    note: market
+  - id: E07
+    area: E
+    position: {x: 20, y: 0, z: 80}
+    requires: []
+    note: market
+  - id: E08
+    area: E
+    position: {x: -26, y: 0, z: 82}
+    requires: []
+    note: market, behind the stalls
+  - id: E09
+    area: E
+    position: {x: 26, y: 0, z: 54}
+    requires: []
+    note: market, behind the stalls
+  - id: E10
+    area: E
+    position: {x: -27, y: 4.6, z: 26}
+    requires: []
+    note: west rooftop (the plank across)
+  - id: E11
+    area: E
+    position: {x: -27, y: 4.6, z: 40}
+    requires: []
+    note: west rooftop (up the outside stair)
+  - id: E12
+    area: E
+    position: {x: 17, y: 4.6, z: 100}
+    requires: []
+    note: east rooftop (up the outside stair)
+  - id: E13
+    area: E
+    position: {x: -17, y: 4.6, z: 104}
+    requires: []
+    note: north-west rooftop (up the outside stair)
+  - id: E14
+    area: E
+    position: {x: -52, y: 5, z: 28}
+    requires:
+    - Pounce
+    note: the far roof (Kira's pounce)
+  - id: E15
+    area: E
+    position: {x: -52, y: 5, z: 38}
+    requires:
+    - Pounce
+    note: the far roof (Kira's pounce)
+  - id: E16
+    area: E
+    position: {x: 0, y: 5.6, z: 64}
+    requires:
+    - DoubleJump
+    note: the obelisk's golden ledge (double jump)
+  - id: E17
+    area: E
+    position: {x: -54, y: 0, z: 66}
+    requires:
+    - Kira
+    note: the cat temple (Kira opens its door)
+  - id: E18
+    area: E
+    position: {x: -54, y: 0, z: 78}
+    requires:
+    - Kira
+    note: the cat temple (Kira opens its door)
+  - id: E19
+    area: E
+    position: {x: 60, y: 0, z: 60}
+    requires: []
+    note: the quarry road
+  - id: E20
+    area: E
+    position: {x: 64, y: 0, z: 90}
+    requires: []
+    note: the quarry road
+  - id: E21
+    area: E
+    position: {x: 58, y: 0, z: 120}
+    requires: []
+    note: the quarry road
+  - id: E22
+    area: E
+    position: {x: 60, y: 0, z: 172}
+    requires: []
+    note: past the quicksand (ride the stone)
+  - id: E23
+    area: E
+    position: {x: 74, y: 0, z: 176}
+    requires: []
+    note: past the quicksand
+  - id: E24
+    area: E
+    position: {x: 92, y: 0, z: 56}
+    requires:
+    - MuscleMan
+    note: the quarry, behind the huge block (Muscle Man)
+  - id: E25
+    area: E
+    position: {x: 92, y: 0, z: 66}
+    requires:
+    - MuscleMan
+    note: the quarry, behind the huge block (Muscle Man)
+  - id: E26
+    area: E
+    position: {x: 20, y: 0, z: 146}
+    requires: []
+    note: dunes (the camel's route)
+  - id: E27
+    area: E
+    position: {x: 2, y: 0, z: 164}
+    requires: []
+    note: dunes (the camel's route)
+  - id: E28
+    area: E
+    position: {x: -14, y: 0, z: 178}
+    requires: []
+    note: dunes (the camel's route)
+  - id: E29
+    area: E
+    position: {x: 40, y: 0, z: 192}
+    requires: []
+    note: a dune top
+  - id: E30
+    area: E
+    position: {x: -12, y: 0, z: 140}
+    requires: []
+    note: a dune hollow
+  - id: E31
+    area: E
+    position: {x: -35, y: 4, z: 208}
+    requires: []
+    note: the Sphinx's right paw
+  - id: E32
+    area: E
+    position: {x: -35, y: 4, z: 222}
+    requires: []
+    note: the Sphinx's left paw
+  - id: E33
+    area: E
+    position: {x: -62, y: 13, z: 215}
+    requires: []
+    note: the Sphinx's back
+  - id: E34
+    area: E
+    position: {x: -72, y: 13, z: 215}
+    requires: []
+    note: the Sphinx's back
+  - id: E35
+    area: E
+    position: {x: -46, y: 22, z: 215}
+    requires: []
+    note: the Sphinx's head
+  - id: E36
+    area: E
+    position: {x: -29, y: 2, z: 201}
+    requires: []
+    note: the Sphinx's plinth
+  - id: E37
+    area: E
+    position: {x: 60, y: 8, z: 200}
+    requires: []
+    note: scaffolding, level 2
+  - id: E38
+    area: E
+    position: {x: 80, y: 16, z: 200}
+    requires: []
+    note: scaffolding, level 4
+  - id: E39
+    area: E
+    position: {x: 60, y: 24, z: 200}
+    requires: []
+    note: scaffolding, level 6
+  - id: E40
+    area: E
+    position: {x: 80, y: 32, z: 200}
+    requires: []
+    note: scaffolding, level 8
+  - id: E41
+    area: E
+    position: {x: 74, y: 36, z: 236}
+    requires: []
+    note: the pyramid's unfinished top
+  - id: E42
+    area: E
+    position: {x: 88, y: 39.3, z: 199}
+    requires:
+    - DoubleJump
+    note: the high plank over the scaffolding (double jump)
+  - id: E43
+    area: E
+    position: {x: -90, y: 0, z: 30}
+    requires: []
+    note: the reeds
+  - id: E44
+    area: E
+    position: {x: -94, y: 0, z: 80}
+    requires: []
+    note: the reeds
+  - id: E45
+    area: E
+    position: {x: -162, y: 0, z: 40}
+    requires: []
+    note: the far bank (ride a boat)
+  - id: E46
+    area: E
+    position: {x: -162, y: 0, z: 110}
+    requires: []
+    note: the far bank (ride a boat)
+  - id: E47
+    area: E
+    position: {x: -124, y: -4, z: 50}
+    requires: []
+    note: the riverbed (dive)
+  - id: E48
+    area: E
+    position: {x: -128, y: -15, z: 75}
+    requires:
+    - DeepDive
+    note: the deep pool (deep dive)
+  - id: E49
+    area: E
+    position: {x: -131, y: -15, z: 79}
+    requires:
+    - DeepDive
+    note: the deep pool (deep dive)
+  - id: E50
+    area: E
+    position: {x: 500, y: 60, z: 15}
+    requires: []
+    note: 'tomb: the blade corridor'
+  - id: E51
+    area: E
+    position: {x: 500, y: 60, z: 39}
+    requires: []
+    note: 'tomb: the blade corridor'
+  - id: E52
+    area: E
+    position: {x: 500, y: 60.3, z: 53}
+    requires: []
+    note: 'tomb: the sand-pit hall (stepping stones)'
+  - id: E53
+    area: E
+    position: {x: 500, y: 60, z: 74}
+    requires: []
+    note: 'tomb: the sliding-block corridor'
+  - id: E54
+    area: E
+    position: {x: 507, y: 60, z: 96}
+    requires: []
+    note: 'tomb: across the turning bridge'
+  - id: E55
+    area: E
+    position: {x: 522, y: 60, z: 96}
+    requires: []
+    note: 'tomb: the mummies'' gallery (mummy Kira walks past quietly)'
+  - id: E56
+    area: E
+    position: {x: 534, y: 60, z: 96}
+    requires: []
+    note: 'tomb: the mummies'' gallery'
+  - id: E57
+    area: E
+    position: {x: 547, y: 60, z: 92}
+    requires:
+    - Kira
+    note: 'tomb: the hidden cat chamber (Kira opens it)'
+  - id: E58
+    area: E
+    position: {x: 474, y: 66, z: 96}
+    requires:
+    - Dan
+    note: 'tomb: the counterweight lift''s ledge (Dan pushes the weight)'
+  - id: E59
+    area: E
+    position: {x: 515, y: 60, z: 122}
+    requires:
+    - ChargedPunch
+    note: 'tomb: behind the cracked wall (charged punch)'
+  - id: E60
+    area: E
+    position: {x: 486, y: 71, z: 118}
+    requires:
+    - WallJump
+    note: 'tomb: the top of the narrow shaft (wall jump)'
+  gates:
+  - id: EG-pounce-roof
+    kind: pounce gap
+    needs: Pounce
+    position: {x: -42, y: 5, z: 33}
+    opens:
+    - E14
+    - E15
+    note: the gap to the far roof (Kira's pounce, Bethlehem)
+  - id: EG-ledge-obelisk
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 0, y: 5.6, z: 64}
+    opens:
+    - E16
+    note: the obelisk's top
+  - id: EG-ledge-scaffold
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 88, y: 39.3, z: 199}
+    opens:
+    - E42
+    note: the high plank over the scaffolding
+  - id: EG-block-quarry
+    kind: huge block
+    needs: MuscleMan
+    position: {x: 86, y: 0, z: 61}
+    opens:
+    - E24
+    - E25
+    note: the quarry's huge block (Muscle Man, Medieval)
+  - id: EG-deep-nile
+    kind: deep water
+    needs: DeepDive
+    position: {x: -128, y: -6, z: 77}
+    opens:
+    - E48
+    - E49
+    note: the Nile's deep pool (deep dive, Pirate Seas)
+  - id: EG-crack-tomb
+    kind: cracked wall
+    needs: ChargedPunch
+    position: {x: 511, y: 60, z: 122}
+    opens:
+    - E59
+    - EG-H2
+    note: the burial chamber's cracked wall (charged punch, Medieval)
+  - id: EG-shaft-tomb
+    kind: wall-jump shaft
+    needs: WallJump
+    position: {x: 486, y: 60, z: 118}
+    opens:
+    - E60
+    note: the narrow shaft by the burial chamber (wall jump, Steampunk)
+  violinistInstrument: Lyre

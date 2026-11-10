@@ -113,6 +113,9 @@ Egypt's level song: plays in the world and loops. Whimsical and cartoony like
 the Ice Age theme, with an Egyptian flavor. Instrumental, 2–3 minutes. Save Dan's
 pick as `Assets/Resources/Music/egypt.mp3`.
 
+**In (Dan, 2026-11-09): `egypt.mp3`, 3:00.** Plays from the Egypt arrival on and everywhere in Egypt (the tomb too);
+the vortex crossfades to `vortex.mp3` as in the Ice Age (`Game.MusicFor`). Checked playing in the exe (muted run).
+
 Suno prompt (instrumental):
 
 > Bouncy, whimsical, cartoony theme for a funny animated family adventure in

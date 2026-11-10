@@ -56,6 +56,8 @@ namespace ShardsOfTime
         public List<AreaData> areas = new List<AreaData>();
         public List<ShardSpot> shards = new List<ShardSpot>();
         public List<GateData> gates = new List<GateData>();   // Round 5
+        [Tooltip("Round 6: the Violinist's instrument here (a part of Resources/World/instruments.fbx: Fiddle, Lyre)")]
+        public string violinistInstrument = "Fiddle";
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -73,8 +75,8 @@ namespace ShardsOfTime
                 (gates.Count > 0 ? $"; gates: {string.Join(", ", gates.Select(g => $"{g.id} ({g.kind}, needs {g.needs}: {string.Join(" ", g.opens)})"))}" : ""));
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : Defaults());
-        public const string IceAge = "IceAge", Playground = "Playground";
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt";
 
         // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
@@ -144,6 +146,66 @@ namespace ShardsOfTime
             G("IA-deep-lake", "deep water", Abilities.DeepDive, new Vector3(-118, -8, 130), "the deep part under the lake (Round 5)", "L06", "L07");
             G("IA-chimney-near", "wall-jump chimney", Abilities.WallJump, new Vector3(113, 0, 301), "the glacier's near chimney (Round 5)", "G06");
             G("IA-chimney-far", "wall-jump chimney", Abilities.WallJump, new Vector3(113, 0, 331), "the glacier's far chimney (Round 5)", "G07");
+            return w;
+        }
+
+        // Round 6: Ancient Egypt (World/Egypt.cs builds it; the ground and the big pieces in Tools/Blender/egypt_world.py, the same numbers).
+        // One area, "E". 60 small shards, 35 wake the necklace (DEFAULT). Shard y = the height of the surface it sits on (a hint, as the
+        // Ice Age). The pyramid's inside (the tomb) is a space of its own at Egypt.Tomb (x 500, y 60): its shards' x / y / z are world
+        // numbers. Rule 2: the first visit has the three heroes and mummy Kira (mummies don't wake for her); not the ground pound (a
+        // player may skip the Ice Age's Violinist), not the double jump (Abi learns it here, from the Violinist), not the later moves.
+        public static WorldData EgyptDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Egypt; w.worldId = Egypt; w.displayName = "Ancient Egypt"; w.heightsAreHints = true;
+            w.violinistInstrument = "Lyre";
+            w.areas.Add(new AreaData { id = "E", name = "Ancient Egypt", requirement = 35, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.MummyHush },
+                storyShard = new Vector3(500, 61.6f, 127f), storyShardColor = new Color(1f, .18f, .14f), spawn = new Vector3(0, .3f, 8f), spawnYaw = 0,
+                kiraForm = KiraForm.Mummy, outfit = Outfits.Egypt, box = new Bounds(new Vector3(160, 0, 160), new Vector3(800, 600, 700)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "E", position = new Vector3(x, y, z), requires = req, note = note });
+            // the town (the arrival plaza, the main street, the north gate) and the market
+            S("E01", 0, 0, 18, "the arrival plaza"); S("E02", 0, 0, 32, "main street"); S("E03", -4, 0, 44, "main street"); S("E04", 4, 0, 96, "main street");
+            S("E05", 0, 0, 114, "the north gate"); S("E06", -20, 0, 58, "market"); S("E07", 20, 0, 80, "market"); S("E08", -26, 0, 82, "market, behind the stalls");
+            S("E09", 26, 0, 54, "market, behind the stalls");
+            // the rooftops (crates and stairs up), a far roof across a gap only Kira's pounce clears (Bethlehem), the obelisk's top
+            S("E10", -27, 4.6f, 26, "west rooftop (the plank across)"); S("E11", -27, 4.6f, 40, "west rooftop (up the outside stair)"); S("E12", 17, 4.6f, 100, "east rooftop (up the outside stair)"); S("E13", -17, 4.6f, 104, "north-west rooftop (up the outside stair)");
+            S("E14", -52, 5, 28, "the far roof (Kira's pounce)", Abilities.Pounce); S("E15", -52, 5, 38, "the far roof (Kira's pounce)", Abilities.Pounce);
+            S("E16", 0, 5.6f, 64, "the obelisk's golden ledge (double jump)", Abilities.DoubleJump);
+            // the cat temple: its door opens for Kira (a cat plate)
+            S("E17", -54, 0, 66, "the cat temple (Kira opens its door)", "Kira"); S("E18", -54, 0, 78, "the cat temple (Kira opens its door)", "Kira");
+            // the quarry road: workers haul stones on rollers; a quicksand pit crossed on a stone block; a huge block (Muscle Man)
+            S("E19", 60, 0, 60, "the quarry road"); S("E20", 64, 0, 90, "the quarry road"); S("E21", 58, 0, 120, "the quarry road");
+            S("E22", 60, 0, 172, "past the quicksand (ride the stone)"); S("E23", 74, 0, 176, "past the quicksand");
+            S("E24", 92, 0, 56, "the quarry, behind the huge block (Muscle Man)", Abilities.MuscleMan); S("E25", 92, 0, 66, "the quarry, behind the huge block (Muscle Man)", Abilities.MuscleMan);
+            // the dunes, along the camel's route to the Sphinx
+            S("E26", 20, 0, 146, "dunes (the camel's route)"); S("E27", 2, 0, 164, "dunes (the camel's route)"); S("E28", -14, 0, 178, "dunes (the camel's route)");
+            S("E29", 40, 0, 192, "a dune top"); S("E30", -12, 0, 140, "a dune hollow");
+            // the Great Sphinx (Kira's face): its plinth, paws, back and head
+            S("E31", -35, 4, 208, "the Sphinx's right paw"); S("E32", -35, 4, 222, "the Sphinx's left paw"); S("E33", -62, 13, 215, "the Sphinx's back");
+            S("E34", -72, 13, 215, "the Sphinx's back"); S("E35", -46, 22, 215, "the Sphinx's head"); S("E36", -29, 2, 201, "the Sphinx's plinth");
+            // the pyramid under construction: the scaffolding up its south face, the top
+            S("E37", 60, 8, 200, "scaffolding, level 2"); S("E38", 80, 16, 200, "scaffolding, level 4"); S("E39", 60, 24, 200, "scaffolding, level 6");
+            S("E40", 80, 32, 200, "scaffolding, level 8"); S("E41", 74, 36, 236, "the pyramid's unfinished top");
+            S("E42", 88, 39.3f, 199, "the high plank over the scaffolding (double jump)", Abilities.DoubleJump);
+            // the Nile bank: reeds, the boats, the far bank, a swim, the deep pool (deep dive, later)
+            S("E43", -90, 0, 30, "the reeds"); S("E44", -94, 0, 80, "the reeds"); S("E45", -162, 0, 40, "the far bank (ride a boat)");
+            S("E46", -162, 0, 110, "the far bank (ride a boat)"); S("E47", -124, -4, 50, "the riverbed (dive)");
+            S("E48", -128, -15, 75, "the deep pool (deep dive)", Abilities.DeepDive); S("E49", -131, -15, 79, "the deep pool (deep dive)", Abilities.DeepDive);
+            // the pyramid's inside (the tomb, at x 500, floor y 60): traps, dark corridors, machinery, hidden chambers
+            S("E50", 500, 60, 15, "tomb: the blade corridor"); S("E51", 500, 60, 39, "tomb: the blade corridor"); S("E52", 500, 60.3f, 53, "tomb: the sand-pit hall (stepping stones)");
+            S("E53", 500, 60, 74, "tomb: the sliding-block corridor"); S("E54", 507, 60, 96, "tomb: across the turning bridge");
+            S("E55", 522, 60, 96, "tomb: the mummies' gallery (mummy Kira walks past quietly)"); S("E56", 534, 60, 96, "tomb: the mummies' gallery");
+            S("E57", 547, 60, 92, "tomb: the hidden cat chamber (Kira opens it)", "Kira");
+            S("E58", 474, 66, 96, "tomb: the counterweight lift's ledge (Dan pushes the weight)", "Dan");
+            S("E59", 515, 60, 122, "tomb: behind the cracked wall (charged punch)", Abilities.ChargedPunch);
+            S("E60", 486, 71, 118, "tomb: the top of the narrow shaft (wall jump)", Abilities.WallJump);
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("EG-pounce-roof", "pounce gap", Abilities.Pounce, new Vector3(-42, 5, 33), "the gap to the far roof (Kira's pounce, Bethlehem)", "E14", "E15");
+            G("EG-ledge-obelisk", "double-jump ledge", Abilities.DoubleJump, new Vector3(0, 5.6f, 64), "the obelisk's top", "E16");
+            G("EG-ledge-scaffold", "double-jump ledge", Abilities.DoubleJump, new Vector3(88, 39.3f, 199), "the high plank over the scaffolding", "E42");
+            G("EG-block-quarry", "huge block", Abilities.MuscleMan, new Vector3(86, 0, 61), "the quarry's huge block (Muscle Man, Medieval)", "E24", "E25");
+            G("EG-deep-nile", "deep water", Abilities.DeepDive, new Vector3(-128, -6, 77), "the Nile's deep pool (deep dive, Pirate Seas)", "E48", "E49");
+            G("EG-crack-tomb", "cracked wall", Abilities.ChargedPunch, new Vector3(511, 60, 122), "the burial chamber's cracked wall (charged punch, Medieval)", "E59", "EG-H2");
+            G("EG-shaft-tomb", "wall-jump shaft", Abilities.WallJump, new Vector3(486, 60, 118), "the narrow shaft by the burial chamber (wall jump, Steampunk)", "E60");
             return w;
         }
 

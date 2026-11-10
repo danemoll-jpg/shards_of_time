@@ -20,7 +20,9 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 MIX, RIGGED, MESHY = ROOT / "SourceArt" / "Mixamo", ROOT / "SourceArt" / "Rigged", ROOT / "SourceArt" / "Meshy"
 OUT = ROOT / "Assets" / "Resources" / "Characters"
-NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_sabertooth", "wolf", "snow_critter", "mammoth", "violinist_iceage"]
+NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_sabertooth", "wolf", "snow_critter", "mammoth", "violinist_iceage",
+         # Round 6: Egypt (the people and the mummy from Dan's Mixamo files when they're in; mummy Kira, the camel, the guardian: Code's rigs)
+         "kira_mummy", "camel", "guardian", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy"]
 # Round 5: the Violinist's own Mixamo clips (SourceArt/Mixamo/violinist_iceage/<Mixamo name>.fbx -> Clips/violinist_<clip>.fbx);
 # his idle and walk are the shared Idle / Walking clips (Clips/idle.fbx, walk.fbx), like Dan's and Abi's
 VIOLINIST_CLIPS = {"play": "Playing The Violin", "bow": "Quick Informal Bow", "nod": "Head Nod Yes"}
@@ -32,7 +34,12 @@ PEOPLE_CLIPS = {
     "land": "Falling To Landing", "land_hard": "Hard Landing", "swim": "Swimming", "tread": "Treading Water", "push": "Push",
     "punch": "Punching", "kick": "Mma Kick", "hurt": "Hit On Side Of Body", "cheer": "Cheering (1)", "look": "Looking Around",
     "fall_back": "Falling Down",   # Round 4: Dan's backward fall (the Ice Age arrival cutscene)
+    "laugh": "Laughing", "hold_up": "Standing Idle 03 Examine",   # (Dan's picks, 2026-11-10)   # Round 6: Dan's relieved laugh and holding up the necklace (the Ice Age arrival)
 }
+# Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
+# the people's clip of the same name (CreatureAnimator)
+MUMMY_CLIPS = {"idle": "Thriller Idle", "walk": "Zombie Walk", "run_slow": "Zombie Walk", "run": "Zombie Walk", "punch": "Zombie Attack",
+               "hurt": "Zombie Reaction Hit", "cheer": "Zombie Scream"}
 
 
 def textures(n):
@@ -40,6 +47,10 @@ def textures(n):
     if (RIGGED / n / "base_color.png").exists(): d = RIGGED / n   # Round 5: maps baked onto a rebuilt closed mesh (closed_mesh.py)
     shutil.copy2(d / "base_color.png", OUT / f"{n}_albedo.png")
     if (d / "normal.png").exists(): shutil.copy2(d / "normal.png", OUT / f"{n}_normal.png")
+    # Round 6, item 3: the plain colour of the hard parts (tusks, fangs, claws: submesh 1), from Tools/Blender/hard_parts.py
+    hard = RIGGED / n / "hard.txt"
+    if hard.exists(): shutil.copy2(hard, OUT / f"{n}_hard.txt")
+    elif (OUT / f"{n}_hard.txt").exists(): (OUT / f"{n}_hard.txt").unlink()
     if False and (d / "metallic.png").exists() and (d / "roughness.png").exists():   # Round 2: Meshy's metallic map is noise; not used
         metal = Image.open(d / "metallic.png").convert("L")
         smooth = Image.eval(Image.open(d / "roughness.png").convert("L"), lambda v: 255 - v)
@@ -69,6 +80,10 @@ def main():
     got = [c for c, m in VIOLINIST_CLIPS.items() if (vd / f"{m}.fbx").exists()]
     for c in got: shutil.copy2(vd / f"{VIOLINIST_CLIPS[c]}.fbx", OUT / "Clips" / f"violinist_{c}.fbx")
     print(f"the Violinist's clips: {len(got)} of {len(VIOLINIST_CLIPS)}" + (f" (missing {', '.join(c for c in VIOLINIST_CLIPS if c not in got)})" if len(got) < len(VIOLINIST_CLIPS) else ""))
+    def mummy_clip(m): return next((d / f"{m}.fbx" for d in (MIX / "mummy", MIX) if (d / f"{m}.fbx").exists()), None)   # Dan saved them with the shared clips
+    got = [c for c, m in MUMMY_CLIPS.items() if mummy_clip(m)]
+    for c in got: shutil.copy2(mummy_clip(MUMMY_CLIPS[c]), OUT / "Clips" / f"mummy_{c}.fbx")
+    print(f"the mummy's clips: {len(got)} of {len(MUMMY_CLIPS)}")
     print("copied:", len(list(OUT.rglob("*.fbx"))), "fbx,", len(list(OUT.rglob("*.png"))), "png")
 
 

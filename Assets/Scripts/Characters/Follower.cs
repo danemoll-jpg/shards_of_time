@@ -35,6 +35,11 @@ namespace ShardsOfTime
             float dist = flat.magnitude, toPlayer = Vector3.Distance(pos, ppos);
 
             var input = new MotorInput();
+            // Round 6: riding the same platform as the player (the camel): sit still and be carried
+            var myPf = me.GroundCollider ? me.GroundCollider.GetComponentInParent<MovingPlatform>() : null;
+            var plPf = player.Motor.GroundCollider ? player.Motor.GroundCollider.GetComponentInParent<MovingPlatform>() : null;
+            bool riding = myPf && myPf == plPf;
+            if (riding) { me.Step(input, Time.deltaTime); FarFor = 0; return; }
             if (dist > .5f) input.move = flat.normalized * Mathf.Clamp(dist / 1.5f, .35f, 1f);
             me.SpeedScale = toPlayer > 3.5f ? 1.35f : 1f;
             bool wantsUp = to.y > .5f && dist < 3.5f;

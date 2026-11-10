@@ -35,6 +35,8 @@ namespace ShardsOfTime
     public sealed class MovingPlatform : MonoBehaviour
     {
         public Vector3 a, b; public float period = 6f; public float spinDegPerSec; float t;
+        // Round 6: a platform something else moves (the camel, the lift, the turning bridge): it only carries riders (a == b: it stays put)
+        public void Hold(Vector3 at) { a = b = at; }
         // Round 4: or a closed loop of points walked at `speed` m/s, turning to face the way it goes (the mammoths)
         public Vector3[] path; public float speed = 2f, startDistance, turnDegPerSec = 30f; float along;
         void Start() { along = startDistance; if (path != null && path.Length > 1) { transform.position = PathPoint(along, out var dir); transform.rotation = Quaternion.LookRotation(dir); } }
@@ -76,6 +78,7 @@ namespace ShardsOfTime
         public float speed = 1.6f;
         public Bounds limits;                 // the block's centre stays inside (the push yard)
         public float PushedDistance { get; private set; }
+        public string Refused { get; private set; } = "never pushed";
         float lastMessage = -10;
 
         public void Pushed(CharacterMotor m, Vector3 dir)
@@ -85,17 +88,18 @@ namespace ShardsOfTime
                 if (m.CompareTag("Player") && Time.time - lastMessage > 4) { lastMessage = Time.time; Hud.Message($"Too heavy for {m.Stats.displayName}. Dan can push this."); }
                 return;
             }
-            if (!m.Grounded) return;
+            if (!m.Grounded) { Refused = "not grounded"; return; }
             m.LastPush = Time.time;   // Dan leans into it (the push clip), moving or not
             dir.y = 0;
             dir = Mathf.Abs(dir.x) > Mathf.Abs(dir.z) ? new Vector3(Mathf.Sign(dir.x), 0, 0) : new Vector3(0, 0, Mathf.Sign(dir.z));
             var step = dir * speed * Time.deltaTime;
             var size = transform.lossyScale;
             var next = transform.position + step;
-            if (!limits.Contains(new Vector3(next.x, limits.center.y, next.z))) return;
+            if (!limits.Contains(new Vector3(next.x, limits.center.y, next.z))) { Refused = "limits"; return; }
             // nothing solid in the way
             var hits = Physics.OverlapBox(next + Vector3.up * .05f, size * .48f, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
-            foreach (var h in hits) if (h.transform != transform && !h.GetComponent<CharacterController>() && h.transform.root != transform.root) return;
+            foreach (var h in hits) if (h.transform != transform && !h.GetComponent<CharacterController>() && h.transform.root != transform.root) { Refused = "blocked by " + h.name; return; }
+            Refused = "";
             transform.position = next; PushedDistance += step.magnitude;
         }
     }

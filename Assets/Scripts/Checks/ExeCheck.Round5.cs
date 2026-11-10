@@ -195,12 +195,16 @@ namespace ShardsOfTime
             yield return TpSettle(IceAge.OnGround(IceAge.ViolinistAt.x + 5, IceAge.ViolinistAt.z - 5) + Vector3.up * .1f, 315);
             yield return Wait(1f);
             Ok(v.ClipNow == "idle", $"idle by the campfire (clip {v.ClipNow})"); yield return Shot("60_violinist_idle");
+            Ok(v.Instrument && v.Instrument.gameObject.activeInHierarchy && v.InstrumentPose == "hold", $"Round 6: his {v.instrument} in his hands while idle (pose {v.InstrumentPose})");
+            yield return CloseUp(v.transform, "60b_violinist_instrument_idle");
             yield return Go(IceAge.ViolinistAt + new Vector3(1.4f, 0, -1.4f), .5f, 15f, .6f, () => Cutscenes.Playing != null);
             yield return WaitFor(() => Cutscenes.Playing == "ViolinistTeaches", 15f);
             yield return Wait(1.2f);
             Log($"  (playing {v.Playing}, cutscene {Cutscenes.Playing}, model {v.HasModel})");
             Ok(v.ClipNow == "play", $"he plays the fiddle (clip {v.ClipNow})"); yield return Shot("61_violinist_plays");
             yield return CloseUp(v.transform, "62_violinist_fiddle_closeup");
+            Ok(v.InstrumentPose == "play", $"Round 6: playing his {v.instrument} (pose {v.InstrumentPose})");
+            yield return Wait(.37f); yield return CloseUp(v.transform, "62b_violinist_fiddle_closeup");
             yield return WaitFor(() => !Game.InCutscene, 10f); yield return Wait(.5f);
             Ok(v.ClipNow == "bow" || v.ClipNow == "nod", $"after the tune: a bow, then a nod (clip {v.ClipNow})"); yield return Shot("63_violinist_bows");
             yield return Wait(1.6f); Log($"  then: {v.ClipNow}"); yield return Shot("64_violinist_nods");

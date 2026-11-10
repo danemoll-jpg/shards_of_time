@@ -18,7 +18,7 @@ namespace ShardsOfTime
 
         public bool Has(string ability) => abilities != null && abilities.Contains(ability);
 
-        public const string Home = "Home", Sabertooth = "Sabertooth";
+        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy";
 
         public static KiraForm Load(string id)
         {
@@ -34,6 +34,10 @@ namespace ShardsOfTime
                 case Sabertooth:
                     f.displayName = "Sabertooth Kira"; f.model = "kira_sabertooth"; f.abilities = new[] { Abilities.ClawIce };
                     f.note = "Ice Age: a saber-toothed kitten. Her claws break ice walls.";
+                    break;
+                case Mummy:   // Round 6
+                    f.displayName = "Mummy Kira"; f.model = "kira_mummy"; f.abilities = new[] { Abilities.MummyHush };
+                    f.note = "Ancient Egypt: a little mummy cat (folded ears showing through the bandages). Mummies don't wake for her; cat-statue doors open for her (any form).";
                     break;
                 default:
                     f.displayName = "Kira"; f.model = "kira"; f.abilities = new string[0];

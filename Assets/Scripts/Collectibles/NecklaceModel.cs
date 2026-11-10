@@ -9,7 +9,12 @@ namespace ShardsOfTime
     //  - On the graybox capsule (the fallback): the cord is widened to wrap the capsule.
     public static class NecklaceModel
     {
-        public static readonly Color Dim = new Color(.25f, .55f, .75f), Bright = new Color(.6f, .97f, 1f);
+        // Round 6, item 6: the shard takes the colour of the world's story shard (the film: blue in the Ice Age, red in Egypt): Tint is
+        // set by Game.BuildWorld; Dim / Bright / the light follow it
+        public static Color Tint = new Color(.25f, .55f, 1f);
+        public static Color Dim => Color.Lerp(Tint * .62f, new Color(.25f, .55f, .75f), Tint.b > .8f ? .8f : 0f);
+        public static Color Bright => Color.Lerp(Tint, Color.white, Tint.b > .8f ? .62f : .45f);
+        static Color LightColour => Color.Lerp(Tint, Color.white, .3f);
         const float LoopX = .086f, ShardFront = .105f, Drop = .17f, Clear = .03f;   // necklace.py's sizes (m); Clear: shard off the cloth
         public static string LastFit { get; private set; } = "";
 
@@ -81,11 +86,11 @@ namespace ShardsOfTime
             {
                 if (!on) return;
                 l = new GameObject("Necklace light").transform; l.SetParent(shard, false); l.localPosition = Vector3.zero;
-                var lt = l.gameObject.AddComponent<UnityEngine.Light>(); lt.type = LightType.Point; lt.color = new Color(.45f, .8f, 1f);
+                var lt = l.gameObject.AddComponent<UnityEngine.Light>(); lt.type = LightType.Point; lt.color = LightColour;
                 lt.range = 13f; lt.intensity = 3.2f; lt.shadows = LightShadows.None;
             }
             if (l.gameObject.activeSelf != on) l.gameObject.SetActive(on);
-            if (on) l.GetComponent<UnityEngine.Light>().intensity = 2.8f + Necklace.Pulse * 1.2f;
+            if (on) { var lt = l.GetComponent<UnityEngine.Light>(); lt.intensity = 2.8f + Necklace.Pulse * 1.2f; lt.color = LightColour; }
         }
 
         public static void Pulse(Transform shard, float pulse, bool lit)

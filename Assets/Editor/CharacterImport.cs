@@ -22,9 +22,9 @@ namespace ShardsOfTime
         static bool Ours(string path) => path.Replace('\\', '/').StartsWith(Dir + "/");
         static bool IsKira(string path) => IsGeneric(path);
         // Round 5: Kira's forms and the Ice Age creatures share Code's four-legged Blender rig (Generic, clips as takes)
-        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth" };
+        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian" };   // Round 6: Egypt's camel and temple guardian
         static bool IsGeneric(string path) { string n = Path.GetFileNameWithoutExtension(path); return n.StartsWith("kira") || System.Array.IndexOf(Creatures, n) >= 0; }
-        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_iceage");
+        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy";   // Round 6: the Egypt Violinist and the mummy (Mixamo)
         static bool IsClip(string path) => path.Replace('\\', '/').StartsWith(Dir + "/Clips/");
 
         // The people's clips (Round 3; frames as Blender / Mixamo number them, 30 fps; 0 = the whole take). loop; the vertical
@@ -46,6 +46,10 @@ namespace ShardsOfTime
             ["fall_back"] = new ClipSpec(),                                            // Round 4: Dan's backward fall in the snow (cutscene)
             // Round 5: the Violinist's own clips (his Mixamo set)
             ["violinist_play"] = new ClipSpec { loop = true }, ["violinist_bow"] = new ClipSpec(), ["violinist_nod"] = new ClipSpec(),
+            // Round 6: Dan's laugh and holding up the necklace (the Ice Age arrival); the mummy's own set
+            ["laugh"] = new ClipSpec(), ["hold_up"] = new ClipSpec(),
+            ["mummy_idle"] = new ClipSpec { loop = true }, ["mummy_walk"] = new ClipSpec { loop = true }, ["mummy_run_slow"] = new ClipSpec { loop = true },
+            ["mummy_run"] = new ClipSpec { loop = true }, ["mummy_punch"] = new ClipSpec(), ["mummy_hurt"] = new ClipSpec(), ["mummy_cheer"] = new ClipSpec(),
         };
 
         void OnPreprocessModel()
@@ -138,6 +142,19 @@ namespace ShardsOfTime
                 m.SetFloat("_Metallic", 0f); m.SetFloat("_Smoothness", .18f);
                 if (fresh) AssetDatabase.CreateAsset(m, path); else EditorUtility.SetDirty(m);
             }
+            // Round 6, item 3: the hard parts' plain material (tusks, fangs, claws: submesh 1), colour from <name>_hard.txt
+            foreach (var txt in Directory.GetFiles(Dir, "*_hard.txt"))
+            {
+                string n = Path.GetFileName(txt).Replace("_hard.txt", ""), path = $"{Dir}/{n}_hard.mat";
+                var v = File.ReadAllText(txt).Trim().Split(' ');
+                var c = new Color(float.Parse(v[0], System.Globalization.CultureInfo.InvariantCulture), float.Parse(v[1], System.Globalization.CultureInfo.InvariantCulture), float.Parse(v[2], System.Globalization.CultureInfo.InvariantCulture));
+                var m = AssetDatabase.LoadAssetAtPath<Material>(path); bool fresh = !m;
+                if (fresh) m = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = n + "_hard" };
+                m.SetColor("_BaseColor", c); m.SetFloat("_Metallic", 0f); m.SetFloat("_Smoothness", .55f);
+                if (fresh) AssetDatabase.CreateAsset(m, path); else EditorUtility.SetDirty(m);
+            }
+            foreach (var mat in Directory.GetFiles(Dir, "*_hard.mat"))
+                if (!File.Exists(mat.Replace("_hard.mat", "_hard.txt"))) AssetDatabase.DeleteAsset(mat.Replace("\\", "/"));
             AssetDatabase.SaveAssets();
         }
 
@@ -196,9 +213,10 @@ namespace ShardsOfTime
                 }
                 Object.DestroyImmediate(img);
                 float pg = 100f * grey / n, pw = 100f * white / n, pa = 100f * amber / n;
-                bool ok = ears.Count == 0 && pg > 35f && pw < 1.5f && pa > .05f;
+                float needGrey = f.id == KiraForm.Mummy ? 20f : 35f;   // Round 6: mummy Kira's bandages cover most of her; grey wherever fur shows
+                bool ok = ears.Count == 0 && pg > needGrey && pw < 1.5f && pa > .05f;
                 lines.Add($"KIRA LOCK {f.id} ({f.model}): {(ok ? "OK" : "FAILED")}: ear bones {ears.Count}{(ears.Count > 0 ? " (" + string.Join(", ", ears) + ")" : "")}; " +
-                          $"grey fur {pg:0}% of the texture (need > 35%); white {pw:0.0}% (need < 1.5%); golden-amber eyes {pa:0.00}% (need > 0.05%)");
+                          $"grey fur {pg:0}% of the texture (need > {needGrey:0}%); white {pw:0.0}% (need < 1.5%); golden-amber eyes {pa:0.00}% (need > 0.05%)");
             }
             Directory.CreateDirectory("Assets/Resources/Data");
             File.WriteAllLines("Assets/Resources/Data/KiraLock.txt", lines);

@@ -39,6 +39,29 @@ namespace ShardsOfTime
             ["Frame"] = (new Color(.96f, .95f, .92f), "Lit", .3f),
             ["Picture"] = (new Color(.85f, .75f, .8f), "Lit", .2f),
             ["Wood"] = (new Color(.45f, .28f, .16f), "Lit", .3f),
+            // Round 6: Egypt (Tools/Blender/egypt_world.py)
+            ["Sand"] = (new Color(.93f, .78f, .52f), "Lit", .15f),
+            ["Sandstone"] = (new Color(.87f, .7f, .48f), "Lit", .12f),
+            ["PastelPink"] = (new Color(.98f, .68f, .72f), "Lit", .2f),
+            ["PastelTeal"] = (new Color(.45f, .82f, .8f), "Lit", .2f),
+            ["PastelLilac"] = (new Color(.75f, .65f, .9f), "Lit", .2f),
+            ["PastelGold"] = (new Color(.98f, .82f, .45f), "Lit", .3f),
+            ["PastelPeach"] = (new Color(.99f, .78f, .6f), "Lit", .2f),
+            ["Turquoise"] = (new Color(.2f, .72f, .75f), "Lit", .5f),
+            ["AwningRed"] = (new Color(.85f, .25f, .25f), "Lit", .15f),
+            ["AwningWhite"] = (new Color(.97f, .95f, .9f), "Lit", .15f),
+            ["AwningBlue"] = (new Color(.2f, .4f, .8f), "Lit", .15f),
+            ["Wicker"] = (new Color(.72f, .55f, .32f), "Lit", .15f),
+            ["Palm"] = (new Color(.25f, .55f, .25f), "Lit", .2f),
+            ["Reed"] = (new Color(.55f, .6f, .3f), "Lit", .15f),
+            ["Plaster"] = (new Color(.96f, .92f, .85f), "Lit", .15f),
+            ["Dark"] = (new Color(.15f, .12f, .1f), "Lit", .2f),
+            ["Terracotta"] = (new Color(.78f, .42f, .28f), "Lit", .2f),
+            // Round 6: the Violinist's instruments
+            ["Ebony"] = (new Color(.12f, .09f, .08f), "Lit", .6f),
+            ["Gut"] = (new Color(.95f, .92f, .8f), "Lit", .4f),
+            ["Hair"] = (new Color(.97f, .96f, .92f), "Lit", .2f),
+            ["Lapis"] = (new Color(.12f, .25f, .7f), "Lit", .6f),
         };
 
         public static Material Mat(string name)

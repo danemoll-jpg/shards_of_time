@@ -22,7 +22,7 @@ namespace ShardsOfTime
         public bool Underwater { get; private set; }
         public int Recenters { get; private set; }
 
-        public const float StickDegPerSec = 160f, MouseDegPerUnit = .11f, Radius = 6.5f;
+        public const float StickDegPerSec = 160f, MouseDegPerUnit = .11f, Radius = 6.5f, DeadBand = 20f;
         float idleLook = 10f, recenterUntil = -1f; Vector3 focusVel;
 
         public static CameraRig Create()
@@ -96,6 +96,11 @@ namespace ShardsOfTime
             Orbit.HorizontalAxis.Value = Mathf.Repeat(Orbit.HorizontalAxis.Value + deg.x + 180f, 360f) - 180f;
             Orbit.VerticalAxis.Value = Mathf.Clamp(Orbit.VerticalAxis.Value + deg.y, Orbit.VerticalAxis.Range.x, Orbit.VerticalAxis.Range.y);
 
+            // Round 6, item 2: under the ice the camera comes in close and level behind the hero (never up in the ice ceiling)
+            bool underIce = IceHole.UnderIce(h.Motor) || IceHole.InHoleBelowIce(h.Motor);
+            Orbit.Radius = Mathf.MoveTowards(Orbit.Radius, underIce ? 3.2f : Radius, (underIce ? 8f : 4f) * dt);
+            if (underIce) Orbit.VerticalAxis.Value = Mathf.MoveTowards(Orbit.VerticalAxis.Value, Mathf.Clamp(Orbit.VerticalAxis.Value, -12f, 4f), 120f * dt);
+
             // Recenter button: swing behind the player
             if (Controls.Recenter.WasPressedThisFrame()) { recenterUntil = Time.time + .35f; Recenters++; }
             float heading = h.transform.eulerAngles.y;
@@ -110,10 +115,17 @@ namespace ShardsOfTime
                 var hv = h.Motor.Velocity; hv.y = 0;
                 if (idleLook > 1.2f && hv.magnitude > 2.5f && h.Motor.Mode != MoveMode.Swim)
                 {
-                    float rate = 35f * Mathf.Clamp01(hv.magnitude / h.Stats.runSpeed);
+                    // Round 6, item 1: only a real turn swings the camera. Running is camera-relative, so chasing every small difference
+                    // fed back: a stick 3 deg off straight (any real thumb) turned the camera, which turned the run, a 35 deg/s circle.
+                    // Differences under DeadBand are left alone (the hero runs straight, a little off the camera's line), bigger ones
+                    // are followed back to DeadBand.
                     float moveYaw = Mathf.Atan2(hv.x, hv.z) * Mathf.Rad2Deg;
-                    if (Mathf.Abs(Mathf.DeltaAngle(Orbit.HorizontalAxis.Value, moveYaw)) < 135f)   // never swing round when running at the camera
-                        Orbit.HorizontalAxis.Value = Mathf.MoveTowardsAngle(Orbit.HorizontalAxis.Value, moveYaw, rate * dt);
+                    float gap = Mathf.DeltaAngle(Orbit.HorizontalAxis.Value, moveYaw);
+                    if (Mathf.Abs(gap) > DeadBand && Mathf.Abs(gap) < 135f)   // never swing round when running at the camera
+                    {
+                        float rate = 35f * Mathf.Clamp01(hv.magnitude / h.Stats.runSpeed) * Mathf.Clamp01((Mathf.Abs(gap) - DeadBand) / 30f);
+                        Orbit.HorizontalAxis.Value = Mathf.MoveTowardsAngle(Orbit.HorizontalAxis.Value, moveYaw - Mathf.Sign(gap) * DeadBand, rate * dt);
+                    }
                 }
             }
         }

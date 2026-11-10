@@ -22,12 +22,22 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 7;
+        public const int Version = 9;   // Round 6: Egypt's cutscenes; the story cutscenes per world; Dan's Egypt models and the arrival's ending (9)
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
             ("VortexOpens", VortexOpens), ("ViolinistTeaches", ViolinistTeaches),
+            ("EgyptArrival", EgyptArrival), ("SphinxGag", SphinxGag), ("NecklaceWakesEgypt", NecklaceWakesEgypt), ("VortexOpensEgypt", VortexOpensEgypt),
+            ("ViolinistTeachesEgypt", ViolinistTeachesEgypt),
         };
+
+        // Round 6: who plays in a world's story cutscenes (a model not in yet falls back: Dan's / Abi's home models, home Kira) and the
+        // colour of its story shard (the necklace's glow follows it: NecklaceModel.Tint)
+        sealed class Cast { public string dan, abi, kira; public Color shard; }
+        static string Have(string model, string fallback) => CharacterModel.Exists(model) ? model : fallback;
+        static Cast IceAgeCast => new Cast { dan = "dan_iceage", abi = "abi_iceage", kira = "kira_sabertooth", shard = new Color(.25f, .55f, 1f) };
+        static Cast EgyptCast => new Cast { dan = Have("dan_egypt", "dan_home"), abi = Have("abi_egypt", "abi_home"), kira = Have("kira_mummy", "kira"), shard = new Color(1f, .18f, .14f) };
+        static Color Glow(Cast c, float whiten) => Color.Lerp(c.shard, Color.white, whiten);
 
         public static void EnsureAll()
         {
@@ -234,13 +244,16 @@ namespace ShardsOfTime
         }
 
         // The 10th shard of Area A: Dan's necklace wakes. The root is where the player stands, facing the story shard.
-        public static void NecklaceWakes()
+        public static void NecklaceWakes() => NecklaceWakesIn("NecklaceWakes", IceAgeCast);
+        public static void NecklaceWakesEgypt() => NecklaceWakesIn("NecklaceWakesEgypt", EgyptCast);
+        static void NecklaceWakesIn(string name, Cast c)
         {
             DataAssets.Ensure();
-            var k = new Kit("NecklaceWakes", 6.5f);
-            var dan = k.Actor("Dan", "dan_iceage", Vector3.zero, 0);   // Round 4: it happens in the Ice Age
-            var abi = k.Actor("Abi", "abi_iceage", new Vector3(-1.3f, 0, -1.1f), 30);
-            var kira = k.Actor("Kira", "kira_sabertooth", new Vector3(1.2f, 0, -.8f), -30);
+            NecklaceModel.Tint = c.shard;
+            var k = new Kit(name, 6.5f);
+            var dan = k.Actor("Dan", c.dan, Vector3.zero, 0);   // Round 4: it happens in the Ice Age (Round 6: and in Egypt)
+            var abi = k.Actor("Abi", c.abi, new Vector3(-1.3f, 0, -1.1f), 30);
+            var kira = k.Actor("Kira", c.kira, new Vector3(1.2f, 0, -.8f), -30);
             // the gem grows and glows; an aura blooms; a beam reaches out toward the story shard
             k.Necklaces.TryGetValue(dan, out var neck);
             if (neck)
@@ -260,11 +273,11 @@ namespace ShardsOfTime
             var gemAt = neck ? k.root.transform.InverseTransformPoint(neck.Find("Shard").position) + new Vector3(0, 0, .03f) : new Vector3(0, 1.15f, .35f);
             float big = neck ? .3f : .7f;
             var aura = k.Holder("Aura", gemAt, 0);
-            Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(.55f, .9f, 1f), "Glow"), name: "Glow");
+            Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(Glow(c, .55f), "Glow"), name: "Glow");
             k.Key(aura, "Glow", "m_LocalScale", .6f, Vector3.one * .03f); k.Key(aura, "Glow", "m_LocalScale", 1.6f, Vector3.one * big); k.Key(aura, "Glow", "m_LocalScale", 2.2f, Vector3.one * big * .35f);
             k.Show(aura, .6f, 2.4f);
             var beam = k.Holder("Beam", gemAt + new Vector3(0, 0, .05f), 0);
-            Placeholders.Prim(PrimitiveType.Cube, beam.transform, Vector3.zero, new Vector3(.08f, .08f, .01f), Placeholders.Mat(new Color(.6f, .95f, 1f), "Glow"), name: "Ray");
+            Placeholders.Prim(PrimitiveType.Cube, beam.transform, Vector3.zero, new Vector3(.08f, .08f, .01f), Placeholders.Mat(Glow(c, .6f), "Glow"), name: "Ray");
             k.Key(beam, "Ray", "m_LocalPosition", 2.3f, Vector3.zero); k.Key(beam, "Ray", "m_LocalScale", 2.3f, new Vector3(.08f, .08f, .01f));
             k.Key(beam, "Ray", "m_LocalPosition", 4.2f, new Vector3(0, .4f, 14f)); k.Key(beam, "Ray", "m_LocalScale", 4.2f, new Vector3(.1f, .1f, 28f));
             k.Key(beam, "Ray", "m_LocalPosition", 6.5f, new Vector3(0, .6f, 20f)); k.Key(beam, "Ray", "m_LocalScale", 6.5f, new Vector3(.1f, .1f, 40f));
@@ -276,12 +289,13 @@ namespace ShardsOfTime
             if (!k.Models.ContainsKey(dan)) { k.KeyQ(dan, "Body/Head", 0f, Quaternion.identity); k.KeyQ(dan, "Body/Head", .5f, Quaternion.Euler(25, 0, 0)); k.KeyQ(dan, "Body/Head", 2.2f, Quaternion.Euler(25, 0, 0)); k.KeyQ(dan, "Body/Head", 2.7f, Quaternion.identity); }
             k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("look"), 2.4f));
             k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("look"), 4.2f));
-            k.Clips(kira, (KiraClip("idle", "kira_sabertooth"), 0f), (KiraClip("jump", "kira_sabertooth"), 2.35f), (KiraClip("idle", "kira_sabertooth"), 3.7f));
+            k.Clips(kira, (KiraClip("idle", c.kira), 0f), (KiraClip("jump", c.kira), 2.35f), (KiraClip("idle", c.kira), 3.7f));
             // shots
             k.Shot("Dan's necklace", 0f, 2.3f, new Vector3(.25f, 1.45f, 1.5f), new Vector3(0, 1.3f, 0), 38f, new Vector3(.15f, 1.38f, 1.05f));
             k.Shot("The heroes", 2.3f, 4.4f, new Vector3(3.8f, 1.7f, 4.2f), new Vector3(-.2f, 1f, -.2f), 48f);
             k.Shot("Follow the light", 4.4f, 6.5f, new Vector3(.3f, 2.1f, -4.8f), new Vector3(0, 1.5f, 12f), 52f, new Vector3(.3f, 2.6f, -2.8f));
             k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
         }
 
         // ================================================================================================ Round 4 (item 3, 5, 6)
@@ -434,7 +448,10 @@ namespace ShardsOfTime
         // Dan scrambles back and falls flat on his back in fright; she leaps onto his chest; close-up: folded ears, amber eyes: it's
         // Kira (relief). She paws at his chest, at the necklace he didn't know he had; it pulses blue. Abi laughs. No dialogue.
         // The root is the landing spot, facing up the valley (+z).
-        public const float ArrivalLength = 15.5f;
+        // Round 6 (item 5, Dan's Mixamo list): with the "laugh" and "hold_up" clips in, the arrival ends with Dan back on his feet,
+        // laughing with relief, then holding the necklace's shard up in his hand to look at it (4 s more)
+        static bool ArrivalEnding => File.Exists("Assets/Resources/Characters/Clips/laugh.fbx") && File.Exists("Assets/Resources/Characters/Clips/hold_up.fbx");
+        public static float ArrivalLength => ArrivalEnding ? 19.5f : 15.5f;
         public static void IceAgeArrival()
         {
             DataAssets.Ensure();
@@ -469,8 +486,9 @@ namespace ShardsOfTime
             k.Key(kira, "Body", "m_LocalPosition", 4.0f, onRock);
             // Dan: lands hard, gets up, looks round; flinches at the growl, scrambles back and falls flat on his back (and stays down)
             var fallBack = PeopleClip("fall_back");
-            k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .78f), (PeopleClip("look"), 2.75f), (PeopleClip("hurt"), 5.2f),
-                (fallBack ? fallBack : PeopleClip("hurt"), 5.55f));
+            if (!ArrivalEnding)   // (with the ending: one clip track for Dan, made with the ending's clips below)
+                k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .78f), (PeopleClip("look"), 2.75f), (PeopleClip("hurt"), 5.2f),
+                    (fallBack ? fallBack : PeopleClip("hurt"), 5.55f));
             var scramble = new Vector3(0, 0, -.6f);
             k.Key(dan, "Body", "m_LocalPosition", 5.2f, Vector3.zero); k.Key(dan, "Body", "m_LocalPosition", 6.0f, scramble); k.Key(dan, "Body", "m_LocalPosition", ArrivalLength, scramble);
             k.Clips(abi, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .7f), (PeopleClip("idle"), 2.6f), (PeopleClip("look"), 5.0f), (PeopleClip("cheer"), 12.9f), (PeopleClip("idle"), 14.8f));
@@ -536,20 +554,45 @@ namespace ShardsOfTime
             var eye = face + toHead * .55f + Vector3.up * .5f;   // over his head, about 0.7 m from her face: her ears and eyes fill the frame
             k.Shot("It's Kira", 8.3f, 10.6f, eye, kiraFace, 40f, Vector3.Lerp(eye, kiraFace, .2f));
             k.Shot("The necklace", 10.6f, 13.0f, chest + new Vector3(1.25f, 1.05f, .35f), chest, 40f, chest + new Vector3(.95f, .8f, .25f));
-            k.Shot("Abi laughs", 13.0f, ArrivalLength, new Vector3(2.4f, 1.7f, 2.4f), new Vector3(-.6f, .7f, -.2f), 48f);
+            if (ArrivalEnding && k.Models.TryGetValue(dan, out var danA))
+            {
+                k.Shot("Abi laughs", 13.0f, 15.5f, new Vector3(2.4f, 1.7f, 2.4f), new Vector3(-.6f, .7f, -.2f), 48f);
+                // the cut hides him getting up: on his feet, laughing; Kira hops down beside him
+                k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .78f), (PeopleClip("look"), 2.75f), (PeopleClip("hurt"), 5.2f),
+                    (fallBack ? fallBack : PeopleClip("hurt"), 5.55f), (PeopleClip("laugh"), 15.5f), (PeopleClip("hold_up"), 17.4f));
+                var kiraDown = WorldToLocal(kira, k.root.transform.TransformPoint(scramble + new Vector3(.8f, 0, .9f)));
+                k.Key(kira, "Body", "m_LocalPosition", 15.45f, onChest); k.Key(kira, "Body", "m_LocalPosition", 15.5f, kiraDown); k.Key(kira, "Body", "m_LocalPosition", 19.5f, kiraDown);
+                // the shard in his hand (the one on his chest hides meanwhile)
+                var hand = danA.GetBoneTransform(HumanBodyBones.RightHand);
+                if (hand && neck)
+                {
+                    var hs = Placeholders.CrystalObject("Hand shard", NecklaceModel.Bright, 1f); hs.transform.SetParent(hand, false);
+                    hs.transform.localPosition = Vector3.zero; hs.transform.position = hand.position + hand.up * .09f;
+                    var ls = hand.lossyScale; hs.transform.localScale = new Vector3(.07f / ls.x, .07f / ls.y, .07f / ls.z);
+                    k.Show(hs, 17.6f, 19.5f);
+                    k.Key(neck.gameObject, "Shard", "m_LocalScale", 17.55f, Vector3.one * 1.6f); k.Key(neck.gameObject, "Shard", "m_LocalScale", 17.6f, Vector3.one * .01f);
+                    k.Key(neck.gameObject, "Shard", "m_LocalScale", 19.5f, Vector3.one * .01f);
+                }
+                k.Shot("Relief", 15.5f, 17.4f, scramble + new Vector3(.4f, 1.6f, 2.6f), scramble + new Vector3(0, 1.45f, 0), 40f);
+                k.Shot("The shard in his hand", 17.4f, 19.5f, scramble + new Vector3(.9f, 1.75f, 1.2f), scramble + new Vector3(.2f, 1.6f, .25f), 38f, scramble + new Vector3(.7f, 1.7f, .95f));
+            }
+            else k.Shot("Abi laughs", 13.0f, ArrivalLength, new Vector3(2.4f, 1.7f, 2.4f), new Vector3(-.6f, .7f, -.2f), 48f);
             k.Save();
         }
 
         // The story shard opens the vortex (Ice Age). The root is the gate (its +z faces the heroes).
-        public static void VortexOpens()
+        public static void VortexOpens() => VortexOpensIn("VortexOpens", IceAgeCast);
+        public static void VortexOpensEgypt() => VortexOpensIn("VortexOpensEgypt", EgyptCast);
+        static void VortexOpensIn(string name, Cast c)
         {
             DataAssets.Ensure();
-            var k = new Kit("VortexOpens", 6.5f);
-            var dan = k.Actor("Dan", "dan_iceage", new Vector3(0, 0, 7.2f), 180);
-            var abi = k.Actor("Abi", "abi_iceage", new Vector3(-1.4f, 0, 8f), 170);
-            var kira = k.Actor("Kira", "kira_sabertooth", new Vector3(1.3f, 0, 7.8f), 195);
+            NecklaceModel.Tint = c.shard;
+            var k = new Kit(name, 6.5f);
+            var dan = k.Actor("Dan", c.dan, new Vector3(0, 0, 7.2f), 180);
+            var abi = k.Actor("Abi", c.abi, new Vector3(-1.4f, 0, 8f), 170);
+            var kira = k.Actor("Kira", c.kira, new Vector3(1.3f, 0, 7.8f), 195);
             var shard = k.Holder("Story shard", Vector3.zero, 0);
-            var crystal = Placeholders.CrystalObject("Crystal", new Color(.25f, .55f, 1f), 1.2f); crystal.transform.SetParent(shard.transform, false);
+            var crystal = Placeholders.CrystalObject("Crystal", c.shard, 1.2f); crystal.transform.SetParent(shard.transform, false);
             k.Key(shard, "Crystal", "m_LocalPosition", 0f, new Vector3(0, 1.5f, 6.5f)); k.Key(shard, "Crystal", "m_LocalPosition", .6f, new Vector3(0, 2.4f, 6.2f));
             k.Key(shard, "Crystal", "m_LocalPosition", 2.0f, new Vector3(0, 2.2f, 0));
             k.Key(shard, "Crystal", "m_LocalScale", 0f, Vector3.one * 1.2f); k.Key(shard, "Crystal", "m_LocalScale", 1.8f, Vector3.one * 1.4f); k.Key(shard, "Crystal", "m_LocalScale", 2.1f, Vector3.one * .1f);
@@ -561,22 +604,26 @@ namespace ShardsOfTime
             k.Show(flash, 2.0f, 2.9f);
             k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("cheer"), 3.9f));
             k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("cheer"), 3.7f));
-            k.Clips(kira, (KiraClip("idle", "kira_sabertooth"), 0f), (KiraClip("jump", "kira_sabertooth"), 3.55f), (KiraClip("jump", "kira_sabertooth"), 4.25f), (KiraClip("idle", "kira_sabertooth"), 4.9f));
+            k.Clips(kira, (KiraClip("idle", c.kira), 0f), (KiraClip("jump", c.kira), 3.55f), (KiraClip("jump", c.kira), 4.25f), (KiraClip("idle", c.kira), 4.9f));
             k.Key(kira, "Body", "m_LocalPosition", 3.6f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 3.85f, new Vector3(0, .5f, 0)); k.Key(kira, "Body", "m_LocalPosition", 4.1f, Vector3.zero);
             k.Key(kira, "Body", "m_LocalPosition", 4.3f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 4.55f, new Vector3(0, .35f, 0)); k.Key(kira, "Body", "m_LocalPosition", 4.8f, Vector3.zero);
             k.Shot("The shard flies", 0f, 2.0f, new Vector3(4.8f, 1.8f, 7f), new Vector3(0, 2f, 3.2f), 50f, new Vector3(4.5f, 2.2f, 5f));
             k.Shot("The vortex opens", 2.0f, 4.0f, new Vector3(.6f, 2.0f, 12f), new Vector3(0, 2.2f, 0), 45f, new Vector3(.4f, 2.1f, 10.5f));
             k.Shot("The heroes cheer", 4.0f, 6.5f, new Vector3(2.8f, 2.4f, 4.4f), new Vector3(0, 1f, 7.6f), 50f);
             k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
         }
 
         // The Violinist plays and Dan learns a move. The root is the Violinist (the world's own figure plays: World/Violinist.cs), +z
         // toward Dan. No dialogue.
-        public static void ViolinistTeaches()
+        public static void ViolinistTeaches() => ViolinistTeachesIn("ViolinistTeaches", "Dan", IceAgeCast.dan, IceAgeCast);
+        public static void ViolinistTeachesEgypt() => ViolinistTeachesIn("ViolinistTeachesEgypt", "Abi", EgyptCast.abi, EgyptCast);
+        static void ViolinistTeachesIn(string name, string learner, string model, Cast c)
         {
             DataAssets.Ensure();
-            var k = new Kit("ViolinistTeaches", 6.5f);
-            var dan = k.Actor("Dan", "dan_iceage", new Vector3(0, 0, 2.3f), 180);
+            NecklaceModel.Tint = c.shard;
+            var k = new Kit(name, 6.5f);
+            var dan = k.Actor(learner, model, new Vector3(0, 0, 2.3f), 180);
             k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("look"), .6f), (PeopleClip("idle"), 2.4f), (PeopleClip("cheer"), 4.6f));
             var aura = k.Holder("Aura", new Vector3(0, 1.15f, 2.3f), 0);
             Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(.6f, .85f, 1f), "Glow"), name: "Glow");
@@ -587,6 +634,129 @@ namespace ShardsOfTime
             k.Shot("Dan learns", 2.5f, 4.6f, new Vector3(-.7f, 1.5f, .7f), new Vector3(0, 1.2f, 2.3f), 42f);
             k.Shot("A nod", 4.6f, 6.5f, new Vector3(3.6f, 1.8f, 1.2f), new Vector3(0, 1.1f, 1.2f), 45f);
             k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
+        }
+
+        // ================================================================================================ Round 6: Egypt
+        // Item 6: the vortex sets them down among the pyramids and the busy workers; they're in Egyptian clothes; Kira is a little mummy
+        // cat; Dan and Abi react to her; the necklace's shard glows red. The root is the arrival spot (+z north, the great pyramids
+        // far ahead). Staging from SourceArt/Reference/Worlds/02-Egypt/trio-arrival-pyramids-*.png. Skippable.
+        public const float EgyptArrivalLength = 13.5f;
+        public static void EgyptArrival()
+        {
+            DataAssets.Ensure();
+            var c = EgyptCast; NecklaceModel.Tint = c.shard;
+            var k = new Kit("EgyptArrival", EgyptArrivalLength);
+            var dan = k.Actor("Dan", c.dan, Vector3.zero, 0);
+            var abi = k.Actor("Abi", c.abi, new Vector3(-1.5f, 0, .3f), 10);
+            var kira = k.Actor("Kira", c.kira, new Vector3(1.0f, 0, 1.4f), 200);
+            Tint(k, (0f, 1f), (.3f, 1f), (1.2f, 0f));
+            foreach (var (actor, land) in new[] { (kira, .55f), (abi, .65f), (dan, .75f) })
+            {
+                k.Key(actor, "Body", "m_LocalPosition", 0f, new Vector3(0, 4f, 0)); k.Key(actor, "Body", "m_LocalPosition", land * .6f, new Vector3(0, 2f, 0));
+                k.Key(actor, "Body", "m_LocalPosition", land, Vector3.zero);
+                SandPuff(k, actor.transform.localPosition + Vector3.up * .1f, land, actor == kira ? .5f : .9f);
+            }
+            // workers hauling a stone across the plaza behind them, two more far off with a cart
+            foreach (var (z, x0, x1, t0) in new[] { (9f, -9f, 9f, 0f), (22f, 12f, -14f, 0f) })
+            {
+                var w = k.Holder("Workers " + z, new Vector3(x0, 0, z), x1 > x0 ? 90 : -90);
+                var grp = new GameObject("Group"); grp.transform.SetParent(w.transform, false);
+                Placeholders.Prim(PrimitiveType.Cube, grp.transform, new Vector3(0, .8f, 0), new Vector3(2.2f, 1.4f, 1.6f), WorldArt.Mat("Sandstone"), name: "Stone");
+                for (int i = 0; i < 2; i++)
+                {
+                    var man = new GameObject("Worker" + i); man.transform.SetParent(grp.transform, false); man.transform.localPosition = new Vector3(i * .8f - .4f, 0, 1.6f);
+                    Placeholders.Prim(PrimitiveType.Capsule, man.transform, new Vector3(0, .9f, 0), new Vector3(.45f, .9f, .4f), Placeholders.Mat(new Color(.68f, .46f, .32f)), name: "Body");
+                    Placeholders.Prim(PrimitiveType.Cylinder, man.transform, new Vector3(0, .65f, 0), new Vector3(.5f, .2f, .42f), Placeholders.Mat(new Color(.96f, .93f, .85f)), name: "Kilt");
+                    Placeholders.Prim(PrimitiveType.Sphere, man.transform, new Vector3(0, 1.85f, 0), new Vector3(.32f, .34f, .32f), Placeholders.Mat(new Color(.2f, .25f, .55f)), name: "Head");
+                }
+                k.Key(w, "Group", "m_LocalPosition", t0, Vector3.zero);
+                k.Key(w, "Group", "m_LocalPosition", EgyptArrivalLength, new Vector3(0, 0, Mathf.Abs(x1 - x0)));
+            }
+            // Dan and Abi get up and look themselves over (new clothes!), then notice Kira: a little mummy cat
+            k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("land"), .75f), (PeopleClip("idle"), 1.6f), (PeopleClip("look"), 3.2f), (PeopleClip("idle"), 6.6f),
+                (PeopleClip("hurt"), 7.3f), (PeopleClip("idle"), 8.2f), (PeopleClip("look"), 10.6f), (PeopleClip("idle"), 12.4f));
+            k.Clips(abi, (PeopleClip("fall"), 0f), (PeopleClip("land"), .65f), (PeopleClip("idle"), 1.5f), (PeopleClip("look"), 3.4f), (PeopleClip("idle"), 6.6f),
+                (PeopleClip("cheer"), 8.0f), (PeopleClip("idle"), 10.2f));
+            k.KeyYaw(dan, "Body", 0f, 0); k.KeyYaw(dan, "Body", 6.6f, 0); k.KeyYaw(dan, "Body", 7.0f, 45f); k.KeyYaw(dan, "Body", 12.4f, 45f); k.KeyYaw(dan, "Body", 13f, 0);
+            k.KeyYaw(abi, "Body", 0f, 0); k.KeyYaw(abi, "Body", 6.6f, 0); k.KeyYaw(abi, "Body", 7.0f, 30f);
+            // Kira: lands, shakes, sits, trots a little circle in her bandages, then sits again looking up at them
+            k.Clips(kira, (KiraClip("fall", c.kira), 0f), (KiraClip("land", c.kira), .55f), (KiraClip("idle", c.kira), 1.0f), (KiraClip("walk", c.kira), 5.4f),
+                (KiraClip("idle", c.kira), 6.9f), (KiraClip("attack", c.kira), 9.2f), (KiraClip("idle", c.kira), 9.9f));
+            k.KeyYaw(kira, "Body", 0f, 0); k.KeyYaw(kira, "Body", 5.4f, 0); k.KeyYaw(kira, "Body", 6.2f, 140f); k.KeyYaw(kira, "Body", 6.9f, 20f);
+            k.Key(kira, "Body", "m_LocalPosition", 5.4f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 6.2f, new Vector3(.5f, 0, -.4f)); k.Key(kira, "Body", "m_LocalPosition", 6.9f, new Vector3(.2f, 0, -.6f));
+            k.Key(kira, "Body", "m_LocalPosition", EgyptArrivalLength, new Vector3(.2f, 0, -.6f));
+            // the necklace glows red
+            if (k.Necklaces.TryGetValue(dan, out var neck))
+            {
+                var holder = neck.gameObject;
+                float[] ts = { 0f, 11.4f, 11.8f, 12.2f, 12.6f, 13.0f, EgyptArrivalLength }; float[] ss = { 1f, 1f, 2.2f, 1.5f, 2.2f, 1.6f, 1.6f };
+                for (int i = 0; i < ts.Length; i++) k.Key(holder, "Shard", "m_LocalScale", ts[i], Vector3.one * ss[i]);
+            }
+            var kiraAt = new Vector3(1.2f, 0, .8f);
+            k.Shot("They land", 0f, 2.4f, new Vector3(-4.5f, 1.6f, -3.5f), new Vector3(0, 1f, 1f), 52f);
+            k.Shot("Egypt!", 2.4f, 5.2f, new Vector3(.4f, 1.9f, -4.2f), new Vector3(0, 6f, 60f), 50f, new Vector3(.2f, 2.6f, -6.5f));
+            k.Shot("New clothes", 5.2f, 7.0f, new Vector3(-.6f, 1.5f, 3.4f), new Vector3(-.7f, 1.2f, 0), 44f, new Vector3(-.5f, 1.45f, 2.8f));
+            k.Shot("A little mummy", 7.0f, 9.0f, kiraAt + new Vector3(-.2f, .5f, -1.3f), kiraAt + new Vector3(0, .3f, 0), 38f, kiraAt + new Vector3(-.15f, .42f, -1.05f));
+            k.Shot("They react", 9.0f, 11.3f, new Vector3(1.8f, 1.3f, -2.6f), new Vector3(-.4f, 1.1f, .4f), 48f);
+            k.Shot("The red shard", 11.3f, EgyptArrivalLength, new Vector3(.6f, 1.55f, 1.2f), new Vector3(0, 1.35f, 0), 36f, new Vector3(.45f, 1.5f, .95f));
+            k.Sound("camel_snort", 4.0f, .5f);
+            k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
+        }
+
+        // The film's big Egypt gag: they walk up to the Great Sphinx, the camera slowly reveals its face (Kira's), Dan does a big
+        // double-take between the Sphinx and mummy Kira (sitting in the same pose), Abi rolls her eyes. Comic timing over length. The root
+        // is the spot in front of the Sphinx (Egypt.GagSpot), +z toward it: its paws ~6 m ahead, its face ~21 m ahead and ~17 m up.
+        public const float SphinxGagLength = 10.5f;
+        public static void SphinxGag()
+        {
+            DataAssets.Ensure();
+            var c = EgyptCast; NecklaceModel.Tint = c.shard;
+            var k = new Kit("SphinxGag", SphinxGagLength);
+            var dan = k.Actor("Dan", c.dan, new Vector3(0, 0, -3f), 0);
+            var abi = k.Actor("Abi", c.abi, new Vector3(-1.5f, 0, -3.6f), 0);
+            var kira = k.Actor("Kira", c.kira, new Vector3(1.3f, 0, -2.8f), 0);
+            // they walk up (3 m)
+            foreach (var a in new[] { dan, abi, kira })
+            {
+                k.Key(a, "Body", "m_LocalPosition", 0f, Vector3.zero); k.Key(a, "Body", "m_LocalPosition", 3.2f, new Vector3(0, 0, 3f)); k.Key(a, "Body", "m_LocalPosition", SphinxGagLength, new Vector3(0, 0, 3f));
+            }
+            k.Clips(dan, (PeopleClip("walk"), 0f), (PeopleClip("idle"), 3.2f), (PeopleClip("look"), 4.6f), (PeopleClip("hurt"), 6.2f), (PeopleClip("idle"), 6.8f), (PeopleClip("cheer"), 9.0f));
+            k.Clips(abi, (PeopleClip("walk"), 0f), (PeopleClip("idle"), 3.2f), (PeopleClip("look"), 8.3f), (PeopleClip("idle"), 9.8f));
+            k.Clips(kira, (KiraClip("walk", c.kira), 0f), (KiraClip("idle", c.kira), 3.2f));
+            // Kira turns round and sits facing out, like the Sphinx (its face toward the party: -z)
+            k.KeyYaw(kira, "Body", 0f, 0); k.KeyYaw(kira, "Body", 4.8f, 0); k.KeyYaw(kira, "Body", 5.3f, 180f); k.KeyYaw(kira, "Body", SphinxGagLength, 180f);
+            // Dan's double-take: Sphinx (ahead), Kira (to his right, down), Sphinx, Kira!, then wide eyes at the camera
+            float[] dt = { 0f, 5.4f, 5.6f, 5.95f, 6.15f, 6.5f, 6.7f, 7.6f, 8.0f }; float[] dy = { 0f, 0f, 70f, 70f, 0f, 0f, 80f, 80f, 150f };
+            for (int i = 0; i < dt.Length; i++) k.KeyYaw(dan, "Body", dt[i], dy[i]);
+            k.Key(dan, "Body", "m_LocalPosition", 6.6f, new Vector3(0, 0, 3f)); k.Key(dan, "Body", "m_LocalPosition", 6.8f, new Vector3(.15f, -.08f, 2.9f)); k.Key(dan, "Body", "m_LocalPosition", 7.2f, new Vector3(0, 0, 3f));
+            // Abi rolls her eyes: a look up and away, a turn of the shoulders away from Dan
+            k.KeyYaw(abi, "Body", 0f, 0); k.KeyYaw(abi, "Body", 8.2f, 0); k.KeyYaw(abi, "Body", 8.6f, -55f); k.KeyYaw(abi, "Body", 9.6f, -55f); k.KeyYaw(abi, "Body", 10.2f, -20f);
+            var sphinxFace = new Vector3(0, 16.5f, 21f);
+            k.Shot("Walking up", 0f, 3.6f, new Vector3(.8f, 1.1f, -7.5f), new Vector3(0, 2.5f, 8f), 50f, new Vector3(.6f, .8f, -6.8f));
+            k.Shot("The reveal", 3.6f, 5.3f, new Vector3(.2f, .9f, -2f), sphinxFace + new Vector3(0, -6f, 0), 46f, new Vector3(.2f, .7f, -1.6f));   // tilting up toward the face
+            k.Shot("Its face", 5.3f, 5.9f, new Vector3(0, 9f, 2f), sphinxFace, 24f);
+            k.Shot("Double-take", 5.9f, 7.6f, new Vector3(.4f, 1.55f, 6.2f), new Vector3(.2f, 1.45f, 3f), 40f);
+            k.Shot("Same pose", 7.6f, 8.6f, new Vector3(1.35f, .55f, -1.2f), new Vector3(1.3f, 3.5f, 20f), 40f);   // little Kira in front, the Sphinx's face above: the same cat
+            k.Shot("Abi's not impressed", 8.6f, SphinxGagLength, new Vector3(-2.4f, 1.6f, 6.4f), new Vector3(-.9f, 1.4f, 2.6f), 42f);
+            k.Sound("camel_snort", 8.7f, .0f);
+            k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
+        }
+
+        static void SandPuff(Kit k, Vector3 at, float t0, float size)
+        {
+            var h = k.Holder("Sand puff", at, 0);
+            var m = Placeholders.Mat(new Color(.95f, .82f, .58f), "Glow");
+            for (int i = 0; i < 5; i++)
+            {
+                Placeholders.Prim(PrimitiveType.Sphere, h.transform, Vector3.zero, Vector3.one * .1f, m, name: "Bit" + i);
+                var dir = Quaternion.Euler(0, i * 72f, 0) * new Vector3(size * .6f, size * .25f, 0);
+                k.Key(h, "Bit" + i, "m_LocalPosition", t0, Vector3.zero); k.Key(h, "Bit" + i, "m_LocalPosition", t0 + .5f, dir);
+                k.Key(h, "Bit" + i, "m_LocalScale", t0, Vector3.one * .1f); k.Key(h, "Bit" + i, "m_LocalScale", t0 + .25f, Vector3.one * size * .6f); k.Key(h, "Bit" + i, "m_LocalScale", t0 + .8f, Vector3.one * .02f);
+            }
+            k.Show(h, t0, t0 + .8f);
         }
 
         // The story shard opens the portal (the test area). The root is the portal (its +z faces the heroes).

@@ -161,7 +161,7 @@ namespace ShardsOfTime
                 if (hv.magnitude > 1.5f && (stepTimer -= Time.deltaTime) <= 0)
                 {
                     stepTimer = Mathf.Lerp(.42f, .27f, hv.magnitude / Stats.runSpeed);
-                    Sfx.Play("footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
+                    Sfx.Play(Game.InEgypt ? "footstep_sand" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
                 }
             }
             if (swipeTimer > 0) { swipeTimer -= Time.deltaTime; if (swipeTimer <= 0) swipe.gameObject.SetActive(false); }
@@ -186,5 +186,5 @@ namespace ShardsOfTime
     }
 
     // Dan's and Abi's outfits (Round 3): AreaData.outfit names one per area
-    public static class Outfits { public const string Home = "home", IceAge = "iceage"; }
+    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt"; }
 }

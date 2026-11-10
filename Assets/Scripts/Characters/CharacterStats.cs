@@ -41,13 +41,13 @@ namespace ShardsOfTime
             {
                 case "Dan":
                     s.color = new Color(.22f, .48f, .92f); s.height = 1.8f; s.radius = .32f; s.runSpeed = 7f; s.acceleration = 45f; s.airControl = .5f;
-                    s.jumpHeight = 1.6f; s.swimSpeed = 3.6f; s.swimmer = false; s.breathSeconds = 10f;
+                    s.jumpHeight = 1.6f; s.swimSpeed = 3.6f; s.swimmer = false; s.breathSeconds = 16f;
                     s.attackName = "Punch"; s.attackDamage = 2; s.attackRange = 1.0f; s.attackRadius = .7f; s.attackCooldown = .45f; s.canPushHeavy = true;
                     s.lockedAbility = Abilities.GroundPound;
                     break;
                 case "Abi":
                     s.color = new Color(.93f, .36f, .62f); s.height = 1.65f; s.radius = .3f; s.runSpeed = 8.2f; s.acceleration = 55f; s.airControl = .85f;
-                    s.jumpHeight = 2.1f; s.swimSpeed = 4f; s.swimmer = false; s.breathSeconds = 12f;
+                    s.jumpHeight = 2.1f; s.swimSpeed = 4f; s.swimmer = false; s.breathSeconds = 16f;
                     s.attackName = "Kick"; s.attackDamage = 1; s.attackRange = 1.25f; s.attackRadius = .75f; s.attackCooldown = .35f;
                     s.lockedAbility = Abilities.DoubleJump; s.doubleJumpHeight = 1.6f;
                     break;
@@ -71,5 +71,8 @@ namespace ShardsOfTime
         public const string ChargedPunch = "ChargedPunch";   // Dan, Medieval Kingdom: breaks cracked rock walls
         public const string DeepDive = "DeepDive";           // everyone, Pirate Seas: a longer breath, deep water
         public const string WallJump = "WallJump";           // Abi, Steampunk: up narrow chimneys
+        // Round 6: Egypt
+        public const string Pounce = "Pounce";               // Kira, Bethlehem: a long pounce over wide gaps (Egypt's rooftop gaps wait for it)
+        public const string MummyHush = "MummyHush";         // mummy Kira (Egypt): mummies don't wake for her
     }
 }
