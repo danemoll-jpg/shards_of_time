@@ -17,11 +17,14 @@ namespace ShardsOfTime
     public sealed class CharacterImport : AssetPostprocessor
     {
         const string Dir = "Assets/Resources/Characters";
-        static readonly HashSet<string> Loops = new HashSet<string> { "idle", "walk", "run", "fall", "swim" };
+        static readonly HashSet<string> Loops = new HashSet<string> { "idle", "walk", "run", "fall", "swim", "stunned" };
 
         static bool Ours(string path) => path.Replace('\\', '/').StartsWith(Dir + "/");
-        static bool IsKira(string path) => Path.GetFileNameWithoutExtension(path).StartsWith("kira");
-        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_");
+        static bool IsKira(string path) => IsGeneric(path);
+        // Round 5: Kira's forms and the Ice Age creatures share Code's four-legged Blender rig (Generic, clips as takes)
+        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth" };
+        static bool IsGeneric(string path) { string n = Path.GetFileNameWithoutExtension(path); return n.StartsWith("kira") || System.Array.IndexOf(Creatures, n) >= 0; }
+        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_iceage");
         static bool IsClip(string path) => path.Replace('\\', '/').StartsWith(Dir + "/Clips/");
 
         // The people's clips (Round 3; frames as Blender / Mixamo number them, 30 fps; 0 = the whole take). loop; the vertical
@@ -41,6 +44,9 @@ namespace ShardsOfTime
             ["punch"] = new ClipSpec(), ["kick"] = new ClipSpec(), ["cheer"] = new ClipSpec(),
             ["hurt"] = new ClipSpec { first = 1, last = 20, bakeXZ = false },          // the first 0.6 s (the stumble back cut)
             ["fall_back"] = new ClipSpec(),                                            // Round 4: Dan's backward fall in the snow (cutscene)
+            // Round 5: the Violinist's own clips (his Mixamo set)
+            ["violinist_idle"] = new ClipSpec { loop = true }, ["violinist_play"] = new ClipSpec { loop = true }, ["violinist_walk"] = new ClipSpec { loop = true },
+            ["violinist_bow"] = new ClipSpec(), ["violinist_nod"] = new ClipSpec(),
         };
 
         void OnPreprocessModel()

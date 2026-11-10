@@ -32,6 +32,7 @@ namespace ShardsOfTime
         public float SpeedScale = 1f;                    // followers catching up run a bit faster
         public bool CanDoubleJump;                       // set by the party from the save (Abi's ability)
         public bool CanGroundPound;                      // set by the party from the save (Dan's, Round 4)
+        public bool CanDeepDive;                         // Round 5: everyone, once the deep dive is learned (Pirate Seas)
         public bool Pounding { get; private set; }       // the ground pound: a short hang, then straight down
         public int Pounds { get; private set; }
         public const float PoundSpeed = 26f, PoundHang = .14f;
@@ -96,7 +97,18 @@ namespace ShardsOfTime
             var hv = new Vector3(Velocity.x, 0, Velocity.z);
             var target = Vector3.ClampMagnitude(input.move, 1f) * s.runSpeed * SpeedScale;
             float accel = Grounded ? s.acceleration * (target.sqrMagnitude < .01f ? 1.3f : 1f) : s.acceleration * s.airControl;
-            hv = Vector3.MoveTowards(hv, target, accel * dt);
+            var slick = Grounded ? SlickIce.At(transform.position + Vector3.up * .2f) : null;   // Round 5: the frozen lake: slide
+            if (slick) { accel *= slick.grip; target *= 1.25f; }
+            var lane = slick ? new Vector3(slick.push.x, 0, slick.push.z) : Vector3.zero;
+            if (lane.sqrMagnitude > .01f)
+            {
+                // a skating lane: slide along it (little grip), steer across it with full grip
+                var f = lane.normalized; float hf = Vector3.Dot(hv, f), tf = Vector3.Dot(target, f);
+                var hl = hv - f * hf; var tl = target - f * tf;
+                hl = Vector3.MoveTowards(hl, tl, s.acceleration * dt); hf = Mathf.MoveTowards(hf, tf, accel * dt);
+                hv = hl + f * hf + lane * dt;
+            }
+            else hv = Vector3.MoveTowards(hv, target, accel * dt);
             float vy = Velocity.y;
 
             // Round 4: the ground pound (Dan): Dive in the air = a short hang, then straight down; landing makes the "pound" event
@@ -168,6 +180,8 @@ namespace ShardsOfTime
             else if (input.jumpHeld && !atSurface) target.y = s.swimSpeed * .8f;
             else if (atSurface || y > surfaceFeet - 1.2f) target.y = Mathf.Clamp((surfaceFeet - y) * 4f, -2f, 2.5f);   // float up to and at the surface
             else target.y = .5f;                                                                          // gentle rise
+            var deep = DeepWater.At(transform.position);                                                   // Round 5: too deep without the deep dive
+            if (deep && !CanDeepDive) { target.y = Mathf.Max(target.y, 2.6f); if (CompareTag("Player")) deep.Hint(); }
             if (atSurface && input.jumpPressed && !input.diveHeld)
             {
                 // leap out (onto a low edge)

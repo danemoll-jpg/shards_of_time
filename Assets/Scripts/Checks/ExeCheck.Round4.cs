@@ -80,8 +80,13 @@ namespace ShardsOfTime
             Ok(Cutscenes.Playing == "ActOne" && SaveGame.Exists, "New game starts Act I (save written)");
             foreach (var (t, n) in new[] { (2f, "02a_act1_evening"), (4.8f, "02b_act1_kira"), (7.1f, "02c_act1_swipe"), (9.1f, "02d_act1_shatter"), (12.5f, "02e_act1_vortex"), (16.2f, "02f_act1_pulled_in") })
             { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 25f); yield return Shot(n); if (t == 2f) MusicCheck("Act I", "act1"); }
-            yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= 18.85f, 6f);
-            Ok(Music.Track == null && (!Music.Current || Music.Current.volume < .02f), $"Act I's music faded out by the white-out (volume {(Music.Current ? Music.Current.volume : 0):0.00} at {Cutscenes.Director?.time:0.0} s)");
+            // Act I's music fades over the white-out: the fade starts at Game.ActOneMusicFadeAt (2.2 s), the track is gone after it
+            yield return WaitFor(() => Music.Track == null || !Cutscenes.Director, 25f);
+            double fadeAt = Cutscenes.Director ? Cutscenes.Director.time : -1;
+            yield return new WaitForSecondsRealtime(2.4f);
+            var act1 = Game.I.GetComponents<AudioSource>().Where(x => x.isPlaying && x.clip && x.clip.name == "act1").ToList();
+            Ok(fadeAt >= Game.ActOneMusicFadeAt - .1f && fadeAt < 18.3f && act1.All(x => x.volume < .02f),
+               $"Act I's music fades out over the white-out (fade from {fadeAt:0.00} s of 19; act1 {(act1.Count > 0 ? $"volume {act1.Max(x => x.volume):0.00}" : "stopped")} 2.4 s later)");
             yield return WaitFor(() => Cutscenes.Playing == "IceAgeArrival", 8f);
             Ok(!Cutscenes.LastSkipped && Cutscenes.LastDuration > 18f, $"Act I played to the end ({Cutscenes.LastDuration:0.0} s)");
             Ok(Cutscenes.Playing == "IceAgeArrival", "then the Ice Age arrival");
@@ -117,6 +122,7 @@ namespace ShardsOfTime
             Ok(M.Mode != MoveMode.Swim, $"out of the pond at {Fmt(Player.transform.position)}");
             yield return SwitchTo(0);
             yield return Shard("S04", XZ(-14, 62)); yield return Shard("S05", XZ(-4, 80)); yield return Shard("S06", XZ(10, 96));
+            yield return FrozenLake();
 
             Head("Item 4: the mammoth ridge (ride a mammoth to the shelf)");
             yield return Shard("R01", XZ(30, 120));
@@ -185,6 +191,7 @@ namespace ShardsOfTime
             yield return GoF(XZ(20, 239.5f), .4f);
             foreach (var z in new[] { 243.5f, 248f, 252.5f, 257f, 261.5f, 266f }) { float edge = z - 4.5f + 1.0f; yield return JumpTo(XZ(20, z), () => Player.transform.position.z > edge, 1f); }
             yield return OutOfRiver();
+            yield return GlacierClimb();
 
             Head("Item 4: the ice caves (dark; Kira's crawl tunnel; the ice wall)");
             yield return GoF(XZ(-8, 333)); yield return Go(XZ(-19, 333), .5f);
@@ -210,10 +217,10 @@ namespace ShardsOfTime
             yield return Shard("C05", XZ(-31, 362));
             int beforeWake = ShardsHere;
             bool gpBeforeWake = SaveGame.Current.Has(Abilities.GroundPound);
-            Ok(beforeWake >= 25, $"{beforeWake} shards without the ground pound, the double jump or Muscle Man (rule 2, play-through)");
+            Ok(beforeWake >= 35, $"{beforeWake} shards without the ground pound, the double jump or Muscle Man (rule 2, play-through; Round 5: 35 needed)");
             yield return Go(XZ(-31, 340), .8f); yield return Go(XZ(-27, 333), .8f); yield return Go(XZ(-16, 330), .8f);
 
-            Head("Items 5, 11: the necklace wakes (25 shards)");
+            Head("Items 5, 11: the necklace wakes (35 shards, Round 5)");
             yield return WaitFor(() => played.Contains("NecklaceWakes"), 8f);
             Ok(played.Contains("NecklaceWakes") && !gpBeforeWake, "out of the cave, the necklace wakes (cutscene NecklaceWakes, Ice Age actors)");
             yield return Wait(1.0f); yield return Shot("11a_necklace_wakes_1"); yield return Wait(2.2f); yield return Shot("11b_necklace_wakes_2");
@@ -266,6 +273,7 @@ namespace ShardsOfTime
             yield return Shard("H04", XZ(60, 426));
             yield return Shot("14_terrace_top");
             yield return Go(XZ(54, 430), .6f, 6f); yield return Go(XZ(36, 446), 1f, 10f);
+            yield return HotSpringWall();
 
             Head("Item 4: the standing stones, the frozen well, the story shard");
             yield return GoF(XZ(0, 456)); yield return Fight(14f, 30f);

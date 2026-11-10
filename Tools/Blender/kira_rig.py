@@ -28,7 +28,11 @@ from mathutils.kdtree import KDTree
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
 COUNTER_TURN = {'kira'}
-THIN = {'kira': 1}   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
+THIN = {'kira': 1}
+# Round 5, item 9: the Ice Age creatures get the same four-legged rig. Their real heights (metres): each is rigged at Kira's size
+# (0.5 m: every number here was tuned for her), then the armature is scaled back up for the export.
+CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4}
+TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
 FPS = 30
 LEGS = ('FL', 'FR', 'BL', 'BR')
 
@@ -95,6 +99,8 @@ def landmarks(ob, name):
         turn = math.atan2(face.x, -face.y)   # 0 = looking along -Y; + = turned toward +X
     # tail: behind the hips and above them
     tail = [c for c in co if c.y > yb and c.z > hi_b + .015]
+    if not tail:   # Round 5: a hanging tail (the wolf's) is below the back: behind the hind legs instead
+        tail = [c for c in co if c.y > yb + .05 and c.z > H * .12]
     if tail:
         base = min(tail, key=lambda c: c.z)
         tip = max(tail, key=lambda c: (c - base).length)
@@ -361,6 +367,14 @@ def clips(arm, L):
         for k in LEGS: p = merge(p, leg(k, -12 * c if k[0] == 'F' else 8 * c, 25 * c))
         return merge(p, tail_wave(0, 0, 40 * c), {'Head': [(X, -25 * c)], 'Neck': [(X, -10 * c)], 'Chest': [(X, -8 * c)]}), -.03 * c, .03 * c
     make('hurt', 12, hurt, False)
+
+    if L['name'] in CREATURES:   # Round 5: stunned (the ground pound): slumped, legs splayed, head wobbling
+        def stunned(t):
+            p = {}
+            bend = 12 if L['name'] == 'snow_critter' else 45   # the critter's stubby legs stretch its fur if bent far
+            for k in LEGS: p = merge(p, leg(k, 6 if k[0] == 'F' else -6, bend))
+            return merge(p, tail_wave(0, 0, -25), {'Head': [(Z, 18 * s(t)), (X, 14)], 'Neck': [(Z, 8 * s(t, .2)), (X, 10)], 'Chest': [(Z, 4 * s(t))]}), -.08 * H, 0
+        make('stunned', 40, stunned)
     return acts
 
 
@@ -422,12 +436,17 @@ def face_shots(arm, L, name, acts, cam):
 def run(name):
     bpy.ops.wm.open_mainfile(filepath=os.path.join(ROOT, 'SourceArt', 'Meshy', name, name + '.blend'))
     ob = bpy.data.objects[name]
+    grow = CREATURES.get(name, .5) / .5
+    if grow != 1:   # rig a creature at Kira's size; scaled back up for the export
+        ob.scale = (1 / grow,) * 3
+        bpy.ops.object.select_all(action='DESELECT'); ob.select_set(True); bpy.context.view_layer.objects.active = ob
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     L, co = landmarks(ob, name)
     # Round 5, item 1b: the mesh is rebuilt as one closed surface (Tools/Blender/closed_mesh.py) with Meshy's maps baked onto it,
     # so no camera sees a back face; the landmarks above come from Meshy's mesh (its texture finds the eyes)
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import closed_mesh
     out = os.path.join(ROOT, 'SourceArt', 'Rigged', name)
-    ob = closed_mesh.rebuild(ob, L['H'] * .005, 20000, out, thin=THIN.get(name, 0), log=log)   # 20k: fewer and the thin parts fold through themselves
+    ob = closed_mesh.rebuild(ob, L['H'] * .005, TRIS.get(name, 20000), out, thin=THIN.get(name, 0), log=log)   # 20k: fewer and the thin parts fold through themselves
     co = [ob.matrix_world @ v.co for v in ob.data.vertices]
     L['tail'] = [c for c in co if c.y > L['yb'] and c.z > L['hi_b'] + .015]
     arm = build(L)
@@ -437,6 +456,10 @@ def run(name):
     # (Round 4's reversed twins, mesh_fix.double_sheets, are not needed on a closed mesh: Round 5)
     parts = lods(ob)
     out = os.path.join(ROOT, 'SourceArt', 'Rigged', name); os.makedirs(out, exist_ok=True)
+    if grow != 1:
+        render(arm, L, name, acts)   # framed for Kira's size
+        arm.scale = (grow,) * 3      # the creature's real size (the mesh and LODs ride the armature)
+        bpy.context.view_layer.update()
     arm.animation_data.action = acts['idle'][0]
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(out, name + '_rig.blend'))
     bpy.ops.object.select_all(action='DESELECT')
@@ -447,8 +470,8 @@ def run(name):
                              bake_anim=True, bake_anim_use_all_actions=True, bake_anim_use_nla_strips=False,
                              bake_anim_force_startend_keying=True, bake_anim_simplify_factor=0)
     tris = [sum(len(p.vertices) - 2 for p in o.data.polygons) for o in parts]
-    log(f'{name}: {len(arm.data.bones)} bones (no ear bones), LOD triangles {tris}, clips {list(acts)} -> SourceArt/Rigged/{name}/model.fbx')
-    render(arm, L, name, acts)
+    log(f'{name}: {len(arm.data.bones)} bones (no ear bones), LOD triangles {tris}, clips {list(acts)}, scale x{grow:.2f} -> SourceArt/Rigged/{name}/model.fbx')
+    if grow == 1: render(arm, L, name, acts)
 
 
 for n in sys.argv[sys.argv.index('--') + 1:]:

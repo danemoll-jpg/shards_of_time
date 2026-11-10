@@ -19,6 +19,18 @@ namespace ShardsOfTime
         public string note;
     }
 
+    // Round 5, item 6: a place that opens with a later move. Visible on the first visit; `opens` = the shards / heart upgrade behind it.
+    [Serializable]
+    public sealed class GateData
+    {
+        public string id;
+        public string kind;                         // "double-jump ledge", "boulder", "cracked rock wall", "deep water", "wall-jump chimney"
+        public string needs;                        // the move (Abilities.*)
+        public Vector3 position;
+        public string[] opens = new string[0];
+        public string note;
+    }
+
     [Serializable]
     public sealed class AreaData
     {
@@ -43,6 +55,7 @@ namespace ShardsOfTime
         public bool heightsAreHints;
         public List<AreaData> areas = new List<AreaData>();
         public List<ShardSpot> shards = new List<ShardSpot>();
+        public List<GateData> gates = new List<GateData>();   // Round 5
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -56,12 +69,14 @@ namespace ShardsOfTime
             var ok = inArea.Where(s => s.requires.All(have.Contains)).ToList();
             var locked = inArea.Except(ok).Select(s => $"{s.id} needs {string.Join("+", s.requires)}");
             return (ok.Count, a.requirement, ok.Count >= a.requirement,
-                $"area {a.id} ({a.name}): {ok.Count} of {inArea.Count} shards reachable with [{string.Join(", ", a.firstVisit)}], requirement {a.requirement}" + (locked.Any() ? $"; locked: {string.Join(", ", locked)}" : ""));
+                $"area {a.id} ({a.name}): {ok.Count} of {inArea.Count} shards reachable with [{string.Join(", ", a.firstVisit)}], requirement {a.requirement}" + (locked.Any() ? $"; locked: {string.Join(", ", locked)}" : "") +
+                (gates.Count > 0 ? $"; gates: {string.Join(", ", gates.Select(g => $"{g.id} ({g.kind}, needs {g.needs}: {string.Join(" ", g.opens)})"))}" : ""));
         }
 
         public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : Defaults());
         public const string IceAge = "IceAge", Playground = "Playground";
 
+        // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
         // area, the valley "V". 40 small shards, 25 wake the necklace (DEFAULT). Shard y = the height of the surface it sits on (a hint:
         // the game raycasts down from 4 m above it and puts the shard 1 m over what it finds). Rule 2: the first visit has the three
@@ -70,9 +85,9 @@ namespace ShardsOfTime
         public static WorldData IceAgeDefaults()
         {
             var w = CreateInstance<WorldData>(); w.name = IceAge; w.worldId = IceAge; w.displayName = "The Ice Age"; w.heightsAreHints = true;
-            w.areas.Add(new AreaData { id = "V", name = "The Ice Age", requirement = 25, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce },
+            w.areas.Add(new AreaData { id = "V", name = "The Ice Age", requirement = 35, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce },
                 storyShard = new Vector3(0, 1.0f, 490f), storyShardColor = new Color(.25f, .55f, 1f), spawn = new Vector3(0, .3f, 12f), spawnYaw = 0,
-                kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(0, 0, 265), new Vector3(400, 300, 720)) });
+                kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(0, 0, 265), new Vector3(400, 300, 720)) });   // Round 5: requirement 25 -> 35 (60 shards)
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "V", position = new Vector3(x, y, z), requires = req, note = note });
             // the landing snowfield (z 0..110): the path, the half-frozen pond
             S("S01", 0, 0, 24, "snowfield path"); S("S02", -6, 0, 36, "snowfield path"); S("S03", 6, 0, 46, "snowfield path");
@@ -99,6 +114,36 @@ namespace ShardsOfTime
             S("T03", -49, 0, 484, "grotto behind the boulder", Abilities.MuscleMan);
             S("T04", 18, -3.5f, 478, "the frozen well (ground pound)", Abilities.GroundPound);
             S("T05", -7, 3.3f, 497, "on the stone lintel", Abilities.DoubleJump);
+            // Round 5, item 5: the frozen lake (the west basin, through the pass at z 100..130): skating lanes, holes in the ice, the deep
+            // part under the ice (deep dive, later), an ice hollow behind a boulder (Muscle Man, later)
+            S("L01", -133, 0, 118, "frozen lake: the skating lane"); S("L02", -133, 0, 150, "frozen lake: the skating lane");
+            S("L03", -133, 1.6f, 186, "frozen lake: the ice island at the lane's end"); S("L04", -101, 0, 172, "frozen lake: by the far hole");
+            S("L05", -118, -6, 96, "frozen lake: under the ice (dive in at the near hole)");
+            S("L06", -118, -28, 128, "frozen lake: the deep part (deep dive)", Abilities.DeepDive);
+            S("L07", -112, -28, 138, "frozen lake: the deep part (deep dive)", Abilities.DeepDive);
+            S("L08", -154, 0, 124, "frozen lake: the ice hollow behind the boulder", Abilities.MuscleMan);
+            // the glacier climb (east, through the gap at z 280..310): ice ledges up to the summit; two wall-jump chimneys; a high ledge
+            S("G01", 122, 5.2f, 286, "glacier: ledge 4"); S("G02", 130, 11.7f, 286, "glacier: ledge 9");
+            S("G03", 138, 18.2f, 278, "glacier: ledge 14"); S("G04", 148, 24.7f, 306, "glacier: the summit");
+            S("G05", 155, 24.7f, 312, "glacier: the summit, the view");
+            S("G06", 113.7f, 13, 301, "glacier: top of the near chimney (wall jump)", Abilities.WallJump);
+            S("G07", 113.7f, 13, 331, "glacier: top of the far chimney (wall jump)", Abilities.WallJump);
+            S("G08", 154, 27.9f, 318, "glacier: the high ledge over the summit (double jump)", Abilities.DoubleJump);
+            // the hot-spring grotto (east of the stones, behind a cracked rock wall: Dan's charged punch, later)
+            S("P01", 70, 0, 458, "hot-spring grotto", Abilities.ChargedPunch); S("P02", 78, 0, 458, "hot-spring grotto", Abilities.ChargedPunch);
+            S("P03", 70, 0, 470, "hot-spring grotto", Abilities.ChargedPunch); S("P04", 80, 0, 472, "hot-spring grotto", Abilities.ChargedPunch);
+            // item 6: the places later moves open (visible on the first visit)
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("IA-ledge-ridge", "double-jump ledge", Abilities.DoubleJump, new Vector3(8, 3.2f, 206), "the ridge's high ledge", "R08");
+            G("IA-ledge-vents", "double-jump ledge", Abilities.DoubleJump, new Vector3(60, 27.3f, 420), "the ice shelf over the top terrace", "H05");
+            G("IA-ledge-lintel", "double-jump ledge", Abilities.DoubleJump, new Vector3(-7, 3.3f, 497), "the stone lintel", "T05");
+            G("IA-ledge-glacier", "double-jump ledge", Abilities.DoubleJump, new Vector3(154, 27.9f, 318), "over the glacier's summit (Round 5)", "G08");
+            G("IA-boulder-grotto", "boulder", Abilities.MuscleMan, new Vector3(-43.5f, 0, 484), "the grotto by the stones", "T03");
+            G("IA-boulder-lake", "boulder", Abilities.MuscleMan, new Vector3(-148, 0, 124), "the ice hollow on the lake's west shore (Round 5)", "L08");
+            G("IA-rock-hotspring", "cracked rock wall", Abilities.ChargedPunch, new Vector3(62, 0, 464), "the hot-spring grotto (Round 5)", "P01", "P02", "P03", "P04", "IA-H2");
+            G("IA-deep-lake", "deep water", Abilities.DeepDive, new Vector3(-118, -8, 130), "the deep part under the lake (Round 5)", "L06", "L07");
+            G("IA-chimney-near", "wall-jump chimney", Abilities.WallJump, new Vector3(113, 0, 301), "the glacier's near chimney (Round 5)", "G06");
+            G("IA-chimney-far", "wall-jump chimney", Abilities.WallJump, new Vector3(113, 0, 331), "the glacier's far chimney (Round 5)", "G07");
             return w;
         }
 

@@ -13,6 +13,9 @@ Materials are only names: the game colours each part by the word after "__" (Wor
 
 The layout (the same numbers as World/IceAge.cs, which places the gameplay on top by raycasting onto this ground):
   the valley floor |x| < ~64 from the south wall (z -30) to the stone circle (z 490), cliffs either side;
+  Round 5: the frozen lake's basin (x -162..-88, z 36..214; the lake x -142..-94, z 58..192, 8 m deep, 30 m round (-118, 133))
+  through a pass (x -96..-56, z 98..132); the glacier floor (x 88..160, z 266..374) through a gap (x 56..96, z 280..310); the
+  hot-spring grotto's footprint (x 56..86, z 450..478).
   the pond (22, 55), r 13, 3.2 m deep; the gorge across the valley at z 240..264 (floor -10 at z 246..258) with a ramp
   out on the south side at x 44..54; the ice cave's footprint (x -62..-24, z 312..368) sunk to -4.5 (the cave's floor and
   the pit under its cracked ice are built by the game); the frozen well (18, 478) r 3; flat spots at the start and the
@@ -23,7 +26,7 @@ from mathutils import Vector, noise
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'Assets', 'Resources', 'World')
-SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round4', 'world')
+SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'world')
 X0, X1, Z0, Z1, STEP = -170.0, 170.0, -70.0, 600.0, 2.5
 
 
@@ -33,6 +36,14 @@ def sstep(t):
 
 def n2(x, z, s, o=0.0):
     return noise.noise(Vector((x / s + o, z / s - o, .37 * o)))
+
+
+def carve(h, x, z, x0, x1, z0, z1, floor, edge, rough=.25):
+    """Round 5: flatten a rectangle to `floor`, blending back over `edge` metres."""
+    if x0 - edge < x < x1 + edge and z0 - edge < z < z1 + edge:
+        k = sstep(min(x - (x0 - edge), (x1 + edge) - x, z - (z0 - edge), (z1 + edge) - z) / edge)
+        h = h * (1 - k) + (floor + rough * n2(x, z, 13, 4.4)) * k
+    return h
 
 
 def height(x, z):
@@ -67,6 +78,18 @@ def height(x, z):
     # the frozen well near the stone circle
     r = math.hypot(x - 18, z - 478)
     if r < 4.5: h = h * sstep((r - 3) / 1.5) - 3.5 * (1 - sstep((r - 3) / 1.5))
+    # Round 5: the frozen lake's basin to the west (through a pass at z 98..132), the glacier's floor to the east (through a gap at
+    # z 280..310), the hot-spring grotto's footprint east of the stones. The game builds the lake's ice, the ledges and the grotto.
+    h = carve(h, x, z, -96, -56, 98, 132, 0, 6, 0)    # the pass (flat: the ice meets it level)
+    h = carve(h, x, z, -162, -88, 36, 214, 0, 8, 0)   # the basin
+    if -140 <= x <= -96 and 60 <= z <= 190:           # the lake: 8 m of water under the ice (whose edge rests on the shore), a 30 m deep part
+        k = sstep(min(x + 140, -96 - x, z - 60, 190 - z) / 4.0)
+        h = h * (1 - k) - 8 * k
+        r = math.hypot(x + 118, z - 133)
+        if r < 16: h = min(h, -8 - 22 * sstep((16 - r) / 6.0))
+    h = carve(h, x, z, 56, 96, 280, 310, 0, 6)        # the glacier gap
+    h = carve(h, x, z, 88, 160, 266, 374, 0, 8)       # the glacier floor (north of the gorge)
+    h = carve(h, x, z, 56, 86, 450, 478, 0, 4)        # the grotto
     return h
 
 

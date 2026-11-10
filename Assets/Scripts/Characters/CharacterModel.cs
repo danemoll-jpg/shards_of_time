@@ -21,6 +21,25 @@ namespace ShardsOfTime
             return go;
         }
 
+        // Round 5: a creature's model (wolf, snow_critter, mammoth) on its placeholder. The placeholder's shapes move into a hidden
+        // "Graybox" child (kept: the fallback when the model is missing); `keep` names children that stay (the mammoth's Back collider,
+        // its renderer hidden). Returns the model's animator, or null (placeholder shown).
+        public static CreatureAnimator Creature(Transform t, string model, float walk, float run, params string[] keep)
+        {
+            if (!Exists(model)) return null;
+            var gray = new GameObject("Graybox").transform; gray.SetParent(t, false);
+            var kids = new System.Collections.Generic.List<Transform>(); foreach (Transform c in t) if (c != gray) kids.Add(c);
+            foreach (var c in kids)
+            {
+                if (System.Array.IndexOf(keep, c.name) >= 0) { foreach (var r in c.GetComponentsInChildren<Renderer>()) r.enabled = false; continue; }
+                if (c.GetComponent<ParticleSystem>() || c.GetComponent<Light>()) continue;
+                c.SetParent(gray, true);
+            }
+            gray.gameObject.SetActive(false);
+            var go = Spawn(model, t);
+            return CreatureAnimator.Attach(go, model, null, walk, run);
+        }
+
         // the model alone (no clips playing): the game's heroes (Build) and the cutscene actors (Editor/CutsceneAuthoring.cs)
         public static GameObject Spawn(string model, Transform parent, float footOffset = 0f)
         {

@@ -41,6 +41,7 @@ namespace ShardsOfTime
             {
                 h.Motor.CanDoubleJump = h.Stats.lockedAbility == Abilities.DoubleJump && SaveGame.Current.Has(Abilities.DoubleJump);
                 h.Motor.CanGroundPound = h.Stats.lockedAbility == Abilities.GroundPound && SaveGame.Current.Has(Abilities.GroundPound);   // Round 4
+                h.Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive);   // Round 5 (everyone)
             }
         }
 

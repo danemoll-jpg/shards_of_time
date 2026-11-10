@@ -14,7 +14,7 @@ namespace ShardsOfTime
     // (attack / punch / kick), hurt, cheer. Landing and cheering stop as soon as the hero runs off.
     public sealed class CreatureAnimator : MonoBehaviour
     {
-        public static readonly string[] KiraClips = { "idle", "walk", "run", "jump", "fall", "land", "swim", "attack", "hurt" };
+        public static readonly string[] KiraClips = { "idle", "walk", "run", "jump", "fall", "land", "swim", "attack", "hurt", "stunned" };
         public static readonly string[] PeopleClips = { "idle", "walk", "run_slow", "run", "jump", "fall", "land", "land_hard", "swim", "tread", "push", "punch", "kick", "hurt", "cheer" };
         static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer" };
         static readonly HashSet<string> UpperBody = new HashSet<string> { "punch", "cheer", "hurt" };
@@ -43,13 +43,16 @@ namespace ShardsOfTime
         (int i, float speed)[] gait; float gaitSeen = -10f;
         string oneShot; float oneShotStart, oneShotEnd; bool oneShotUpper;
 
-        public static CreatureAnimator Attach(GameObject model, string resource, CharacterMotor motor)
+        // Round 5: a creature with no motor (enemies, mammoths) says what to play: a loop name (null = idle / gait by speed) and its speed
+        public System.Func<(string loop, float speed)> Drive;
+
+        public static CreatureAnimator Attach(GameObject model, string resource, CharacterMotor motor, float walk = 1.2f, float run = 7.6f)
         {
             var anim = model.GetComponentInChildren<Animator>() ?? model.AddComponent<Animator>();
             anim.applyRootMotion = false; anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;   // three heroes: cheap; and a batch-mode check only draws at screenshots
             bool human = anim.avatar && anim.avatar.isHuman;
             var all = Resources.LoadAll<AnimationClip>(human ? "Characters/Clips" : "Characters/" + resource);
-            var c = model.AddComponent<CreatureAnimator>(); c.motor = motor; c.Humanoid = human;
+            var c = model.AddComponent<CreatureAnimator>(); c.motor = motor; c.Humanoid = human; c.WalkSpeed = walk; c.RunSpeed = run;
             if (human)
             {
                 var hips = anim.GetBoneTransform(HumanBodyBones.Hips);
@@ -117,7 +120,7 @@ namespace ShardsOfTime
 
         void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
 
-        float FlatSpeed { get { if (!motor) return 0; var v = motor.Velocity; v.y = 0; return v.magnitude; } }
+        float FlatSpeed { get { if (!motor) return Drive != null ? Drive().speed : 0; var v = motor.Velocity; v.y = 0; return v.magnitude; } }
         bool Moving => motor && (FlatSpeed > 1f || (!motor.Grounded && motor.Mode != MoveMode.Swim));
         public bool Has(string clip) => index.ContainsKey(clip == "attack" ? AttackClip : clip);
 
@@ -139,7 +142,7 @@ namespace ShardsOfTime
 
         string Loop(float s)
         {
-            if (!motor) return "idle";
+            if (!motor) { var d = Drive != null ? Drive().loop : null; return d ?? (s < .25f ? "idle" : "gait"); }
             if (motor.Mode == MoveMode.Swim) return (s > .6f || Mathf.Abs(motor.Velocity.y) > 1f || !index.ContainsKey("tread")) ? "swim" : "tread";
             if (!motor.Grounded) return "fall";
             if (Time.time - motor.LastPush < .2f && index.ContainsKey("push")) return "push";

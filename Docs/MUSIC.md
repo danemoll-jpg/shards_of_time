@@ -14,11 +14,9 @@ follows this, except the vortex (mysterious, not quirky; Dan 2026-11-09).
 
 ## The Ice Age theme (Suno, for Dan) — Round 4
 
-In the game now: a stand-in made with ElevenLabs' music API (`Assets/Resources/Music/iceage.mp3`, 90 s,
-`python Tools/make_sounds.py --only iceage --force` makes it again). The real theme is Dan's Suno track: save it as
-`Assets/Resources/Music/iceage.mp3` (over the stand-in) and the next build plays it. The game loops it seamlessly (the
-last 3 s crossfade into the start, `Assets/Scripts/Audio/Music.cs`), so it doesn't need a perfect loop point, but an
-ending that doesn't fade to silence loops best.
+**In the game (Round 5): Dan's Suno track** `Assets/Resources/Music/iceage.mp3` (3:00; Code's ElevenLabs stand-in is gone and
+`make_sounds.py` no longer makes level music). It starts with the arrival cutscene and loops in the valley (the last 3 s
+crossfade into the start, `Assets/Scripts/Audio/Music.cs`), so it doesn't need a perfect loop point.
 
 Suno prompt (instrumental, 2-3 minutes):
 
@@ -35,6 +33,17 @@ Style tags: `whimsical, cartoon, playful, quirky, pizzicato, xylophone, clarinet
 
 Under the music: the wind ambience (`Assets/Resources/Sounds/wind_loop.mp3`, ElevenLabs). Volume: Settings > Music volume.
 
+
+## Where each track plays (Round 5, `Game.MusicFor` in `Assets/Scripts/Core/Game.cs`)
+
+| File | Plays | Notes |
+|---|---|---|
+| `title.mp3` (3:00) | the title screen | crossfades to Act I on New game |
+| `act1.mp3` (22.4 s) | `ActOne` from its start | fades out over 2.2 s from 16.6 s, silent by the full white-out (18.8 s) |
+| `iceage.mp3` (3:00) | from the arrival, then the valley (loops) | the wind ambience under it |
+| `vortex.mp3` (3:00) | inside the vortex space (loops) | crossfades in when the party enters, back to the Ice Age when it leaves |
+
+A missing file is silence (nothing is generated in its place).
 
 ## Act I cutscene (Suno, for Dan) — planning chat, 2026-11-09
 

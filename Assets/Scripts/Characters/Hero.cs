@@ -57,7 +57,7 @@ namespace ShardsOfTime
         void OnDestroy() => Health.Hurt -= OnHurt;
         void OnHurt() { if (IsPlayer && Anim) Anim.Trigger("hurt"); }
 
-        public bool HasAbility(string id) => Form && Form.Has(id);
+        public bool HasAbility(string id) => (Form && Form.Has(id)) || (Stats.lockedAbility == id && SaveGame.Current.Has(id));   // a form's, or this hero's learned move (Round 5)
         public void Cheer() { if (Anim) Anim.Trigger("cheer"); }
 
         // Dan's / Abi's outfit (Round 3): swaps the model (Resources/Characters/<name>_<outfit>.fbx), the same way Kira's form does; Dan's
@@ -144,6 +144,8 @@ namespace ShardsOfTime
                 if (e) e.Hit(Stats.attackDamage, transform.forward, Stats.attackName);
                 var ice = col.GetComponentInParent<IceWall>();
                 if (ice) { PlayLog.Line($"{Stats.displayName}'s {Stats.attackName} reaches ice wall {ice.id}"); ice.Claw(this); }
+                var rock = col.GetComponentInParent<RockWall>();
+                if (rock) rock.Punch(this);   // Round 5: only the charged punch (later) breaks it
             }
             return true;
         }

@@ -111,7 +111,7 @@ namespace ShardsOfTime
     public sealed class Mammoth : MonoBehaviour
     {
         public const float BackTop = 4.0f;
-        Transform[] legs; float phase;
+        Transform[] legs; float phase; CreatureAnimator anim;
         public static readonly List<Mammoth> All = new List<Mammoth>();
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
@@ -145,6 +145,9 @@ namespace ShardsOfTime
                 m.legs[i] = pivot;
             }
             Placeholders.Prim(PrimitiveType.Capsule, t, new Vector3(0, 2.9f, -2.3f), new Vector3(.25f, .5f, .25f), dark, name: "Tail").transform.localRotation = Quaternion.Euler(-30, 0, 0);
+            // Round 5: the Meshy mammoth (Code's rig) when it exists; the flat Back stays the ride (its box hidden)
+            m.anim = CharacterModel.Creature(t, "mammoth", 2f, 6f, "Back");
+            if (m.anim) { float sp = speed; m.anim.Drive = () => (null, sp); }
             return m;
         }
 

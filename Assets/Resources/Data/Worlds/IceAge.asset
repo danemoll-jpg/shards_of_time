@@ -18,7 +18,7 @@ MonoBehaviour:
   areas:
   - id: V
     name: The Ice Age
-    requirement: 25
+    requirement: 35
     firstVisit:
     - Dan
     - Abi
@@ -245,3 +245,189 @@ MonoBehaviour:
     requires:
     - DoubleJump
     note: on the stone lintel
+  - id: L01
+    area: V
+    position: {x: -133, y: 0, z: 118}
+    requires: []
+    note: 'frozen lake: the skating lane'
+  - id: L02
+    area: V
+    position: {x: -133, y: 0, z: 150}
+    requires: []
+    note: 'frozen lake: the skating lane'
+  - id: L03
+    area: V
+    position: {x: -133, y: 1.6, z: 186}
+    requires: []
+    note: 'frozen lake: the ice island at the lane''s end'
+  - id: L04
+    area: V
+    position: {x: -101, y: 0, z: 172}
+    requires: []
+    note: 'frozen lake: by the far hole'
+  - id: L05
+    area: V
+    position: {x: -118, y: -6, z: 96}
+    requires: []
+    note: 'frozen lake: under the ice (dive in at the near hole)'
+  - id: L06
+    area: V
+    position: {x: -118, y: -28, z: 128}
+    requires:
+    - DeepDive
+    note: 'frozen lake: the deep part (deep dive)'
+  - id: L07
+    area: V
+    position: {x: -112, y: -28, z: 138}
+    requires:
+    - DeepDive
+    note: 'frozen lake: the deep part (deep dive)'
+  - id: L08
+    area: V
+    position: {x: -154, y: 0, z: 124}
+    requires:
+    - MuscleMan
+    note: 'frozen lake: the ice hollow behind the boulder'
+  - id: G01
+    area: V
+    position: {x: 122, y: 5.2, z: 286}
+    requires: []
+    note: 'glacier: ledge 4'
+  - id: G02
+    area: V
+    position: {x: 130, y: 11.7, z: 286}
+    requires: []
+    note: 'glacier: ledge 9'
+  - id: G03
+    area: V
+    position: {x: 138, y: 18.2, z: 278}
+    requires: []
+    note: 'glacier: ledge 14'
+  - id: G04
+    area: V
+    position: {x: 148, y: 24.7, z: 306}
+    requires: []
+    note: 'glacier: the summit'
+  - id: G05
+    area: V
+    position: {x: 155, y: 24.7, z: 312}
+    requires: []
+    note: 'glacier: the summit, the view'
+  - id: G06
+    area: V
+    position: {x: 113.7, y: 13, z: 301}
+    requires:
+    - WallJump
+    note: 'glacier: top of the near chimney (wall jump)'
+  - id: G07
+    area: V
+    position: {x: 113.7, y: 13, z: 331}
+    requires:
+    - WallJump
+    note: 'glacier: top of the far chimney (wall jump)'
+  - id: G08
+    area: V
+    position: {x: 154, y: 27.9, z: 318}
+    requires:
+    - DoubleJump
+    note: 'glacier: the high ledge over the summit (double jump)'
+  - id: P01
+    area: V
+    position: {x: 70, y: 0, z: 458}
+    requires:
+    - ChargedPunch
+    note: hot-spring grotto
+  - id: P02
+    area: V
+    position: {x: 78, y: 0, z: 458}
+    requires:
+    - ChargedPunch
+    note: hot-spring grotto
+  - id: P03
+    area: V
+    position: {x: 70, y: 0, z: 470}
+    requires:
+    - ChargedPunch
+    note: hot-spring grotto
+  - id: P04
+    area: V
+    position: {x: 80, y: 0, z: 472}
+    requires:
+    - ChargedPunch
+    note: hot-spring grotto
+  gates:
+  - id: IA-ledge-ridge
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 8, y: 3.2, z: 206}
+    opens:
+    - R08
+    note: the ridge's high ledge
+  - id: IA-ledge-vents
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 60, y: 27.3, z: 420}
+    opens:
+    - H05
+    note: the ice shelf over the top terrace
+  - id: IA-ledge-lintel
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: -7, y: 3.3, z: 497}
+    opens:
+    - T05
+    note: the stone lintel
+  - id: IA-ledge-glacier
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 154, y: 27.9, z: 318}
+    opens:
+    - G08
+    note: over the glacier's summit (Round 5)
+  - id: IA-boulder-grotto
+    kind: boulder
+    needs: MuscleMan
+    position: {x: -43.5, y: 0, z: 484}
+    opens:
+    - T03
+    note: the grotto by the stones
+  - id: IA-boulder-lake
+    kind: boulder
+    needs: MuscleMan
+    position: {x: -148, y: 0, z: 124}
+    opens:
+    - L08
+    note: the ice hollow on the lake's west shore (Round 5)
+  - id: IA-rock-hotspring
+    kind: cracked rock wall
+    needs: ChargedPunch
+    position: {x: 62, y: 0, z: 464}
+    opens:
+    - P01
+    - P02
+    - P03
+    - P04
+    - IA-H2
+    note: the hot-spring grotto (Round 5)
+  - id: IA-deep-lake
+    kind: deep water
+    needs: DeepDive
+    position: {x: -118, y: -8, z: 130}
+    opens:
+    - L06
+    - L07
+    note: the deep part under the lake (Round 5)
+  - id: IA-chimney-near
+    kind: wall-jump chimney
+    needs: WallJump
+    position: {x: 113, y: 0, z: 301}
+    opens:
+    - G06
+    note: the glacier's near chimney (Round 5)
+  - id: IA-chimney-far
+    kind: wall-jump chimney
+    needs: WallJump
+    position: {x: 113, y: 0, z: 331}
+    opens:
+    - G07
+    note: the glacier's far chimney (Round 5)

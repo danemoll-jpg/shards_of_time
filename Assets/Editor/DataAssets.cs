@@ -31,6 +31,8 @@ namespace ShardsOfTime
             else Upgrade(AssetDatabase.LoadAssetAtPath<WorldData>(wp));
             // Round 4: the Ice Age (made once; then Dan's to edit)
             string ia = Data + "/Worlds/IceAge.asset";
+            // Round 5: the bigger valley (60 shards, requirement 35, gates as data): a Round 4 asset (no gates) is made again
+            if (File.Exists(ia) && AssetDatabase.LoadAssetAtPath<WorldData>(ia) is WorldData old && old.gates.Count == 0) { AssetDatabase.DeleteAsset(ia); Debug.Log("DataAssets: IceAge.asset remade for Round 5"); }
             if (!File.Exists(ia)) AssetDatabase.CreateAsset(WorldData.IceAgeDefaults(), ia);
             // Round 4: Dan learns the ground pound (an existing Dan.asset had no locked ability)
             var danStats = AssetDatabase.LoadAssetAtPath<CharacterStats>(Data + "/Characters/Dan.asset");

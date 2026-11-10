@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -36,9 +37,14 @@ namespace ShardsOfTime
             Physics.SyncTransforms();
 
             Snowfield(); Ridge(); River(); Cave(prog); Vents(); Stones(prog);
+            Lake(prog); Glacier(); Grotto(save, prog);   // Round 5
             // invisible walls round the valley (the foothills to the north and the cliff tops are not part of it)
+            // (Round 5: openings into the lake's basin (west, z 98..132) and the glacier (east, z 280..310), walled round too)
             foreach (var (c, s) in new[] { (new Vector3(0, 40, 560), new Vector3(400, 120, 4)), (new Vector3(0, 40, -45), new Vector3(400, 120, 4)),
-                                           (new Vector3(-92, 40, 260), new Vector3(4, 120, 640)), (new Vector3(92, 40, 260), new Vector3(4, 120, 640)) })
+                                           (new Vector3(-92, 40, 26.5f), new Vector3(4, 120, 143)), (new Vector3(-92, 40, 346), new Vector3(4, 120, 428)),
+                                           (new Vector3(92, 40, 117.5f), new Vector3(4, 120, 325)), (new Vector3(92, 40, 435), new Vector3(4, 120, 250)),
+                                           (new Vector3(-165, 40, 125), new Vector3(4, 120, 186)), (new Vector3(-128.5f, 40, 32), new Vector3(77, 120, 4)), (new Vector3(-128.5f, 40, 218), new Vector3(77, 120, 4)),
+                                           (new Vector3(165, 40, 320), new Vector3(4, 120, 116)), (new Vector3(128.5f, 40, 262), new Vector3(77, 120, 4)), (new Vector3(128.5f, 40, 378), new Vector3(77, 120, 4)) })
                 Box("Valley boundary", c, s, Color.clear, "Water").GetComponent<Renderer>().enabled = false;
             Physics.SyncTransforms();
 
@@ -279,6 +285,112 @@ namespace ShardsOfTime
             Slab("Lintel", -10, -4, 496, 498, 3.3f, 2.8f, "Stone");
         }
 
+        // ---- Round 5, item 5: the frozen lake (the west basin, through the pass at z 98..132)
+        static void Lake(WorldProgress prog)
+        {
+            Cp("IA-lake", -74, 115, 270);
+            Hint(new Vector3(-84, 0, 115), 7f, () => "A frozen lake! The ice is slippery: run, and ride the skating lane.");
+            Hint(new Vector3(-118, 0, 133), 6f, () => "The water under this hole goes down and down... too deep to dive, for now.");
+            // the water: 8 m under the ice, and the deep part (30 m) that pushes divers back up without the deep dive
+            var water = Box("Lake water", new Vector3(-118, -4.25f, 125), new Vector3(48, 7.5f, 134), new Color(.3f, .55f, .85f, .55f), "Water", false);
+            water.gameObject.layer = 4; water.gameObject.AddComponent<WaterVolume>();
+            var deepW = Box("Lake deep water", new Vector3(-118, -19.25f, 133), new Vector3(32, 22.5f, 32), new Color(.2f, .4f, .75f, .55f), "Water", false);
+            deepW.gameObject.layer = 4; deepW.gameObject.AddComponent<WaterVolume>();
+            var deep = Box("Deep water (deep dive)", new Vector3(-118, -19f, 133), new Vector3(32, 22f, 32), Color.clear, "Water", false);
+            deep.GetComponent<Renderer>().enabled = false; deep.gameObject.layer = 2; deep.gameObject.AddComponent<DeepWater>();
+            // the ice sheet (top 0) with three holes: near (dive under the ice), far, and over the deep part
+            IceSheet(-142, -94, 58, 192, new[] { new Rect(-121, 82, 6, 6), new Rect(-104, 157, 6, 6), new Rect(-121, 130, 6, 6) });
+            // slick ice over the whole lake; the skating lane drives you north to the ramp and the island
+            var slick = Box("Slick ice", new Vector3(-118, .5f, 125), new Vector3(48, 2f, 134), Color.clear, "Water", false);
+            slick.GetComponent<Renderer>().enabled = false; slick.gameObject.layer = 2; slick.gameObject.AddComponent<SlickIce>().grip = .3f;
+            var lane = Box("Skating lane", new Vector3(-133, .5f, 120), new Vector3(6, 2f, 112), Color.clear, "Water", false);
+            lane.GetComponent<Renderer>().enabled = false; lane.gameObject.layer = 2; var ls = lane.gameObject.AddComponent<SlickIce>(); ls.push = new Vector3(0, 0, 6f); ls.grip = .35f;   // Round 5 tuning: at 10% grip nobody could steer
+            for (int i = 0; i < 14; i++) foreach (var x in new[] { -136.3f, -129.7f })
+                Box("Lane mark", new Vector3(x, .03f, 68 + i * 8), new Vector3(.4f, .06f, 4f), new Color(.45f, .7f, 1f), "Lit", false);
+            var ramp = Placeholders.Prim(PrimitiveType.Cube, root, new Vector3(-133, .7f, 175), new Vector3(6, .4f, 6.4f), WorldArt.Mat("Ice"), true, "Ice ramp");
+            ramp.transform.rotation = Quaternion.Euler(-15, 0, 0);
+            Slab("Ice island", -136, -130, 178, 190, 1.6f, -1);
+            // the ice hollow on the west shore, behind a boulder (Muscle Man, later)
+            Slab("Hollow wall W", -162, -160, 116, 132, 4f, -1); Slab("Hollow wall S", -162, -150, 116, 118, 4f, -1); Slab("Hollow wall N", -162, -150, 130, 132, 4f, -1);
+            Slab("Hollow front S", -151, -150, 118, 121.5f, 4f, -1); Slab("Hollow front N", -151, -150, 126.5f, 130, 4f, -1); Slab("Hollow roof", -162, -150, 116, 132, 5f, 4f);
+            var boulder = WorldArt.Prop("iceage_props", "Rock2", root, OnGround(-148, 124) + Vector3.down * .2f, 90, 1f, true);
+            if (boulder) { boulder.name = "Boulder (needs Muscle Man)"; boulder.transform.localScale = Vector3.Scale(boulder.transform.localScale, new Vector3(2.4f, 1.6f, 2.6f)); boulder.AddComponent<Boulder>(); }
+            foreach (var (x, z, s) in new[] { (-150f, 60f, 1.1f), (-90f, 200f, .9f), (-156f, 180f, 1.3f), (-96f, 50f, .8f) }) WorldArt.Prop("iceage_props", "IceCrystal", root, OnGround(x, z) + Vector3.down * .2f, x * 5, s);
+            foreach (var (x, z, s) in new[] { (-152f, 44f, 1.2f), (-158f, 96f, 1.4f), (-150f, 206f, 1.1f), (-92f, 208f, 1.3f), (-90f, 44f, 1.0f) }) WorldArt.Prop("iceage_props", "Pine", root, OnGround(x, z) + Vector3.down * .2f, x * 3, s);
+            foreach (var (x, z, s) in new[] { (-146f, 200f, 1.4f), (-158f, 70f, 1.1f), (-92f, 90f, .9f) }) Rock(x, z, s, x * 7, 2);
+        }
+
+        // the lake's ice: a sheet (top 0, 0.5 m thick) over x0..x1, z0..z1 with rectangular holes, as strips
+        static void IceSheet(float x0, float x1, float z0, float z1, Rect[] holes)
+        {
+            var zs = new List<float> { z0, z1 };
+            foreach (var h in holes) { zs.Add(h.yMin); zs.Add(h.yMax); }
+            zs = zs.Distinct().OrderBy(v => v).ToList();
+            for (int i = 0; i < zs.Count - 1; i++)
+            {
+                float a = zs[i], b = zs[i + 1]; float mid = (a + b) / 2;
+                var cuts = holes.Where(h => mid > h.yMin && mid < h.yMax).OrderBy(h => h.xMin).ToList();
+                float x = x0;
+                foreach (var h in cuts) { if (h.xMin > x) Slab("Lake ice", x, h.xMin, a, b, .05f, -.5f, "Ice"); x = Mathf.Max(x, h.xMax); }
+                if (x1 > x) Slab("Lake ice", x, x1, a, b, .05f, -.5f, "Ice");
+            }
+        }
+
+        // ---- the glacier climb (east, through the gap at z 280..310): 18 ice ledges (three rows side by side) zigzag up to the summit (24.7 m), a view over
+        // the valley; two wall-jump chimneys (later) and a high ledge over the summit (double jump, later)
+        public const float LedgeStep = 1.3f;
+        static void Glacier()
+        {
+            Cp("IA-glacier", 86, 295, 90);
+            Hint(new Vector3(98, 0, 295), 7f, () => $"The glacier! Climb the ice ledges ({B(Controls.Act.Jump)}) all the way to the top.");
+            Hint(new Vector3(108, 0, 316), 5f, () => "A narrow chimney of ice, far too high to climb... someone who can jump off walls could do it.");
+            for (int i = 0; i < 18; i++)
+            {
+                int row = i / 6, j = i % 6; float x = 118 + row * 8, z = row % 2 == 0 ? 272 + j * 4 : 292 - j * 4;
+                Slab("Glacier ledge " + (i + 1), x, x + 8, z, z + 4, LedgeStep * (i + 1), -1, "Ice");
+            }
+            Slab("Glacier summit", 138, 158, 296, 316, LedgeStep * 19, -1);
+            Slab("Glacier wall", 158, 163, 264, 376, 32f, -1, "Ice");
+            Slab("High ledge (double jump)", 152, 158, 316, 320, LedgeStep * 19 + 3.2f, LedgeStep * 19 + 2.4f, "Ice");
+            foreach (var cz in new[] { 300f, 330f })   // the chimneys: open to the west, 2 m inside, a ledge at the top with the shard
+            {
+                Slab("Chimney wall S", 111.2f, 115, cz - .8f, cz, 14.8f, -1, "Ice"); Slab("Chimney wall N", 111.2f, 115, cz + 2, cz + 2.8f, 14.8f, -1, "Ice");
+                Slab("Chimney wall E", 114, 115, cz, cz + 2, 14.8f, -1, "Ice");
+                Slab("Chimney top ledge", 113.4f, 114, cz, cz + 2, 13f, 12.6f, "Ice");
+            }
+            foreach (var (x, z, s) in new[] { (96f, 270f, 1.2f), (104f, 368f, 1.4f), (150f, 360f, 1.1f), (100f, 340f, .9f), (130f, 368f, 1.3f) }) WorldArt.Prop("iceage_props", "IceCrystal", root, OnGround(x, z) + Vector3.down * .2f, x * 9, s);
+            foreach (var (x, z, s) in new[] { (94f, 360f, 1.4f), (140f, 330f, 1.1f) }) Rock(x, z, s, x * 3, 1);
+        }
+
+        // ---- the hot-spring grotto (east of the stones), behind a cracked rock wall (Dan's charged punch, later). Warm light and
+        // steam leak out of the cracks and a slit window, so the player knows something is in there.
+        static void Grotto(SaveGame save, WorldProgress prog)
+        {
+            Hint(new Vector3(54, 0, 464), 6f, () => "Warm air seeps through the cracks in this rock. A very strong punch could break it... (later)");
+            Slab("Grotto wall W south", 58, 60, 450, 461, 6, -1); Slab("Grotto wall W north", 58, 60, 467, 470, 6, -1); Slab("Grotto wall W far", 58, 60, 470.8f, 478, 6, -1);
+            Slab("Grotto slit sill", 58, 60, 470, 470.8f, 1, -1); Slab("Grotto slit head", 58, 60, 470, 470.8f, 6, 2.2f);
+            Slab("Grotto lintel", 58, 60, 461, 467, 6, 3.6f);
+            Slab("Grotto wall S", 58, 86, 448, 450, 6, -1); Slab("Grotto wall N", 58, 86, 478, 480, 6, -1); Slab("Grotto wall E", 84, 86, 450, 478, 6, -1);
+            Slab("Grotto roof", 58, 86, 448, 480, 7, 6);
+            if (!prog.opened.Contains("IA-rock-hotspring"))
+            {
+                var wall = Slab("Cracked rock wall (charged punch)", 58.2f, 59.8f, 461, 467, 3.6f, 0);
+                wall.gameObject.AddComponent<RockWall>().id = "IA-rock-hotspring";
+                for (int i = 0; i < 4; i++)
+                {
+                    var c = Box("Glowing crack", new Vector3(57.85f, .6f + i * .75f, 464 + Mathf.Sin(i * 2.1f) * 1.6f), new Vector3(.06f, .08f, 1.6f + i * .3f), "Lava", false);
+                    c.localRotation = Quaternion.Euler(i * 23 - 30, 0, 0);
+                }
+            }
+            // inside: a hot spring, warm light, steam out through a gap in the roof
+            Box("Hot spring", new Vector3(71, .1f, 466), new Vector3(10, .25f, 8), new Color(.35f, .8f, .8f, .7f), "Water", false);
+            foreach (var (x, z) in new[] { (65.5f, 466f), (76.5f, 466f), (71f, 461.5f), (71f, 470.5f) }) Rock(x, z, .55f, x * 11, 3, collider: false);
+            var l = new GameObject("Grotto light"); l.transform.SetParent(root, false); l.transform.position = new Vector3(72, 3.5f, 464);
+            var lt = l.AddComponent<Light>(); lt.type = LightType.Point; lt.color = new Color(1f, .6f, .3f); lt.range = 22; lt.intensity = 2.4f;
+            Steam.Make(root, new Vector3(71, 7f, 466), 8f);
+            if (!save.heartUpgrades.Contains("IA-H2")) Pickup.Make(Pickup.Kind.HeartUpgrade, "IA-H2", "V", new Vector3(82, 1.2f, 466), root, Playground.Accent);
+        }
+
         // ---- wolves and snow critters
         static void Enemies()
         {
@@ -293,6 +405,9 @@ namespace ShardsOfTime
             Enemy.Wolf(root, G(-10, 462), G(-2, 470));
             Enemy.Wolf(root, G(10, 466), G(4, 474));
             Enemy.Wolf(root, G(-22, 450), G(-12, 446));
+            // Round 5: the lake's shore and the glacier's floor
+            Enemy.Critter(root, G(-140, 204), G(-104, 204)); Enemy.Wolf(root, G(-150, 50), G(-150, 80));
+            Enemy.Critter(root, G(100, 276), G(100, 300)); Enemy.Wolf(root, G(110, 352), G(132, 356));
         }
 
         // ---- trees, rocks, bones, ruins
@@ -308,6 +423,9 @@ namespace ShardsOfTime
                 if (x > 28 && z > 385 && z < 455) continue;   // the vents
                 if (x < -18 && z > 300 && z < 380) continue;  // the cave
                 if (Mathf.Abs(z - 252) < 16) continue;        // the gorge
+                if (x > 40 && z > 444 && z < 484) continue;   // Round 5: the hot-spring grotto's cracked wall
+                if (x > 40 && z > 274 && z < 316) continue;   // Round 5: the way into the glacier
+                if (x < -40 && z > 92 && z < 138) continue;   // Round 5: the pass to the frozen lake
                 var p = OnGround(x, z);
                 if (p.y > 3f || p.y < -.8f) continue;
                 WorldArt.Prop("iceage_props", "Pine", root, p + Vector3.down * .2f, R(0, 360), R(.8f, 1.5f), false);
@@ -318,6 +436,7 @@ namespace ShardsOfTime
                 if (Mathf.Abs(x) < 14 && z < 470) continue;   // keep the middle path clear
                 if (Mathf.Abs(z - 252) < 14 || (x > 30 && z > 100 && z < 225) || (x < -18 && z > 300 && z < 380) || (x > 28 && z > 385 && z < 455)) continue;
                 if (Mathf.Abs(x) < 16 && z > 470) continue;
+                if (x > 10 && x < 56 && z > 214 && z < 240) continue;   // Round 5: the way to the pillars and the ramp (upright rocks blocked it)
                 Rock(x, z, R(.6f, 2.2f), R(0, 360), i % 3 + 1);
             }
             foreach (var (x, z, y) in new[] { (-22f, 30f, 40f), (30f, 96f, 200f), (-40f, 200f, 110f), (36f, 300f, 15f), (-30f, 430f, 70f) })

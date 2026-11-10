@@ -459,3 +459,48 @@ them after playing.
 vortex is the travel hub (path home blocked until all shards are rebuilt).
 
 ---------------------------------------------------------------------------
+
+### Round 3: Dan and Abi in the game, animated (0.3.0, build 300, 2026-11-09)
+Final check `local/round3/final` (built exe, batch mode, muted, no window,
+virtual pad from the title screen; play + Round 3 models + measure + perf):
+RESULT all checks passed (171 ok); audio output 0.000 RMS. Evidence:
+`Data/screenshots/round3/` (`game/` 39 exe shots from the player's view +
+necklace close-ups, `cutscenes/` frames of the two MP4s, `exe_check_final.txt`).
+1. Import: **done.** Four models Humanoid (Mixamo T-poses for Dan, `rigged_hairfix.fbx`
+   for Abi), 20-21k triangles, LODs by Unity's own mesh LODs (made from the rigged
+   mesh, so skin weights kept; 10-11 levels). One Mixamo clip set for all four (16
+   clips, trimmed in `CharacterImport.PeopleClips`): idle, walk / slow run / run
+   blended by speed, jump, fall, land, hard landing (falls of 3.3 m+), swim + tread,
+   push, punch (Dan), kick (Abi), hit, cheer (shard pickups; everyone on the story
+   shard), look (cutscenes). Punch / cheer / hit go on the upper body while running.
+   Check: a planted foot slides 0.3-0.7 m/s while running (4-9% of run speed; limit
+   12%) after the clip speeds were tuned once from the check (x1.09).
+2. Capsules replaced: **done.** Dan and Abi as player and followers; outfit per
+   area like Kira's form (`AreaData.outfit`: A home, B Ice Age); capsules kept as
+   fallback. Check: outfits swap both ways at the portal; feet on the ground
+   (lowest toe -2.5 to -1.3 cm), every model faces its way (0.96-1.00).
+3. Necklace: **done.** Fitted per outfit from the model's own chest (neck bone,
+   clothes under the shard, neck width) on `Spine2`, 3 cm off the clothes. Check:
+   shard outside the clothes while running (home: 1.5 cm in front at the
+   deepest; Ice Age: touches the fur, 0.2 cm in at the deepest, limit 0.5 cm); close-ups in `game/r3_dan_*_necklace_closeup.png`.
+4. Cutscenes: **done.** NecklaceWakes and PortalOpens rebuilt with Dan, Abi (home
+   clothes) and Kira as actors with clip tracks (idle / look / cheer; Kira idle /
+   jump); both MP4s rendered again (`Recordings/`, 1920x1080, 30 fps).
+5. Checked as Dan sees it: **done.** New exe check `--only models`: per person and
+   outfit idle / run front / run side / jump / attack / swim / tread / push / hard
+   landing / cheer, followers, switching. Found and fixed: foot sliding, Abi's run
+   speed, the necklace sinking into the sweater mid-stride, Dan's head in the push
+   block (the model steps back 25 cm while pushing), the cutscene glow covering
+   Dan's face. Left as is: followers can overlap each other in the pool (followers
+   never collide, by design); Abi's long hair looks stringy close up (Meshy mesh).
+6. Build / check / publish: **done.** 0.3.0 (166 MB), `game-300` published; a
+   Round 1 starter install updated itself from GitHub to 0.3.0 (ready handshake).
+
+Decisions Code made (Dan can overrule): Unity mesh LODs instead of Blender LODs;
+heroes always animate (no off-screen culling: 3 characters, cheap); hard landing
+from 14 m/s; cheer on every shard pickup (upper body if running); the model lifts
+0.28 x height when swimming at the surface; Abi's double jump replays the jump clip.
+
+**For Dan to check:** Dan and Abi running, jumping, swimming, punching / kicking on
+a pad (both outfits: Area A and B); the necklace on both outfits; the two
+cutscenes in play and the new MP4s; whether the cheer on every shard is too much.

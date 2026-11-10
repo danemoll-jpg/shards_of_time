@@ -23,6 +23,8 @@ namespace ShardsOfTime
         public float StunnedFor => stun;
         public string WolfState => wolf.ToString();
         CharacterController cc; Renderer[] rends; Color baseColor; float flash, stun, vy; bool toB = true; Vector3 home;
+        public CreatureAnimator Anim;   // Round 5: the creature's model (null: placeholder shapes)
+        float speedNow;
         enum W { Prowl, Circle, Lunge, Recover }
         W wolf = W.Prowl; float wolfT, angle, circleDir = 1; Vector3 lungeDir;
         static Enemy lunger;   // the wolf lunging now (one at a time)
@@ -44,7 +46,8 @@ namespace ShardsOfTime
             var player = party.Player.transform.position;
             var pos = transform.position;
             Vector3 move = kind == Kind.Wolf ? WolfMove(player, pos) : PatrolMove(player, pos);
-            if (stun > 0) { stun -= Time.deltaTime; move = Vector3.zero; transform.Rotate(0, 400f * Time.deltaTime, 0); }
+            if (stun > 0) { stun -= Time.deltaTime; move = Vector3.zero; if (!Anim) transform.Rotate(0, 400f * Time.deltaTime, 0); }
+            speedNow = new Vector3(move.x, 0, move.z).magnitude;
             vy = cc.isGrounded ? -2f : vy - 30f * Time.deltaTime;
             cc.Move((move + Vector3.up * vy) * Time.deltaTime);
             if (move.sqrMagnitude > .01f && stun <= 0)
@@ -95,7 +98,7 @@ namespace ShardsOfTime
                     var dir = target - pos; dir.y = 0;
                     if (wolfT > 2.6f && (lunger == null || !lunger || lunger.Dead) && flat.magnitude < 8f)
                     {
-                        wolf = W.Lunge; wolfT = 0; lunger = this; Lunges++; lungeDir = flat.normalized; Sfx.Play("growl", .6f, 1.2f);
+                        wolf = W.Lunge; wolfT = 0; lunger = this; Lunges++; lungeDir = flat.normalized; Sfx.Play("growl", .6f, 1.2f); if (Anim) Anim.Trigger("attack");
                         PlayLog.Line($"wolf lunges ({name})");
                     }
                     return dir.magnitude > .3f ? dir.normalized * Mathf.Min(chaseSpeed, dir.magnitude * 3f) : Vector3.zero;
@@ -117,7 +120,7 @@ namespace ShardsOfTime
             hp -= damage; HitsTaken++; flash = .12f; stun = Mathf.Max(stun, .5f);
             cc.Move(new Vector3(dir.x, 0, dir.z).normalized * .6f);
             PlayLog.Line($"{kind} hit by {by} ({damage}), hp {Mathf.Max(0, hp)}");
-            Sfx.Play("hit", .5f);
+            Sfx.Play("hit", .5f); if (Anim) Anim.Trigger("hurt");
             if (kind == Kind.Wolf && hp > 0) { wolf = W.Recover; wolfT = 0; if (lunger == this) lunger = null; }
             if (hp <= 0) Die(true);
         }
@@ -157,6 +160,7 @@ namespace ShardsOfTime
                 Placeholders.Prim(PrimitiveType.Sphere, t, new Vector3(s * .26f, .66f, 0), new Vector3(.1f, .1f, .06f), fur, name: "Ear");
             }
             Placeholders.Prim(PrimitiveType.Sphere, t, new Vector3(0, .4f, .37f), new Vector3(.08f, .06f, .05f), Placeholders.Mat(new Color(1f, .6f, .7f)), name: "Nose");
+            e.Anim = CharacterModel.Creature(e.transform, "snow_critter", 1.6f, 3.2f); if (e.Anim) e.Anim.Drive = () => (e.stun > 0 ? "stunned" : null, e.speedNow);
             return e;
         }
 
@@ -179,6 +183,7 @@ namespace ShardsOfTime
                 foreach (float z in new[] { .35f, -.4f }) Placeholders.Prim(PrimitiveType.Cylinder, t, new Vector3(s * .18f, .25f, z), new Vector3(.13f, .25f, .13f), dark, name: "Leg");
             }
             Placeholders.Prim(PrimitiveType.Capsule, t, new Vector3(0, .7f, -.75f), new Vector3(.22f, .4f, .22f), fur, name: "Tail").transform.localRotation = Quaternion.Euler(-60, 0, 0);
+            e.Anim = CharacterModel.Creature(e.transform, "wolf", 2.4f, 6.0f); if (e.Anim) e.Anim.Drive = () => (e.stun > 0 ? "stunned" : null, e.speedNow);
             return e;
         }
     }

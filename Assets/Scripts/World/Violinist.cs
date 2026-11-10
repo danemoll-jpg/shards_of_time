@@ -1,5 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
 namespace ShardsOfTime
 {
@@ -44,7 +47,63 @@ namespace ShardsOfTime
             bowGo.transform.localRotation = Quaternion.Euler(0, 0, 70);
             v.bowArm = armPivot; v.bow = bowGo.transform;
             v.notes = MakeNotes(t);
+            v.UseModel(fiddle);
             return v;
+        }
+
+        // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage) and his own clips (Clips/violinist_<name>: idle,
+        // play, walk, bow, nod) replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
+        public const string Model = "violinist_iceage";
+        PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
+        string loop = "idle", oneShot; float oneShotEnd;
+        public string ClipNow => oneShot ?? loop;
+        public bool HasModel => graph.IsValid();
+
+        void UseModel(GameObject fiddle)
+        {
+            if (!CharacterModel.Exists(Model)) return;
+            var gray = new GameObject("Graybox").transform; gray.SetParent(transform, false);
+            var kids = new List<Transform>(); foreach (Transform c in transform) if (c != gray && c.name != "Notes") kids.Add(c);
+            foreach (var c in kids) c.SetParent(gray, true);
+            gray.gameObject.SetActive(false); bowArm = null; bow = null; head = null;
+            var go = CharacterModel.Spawn(Model, transform);
+            var anim = go.GetComponentInChildren<Animator>(); anim.applyRootMotion = false; anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            graph = PlayableGraph.Create("Violinist clips"); graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+            var clips = new List<AnimationClip>();
+            foreach (var n in new[] { "idle", "play", "walk", "bow", "nod" })
+            {
+                var c = Resources.Load<AnimationClip>("Characters/Clips/violinist_" + n);
+                if (!c) foreach (var a in Resources.LoadAll<AnimationClip>("Characters/Clips/violinist_" + n)) if (!a.name.StartsWith("__preview__")) { c = a; break; }
+                if (c) { clipIndex[n] = clips.Count; clips.Add(c); }
+            }
+            mix = AnimationMixerPlayable.Create(graph, clips.Count);
+            for (int i = 0; i < clips.Count; i++) { var cp = AnimationClipPlayable.Create(graph, clips[i]); graph.Connect(cp, 0, mix, i); }
+            weights = new float[clips.Count];
+            AnimationPlayableOutput.Create(graph, "out", anim).SetSourcePlayable(mix);
+            graph.Play();
+            var hand = anim.isHuman ? anim.GetBoneTransform(HumanBodyBones.LeftHand) : null;
+            if (fiddle && hand) { fiddle.transform.SetParent(hand, false); fiddle.transform.localPosition = new Vector3(0, .08f, .04f); fiddle.transform.localRotation = Quaternion.Euler(0, 90, 0); }
+            else if (fiddle) fiddle.SetActive(false);
+            PlayLog.Line($"the Violinist: model {Model}, clips [{string.Join(", ", clipIndex.Keys)}]");
+        }
+
+        void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
+
+        // a one-shot (bow, nod) now; the loop comes back when it ends
+        public void OneShot(string n)
+        {
+            if (!HasModel || !clipIndex.TryGetValue(n, out int i)) return;
+            oneShot = n; var p = mix.GetInput(i); p.SetTime(0); oneShotEnd = Time.time + ((AnimationClipPlayable)p).GetAnimationClip().length * .95f;
+        }
+
+        void Blend()
+        {
+            if (!HasModel || weights.Length == 0) return;
+            if (oneShot != null && Time.time > oneShotEnd) oneShot = null;
+            string want = ClipNow; if (!clipIndex.ContainsKey(want)) want = "idle";
+            float sum = 0;
+            for (int i = 0; i < weights.Length; i++) { weights[i] = Mathf.MoveTowards(weights[i], clipIndex.TryGetValue(want, out int k) && k == i ? 1 : 0, Time.deltaTime / .25f); sum += weights[i]; }
+            for (int i = 0; i < weights.Length; i++) mix.SetInputWeight(i, sum > 0 ? weights[i] / sum : 0);
         }
 
         static ParticleSystem MakeNotes(Transform t)
@@ -63,6 +122,7 @@ namespace ShardsOfTime
             // the tune: the bow arm saws, notes drift up (during his cutscene, and a slow idle sway otherwise)
             bool play = Playing || Cutscenes.Playing == "ViolinistTeaches";
             var em = notes.emission; em.rateOverTime = play ? 6f : 0f;
+            loop = play ? "play" : "idle"; Blend();
             if (bowArm) bowArm.localRotation = Quaternion.Euler(0, play ? Mathf.Sin(Time.time * 7f) * 25f : 0, play ? 0 : 10f);
             if (head) head.localRotation = Quaternion.Euler(play ? 8f : 0, 0, play ? Mathf.Sin(Time.time * 1.5f) * 8f : Mathf.Sin(Time.time * .7f) * 3f);
             if (!Game.Playing || !Party.I || Game.I.Busy) return;
@@ -73,6 +133,8 @@ namespace ShardsOfTime
             if (Time.time > hintAt + 6f) { hintAt = Time.time; Hud.Message($"The musician smiles, but he is looking past you, at {learner}.", 4f); }
         }
 
+        IEnumerator NodLater() { yield return new WaitForSeconds(1.6f); OneShot("nod"); }
+
         IEnumerator Teach(Hero hero)
         {
             Game.I.SetBusy(true); Playing = true;
@@ -82,6 +144,7 @@ namespace ShardsOfTime
             transform.rotation = face;
             yield return Cutscenes.Play("ViolinistTeaches", transform.position, face);
             Playing = false;
+            OneShot("bow"); Game.I.StartCoroutine(NodLater());
             if (!SaveGame.Current.abilities.Contains(ability)) SaveGame.Current.abilities.Add(ability);
             Party.I.ApplyAbilities(); Taught++;
             Sfx.Play("story", .6f, 1.2f);

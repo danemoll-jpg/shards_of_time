@@ -67,5 +67,9 @@ namespace ShardsOfTime
         public const string MuscleMan = "MuscleMan";   // the companion from the Medieval Kingdom: moves boulders (not yet)
         public const string ClawIce = "ClawIce";       // Kira's sabertooth form (Ice Age): her claws break ice walls (Round 2)
         public const string GroundPound = "GroundPound"; // Dan, taught by the Violinist in the Ice Age (Round 4): slam down, break cracked ice, stun enemies
+        // Round 5: later moves (the move roadmap in TODO.md); the Ice Age's gates wait for them (WorldData.gates), they come in their worlds
+        public const string ChargedPunch = "ChargedPunch";   // Dan, Medieval Kingdom: breaks cracked rock walls
+        public const string DeepDive = "DeepDive";           // everyone, Pirate Seas: a longer breath, deep water
+        public const string WallJump = "WallJump";           // Abi, Steampunk: up narrow chimneys
     }
 }
