@@ -34,6 +34,7 @@ PEOPLE_CLIPS = {
 
 def textures(n):
     d = MESHY / n
+    if (RIGGED / n / "base_color.png").exists(): d = RIGGED / n   # Round 5: maps baked onto a rebuilt closed mesh (closed_mesh.py)
     shutil.copy2(d / "base_color.png", OUT / f"{n}_albedo.png")
     if (d / "normal.png").exists(): shutil.copy2(d / "normal.png", OUT / f"{n}_normal.png")
     if False and (d / "metallic.png").exists() and (d / "roughness.png").exists():   # Round 2: Meshy's metallic map is noise; not used
@@ -50,7 +51,7 @@ def main():
             src, model = RIGGED / n, RIGGED / n / "model.fbx"
         else:
             src = MIX / n
-            model = next((src / f for f in ("rigged_hairfix.fbx", "rigged.fbx") if (src / f).exists()), None)                 or next(iter(sorted(src.glob("T-Pose*.fbx"))), None)   # Mixamo names the T-pose download "T-Pose (2).fbx" etc.
+            model = next((src / f for f in ("rigged_closed.fbx", "rigged_hairfix.fbx", "rigged.fbx") if (src / f).exists()), None)                 or next(iter(sorted(src.glob("T-Pose*.fbx"))), None)   # Mixamo names the T-pose download "T-Pose (2).fbx" etc.
         if not model:
             print(f"{n}: no rigged model yet ({MIX / n} or {RIGGED / n}), skipped"); continue
         shutil.copy2(model, OUT / f"{n}.fbx")

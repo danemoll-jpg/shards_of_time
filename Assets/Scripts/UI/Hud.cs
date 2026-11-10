@@ -57,7 +57,7 @@ namespace ShardsOfTime
             breathBack = UiKit.Image(p, "Breath", UiKit.Panel, new Vector2(.5f, 0), new Vector2(.5f, 0), new Vector2(-160, 210), new Vector2(160, 236));
             breathFill = UiKit.Image(breathBack.transform, "Fill", new Color(.6f, .9f, 1f), Vector2.zero, Vector2.one, new Vector2(3, 3), new Vector2(-3, -3));
             var bl = UiKit.Label(breathBack.transform, "Label", 20, TextAnchor.MiddleCenter, UiKit.Ink, Vector2.zero, Vector2.one, new Vector2(0, 26), new Vector2(0, 50)); bl.text = "AIR";
-            messageText = UiKit.Label(root, "Message", 36, TextAnchor.MiddleCenter, UiKit.Ink, new Vector2(.15f, 0), new Vector2(.85f, 0), new Vector2(0, 250), new Vector2(0, 320));
+            messageText = UiKit.Label(root, "Message", 36, TextAnchor.MiddleCenter, UiKit.Ink, new Vector2(.15f, 0), new Vector2(.85f, 0), new Vector2(0, 128), new Vector2(0, 196));   // Round 5: under the hero, over the buttons
             // cutscene layer
             cutLayer = UiKit.Rect(root, "Cutscene", Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero).gameObject;
             UiKit.Image(cutLayer.transform, "Bar top", Color.black, new Vector2(0, .89f), Vector2.one, Vector2.zero, Vector2.zero);

@@ -72,18 +72,22 @@ namespace ShardsOfTime
             var menuCanvas = Menu.I.GetComponent<Canvas>(); menuCanvas.enabled = false;
             yield return Shot("00_key_art"); menuCanvas.enabled = true;
             yield return Shot("01_title");
+            MusicCheck("the title screen", "title");
             yield return Press(GamepadButton.South);
 
             Head("Item 3: Act I (the living room) and the Ice Age arrival");
             yield return WaitFor(() => Cutscenes.Playing == "ActOne", 4f);
             Ok(Cutscenes.Playing == "ActOne" && SaveGame.Exists, "New game starts Act I (save written)");
             foreach (var (t, n) in new[] { (2f, "02a_act1_evening"), (4.8f, "02b_act1_kira"), (7.1f, "02c_act1_swipe"), (9.1f, "02d_act1_shatter"), (12.5f, "02e_act1_vortex"), (16.2f, "02f_act1_pulled_in") })
-            { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 25f); yield return Shot(n); }
+            { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 25f); yield return Shot(n); if (t == 2f) MusicCheck("Act I", "act1"); }
+            yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= 18.85f, 6f);
+            Ok(Music.Track == null && (!Music.Current || Music.Current.volume < .02f), $"Act I's music faded out by the white-out (volume {(Music.Current ? Music.Current.volume : 0):0.00} at {Cutscenes.Director?.time:0.0} s)");
             yield return WaitFor(() => Cutscenes.Playing == "IceAgeArrival", 8f);
             Ok(!Cutscenes.LastSkipped && Cutscenes.LastDuration > 18f, $"Act I played to the end ({Cutscenes.LastDuration:0.0} s)");
             Ok(Cutscenes.Playing == "IceAgeArrival", "then the Ice Age arrival");
-            foreach (var (t, n) in new[] { (.6f, "03a_arrival_landing"), (3.6f, "03b_arrival_dan"), (5.9f, "03c_arrival_fall"), (8.3f, "03d_arrival_kira_necklace") })
-            { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 15f); yield return Shot(n); }
+            foreach (var (t, n) in new[] { (.6f, "03a_arrival_landing"), (3.2f, "03b_arrival_dan_gets_up"), (4.9f, "03c_arrival_silhouette"), (6.9f, "03d_arrival_fall"),
+                                            (9.2f, "03e_arrival_its_kira"), (12.0f, "03f_arrival_necklace"), (13.4f, "03g_arrival_abi_laughs") })
+            { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 15f); yield return Shot(n); if (n.StartsWith("03a")) MusicCheck("the arrival", "iceage"); }
             yield return Hold(GamepadButton.South, 1.3f);
             yield return WaitFor(() => !Game.InCutscene && !Game.I.Busy, 5f);
             Ok(Cutscenes.LastSkipped, $"holding A skips the arrival (after {Cutscenes.LastDuration:0.0} s)");
@@ -304,7 +308,7 @@ namespace ShardsOfTime
             yield return Go(XZ(0, 499), .5f); yield return Go(XZ(0, 507), .5f, 8f, 1f, () => Vortex.Inside(Player.transform.position));
             yield return WaitFor(() => Vortex.Inside(Player.transform.position), 3f);
             Ok(Vortex.Inside(Player.transform.position), "stepping into the vortex takes the party into the vortex space");
-            yield return Wait(.6f); yield return Shot("18_vortex_space");
+            yield return Wait(.6f); yield return Shot("18_vortex_space"); MusicCheck("the vortex space", "vortex");
             var c = Vortex.Centre;
             Vector3 PathPt(float yaw, float d) => c + Quaternion.Euler(0, yaw, 0) * new Vector3(0, 0, d);
             yield return Go(PathPt(42, 8), .6f); yield return Go(PathPt(42, 19), .6f); yield return Go(PathPt(42, 24), .5f, 6f);
@@ -321,7 +325,7 @@ namespace ShardsOfTime
             yield return Go(PathPt(0, 4), .8f); yield return Go(PathPt(-42, 8), .6f); yield return Go(PathPt(-42, 19), .6f); yield return Go(PathPt(-42, 24), .5f, 6f, 1f, () => !Vortex.Inside(Player.transform.position));
             yield return WaitFor(() => !Vortex.Inside(Player.transform.position), 3f);
             Ok(!Vortex.Inside(Player.transform.position) && Player.transform.position.z > 480f && Player.transform.position.z < 520f && Player.transform.position.y < 50f, $"the Ice Age path leads back to the valley ({Fmt(Player.transform.position)})");
-            yield return Wait(.5f); yield return Shot("21_back_in_the_valley");
+            yield return Wait(.5f); yield return Shot("21_back_in_the_valley"); MusicCheck("back in the valley", "iceage");
             yield return FollowersArrive("back from the vortex");
             var stuck = P.Heroes.Where(h => h != Player && h.Follower.FarFor > Follower.StuckSeconds).ToList();
             Ok(stuck.Count == 0, $"no follower stuck; warps over the run: {string.Join(", ", P.Heroes.Select(h => h.Stats.displayName + " " + h.Follower.Warps))}");
@@ -384,14 +388,26 @@ namespace ShardsOfTime
             cam.fieldOfView = 30f; cam.nearClipPlane = .02f;
             var b = new Bounds(h.Model.transform.position, Vector3.zero); foreach (var r in rends) if (r.enabled) b.Encapsulate(r.bounds);
             float dist = b.extents.magnitude / Mathf.Tan(15f * Mathf.Deg2Rad) * 1.05f;
-            var sheet = new Texture2D(S * 4, S * 3, TextureFormat.RGB24, false);
+            const int Cols = 6, Rows = 4;   // Round 5: 16 angles + close-ups (Dan: ears, tail, paws, fangs)
+            var sheet = new Texture2D(S * Cols, S * Rows, TextureFormat.RGB24, false);
             int total = 0, worst = 0; string worstView = "";
             float hy = h.transform.eulerAngles.y;   // dir = from what it looks at toward the camera
-            var views = Enumerable.Range(0, 8).Select(i => (n: $"yaw{i * 45:000}", dir: Quaternion.Euler(-12f, hy + i * 45f, 0) * Vector3.forward, aim: b.center, d: dist)).ToList();
+            var views = Enumerable.Range(0, 16).Select(i => (n: $"yaw{i * 22.5f:000}", dir: Quaternion.Euler(i % 2 == 0 ? -12f : 8f, hy + i * 22.5f, 0) * Vector3.forward, aim: b.center, d: dist)).ToList();
             var headT = h.IsPerson ? (h.Anim ? h.Anim.GetComponentInChildren<Animator>() : null)?.GetBoneTransform(HumanBodyBones.Head) : h.Model.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Head");
             if (headT)
                 foreach (var (n, yaw, pitch) in new[] { ("head_front", 0f, 8f), ("head_back", 180f, 15f), ("head_left", -90f, 10f), ("head_top", 200f, 65f) })
                     views.Add((n, Quaternion.Euler(-pitch, hy + yaw, 0) * Vector3.forward, headT.position, (h.IsPerson ? .55f : .3f) / Mathf.Tan(15f * Mathf.Deg2Rad)));
+            if (!h.IsPerson)   // Round 5: Kira's tail, paws and fangs close up
+            {
+                Transform Bone(string n) => h.Model.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == n);
+                float near = .16f / Mathf.Tan(15f * Mathf.Deg2Rad);
+                foreach (var (n, bone, yaw, pitch) in new[] { ("tail", "Tail3", 150f, 10f), ("paws_front", "FL_Paw", 20f, 5f), ("paws_back", "BR_Paw", 200f, 5f), ("fangs", "Head", 0f, -12f) })
+                {
+                    var t = Bone(bone); if (!t) continue;
+                    var aim = n == "fangs" ? t.position + h.transform.forward * .05f - Vector3.up * .05f : t.position;
+                    views.Add((n, Quaternion.Euler(-pitch, hy + yaw, 0) * Vector3.forward, aim, near));
+                }
+            }
             var mats = rends.Select(r => r.sharedMaterials).ToArray();
             var two = rends.Select(r => r.sharedMaterials.Select(m => { var c2 = new Material(m); c2.SetFloat("_Cull", 0f); return c2; }).ToArray()).ToArray();
             for (int v = 0; v < views.Count; v++)
@@ -410,14 +426,14 @@ namespace ShardsOfTime
                     else if (bgA) a[p] = new Color32(70, 70, 80, 255);
                 }
                 total += holes; if (holes > worst) { worst = holes; worstView = n; }
-                if (v < 12) sheet.SetPixels32((v % 4) * S, (2 - v / 4) * S, S, S, a);
+                if (v < Cols * Rows) sheet.SetPixels32((v % Cols) * S, (Rows - 1 - v / Cols) * S, S, S, a);
                 Log($"    {label} {n}: {holes} see-through pixels");
             }
             sheet.Apply(); File.WriteAllBytes(Path.Combine(dir, $"r4_turntable_{label}.png"), sheet.EncodeToPNG());
             Destroy(sheet); foreach (var arr in two) foreach (var m in arr) Destroy(m);
             for (int i = 0; i < rends.Length; i++) rends[i].gameObject.layer = layers[i];
             cam.targetTexture = null; rt.Release(); Destroy(rt); Destroy(go);
-            Ok(worst < 60, $"{label}: {total} see-through pixels over {views.Count} views of {S}x{S} (worst {worst} in {worstView}; limit 60 per view); sheet r4_turntable_{label}.png (holes in green)");
+            Ok(total == 0, $"{label}: {total} see-through pixels over {views.Count} views of {S}x{S} (worst {worst} in {worstView}; must be 0, Round 5); sheet r4_turntable_{label}.png (holes in green)");
         }
 
         static Color32[] Grab(Camera cam, RenderTexture rt)

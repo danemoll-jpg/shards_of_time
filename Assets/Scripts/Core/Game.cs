@@ -67,7 +67,6 @@ namespace ShardsOfTime
             Party.Create(a.spawn, Quaternion.Euler(0, a.spawnYaw, 0));
             Health.Refill();
             Checkpoint.RespawnParty();
-            Music.Play(TestArea ? null : "iceage");
             PlayLog.Line($"world {World.worldId} built ({World.shards.Count} shards); " + string.Join("; ", World.areas.Select(x => World.RequirementReport(x.id).detail)));
         }
 
@@ -89,7 +88,6 @@ namespace ShardsOfTime
             p.rows.Add(new Menu.Row { label = "Credits", submit = () => Menu.I.Push(Menu.CreditsPage()) });
             p.rows.Add(new Menu.Row { label = "Quit", submit = Quit });
             Menu.I.Show(p, true);
-            Music.Play("iceage");
             PlayLog.Line("title screen");
         }
 
@@ -217,6 +215,7 @@ namespace ShardsOfTime
                     titleCam.transform.rotation = Quaternion.LookRotation(new Vector3(-10f + s * 25f, 40f, 400f) - titleCam.transform.position);
                 }
             }
+            MusicFor();
             if (Party.I && (State == Mode.Playing))
             {
                 var area = Area; var prog = SaveGame.Current.World(World.worldId);
@@ -227,6 +226,24 @@ namespace ShardsOfTime
                 Look.SetDark(dark);
                 foreach (var h in Party.I.Heroes) NecklaceModel.Light(h.NecklaceGem, dark);
             }
+        }
+
+        // Round 5, item 4: Dan's tracks by place. The title screen: "title"; Act I: "act1", faded out over the white-out; the
+        // arrival and the valley: "iceage"; the vortex space: "vortex" (crossfades both ways); the test area: silence.
+        public const float ActOneMusicFadeAt = 16.6f;
+        void MusicFor()
+        {
+            if (State == Mode.Title) { Music.Play(TestArea ? null : "title"); return; }
+            if (TestArea) { Music.Play(null); return; }
+            if (Cutscenes.Playing == "ActOne")
+            {
+                if (Cutscenes.Director && Cutscenes.Director.time >= ActOneMusicFadeAt) Music.Play(null, 2.2f);   // out by the full white-out
+                else Music.Play("act1", .3f);
+                return;
+            }
+            if (Cutscenes.Playing == "IceAgeArrival") { Music.Play("iceage", .8f); return; }
+            if (State != Mode.Playing || !Party.I) return;   // paused: keep what plays
+            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : "iceage");
         }
 
         // ---- progression

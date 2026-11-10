@@ -58,12 +58,20 @@ namespace ShardsOfTime
             Refresh();
         }
 
+        // Round 5: a cutscene's silhouette shot (Backlight): light on the near side to 8%, ambient to 22%, the sky near white
+        static float backlit;
+        public static void Backlit(float amount)
+        {
+            backlit = Mathf.Clamp01(amount); Refresh();
+            if (CameraRig.I) CameraRig.I.Cam.backgroundColor = Color.Lerp(Sky, new Color(1f, .98f, .92f), backlit);
+        }
+
         static void Refresh()
         {
-            float k = Mathf.Lerp(1f, .06f, darkness), a = Mathf.Lerp(1f, .12f, darkness);
+            float k = Mathf.Lerp(1f, .06f, darkness) * Mathf.Lerp(1f, .08f, backlit), a = Mathf.Lerp(1f, .12f, darkness) * Mathf.Lerp(1f, .22f, backlit);
             if (Sun) Sun.intensity = sunIntensity * k;
             RenderSettings.ambientSkyColor = ambSky * a; RenderSettings.ambientEquatorColor = ambEq * a; RenderSettings.ambientGroundColor = ambGround * a;
-            RenderSettings.fogColor = FogColor;
+            RenderSettings.fogColor = Color.Lerp(FogColor, new Color(1f, .98f, .92f), backlit);
         }
 
         // the vortex space: a deep violet sky and fog behind the swirl

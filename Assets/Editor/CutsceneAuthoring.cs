@@ -22,7 +22,7 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 4;
+        public const int Version = 5;
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
@@ -186,6 +186,22 @@ namespace ShardsOfTime
                 }
             }
             public void KeyYaw(GameObject holder, string path, float t, float yaw) => KeyQ(holder, path, t, Quaternion.Euler(0, yaw, 0));
+
+            // Round 5: a sound effect (Resources/Sounds/<name>) at t on the cutscene's audio track (plays in game; the MP4 has no audio)
+            AudioTrack audio;
+            public void Sound(string clipName, float t, float vol)
+            {
+                var clip = AssetDatabase.LoadAssetAtPath<AudioClip>($"Assets/Resources/Sounds/{clipName}.mp3");
+                if (!clip) { Debug.LogWarning("[Cutscene] no sound " + clipName); return; }
+                if (audio == null)
+                {
+                    audio = tl.CreateTrack<AudioTrack>(null, "Sounds");
+                    var src = root.AddComponent<AudioSource>(); src.playOnAwake = false; src.spatialBlend = 0;
+                    root.AddComponent<CutsceneAudio>();
+                    dir.SetGenericBinding(audio, src);
+                }
+                var c = audio.CreateClip(clip); c.start = t; c.duration = clip.length;
+            }
 
             // a prop shown only from t0 to t1 (activation track)
             public void Show(GameObject go, float t0, float t1)
@@ -413,67 +429,113 @@ namespace ShardsOfTime
             k.Save();
         }
 
-        // Act II's arrival (film): they land in the snow in caveman clothes; Dan falls flat on his back; sabertooth Kira jumps on his
-        // chest and paws at the necklace, which starts pulsing blue; Abi laughs. The root is the landing spot, facing up the valley.
+        // Act II's arrival (Round 5 item 1, Dan's story beat): they land in the snow in caveman clothes. Dan gets up and sees what looks
+        // like a sabertooth about to attack: Kira on a snow rock, shot from below in silhouette against the bright sky, growling, fangs.
+        // Dan scrambles back and falls flat on his back in fright; she leaps onto his chest; close-up: folded ears, amber eyes: it's
+        // Kira (relief). She paws at his chest, at the necklace he didn't know he had; it pulses blue. Abi laughs. No dialogue.
+        // The root is the landing spot, facing up the valley (+z).
+        public const float ArrivalLength = 15.5f;
         public static void IceAgeArrival()
         {
             DataAssets.Ensure();
-            var k = new Kit("IceAgeArrival", 13.5f);
+            var k = new Kit("IceAgeArrival", ArrivalLength);
             var dan = k.Actor("Dan", "dan_iceage", Vector3.zero, 0);
             var abi = k.Actor("Abi", "abi_iceage", new Vector3(-1.4f, 0, .5f), 15);
-            var kira = k.Actor("Kira", "kira_sabertooth", new Vector3(1.3f, 0, .8f), -15);
+            // the snow rock up the slope in front of Dan; Kira lands behind it (out of sight) and climbs on top
+            var rockAt = new Vector3(.3f, 0, 3.4f); float rockTop = 1.25f;
+            var rockFile = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/World/iceage_props.fbx");
+            var rockSrc = rockFile ? rockFile.transform.Find("Rock2") : null;
+            if (rockSrc)
+            {
+                var rock = Object.Instantiate(rockSrc.gameObject, k.root.transform, false); rock.name = "Snow rock";
+                rock.transform.localPosition = rockAt + Vector3.down * .1f; rock.transform.localRotation = Quaternion.Euler(0, 200, 0) * rockSrc.localRotation;
+                rock.transform.localScale = rockSrc.localScale * .85f;
+                WorldArt.Dress(rock);
+                var b = new Bounds(rock.transform.position, Vector3.zero); foreach (var r in rock.GetComponentsInChildren<Renderer>()) b.Encapsulate(r.bounds);
+                rockTop = b.max.y - k.root.transform.position.y - .08f;
+                Debug.Log($"[Cutscene] IceAgeArrival: the snow rock is {b.size.y:0.00} m tall (Kira stands at {rockTop:0.00})");
+            }
+            var kira = k.Actor("Kira", "kira_sabertooth", rockAt + new Vector3(0, 0, 1.3f), 180);   // facing Dan
             Tint(k, (0f, 1f), (.35f, 1f), (1.3f, 0f));
             foreach (var (actor, land) in new[] { (kira, .6f), (abi, .7f), (dan, .78f) })
             {
                 k.Key(actor, "Body", "m_LocalPosition", 0f, new Vector3(0, 4.5f, 0)); k.Key(actor, "Body", "m_LocalPosition", land * .6f, new Vector3(0, 2.2f, 0));
                 k.Key(actor, "Body", "m_LocalPosition", land, Vector3.zero);
-                Puff(k, actor.transform.localPosition + Vector3.up * .1f, land, actor == kira ? .5f : .9f);
+                if (actor != kira) Puff(k, actor.transform.localPosition + Vector3.up * .1f, land, .9f);
             }
-            k.Clips(abi, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .7f), (PeopleClip("idle"), 2.6f), (PeopleClip("look"), 6.2f), (PeopleClip("cheer"), 9.8f), (PeopleClip("idle"), 12.4f));
-            // Dan: lands, looks round, falls flat on his back (and stays down)
+            // Kira climbs onto the rock (while the camera is on Dan's face)
+            var onRock = WorldToLocal(kira, k.root.transform.TransformPoint(rockAt + Vector3.up * rockTop));
+            k.Key(kira, "Body", "m_LocalPosition", 3.7f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 3.85f, Vector3.Lerp(Vector3.zero, onRock, .5f) + Vector3.up * .6f);
+            k.Key(kira, "Body", "m_LocalPosition", 4.0f, onRock);
+            // Dan: lands hard, gets up, looks round; flinches at the growl, scrambles back and falls flat on his back (and stays down)
             var fallBack = PeopleClip("fall_back");
-            k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .78f), (PeopleClip("look"), 2.7f), (fallBack ? fallBack : PeopleClip("hurt"), 5.0f));
-            // where his chest ends up: the fall's last pose, sampled on his model (Spine2)
-            var chest = new Vector3(0, .3f, -.95f);
+            k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .78f), (PeopleClip("look"), 2.75f), (PeopleClip("hurt"), 5.2f),
+                (fallBack ? fallBack : PeopleClip("hurt"), 5.55f));
+            var scramble = new Vector3(0, 0, -.6f);
+            k.Key(dan, "Body", "m_LocalPosition", 5.2f, Vector3.zero); k.Key(dan, "Body", "m_LocalPosition", 6.0f, scramble); k.Key(dan, "Body", "m_LocalPosition", ArrivalLength, scramble);
+            k.Clips(abi, (PeopleClip("fall"), 0f), (PeopleClip("land_hard"), .7f), (PeopleClip("idle"), 2.6f), (PeopleClip("look"), 5.0f), (PeopleClip("cheer"), 12.9f), (PeopleClip("idle"), 14.8f));
+            // where his chest and face end up: the fall's last pose, sampled on his model
+            var chest = new Vector3(0, .3f, -.95f) + scramble; var face = chest + new Vector3(0, .1f, -.45f);
             if (k.Models.TryGetValue(dan, out var danAnim) && fallBack)
             {
                 var bone = danAnim.GetBoneTransform(HumanBodyBones.Chest) ?? danAnim.GetBoneTransform(HumanBodyBones.Spine);
+                var head = danAnim.GetBoneTransform(HumanBodyBones.Head);
                 if (bone)
                 {
                     AnimationMode.StartAnimationMode(); AnimationMode.BeginSampling();
                     AnimationMode.SampleAnimationClip(danAnim.gameObject, fallBack, fallBack.length);
                     AnimationMode.EndSampling();
-                    chest = k.root.transform.InverseTransformPoint(bone.position) + new Vector3(0, .12f, 0);
+                    chest = k.root.transform.InverseTransformPoint(bone.position) + new Vector3(0, .12f, 0) + scramble;
+                    if (head) face = k.root.transform.InverseTransformPoint(head.position) + scramble;
                     AnimationMode.StopAnimationMode();
-                    Debug.Log($"[Cutscene] IceAgeArrival: Dan's chest after the fall at {chest}");
+                    Debug.Log($"[Cutscene] IceAgeArrival: Dan's chest after the fall at {chest}, his face at {face}");
                 }
             }
-            // Kira jumps onto it and paws at the necklace
+            // she leaps from the rock onto his chest (facing his face) and paws at the necklace
             var onChest = WorldToLocal(kira, k.root.transform.TransformPoint(chest));
-            k.Key(kira, "Body", "m_LocalPosition", 6.8f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 7.15f, Vector3.Lerp(Vector3.zero, onChest, .5f) + Vector3.up * .8f);
-            k.Key(kira, "Body", "m_LocalPosition", 7.45f, onChest); k.Key(kira, "Body", "m_LocalPosition", 13.5f, onChest);
-            k.KeyYaw(kira, "Body", 6.8f, 0); k.KeyYaw(kira, "Body", 7.4f, 200f); k.KeyYaw(kira, "Body", 13.5f, 200f);
+            k.Key(kira, "Body", "m_LocalPosition", 7.6f, onRock); k.Key(kira, "Body", "m_LocalPosition", 7.85f, Vector3.Lerp(onRock, onChest, .5f) + Vector3.up * .7f);
+            k.Key(kira, "Body", "m_LocalPosition", 8.1f, onChest); k.Key(kira, "Body", "m_LocalPosition", ArrivalLength, onChest);
             k.Clips(kira, (KiraClip("fall", "kira_sabertooth"), 0f), (KiraClip("land", "kira_sabertooth"), .6f), (KiraClip("idle", "kira_sabertooth"), 1.1f),
-                (KiraClip("jump", "kira_sabertooth"), 6.75f), (KiraClip("land", "kira_sabertooth"), 7.4f), (KiraClip("attack", "kira_sabertooth"), 7.75f),
-                (KiraClip("attack", "kira_sabertooth"), 8.45f), (KiraClip("attack", "kira_sabertooth"), 9.15f), (KiraClip("idle", "kira_sabertooth"), 9.9f));
+                (KiraClip("jump", "kira_sabertooth"), 3.65f), (KiraClip("land", "kira_sabertooth"), 3.95f), (KiraClip("idle", "kira_sabertooth"), 4.3f),
+                (KiraClip("attack", "kira_sabertooth"), 4.6f), (KiraClip("idle", "kira_sabertooth"), 5.3f),
+                (KiraClip("jump", "kira_sabertooth"), 7.55f), (KiraClip("land", "kira_sabertooth"), 8.05f), (KiraClip("idle", "kira_sabertooth"), 8.4f),
+                (KiraClip("attack", "kira_sabertooth"), 10.6f), (KiraClip("attack", "kira_sabertooth"), 11.3f), (KiraClip("attack", "kira_sabertooth"), 12.0f),
+                (KiraClip("idle", "kira_sabertooth"), 12.7f));
+            k.Sound("growl", 4.55f, 1f);
+            k.Sound("growl", 5.15f, .7f);
+            // the silhouette: the sun behind her, the sky bright, the light on her side of the world down (Look.Backlit)
+            var bl = k.Holder("Backlight", Vector3.zero, 0);
+            var amount = new GameObject("Amount"); amount.transform.SetParent(bl.transform, false); amount.AddComponent<Backlight>();
+            foreach (var (t, v) in new[] { (0f, 0f), (3.98f, 0f), (4.0f, 1f), (5.95f, 1f), (5.97f, 0f) }) k.Key(bl, "Amount", "m_LocalScale", t, new Vector3(v, 1, 1));
+            var camC = new Vector3(.05f, .22f, 1.55f); var kiraHead = rockAt + Vector3.up * (rockTop + .35f);
+            var sunAt = camC + (kiraHead - camC).normalized * 60f + Vector3.up * 2f;
+            var sun = k.Holder("Sun disk", sunAt, 0);
+            Placeholders.Prim(PrimitiveType.Sphere, sun.transform, Vector3.zero, Vector3.one * 7f, Placeholders.Mat(new Color(1f, .97f, .85f), "Glow"), name: "Disk");
+            k.Show(sun, 4.0f, 5.95f);
             // the necklace wakes: the shard pulses blue and a glow blooms round it
             if (k.Necklaces.TryGetValue(dan, out var neck))
             {
                 var holder = neck.gameObject;
-                float[] ts = { 0f, 7.6f, 8.0f, 8.4f, 8.8f, 9.2f, 9.6f, 10.0f, 13.5f }; float[] ss = { 1f, 1f, 2.3f, 1.5f, 2.3f, 1.5f, 2.1f, 1.6f, 1.6f };
+                float[] ts = { 0f, 11.2f, 11.6f, 12.0f, 12.4f, 12.8f, 13.2f, 13.6f, ArrivalLength }; float[] ss = { 1f, 1f, 2.3f, 1.5f, 2.3f, 1.5f, 2.1f, 1.6f, 1.6f };
                 for (int i = 0; i < ts.Length; i++) k.Key(holder, "Shard", "m_LocalScale", ts[i], Vector3.one * ss[i]);
                 var aura = new GameObject("Aura"); aura.transform.SetParent(neck, false);
                 var shard = neck.Find("Shard"); aura.transform.localPosition = shard ? shard.localPosition : Vector3.zero;
                 Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(.4f, .7f, 1f), "Glow"), name: "Glow");
                 for (int i = 1; i < ts.Length; i++) k.Key(holder, "Aura/Glow", "m_LocalScale", ts[i], Vector3.one * (i % 2 == 0 ? .28f : .1f));
-                k.Show(aura, 7.6f, 13.5f);
+                k.Show(aura, 11.2f, ArrivalLength);
             }
             // shots
-            k.Shot("They land", 0f, 3.0f, new Vector3(2.8f, 1.9f, 6.0f), new Vector3(0, .9f, .3f), 50f);
-            k.Shot("Dan looks round", 3.0f, 5.0f, new Vector3(.7f, 1.65f, 2.4f), new Vector3(0, 1.45f, 0), 40f);
-            k.Shot("The fall", 5.0f, 6.9f, new Vector3(3.6f, 1.1f, -.6f), new Vector3(0, .7f, -.5f), 45f);
-            k.Shot("Kira and the necklace", 6.9f, 10.4f, chest + new Vector3(1.25f, 1.05f, .35f), chest, 40f, chest + new Vector3(.95f, .8f, .25f));
-            k.Shot("Abi laughs", 10.4f, 13.5f, new Vector3(2.6f, 1.9f, 2.8f), new Vector3(-.4f, .6f, -.4f), 48f);
+            k.Shot("They land", 0f, 2.6f, new Vector3(3.2f, 1.4f, .2f), new Vector3(-.5f, .8f, .3f), 50f);
+            k.Shot("Dan gets up", 2.6f, 4.0f, new Vector3(.55f, 1.6f, 1.9f), new Vector3(0, 1.45f, 0), 40f, new Vector3(.45f, 1.58f, 1.6f));
+            k.Shot("Something on the rock", 4.0f, 5.95f, camC, kiraHead + Vector3.up * .15f, 58f, camC + new Vector3(0, -.05f, -.25f));
+            k.Shot("Dan falls", 5.95f, 8.3f, new Vector3(3.6f, 1.3f, .2f), new Vector3(.35f, .5f, -.6f), 50f);
+            // Dan's view: from just behind and over his head, down at her face (she stands on his chest facing his head)
+            var toHead = face - chest; toHead.y = 0; toHead = toHead.sqrMagnitude > .0001f ? toHead.normalized : Vector3.back;
+            var kiraFace = chest + Vector3.up * .32f + toHead * .16f;
+            var eye = face + toHead * .3f + Vector3.up * .32f;
+            k.Shot("It's Kira", 8.3f, 10.6f, eye, kiraFace, 38f, Vector3.Lerp(eye, kiraFace, .3f));
+            k.Shot("The necklace", 10.6f, 13.0f, chest + new Vector3(1.25f, 1.05f, .35f), chest, 40f, chest + new Vector3(.95f, .8f, .25f));
+            k.Shot("Abi laughs", 13.0f, ArrivalLength, new Vector3(2.4f, 1.7f, 2.4f), new Vector3(-.6f, .7f, -.2f), 48f);
             k.Save();
         }
 

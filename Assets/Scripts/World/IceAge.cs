@@ -78,8 +78,15 @@ namespace ShardsOfTime
         static Transform Box(string name, Vector3 centre, Vector3 size, Color c, string kind = "Lit", bool collider = true) =>
             Placeholders.Prim(PrimitiveType.Cube, root, centre, size, Placeholders.Mat(c, kind), collider, name).transform;
         // a box from x / z ranges and a top height (and a bottom)
-        static Transform Slab(string name, float x0, float x1, float z0, float z1, float top, float bottom, string mat = "Rock") =>
-            Box(name, new Vector3((x0 + x1) / 2, (top + bottom) / 2, (z0 + z1) / 2), new Vector3(x1 - x0, top - bottom, z1 - z0), mat);
+        static Transform Slab(string name, float x0, float x1, float z0, float z1, float top, float bottom, string mat = "Rock")
+        {
+            var t = Box(name, new Vector3((x0 + x1) / 2, (top + bottom) / 2, (z0 + z1) / 2), new Vector3(x1 - x0, top - bottom, z1 - z0), mat);
+            // Round 5 (clean-up): rock gets a snow cap with a soft rim over its edges, like the terrain's cliff tops (no collider:
+            // feet sink 6 cm into it). Thin slabs (< 0.4 m) and ice stay bare.
+            if (mat == "Rock" && top - bottom > .4f)
+                Placeholders.Prim(PrimitiveType.Cube, root, new Vector3((x0 + x1) / 2, top - .12f, (z0 + z1) / 2), new Vector3(x1 - x0 + .2f, .36f, z1 - z0 + .2f), WorldArt.Mat("Snow"), false, name + " snow");
+            return t;
+        }
         static void Hint(Vector3 at, float r, System.Func<string> text)
         {
             var go = new GameObject("Hint"); go.transform.SetParent(root, false); go.transform.position = at;
@@ -205,7 +212,8 @@ namespace ShardsOfTime
             // lava pools by the first vent: they hurt
             foreach (var (x, z) in new[] { (34f, 412f), (37f, 432f) })
             {
-                var lava = Box("Lava", new Vector3(x, Ground(x, z) + .1f, z), new Vector3(5, .3f, 4), "Lava", false);
+                var lava = Placeholders.Prim(PrimitiveType.Cylinder, root, new Vector3(x, Ground(x, z) + .05f, z), new Vector3(5, .08f, 4), WorldArt.Mat("Lava"), false, "Lava").transform;
+                Placeholders.Prim(PrimitiveType.Cylinder, root, new Vector3(x, Ground(x, z) + .02f, z), new Vector3(5.8f, .06f, 4.8f), WorldArt.Mat("Basalt"), false, "Lava rim");
                 var sp = lava.gameObject.AddComponent<Spikes>(); sp.cause = "lava";
                 var l = new GameObject("Lava light"); l.transform.SetParent(lava, false); l.transform.localPosition = new Vector3(0, 3, 0);
                 var lt = l.AddComponent<Light>(); lt.type = LightType.Point; lt.color = new Color(1f, .5f, .15f); lt.range = 10; lt.intensity = 2f;
@@ -218,7 +226,11 @@ namespace ShardsOfTime
             up.GetComponent<Renderer>().enabled = false; up.gameObject.layer = 2;
             up.gameObject.AddComponent<UpdraftVolume>();
             Box("Vent crack", new Vector3(x, baseY + .03f, z), new Vector3(1.8f, .06f, 1.8f), "Lava", false);
-            for (int i = 0; i < 6; i++) WorldArt.Prop("iceage_props", "Rock" + (i % 3 + 1), root, new Vector3(x + Mathf.Cos(i) * 1.7f, baseY - .1f, z + Mathf.Sin(i) * 1.7f), i * 60, .45f);
+            for (int i = 0; i < 6; i++)
+            {
+                float rx = x + Mathf.Cos(i) * 1.7f, rz = z + Mathf.Sin(i) * 1.7f;
+                WorldArt.Prop("iceage_props", "Rock" + (i % 3 + 1), root, new Vector3(rx, Ground(rx, rz, baseY + 2f) - .1f, rz), i * 60, .45f);
+            }
             Steam.Make(root, new Vector3(x, baseY, z), height);
         }
 
@@ -254,7 +266,13 @@ namespace ShardsOfTime
             Slab("Grotto wall W", -54, -52, 478, 490, 4.5f, -1); Slab("Grotto wall S", -54, -44, 478, 480, 4.5f, -1); Slab("Grotto wall N", -54, -44, 488, 490, 4.5f, -1);
             Slab("Grotto front S", -45, -44, 480, 482.2f, 4.5f, -1); Slab("Grotto front N", -45, -44, 485.8f, 488, 4.5f, -1);   // a 3.6 m mouth the boulder fills
             Slab("Grotto roof", -54, -44, 478, 490, 5.5f, 4.5f);
-            var boulder = Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(-43.5f, 484) + Vector3.up * 2f, Vector3.one * 4.6f, WorldArt.Mat("Rock"), true, "Boulder (needs Muscle Man)");
+            var boulder = WorldArt.Prop("iceage_props", "Rock2", root, OnGround(-43.5f, 484) + Vector3.down * .2f, 90, 1f, true);
+            if (boulder)
+            {
+                boulder.name = "Boulder (needs Muscle Man)";
+                boulder.transform.localScale = Vector3.Scale(boulder.transform.localScale, new Vector3(2.3f, 1.6f, 2.7f));   // Blender axes: width, depth, height
+            }
+            else boulder = Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(-43.5f, 484) + Vector3.up * 2f, Vector3.one * 4.6f, WorldArt.Mat("Rock"), true, "Boulder (needs Muscle Man)");
             boulder.AddComponent<Boulder>();
             // the stone lintel (double jump)
             Slab("Lintel post W", -9.5f, -8.5f, 496.5f, 497.5f, 2.8f, -.5f, "Stone"); Slab("Lintel post E", -5.5f, -4.5f, 496.5f, 497.5f, 2.8f, -.5f, "Stone");

@@ -13,8 +13,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 API = "https://api.meshy.ai/openapi/v1/image-to-3d"
 # triangle budgets: people 20k, Kira's forms 15k (she's small on screen)
-MODELS = {"dan_home": 20000, "dan_iceage": 20000, "abi_home": 20000, "abi_iceage": 20000, "kira": 15000, "kira_sabertooth": 15000}
-CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
+MODELS = {"dan_home": 20000, "dan_iceage": 20000, "abi_home": 20000, "abi_iceage": 20000, "kira": 15000, "kira_sabertooth": 15000,
+          # Round 5: the Violinist (Mixamo) and the Ice Age creatures (Code's Blender rigs)
+          "violinist_iceage": 20000, "wolf": 12000, "snow_critter": 8000, "mammoth": 15000}
+CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage", "violinist_iceage"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
 
 
 def key():

@@ -180,7 +180,20 @@ namespace ShardsOfTime
             for (int i = 0; i < 6; i++) Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3(Mathf.Cos(i) * .7f, .1f, Mathf.Sin(i) * .7f), new Vector3(.4f, .25f, .35f), Placeholders.Mat(new Color(.45f, .43f, .42f)));
             var c = go.AddComponent<Campfire>(); c.flames = new Transform[3];
             Color[] cols = { new Color(1f, .45f, .1f), new Color(1f, .7f, .2f), new Color(1f, .9f, .5f) };
-            for (int i = 0; i < 3; i++) c.flames[i] = Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3(0, .5f, 0), new Vector3(.6f - i * .15f, 1f - i * .2f, .6f - i * .15f), Placeholders.Mat(cols[i], "Glow")).transform;
+            // Round 5 (clean-up): small tapered glowing tongues + rising flame particles (Round 4's were solid orange blobs)
+            for (int i = 0; i < 3; i++) c.flames[i] = Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3((i - 1) * .1f, .32f + i * .06f, (i % 2) * .06f), new Vector3(.32f - i * .07f, .55f - i * .08f, .32f - i * .07f), Placeholders.Mat(cols[i], "Glow")).transform;
+            var fx = new GameObject("Flames"); fx.transform.SetParent(go.transform, false); fx.transform.localPosition = new Vector3(0, .3f, 0);
+            var ps = fx.AddComponent<ParticleSystem>(); ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = ps.main; main.startLifetime = new ParticleSystem.MinMaxCurve(.5f, .9f); main.startSpeed = new ParticleSystem.MinMaxCurve(.6f, 1.2f);
+            main.startSize = new ParticleSystem.MinMaxCurve(.18f, .34f); main.startColor = new ParticleSystem.MinMaxGradient(new Color(1f, .55f, .12f), new Color(1f, .85f, .35f)); main.maxParticles = 80;
+            var em = ps.emission; em.rateOverTime = 45;
+            var sh = ps.shape; sh.shapeType = ParticleSystemShapeType.Cone; sh.angle = 8; sh.radius = .22f; sh.rotation = new Vector3(-90, 0, 0);
+            var sz = ps.sizeOverLifetime; sz.enabled = true; sz.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0, 1, 1, .1f));
+            var col = ps.colorOverLifetime; col.enabled = true; var g = new Gradient();
+            g.SetKeys(new[] { new GradientColorKey(new Color(1f, .9f, .5f), 0), new GradientColorKey(new Color(1f, .35f, .08f), 1) }, new[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(0, 1) });
+            col.color = g;
+            fx.GetComponent<ParticleSystemRenderer>().material = Resources.Load<Material>("Materials/Particle");
+            ps.Play();
             var l = new GameObject("Fire light"); l.transform.SetParent(go.transform, false); l.transform.localPosition = new Vector3(0, 1.2f, 0);
             c.lt = l.AddComponent<Light>(); c.lt.type = LightType.Point; c.lt.color = new Color(1f, .6f, .25f); c.lt.range = 14f; c.lt.intensity = 3f; c.lt.shadows = LightShadows.None;
             return c;

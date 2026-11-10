@@ -1,10 +1,9 @@
-"""Shards of Time, Round 4 item 10 (Hostile Horizon's make_sounds.py / make_music.py, ported): the Ice Age's sounds and music
-stand-in, made with ElevenLabs. The key comes from ELEVENLABS_API_KEY (never printed or saved). Nothing is played: making a
+"""Shards of Time, Round 4 item 10 (Hostile Horizon's make_sounds.py / make_music.py, ported): the game's sound effects and short
+music (stings, the Violinist's tune), made with ElevenLabs. Level songs are Dan's (Suno, Docs/MUSIC.md): never made here (Round 5). The key comes from ELEVENLABS_API_KEY (never printed or saved). Nothing is played: making a
 sound never makes any noise on this PC (Dan's testing rule).
 
   sound effects -> Assets/Resources/Sounds/<name>.mp3   (Audio/Sfx.cs loads them by name; a missing file = the code-made tone)
-  music         -> Assets/Resources/Music/<name>.mp3    (Audio/Music.cs). The real Ice Age theme is Dan's Suno track
-                   (Docs/MUSIC.md has the prompt); this is the stand-in until it exists: drop Dan's file over it.
+  short music   -> Assets/Resources/Music/<name>.mp3    (kind 'music': stings and jingles only, never a level song)
 Prompts: Docs/SOUNDS.md (written by this tool). Usage: python Tools/make_sounds.py [--only a,b] [--force] [--list]
 """
 import argparse, json, os, pathlib, sys, time, urllib.request, urllib.error
@@ -32,17 +31,14 @@ SOUNDS = [
      'A heavy cartoon body slam onto packed snow and ice: a deep thud with a crunchy snow burst, punchy, no music.'),
     ('violinist_tune', 6.0, 'sfx', 'the Violinist plays (he teaches a move)',
      'A short mysterious gentle melody on a rustic wooden fiddle, a few slow lilting notes rising, warm and magical, solo instrument, music cue.'),
-    ('iceage', 90.0, 'music', 'the Ice Age theme (stand-in for the Suno track)',
-     'Whimsical adventurous orchestral theme for a family animated film set in the Ice Age: playful pizzicato strings, bouncy '
-     'woodwinds, glockenspiel and soft brass, light percussion, a warm hopeful melody, steady 100 bpm, instrumental, seamless loop.'),
 ]
 
 
 def write_doc():
-    lines = ['# Shards of Time — sounds made with ElevenLabs (Round 4)', '',
+    lines = ['# Shards of Time — sounds made with ElevenLabs (Round 4; level music removed in Round 5)', '',
              'Made by `python Tools/make_sounds.py` (key from `ELEVENLABS_API_KEY`). Sound effects are',
              '`Assets/Resources/Sounds/<name>.mp3` (the game loads them by name, `Audio/Sfx.cs`, and falls back to a tone made in',
-             'code when a file is missing); the music stand-in is `Assets/Resources/Music/iceage.mp3` (`Audio/Music.cs`). To replace',
+             'code when a file is missing). Level songs are Dan’s Suno tracks (`Docs/MUSIC.md`), never made here. To replace',
              'one: generate it again (`--only <name> --force`) or drop your own file with the same name into that folder and rebuild.', '',
              '| File | Length | Kind | For | Prompt |', '|---|---|---|---|---|']
     for n, sec, kind, what, prompt in SOUNDS:

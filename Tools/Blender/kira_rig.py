@@ -8,6 +8,8 @@ Reads SourceArt/Meshy/<name>/<name>.blend (Tools/Blender/meshy_cleanup.py: metre
    (the front-top lump), the eyes (amber in the texture: they give the way her face looks) and the tail (behind the hips).
 2. Skeleton: Root, Hips, Spine, Chest, Neck, Head, Tail1-5, and per leg Upper, Lower, Paw. **No ear bones** (the Kira lock: her
    folded ears are part of the head and can never rise).
+0. (Round 5) The mesh is rebuilt closed (closed_mesh.py: voxel remesh, 15k triangles, Meshy's maps baked to
+   SourceArt/Rigged/<name>/base_color.png + normal.png) after the landmarks are read from Meshy's mesh.
 3. Skin: Blender's bone heat on a closed remeshed copy, copied back to the real mesh (a distance-based skin, limited by region,
    is the fallback). Ears go with the head.
 4. Head forward: home Kira's concept had her head turned, Meshy kept it; her neck and head get a fixed counter-turn (at most
@@ -25,7 +27,8 @@ from mathutils.kdtree import KDTree
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
-COUNTER_TURN = {'kira'}   # models whose head Meshy built turned (see 4. above)
+COUNTER_TURN = {'kira'}
+THIN = {'kira': 1}   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
 FPS = 30
 LEGS = ('FL', 'FR', 'BL', 'BR')
 
@@ -420,12 +423,18 @@ def run(name):
     bpy.ops.wm.open_mainfile(filepath=os.path.join(ROOT, 'SourceArt', 'Meshy', name, name + '.blend'))
     ob = bpy.data.objects[name]
     L, co = landmarks(ob, name)
+    # Round 5, item 1b: the mesh is rebuilt as one closed surface (Tools/Blender/closed_mesh.py) with Meshy's maps baked onto it,
+    # so no camera sees a back face; the landmarks above come from Meshy's mesh (its texture finds the eyes)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import closed_mesh
+    out = os.path.join(ROOT, 'SourceArt', 'Rigged', name)
+    ob = closed_mesh.rebuild(ob, L['H'] * .005, 20000, out, thin=THIN.get(name, 0), log=log)   # 20k: fewer and the thin parts fold through themselves
+    co = [ob.matrix_world @ v.co for v in ob.data.vertices]
+    L['tail'] = [c for c in co if c.y > L['yb'] and c.z > L['hi_b'] + .015]
     arm = build(L)
     skin(ob, arm, L, co)
     acts = clips(arm, L)
     # Round 4, item 1: fur tufts and whiskers are single sheets; the ones seen from behind get a reversed twin (Tools/Blender/mesh_fix.py)
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import mesh_fix
-    mesh_fix.double_sheets(ob, log=log)
+    # (Round 4's reversed twins, mesh_fix.double_sheets, are not needed on a closed mesh: Round 5)
     parts = lods(ob)
     out = os.path.join(ROOT, 'SourceArt', 'Rigged', name); os.makedirs(out, exist_ok=True)
     arm.animation_data.action = acts['idle'][0]

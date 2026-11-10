@@ -85,7 +85,9 @@ namespace ShardsOfTime
             }
             if (!src) { Debug.LogWarning($"[WorldArt] missing prop {key}"); return null; }
             var go = Object.Instantiate(src.gameObject, parent, false); go.name = prop;
-            go.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, yaw, 0)); go.transform.localScale = Vector3.one * scale;
+            // keep the file's own turn (Blender's Z-up -> Unity's Y-up sits on the prop's root): Round 4 replaced it with the yaw and laid
+            // every prop on its side (Round 5 item 2)
+            go.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, yaw, 0) * src.localRotation); go.transform.localScale = src.localScale * scale;
             Dress(go);
             if (collider) foreach (var mf in go.GetComponentsInChildren<MeshFilter>()) { var mc = mf.gameObject.AddComponent<MeshCollider>(); mc.sharedMesh = mf.sharedMesh; mc.convex = true; }
             return go;

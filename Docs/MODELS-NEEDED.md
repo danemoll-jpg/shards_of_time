@@ -1,5 +1,28 @@
 # Shards of Time — models needed
 
+## Round 5 (2026-11-09): the Violinist in Mixamo — for Dan, now
+
+His Meshy model is cleaned up (1.85 m, 20.8k triangles, A-pose, facing front; previews
+`Data/screenshots/round5/models/sheet_violinist_iceage.jpg`). Same steps as Dan and Abi in Round 2:
+
+1. **Upload** at mixamo.com (Upload Character): `SourceArt/Mixamo/violinist_iceage/upload/violinist_iceage.fbx`
+2. **Auto-rigger:** markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**. Next, Next.
+3. **Rigged character:** download it first with no animation picked: Format **FBX for Unity (.fbx)**, **With Skin**,
+   **T-pose**. Save as `SourceArt/Mixamo/violinist_iceage/rigged.fbx`.
+4. **Clips:** each one FBX for Unity, 30 fps, Keyframe Reduction none, **Without Skin**, **In Place** ticked where offered.
+   Save next to the `upload` folder (not inside it), renamed to the file name below:
+
+| File | Mixamo search | For |
+|---|---|---|
+| `idle.fbx` | **Idle** (a calm standing one) | waiting by the campfire |
+| `play.fbx` | **Playing Violin** (if nothing: search "violin"; if still nothing, take **Idle** again and say so: Code animates the bow arm) | playing the tune that teaches a move |
+| `walk.fbx` | **Walking** | walking up to the heroes / away |
+| `bow.fbx` | **Quick Formal Bow** (or **Bowing**) | a small bow at the end of the tune |
+| `nod.fbx` | **Head Nod Yes** | a knowing nod to the hero who learned the move |
+
+When the files are there, tell Code: they go into the game this same round (Round 5).
+
+
 ## Round 4 (2026-11-09): Ice Age creatures and the Violinist: images needed from Dan
 
 **Ready for Dan.** Four concept images, made like the six character sheets (same rules as "What makes an image usable"
@@ -82,7 +105,7 @@ give it to your image tool (his face should stay the same in every era).
 
 **Design note:** he appears in every world and teaches a move: he plays a short tune, and the hero who reached him learns
 it (in the Ice Age: Dan's ground pound). He never speaks or explains himself. The cloak ends at the hips and stays away
-from the arms, so Mixamo's rig doesn't tie it to them. Height **1.85 m**. Mixamo: Humanoid. Clips: **Idle** (`idle.fbx`);
+from the arms, so Mixamo's rig doesn't tie it to them. Height **1.85 m** (Round 5: Mixamo steps at the top of this page). Mixamo: Humanoid. Clips: **Idle** (`idle.fbx`);
 for playing, search **"Playing Violin"** (`play.fbx`); if Mixamo has nothing by that name, download **Idle** only and tell
 Code, who will animate the bow arm in Blender. His **bone fiddle** (a hollow bone body, gut strings, a curved stick bow)
 is made by Code in Blender, like Dan's necklace: no image needed.
