@@ -1,0 +1,342 @@
+Shards of Time exe check 2026-11-09 22:06, version 0.5.0; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 120832 samples); master volume 0.00
+
+== Title screen
+  ok    title screen over the Ice Age valley
+  ok    no save yet: Continue greyed out, New game selected
+  screenshot 00_key_art.png
+  screenshot 01_title.png
+  ok    music in the title screen: title (179.6 s, at 2.0 s)
+
+== Item 3: Act I (the living room) and the Ice Age arrival
+  ok    New game starts Act I (save written)
+  screenshot 02a_act1_evening.png
+  ok    music in Act I: act1 (22.5 s, at 2.1 s)
+  screenshot 02b_act1_kira.png
+  screenshot 02c_act1_swipe.png
+  screenshot 02d_act1_shatter.png
+  screenshot 02e_act1_vortex.png
+  screenshot 02f_act1_pulled_in.png
+  ok    Act I's music fades out over the white-out (fade from 16.61 s of 19; act1 stopped 2.4 s later)
+  ok    Act I played to the end (19.0 s)
+  ok    then the Ice Age arrival
+  screenshot 03a_arrival_landing.png
+  ok    music in the arrival: iceage (180.0 s, at 0.7 s)
+  screenshot 03b_arrival_dan_gets_up.png
+  screenshot 03c_arrival_silhouette.png
+  screenshot 03d_arrival_fall.png
+  screenshot 03e_arrival_its_kira.png
+  screenshot 03f_arrival_necklace.png
+  screenshot 03g_arrival_abi_laughs.png
+  ok    holding A skips the arrival (after 14.5 s)
+  ok    play starts in the snow: caveman outfits, sabertooth Kira; at (0.0, 0.1, 12.0)
+  screenshot 04_start_view.png
+  area V (The Ice Age): 43 of 60 shards reachable with [Dan, Abi, Kira, ClawIce], requirement 35; locked: R08 needs DoubleJump, C06 needs GroundPound, C07 needs GroundPound, H05 needs DoubleJump, T03 needs MuscleMan, T04 needs GroundPound, T05 needs DoubleJump, L06 needs DeepDive, L07 needs DeepDive, L08 needs MuscleMan, G06 needs WallJump, G07 needs WallJump, G08 needs DoubleJump, P01 needs ChargedPunch, P02 needs ChargedPunch, P03 needs ChargedPunch, P04 needs ChargedPunch; gates: IA-ledge-ridge (double-jump ledge, needs DoubleJump: R08), IA-ledge-vents (double-jump ledge, needs DoubleJump: H05), IA-ledge-lintel (double-jump ledge, needs DoubleJump: T05), IA-ledge-glacier (double-jump ledge, needs DoubleJump: G08), IA-boulder-grotto (boulder, needs MuscleMan: T03), IA-boulder-lake (boulder, needs MuscleMan: L08), IA-rock-hotspring (cracked rock wall, needs ChargedPunch: P01 P02 P03 P04 IA-H2), IA-deep-lake (deep water, needs DeepDive: L06 L07), IA-chimney-near (wall-jump chimney, needs WallJump: G06), IA-chimney-far (wall-jump chimney, needs WallJump: G07)
+  ok    rule 2 by data: 43 of 60 shards reachable on the first visit, requirement 35
+
+== Item 4: the landing snowfield and the pond
+  ok    S01 (snowfield path) at (0.0, 0.0, 23.5); 1 shards
+  ok    S02 (snowfield path) at (-5.8, 0.0, 35.6); 2 shards
+  ok    S03 (snowfield path) at (5.6, 0.1, 45.7); 3 shards
+  ok    followers arrived at the snowfield: Abi 2.5 m (0 warps); Kira 3.6 m (0 warps); 
+  ok    Kira for the pond (she never runs out of air)
+  ok    S09 on an ice floe (at (16.3, -0.2, 52.1))
+  ok    S07 on the pond bottom (dived to y -2.2)
+  screenshot 05_pond_underwater.png
+  ok    S08 on the pond bottom
+  ok    out of the pond at (36.2, 0.0, 61.9)
+  (could not reach (-14.0, 0.0, 62.0) in 4 s, at (17.9, -1.8, 61.9))
+  (could not reach (-14.0, 0.0, 62.0) in 4 s, at (-8.0, 0.2, 62.0))
+  ok    S04 (by the rocks) at (-13.5, 0.2, 62.0); 7 shards
+  ok    S05 (snowfield path) at (-4.2, 0.3, 79.6); 8 shards
+  ok    S06 (snowfield path) at (9.7, 0.0, 95.6); 9 shards
+
+== Round 5, item 5: the frozen lake (the west basin)
+  (could not reach (-40.0, 0.0, 115.0) in 4 s, at (-15.9, 0.1, 105.6))
+  (could not reach (-88.0, 0.0, 115.0) in 4 s, at (-67.2, 0.0, 114.9))
+  ok    on the lake's slick ice at (-99.5, 0.1, 100.6)
+  screenshot 50_frozen_lake.png
+  ok    L01, L02 on the skating lane (speed 3.3 m/s at the end)
+  ok    L03 on the ice island at the lane's end (y 1.6)
+  screenshot 51_ice_island.png
+  ok    L04 (frozen lake: by the far hole) at (-101.6, 0.1, 172.3); 13 shards
+  ok    the lake's boulder needs Muscle Man (visible, closed)
+  ok    L05 under the ice (Kira dived in at the near hole, y -8.0)
+  screenshot 52_under_the_ice.png
+  ok    out of the hole onto the ice ((-111.4, 0.1, 85.2))
+  ok    the deep part pushes divers back up (lowest y -9.0; L06 at -27 stays for the deep dive): "Too deep! Nobody can hold their breath that long... yet."
+  (could not reach (-50.0, 0.0, 115.0) in 4 s, at (-62.5, 0.0, 115.0))
+  the lake took the bot 2.2 min; 14 shards
+
+== Item 4: the mammoth ridge (ride a mammoth to the shelf)
+  (could not reach (30.0, 0.0, 120.0) in 4 s, at (-22.9, 0.1, 116.7))
+  (could not reach (30.0, 0.0, 120.0) in 4 s, at (5.1, 0.2, 118.5))
+  ok    R01 (ridge) at (29.5, 0.2, 120.0); 15 shards
+  ok    R07 on the loading rock (y 3.9)
+  ok    a mammoth comes past the loading rock
+  ok    jumped onto its back (y 4.1, riding True)
+  screenshot 06_riding_mammoth.png
+  ok    the mammoth carried the party 37 m up the ridge
+  ok    jumped from its back onto the high shelf (y 5.0)
+  ok    R04 (the high shelf (ride a mammoth)) at (50.5, 5.0, 158.0); 17 shards
+  ok    R05 (the high shelf (ride a mammoth)) at (54.9, 5.0, 179.5); 18 shards
+  ok    R06 (the high shelf (ride a mammoth)) at (51.1, 5.0, 201.5); 19 shards
+  screenshot 07_shelf.png
+  (could not reach (28.0, 0.0, 190.0) in 4 s, at (33.2, 0.0, 195.8))
+  ok    R03 (ridge) at (28.3, 0.0, 190.4); 20 shards
+  ok    the ridge wolves: hp 3, 0 lunges, hp 3, 0 lunges, hp 3, 0 lunges
+  (could not reach (20.0, 0.0, 150.0) in 4 s, at (22.5, 0.1, 165.2))
+  ok    R02 (ridge) at (20.0, 0.2, 150.5); 21 shards
+
+== Item 4: the ice pillars, the cracked bridge, the river
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (20.0, 0.0, 177.8))
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (20.0, 0.0, 205.8))
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (20.0, 0.2, 233.9))
+  ok    hearts 2/3
+  ok    V01 on an ice pillar (at (20.0, 0.0, 243.5))
+  ok    V02 on an ice pillar (at (20.0, 0.0, 248.0))
+  ok    V03 on an ice pillar (at (20.0, 0.0, 252.5))
+  ok    V04 on an ice pillar (at (20.0, 0.0, 257.0))
+  screenshot 08_pillars.png
+  ok    across the gorge on the pillars ((20.0, 0.1, 266.0))
+  ok    the cracked plank dropped under Kira (1 drops): into the river
+  ok    V05 on the river bottom under the bridge
+  (in the river at (49.1, -7.9, 246.6): out by the ramp)
+  ok    V06 (the ramp out of the gorge) at (49.0, -4.7, 235.5); 27 shards
+  ok    up the ramp out of the gorge ((49.0, -0.5, 226.6))
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (23.9, 0.2, 237.8))
+
+== Round 5, item 5: the glacier climb (east)
+  (could not reach (50.0, 0.0, 295.0) in 4 s, at (39.8, -0.4, 285.1))
+  (could not reach (96.0, 0.0, 290.0) in 4 s, at (77.1, 0.0, 291.9))
+  screenshot 53_glacier.png
+  ok    the chimney's shard is out of reach (Abi's wall jump, later)
+  ok    G01 (glacier: ledge 4) at (122.0, 5.2, 285.8); 28 shards
+  ok    G02 (glacier: ledge 9) at (130.0, 11.7, 286.2); 29 shards
+  ok    G03 (glacier: ledge 14) at (137.9, 18.2, 277.7); 30 shards
+  ok    G04 (glacier: the summit) at (147.7, 24.7, 305.5); 31 shards
+  ok    G05 (glacier: the summit, the view) at (154.6, 24.7, 311.6); 32 shards
+  ok    on the glacier's summit (y 24.7)
+  screenshot 54_glacier_summit_view.png
+  ok    G08 over the summit is out of a single jump's reach (Abi's double jump, later)
+  (could not reach (60.0, 0.0, 296.0) in 4 s, at (72.9, 0.0, 296.0))
+  the glacier took the bot 1.2 min; 32 shards; hearts 3/3
+
+== Item 4: the ice caves (dark; Kira's crawl tunnel; the ice wall)
+  (could not reach (-8.0, 0.0, 333.0) in 4 s, at (36.2, -0.1, 309.2))
+  (could not reach (-8.0, 0.0, 333.0) in 4 s, at (11.5, 0.2, 322.5))
+  ok    inside the cave it is dark and Dan's necklace gives a light (sun 0.07)
+  screenshot 09_cave_dark.png
+  ok    C01 (dark hall (the necklace lights it)) at (-37.7, 0.0, 316.4); 33 shards
+  (could not reach (-38.0, 0.0, 352.0) in 4 s, at (-38.0, 0.0, 343.8))
+  ok    C02 (dark hall (the necklace lights it)) at (-38.0, 0.0, 351.5); 34 shards
+  ok    Kira crawls through the gap (at (-43.7, 0.0, 320.0))
+  ok    C03 (crawl chamber (Kira)) at (-57.5, 0.0, 316.1); 35 shards
+  ok    C04 (crawl chamber (Kira)) at (-58.0, 0.0, 323.5); 36 shards
+  screenshot 10_crawl_chamber.png
+  (at the ice wall: Kira at (-31.1, 0.0, 356.1) facing (0.0, 0.0, 1.0), wall (-31.0, 2.5, 357.0), player Kira, form Sabertooth, near: Cave floor N,Ice wall (cave),Kira)
+  ok    sabertooth Kira claws the ice wall open
+  ok    C05 (behind the ice wall (sabertooth Kira)) at (-31.0, 0.0, 361.5); 37 shards
+  ok    37 shards without the ground pound, the double jump or Muscle Man (rule 2, play-through; Round 5: 35 needed)
+
+== Items 5, 11: the necklace wakes (35 shards, Round 5)
+  ok    out of the cave, the necklace wakes (cutscene NecklaceWakes, Ice Age actors)
+  screenshot 11a_necklace_wakes_1.png
+  screenshot 11b_necklace_wakes_2.png
+  ok    the blue story shard appears; the necklace leads to it (161 m)
+
+== Item 6: the Violinist teaches Dan the ground pound
+  ok    Kira reaches him: he looks past her, at Dan ("The musician smiles, but he is looking past you, at Dan.")
+  ok    Dan reaches him: he plays (cutscene ViolinistTeaches)
+  screenshot 12a_violinist_plays.png
+  screenshot 12b_dan_learns.png
+  ok    Dan learned the ground pound (saved): "Dan learned the Ground Pound! Jump, then press B. It breaks cracked ice and stuns enemies."
+
+== Item 6: the ground pound (the cave's cracked ice)
+  ok    jump, then B: Dan slams down
+  ok    the cracked ice breaks: Dan drops into the pit (y -4.5)
+  ok    C06 (the pit under the cracked ice (ground pound)) at (-32.8, -4.5, 338.4); 38 shards
+  ok    C07 (the pit under the cracked ice (ground pound)) at (-26.4, -4.5, 346.8); 39 shards
+  ok    up the steps out of the pit ((-25.5, 0.0, 342.5))
+
+== Item 4: the volcano vents (steam lifts the party)
+  (could not reach (10.0, 0.0, 380.0) in 4 s, at (-3.4, 0.1, 355.3))
+  ok    the steam lifts Dan to y 13.8
+  screenshot 13_steam_vent.png
+  ok    H01 (terrace 1 (steam)) at (47.0, 8.0, 435.5); 40 shards
+  ok    the steam lifts Dan to y 19.0
+  ok    H02 (terrace 2 (steam)) at (57.8, 16.0, 436.6); 41 shards
+  ok    the steam lifts Dan to y 27.0
+  (could not reach (58.5, 0.0, 420.0) in 4 s, at (57.7, 24.0, 420.0))
+  ok    H03 (terrace 3 (steam)) at (59.7, 24.0, 414.4); 42 shards
+  ok    H04 (terrace 3 (steam)) at (59.7, 24.0, 425.7); 43 shards
+  screenshot 14_terrace_top.png
+
+== Round 5, item 6: the hot-spring grotto (cracked rock wall)
+  screenshot 55_grotto_wall.png
+  ok    the cracked rock wall holds (Dan's charged punch, later): "Cracked rock, warm to the touch. A much stronger punch could break it... (later)"
+  ok    gates as data: 10 (4 double-jump ledge, 2 boulder, 1 cracked rock wall, 1 deep water, 2 wall-jump chimney)
+  ok    60 shards, 35 wake the necklace
+
+== Item 4: the standing stones, the frozen well, the story shard
+  (could not reach (0.0, 0.0, 456.0) in 4 s, at (13.0, 0.1, 457.3))
+  ok    T01 (standing stones) at (-11.9, 0.2, 475.5); 44 shards
+  (could not reach (12.0, 0.0, 500.0) in 4 s, at (6.9, 0.0, 494.6))
+  ok    T02 (standing stones) at (11.7, -0.1, 499.7); 45 shards
+  ok    the ground pound breaks the frozen well's ice
+  ok    T04 (the frozen well (ground pound)) at (18.1, -3.5, 477.5); 46 shards
+  screenshot 15_stones.png
+  ok    the boulder needs Muscle Man (a future-ability gate, visible but closed)
+  ok    T05 on the stone lintel is out of a single jump's reach (Abi's double jump, later)
+  46 of 60 shards before the story shard; hearts 1/4; respawns 1
+  ok    the blue story shard opens the vortex (cutscene VortexOpens)
+  screenshot 16_vortex_opens.png
+  ok    skipped after 3.7 s; the vortex gate is open (saved)
+  screenshot 17_vortex_gate.png
+
+== Item 5: the vortex (paths: Ice Age, Egypt, Home)
+  ok    stepping into the vortex takes the party into the vortex space
+  screenshot 18_vortex_space.png
+  ok    music in the vortex space: vortex (180.0 s, at 0.7 s)
+  (could not reach (16.1, 600.0, 2517.8) in 6 s, at (14.4, 600.0, 2515.9))
+  ok    Home is blocked: "The way home is closed. 7 story shards are still missing: rebuild them all to open it."
+  screenshot 19_home_blocked.png
+  ok    the Egypt path: "Ancient Egypt, to be continued..." (saved)
+  screenshot 20_egypt_to_be_continued.png
+  ok    back in the vortex space after the card
+  ok    the Ice Age path leads back to the valley ((5.0, 0.0, 497.0))
+  screenshot 21_back_in_the_valley.png
+  ok    music in back in the valley: iceage (180.0 s, at 0.6 s)
+  ok    followers arrived at back from the vortex: Abi 0.4 m (23 warps, last: 12 m behind); Kira 0.5 m (67 warps, last: 12 m behind); 
+  ok    no follower stuck; warps over the run: Dan 5, Abi 23, Kira 67
+  shards: 46 of 60 (S01 S02 S03 S09 S07 S08 S04 S05 S06 L01 L02 L03 L04 L05 R01 R07 R04 R05 R06 R03 R02 V01 V02 V03 V04 V05 V06 G01 G02 G03 G04 G05 C01 C02 C03 C04 C05 C06 C07 H01 H02 H03 H04 T01 T02 T04); story shards 1; abilities [GroundPound]; worlds reached [Egypt]
+  enemies: Critter 0/7 defeated; Wolf 5/7 defeated; hits taken 9, respawns 1
+  ok    music: the Ice Age theme and the wind are playing (iceage 180 s, vortex 180 s, wind_loop 12 s); 1634 sound effects played over the run
+  ok    sound footstep_snow is in the build (ElevenLabs)
+  ok    sound crack is in the build (ElevenLabs)
+  ok    sound shard is in the build (ElevenLabs)
+  ok    sound necklace is in the build (ElevenLabs)
+  ok    sound growl is in the build (ElevenLabs)
+  ok    sound pound is in the build (ElevenLabs)
+  ok    sound violinist_tune is in the build (ElevenLabs)
+  sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 65191936 samples); master volume 0.00
+
+== Items 1-2: see-through holes (Kira's forms, Abi's outfits), measured in the game's renderer
+    kira yaw000: 0 see-through pixels
+    kira yaw023: 0 see-through pixels
+    kira yaw045: 0 see-through pixels
+    kira yaw068: 0 see-through pixels
+    kira yaw090: 0 see-through pixels
+    kira yaw113: 0 see-through pixels
+    kira yaw135: 0 see-through pixels
+    kira yaw158: 0 see-through pixels
+    kira yaw180: 0 see-through pixels
+    kira yaw203: 0 see-through pixels
+    kira yaw225: 0 see-through pixels
+    kira yaw248: 0 see-through pixels
+    kira yaw270: 0 see-through pixels
+    kira yaw293: 0 see-through pixels
+    kira yaw315: 0 see-through pixels
+    kira yaw338: 0 see-through pixels
+    kira head_front: 0 see-through pixels
+    kira head_back: 0 see-through pixels
+    kira head_left: 0 see-through pixels
+    kira head_top: 0 see-through pixels
+    kira tail: 0 see-through pixels
+    kira paws_front: 0 see-through pixels
+    kira paws_back: 0 see-through pixels
+    kira fangs: 0 see-through pixels
+  ok    kira: 0 see-through pixels over 24 views of 480x480 (worst 0 in ; must be 0, Round 5); sheet r4_turntable_kira.png (holes in green)
+    kira_sabertooth yaw000: 0 see-through pixels
+    kira_sabertooth yaw023: 0 see-through pixels
+    kira_sabertooth yaw045: 0 see-through pixels
+    kira_sabertooth yaw068: 0 see-through pixels
+    kira_sabertooth yaw090: 0 see-through pixels
+    kira_sabertooth yaw113: 0 see-through pixels
+    kira_sabertooth yaw135: 0 see-through pixels
+    kira_sabertooth yaw158: 0 see-through pixels
+    kira_sabertooth yaw180: 0 see-through pixels
+    kira_sabertooth yaw203: 0 see-through pixels
+    kira_sabertooth yaw225: 0 see-through pixels
+    kira_sabertooth yaw248: 0 see-through pixels
+    kira_sabertooth yaw270: 0 see-through pixels
+    kira_sabertooth yaw293: 0 see-through pixels
+    kira_sabertooth yaw315: 0 see-through pixels
+    kira_sabertooth yaw338: 0 see-through pixels
+    kira_sabertooth head_front: 0 see-through pixels
+    kira_sabertooth head_back: 0 see-through pixels
+    kira_sabertooth head_left: 0 see-through pixels
+    kira_sabertooth head_top: 0 see-through pixels
+    kira_sabertooth tail: 0 see-through pixels
+    kira_sabertooth paws_front: 0 see-through pixels
+    kira_sabertooth paws_back: 0 see-through pixels
+    kira_sabertooth fangs: 0 see-through pixels
+  ok    kira_sabertooth: 0 see-through pixels over 24 views of 480x480 (worst 0 in ; must be 0, Round 5); sheet r4_turntable_kira_sabertooth.png (holes in green)
+    abi_home yaw000: 0 see-through pixels
+    abi_home yaw023: 0 see-through pixels
+    abi_home yaw045: 0 see-through pixels
+    abi_home yaw068: 0 see-through pixels
+    abi_home yaw090: 0 see-through pixels
+    abi_home yaw113: 0 see-through pixels
+    abi_home yaw135: 0 see-through pixels
+    abi_home yaw158: 0 see-through pixels
+    abi_home yaw180: 0 see-through pixels
+    abi_home yaw203: 0 see-through pixels
+    abi_home yaw225: 0 see-through pixels
+    abi_home yaw248: 0 see-through pixels
+    abi_home yaw270: 0 see-through pixels
+    abi_home yaw293: 0 see-through pixels
+    abi_home yaw315: 0 see-through pixels
+    abi_home yaw338: 0 see-through pixels
+    abi_home head_front: 0 see-through pixels
+    abi_home head_back: 0 see-through pixels
+    abi_home head_left: 0 see-through pixels
+    abi_home head_top: 0 see-through pixels
+  ok    abi_home: 0 see-through pixels over 20 views of 480x480 (worst 0 in ; must be 0, Round 5); sheet r4_turntable_abi_home.png (holes in green)
+    abi_iceage yaw000: 0 see-through pixels
+    abi_iceage yaw023: 0 see-through pixels
+    abi_iceage yaw045: 0 see-through pixels
+    abi_iceage yaw068: 0 see-through pixels
+    abi_iceage yaw090: 0 see-through pixels
+    abi_iceage yaw113: 0 see-through pixels
+    abi_iceage yaw135: 0 see-through pixels
+    abi_iceage yaw158: 0 see-through pixels
+    abi_iceage yaw180: 0 see-through pixels
+    abi_iceage yaw203: 0 see-through pixels
+    abi_iceage yaw225: 0 see-through pixels
+    abi_iceage yaw248: 0 see-through pixels
+    abi_iceage yaw270: 0 see-through pixels
+    abi_iceage yaw293: 0 see-through pixels
+    abi_iceage yaw315: 0 see-through pixels
+    abi_iceage yaw338: 0 see-through pixels
+    abi_iceage head_front: 0 see-through pixels
+    abi_iceage head_back: 0 see-through pixels
+    abi_iceage head_left: 0 see-through pixels
+    abi_iceage head_top: 0 see-through pixels
+  ok    abi_iceage: 0 see-through pixels over 20 views of 480x480 (worst 0 in ; must be 0, Round 5); sheet r4_turntable_abi_iceage.png (holes in green)
+
+== Items 1-2: the player's view while running (vortex platform)
+  screenshot r4_run_abi_home_side.png
+  screenshot r4_run_abi_home_front.png
+  screenshot r4_run_abi_home_back.png
+  screenshot r4_run_abi_iceage_side.png
+  screenshot r4_run_abi_iceage_front.png
+  screenshot r4_run_abi_iceage_back.png
+  screenshot r4_run_kira_sabertooth_side.png
+  screenshot r4_run_kira_sabertooth_front.png
+  screenshot r4_run_kira_sabertooth_back.png
+  screenshot r4_run_kira_side.png
+  screenshot r4_run_kira_front.png
+  screenshot r4_run_kira_back.png
+
+== Item 8: frame rate in the Ice Age, the full view drawn every frame (1920 x 1080 off-screen, Steam Deck setting off)
+  the snowfield toward the volcanoes: 200 fps average, slowest frame 88 ms
+  screenshot 40_perf_snowfield.png
+  the mammoth ridge: 219 fps average, slowest frame 48 ms
+  screenshot 40_perf_mammoth.png
+  the standing stones and the vents: 295 fps average, slowest frame 33 ms
+  screenshot 40_perf_standing.png
+  ok    200 fps at the slowest place (the snowfield toward the volcanoes); need 60 (NVIDIA GeForce GTX 1660 Ti, 1920x1080)
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 69218304 samples); master volume 0.00

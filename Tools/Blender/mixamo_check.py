@@ -9,6 +9,10 @@ import bpy, math, os, sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'mixamo')
 CLIPS = {'run': ('Fast Run.fbx', .3), 'cheer': ('Cheering.fbx', .5), 'kick': ('Mma Kick.fbx', .45)}
+# Round 5: the Violinist's own clips (paths relative to SourceArt/Mixamo); pick the set with clips=violinist
+VIOLINIST = {'play': ('violinist_iceage/Playing The Violin.fbx', .4), 'bow': ('violinist_iceage/Quick Informal Bow.fbx', .5),
+             'nod': ('violinist_iceage/Head Nod Yes.fbx', .5), 'walk': ('Walking.fbx', .3)}
+if 'clips=violinist' in sys.argv: OUT = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'violinist'); CLIPS = VIOLINIST
 
 
 def load_action(path):
@@ -64,5 +68,5 @@ def check(model, fbx):
         shot(cam, h, 35, os.path.join(OUT, f'{model}_{tag}.png'))
 
 
-for a in sys.argv[sys.argv.index('--') + 1:]:
+for a in [x for x in sys.argv[sys.argv.index('--') + 1:] if x != 'clips=violinist']:
     m, f = a.split('=', 1); check(m, f)

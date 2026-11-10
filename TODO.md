@@ -24,134 +24,12 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 5: Ice Age polish, a bigger valley, creature models (target 0.5.0)
-Round 4's plan is in `TODO-ARCHIVE.md`. Dan played 0.4.0 (2026-11-09): "for a
-start not too bad", clean-up needed, and the notes below. Report per item:
-done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can
-overrule after playing.
-
-**Testing incident (2026-11-09, during Round 5), fixed:** Code rendered `IceAgeArrival` with the Unity editor in batch
-mode *with graphics* (`unity_batch.py --gpu`, Play mode + Unity Recorder): the editor (and the licensing client it starts)
-took Dan's focus and the cutscene's music came out of his speakers (the recorder only kept audio out of the file). Changed:
-every process now starts through `Tools/quiet.py` (a separate, never-shown Windows desktop, so no window can appear or take
-focus; hidden; Below Normal; Blender only with `-b`, Unity only with `-batchmode`; a watcher reports any visible window or
-foreground grab); the editor mutes itself in batch mode (`Editor/QuietEditor.cs`); `--gpu` is refused; cutscene videos are
-rendered from the built exe in batch mode (`Tools/render_cutscene.py`: muted, frames off-screen at a fixed 30 fps, ffmpeg
-hidden); the editor menu calls the same script. Found on the way: even a batch-mode exe check's hidden
-`Unity.BatchModeWindow` briefly took the foreground (no window shown) before the separate desktop. Check: ActOne and
-IceAgeArrival re-rendered this way: measured output 0.000 RMS / peak 0.000 for both, and the watcher (every 0.25 s) saw no
-visible window and no foreground grab for the game exe or ffmpeg; the build and the exe checks report the same.
-
-**Dan's notes on 0.4.0**
-1. **Rewrite `IceAgeArrival` (Dan's story beat).** They land in the snow. Dan
-   gets up and sees what looks like a **sabertooth about to attack him**: shoot
-   Kira from a low angle in silhouette / shadow against the bright sky so she
-   reads as big and dangerous, a growl, fangs. Dan scrambles backward and
-   **falls flat on his back in fright**. Kira leaps onto his chest; close-up:
-   he sees the folded ears and amber eyes and realizes it's **Kira**: big
-   relief (he laughs, slumps back). She paws at his chest, **pointing out the
-   necklace** he didn't know he had; he holds it up, it pulses blue. Abi
-   laughs. Comedy is situational, no dialogue needed. Keep it about the same
-   length (13–16 s) and skippable; render the MP4 again.
-1b. **Kira still has see-through spots (Dan, 2026-11-09, after 0.4.0).**
-   Round 4's reversed-twin faces cut it down but didn't finish it (sabertooth
-   still 168 px in the exe). Get to **zero** see-through pixels, both forms,
-   any angle, in the exe. If the Meshy mesh itself is open or non-manifold,
-   don't patch it again: rebuild a closed mesh in Blender (voxel remesh or
-   shrink-wrap to a solid body), re-bake the texture onto it, re-skin to the
-   same rig, keep the Kira lock checks. Also check the material isn't using
-   alpha / transparency anywhere. Check: turntable at 16 angles + close-ups of
-   ears, tail, paws and fangs, and a player's-view run, with the measured
-   see-through count (must be 0). Same check for Abi's hair (32 / 30 px left).
-2. **The trees are lying down** ("Why were all the trees down?"). Find the
-   cause (likely the pine prop's up-axis from Blender, not its placement) and
-   fix it at the source. Then check **every** Ice Age prop is upright and
-   sitting on the ground (pines, rocks, bones, crystals, stones), with a shot.
-3. **Clean-up pass.** Before adding anything: go through Round 4's own exe
-   screenshots and new ones from the player's view across the whole valley,
-   and list every visual problem found (things lying wrong, floating or sunk
-   props, clipping, seams, stretched textures, holes, popping). Fix them, and
-   put the list (fixed / not fixed) in the report. Dan will add his own list
-   after playing.
-
-**Music (standing rule in `CLAUDE.md`: level songs are Dan's)**
-4. Remove Code's Ice Age stand-in (`Music/iceage.mp3`, and from
-   `make_sounds.py`). Play Dan's files when they exist, silence until then:
-   - `Music/title.mp3`: **title screen (new, Dan 2026-11-09)**: its own main
-     theme, different from Act I and the Ice Age. Prompt in `Docs/MUSIC.md`.
-   - `Music/act1.mp3`: during `ActOne`, fade out at the white-out.
-   - `Music/iceage.mp3`: starts with `IceAgeArrival`, then loops in the world.
-   - `Music/vortex.mp3`: **inside the vortex space (new, Dan 2026-11-09)**,
-     loops; crossfade in when the party enters, back to the world's theme
-     when they leave.
-   The Violinist's tune and the sound effects stay (ElevenLabs).
-   **Dan's four tracks are in (2026-11-09):** `Music/title.mp3` (3:00),
-   `act1.mp3` (22.4 s), `iceage.mp3` (3:00, replaces Code's stand-in: don't
-   regenerate it; remove the iceage entry from `make_sounds.py`), `vortex.mp3`
-   (3:00). Act I's track runs 3.4 s past the 19 s scene: fade it out over the
-   white-out (or hold the white-out a moment longer if it ends on a nicer
-   note). Check all four load and play in the right places (muted run, level
-   reported); Dan judges the sound.
-
-**A bigger Ice Age with places for later (Dan, 2026-11-09)**
-5. **Grow the valley** (DEFAULT): about 10–15 minutes for a first visit (now
-   6.6). Keep what's there and add three zones:
-   - **Frozen lake:** wide ice with skating slides, holes in the ice, and a deep
-     part under the ice for later (see the gates below).
-   - **Glacier climb:** a tall wall of ice and ledges up to a summit with a view
-     over the whole valley and the volcanoes.
-   - **Hot-spring grotto:** a warm hidden cave by the volcano side, behind a
-     cracked rock wall.
-6. **Places that open with later moves.** Every one is visible on the first
-   visit so the player knows to come back, and holds shards, a heart upgrade
-   or both. Use the move roadmap below (DEFAULT, see open question):
-   - double-jump ledges (Abi, Egypt): keep the two, add one;
-   - boulders (Muscle Man, Medieval): keep the one, add one;
-   - cracked rock walls (Dan's charged punch, Medieval): the grotto entrance;
-   - the deep lake under the ice (deep dive, Pirate Seas);
-   - wall-jump chimneys in the glacier (Abi's wall jump, Steampunk).
-   Build the gates now as data (which move opens each); the moves themselves
-   come in their worlds.
-7. **Shards and hearts:** grow to about 60 small shards (DEFAULT) with the
-   requirement about 35; Rule 2 must still hold (35 reachable with the moves
-   you have on the first visit: no double jump, no Muscle Man, and the ground
-   pound only after the Violinist). Hide two heart upgrades in the valley, at
-   least one behind a later-move gate.
-
-**Creature models**
-8. **Meshy + Mixamo for the Violinist first, then stop for Dan.** Dan's concept
-   `SourceArt/Concepts/violinist_iceage.png` → Meshy → clean-up → Mixamo upload
-   FBX + clip list (idle, play-instrument idle, walk, a small bow/nod). Stop and
-   tell Dan as soon as his file is ready (Dan does Mixamo the same day).
-   **When Dan's clips arrive, import them in this same round** (don't wait for
-   a later round).
-9. **Wolf, snow critter, mammoth:** Meshy from Dan's concepts, Blender rig and
-   clips by script (four-legged, like Kira): wolf (idle, walk, run, circle,
-   lunge, hit, stunned), critter (idle, waddle, hit, stunned), mammoth (walk,
-   idle; ride collider stays flat). Replace the placeholders; keep them as
-   fallback.
-10. Build, check (a full run from New game: Act I, the new arrival, the whole
-    valley, story shard, vortex), publish 0.5.0, update `TODO.md` / `CLAUDE.md`,
-    clean up.
-
-**Move roadmap (DEFAULT, open for Dan; moves are kept across worlds, so later
-moves reopen earlier worlds):**
-| World | The Violinist teaches | Also |
-|---|---|---|
-| Ice Age | Dan: ground pound | |
-| Egypt | Abi: double jump | |
-| Bethlehem | Kira: pounce (long leap) | |
-| Medieval | Dan: charged punch | Muscle Man joins (boulders, lifts Dan to high ledges) |
-| Pirate Seas | everyone: deep dive (longer breath) | |
-| Steampunk | Abi: wall jump | |
-| Tomorrowland | Abi: air dash | |
-| Moon | none (the finale) | |
----------------------------------------------------------------------------
-
+Current round — none yet: the planning chat writes Round 6 (suggested: Egypt, mummy Kira, the judgmental camel, Abi's
+double jump from the Violinist). Round 5's plan is in `TODO-ARCHIVE.md`.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
-### Round 5: Ice Age polish, a bigger valley, creature models (0.5.0, build 500, 2026-11-09) — waiting for the Violinist's clips
+### Round 5: Ice Age polish, a bigger valley, creature models (0.5.0, build 500, 2026-11-09)
 Final checks so far (built exe, batch mode, muted, separate never-shown desktop, virtual pad from the title screen):
 `local/round5/play4` play-through RESULT all passed (116 ok); `zones4`, `fixes2`, `perf`, `perf_deck` passed; `tour2` 1 prop
 fixed after it. Audio output 0.000 RMS in every run; window watcher: no window, never in the foreground. Evidence:
@@ -182,17 +60,34 @@ fixed after it. Audio output 0.000 RMS in every run; window watcher: no window, 
    All visible on the first visit, each says what it waits for; checked closed in the exe.
 7. Shards / hearts: **done.** 60 shards, 35 wake the necklace. Rule 2 by data: 43 reachable on the first visit; play-through:
    37 before the ground pound. Hearts: IA-H1 (cave) + IA-H2 in the grotto (charged punch).
-8. Violinist: **Meshy + Mixamo file done, waiting for Dan's clips** (`Docs/MODELS-NEEDED.md` top). Import + game code ready.
+8. Violinist: **done.** Meshy model (1.85 m) rigged by Dan in Mixamo; his clips play (violin), bow, nod + the shared idle / walk.
+   In the game he idles by the fire, plays through `ViolinistTeaches`, then bows and nods; the bone fiddle and a bow follow his
+   hands (placed each frame; the hand bone's scale had made the fiddle huge). Check `violinist`: idle -> play -> bow -> nod.
 9. Wolf, critter, mammoth: **done.** Meshy, closed rebuild, Code's quadruped rig + clips (+ stunned), Generic; in the game on
    the placeholders (kept as fallback): walk/run by speed, lunge, hit, stunned. Mammoth skin: distance weights (bone heat failed).
-10. Build / check / publish: build and checks **done**; publish **after item 8**.
+10. Build / check / publish: **done.** Final check `local/round5/final` (play-through + see-through + frame rate: RESULT all passed, 121 ok; 0.000 RMS; bot 10.1 min landing to story shard; 200 fps); 0.5.0 (211 MB) published as `game-500`; a fresh Round 1 starter install updated itself from GitHub to 0.5.0 and started (ready handshake; launcher hidden, never in the foreground). Disk: 3.4 GB -> 3.3 GB.
+
+Also fixed on the way: the campfire's flicker code reset its flames to big blobs every frame (now slim tongues).
+
+Testing incident (fixed, Dan's rule widened): Code rendered `IceAgeArrival` with the Unity editor in batch
+mode *with graphics* (`unity_batch.py --gpu`, Play mode + Unity Recorder): the editor (and the licensing client it starts)
+took Dan's focus and the cutscene's music came out of his speakers (the recorder only kept audio out of the file). Changed:
+every process now starts through `Tools/quiet.py` (a separate, never-shown Windows desktop, so no window can appear or take
+focus; hidden; Below Normal; Blender only with `-b`, Unity only with `-batchmode`; a watcher reports any visible window or
+foreground grab); the editor mutes itself in batch mode (`Editor/QuietEditor.cs`); `--gpu` is refused; cutscene videos are
+rendered from the built exe in batch mode (`Tools/render_cutscene.py`: muted, frames off-screen at a fixed 30 fps, ffmpeg
+hidden); the editor menu calls the same script. Found on the way: even a batch-mode exe check's hidden
+`Unity.BatchModeWindow` briefly took the foreground (no window shown) before the separate desktop. Check: ActOne and
+IceAgeArrival re-rendered this way: measured output 0.000 RMS / peak 0.000 for both, and the watcher (every 0.25 s) saw no
+visible window and no foreground grab for the game exe or ffmpeg; the build and the exe checks report the same.
 
 Decisions Code made (Dan can overrule): the skating lane grips across it (you can steer) and slides along it; Kira 20k
 triangles (closed); the necklace waits for open sky (unchanged); hearts in the valley = 2 (H1 kept, H2 new).
 
 **For Dan to check:** the new arrival (MP4 and in game); Kira's / Abi's look up close after the rebuild (smoother than Meshy's
 fur, whiskers gone); the music in each place (only checked muted); the lake's slipperiness and the skating lane; the glacier
-climb and the view; whether 35 shards feels right; the wolves / critters / mammoths moving.
+climb and the view; whether 35 shards feels right; the wolves / critters / mammoths moving; the Violinist playing (Mixamo's violin
+clip holds his arms low, so the fiddle sits in front of his chest, not under his chin: say if you want another clip).
 
 ### Round 4: the Ice Age, the first real world (0.4.0, build 400, 2026-11-09)
 Final check `local/round4/final2` (built exe, batch mode, muted, no window, virtual pad from the title screen; Ice Age

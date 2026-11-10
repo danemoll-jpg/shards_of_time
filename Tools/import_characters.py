@@ -21,8 +21,9 @@ ROOT = Path(__file__).resolve().parent.parent
 MIX, RIGGED, MESHY = ROOT / "SourceArt" / "Mixamo", ROOT / "SourceArt" / "Rigged", ROOT / "SourceArt" / "Meshy"
 OUT = ROOT / "Assets" / "Resources" / "Characters"
 NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_sabertooth", "wolf", "snow_critter", "mammoth", "violinist_iceage"]
-# Round 5: the Violinist's own Mixamo clips (SourceArt/Mixamo/violinist_iceage/<clip>.fbx -> Clips/violinist_<clip>.fbx)
-VIOLINIST_CLIPS = ["idle", "play", "walk", "bow", "nod"]
+# Round 5: the Violinist's own Mixamo clips (SourceArt/Mixamo/violinist_iceage/<Mixamo name>.fbx -> Clips/violinist_<clip>.fbx);
+# his idle and walk are the shared Idle / Walking clips (Clips/idle.fbx, walk.fbx), like Dan's and Abi's
+VIOLINIST_CLIPS = {"play": "Playing The Violin", "bow": "Quick Informal Bow", "nod": "Head Nod Yes"}
 # Round 3: one Mixamo clip set for all four people (Without Skin, SourceArt/Mixamo/<Mixamo name>.fbx), copied as
 # Assets/Resources/Characters/Clips/<game clip>.fbx. Unity's Humanoid retargeting plays them on every person; trims, loops and
 # root settings per clip are in Assets/Editor/CharacterImport.cs (PeopleClips).
@@ -65,8 +66,8 @@ def main():
         if (MIX / f"{m}.fbx").exists(): shutil.copy2(MIX / f"{m}.fbx", OUT / "Clips" / f"{game}.fbx")
     print(f"people's clips: {len(PEOPLE_CLIPS) - len(missing)} of {len(PEOPLE_CLIPS)}")
     vd = MIX / "violinist_iceage"
-    got = [c for c in VIOLINIST_CLIPS if (vd / f"{c}.fbx").exists()]
-    for c in got: shutil.copy2(vd / f"{c}.fbx", OUT / "Clips" / f"violinist_{c}.fbx")
+    got = [c for c, m in VIOLINIST_CLIPS.items() if (vd / f"{m}.fbx").exists()]
+    for c in got: shutil.copy2(vd / f"{VIOLINIST_CLIPS[c]}.fbx", OUT / "Clips" / f"violinist_{c}.fbx")
     print(f"the Violinist's clips: {len(got)} of {len(VIOLINIST_CLIPS)}" + (f" (missing {', '.join(c for c in VIOLINIST_CLIPS if c not in got)})" if len(got) < len(VIOLINIST_CLIPS) else ""))
     print("copied:", len(list(OUT.rglob("*.fbx"))), "fbx,", len(list(OUT.rglob("*.png"))), "png")
 

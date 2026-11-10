@@ -75,7 +75,8 @@ def _desktop_popen(args, log):
     for h in (ho, hi): k.SetHandleInformation(wintypes.HANDLE(h), 1, 1)   # inheritable
     si.hStdInput, si.hStdOutput, si.hStdError = hi, ho, ho
     pi = PI()
-    cmd = ctypes.create_unicode_buffer(subprocess.list2cmdline([str(a) for a in args]))
+    args = [os.path.abspath(str(args[0])) if os.path.exists(str(args[0])) else str(args[0])] + [str(a) for a in args[1:]]   # CreateProcess wants a full path
+    cmd = ctypes.create_unicode_buffer(subprocess.list2cmdline(args))
     if not k.CreateProcessW(None, cmd, None, None, True, FLAGS, None, None, ctypes.byref(si), ctypes.byref(pi)):
         raise OSError(f'quiet.py: could not start {args[0]} (error {k.GetLastError()})')
     k.CloseHandle(pi.hThread)

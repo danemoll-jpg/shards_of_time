@@ -183,6 +183,43 @@ namespace ShardsOfTime
             Log("  " + TestRun.Report());
         }
 
+        // Round 5, item 8: the Violinist's model and clips (teleport only to set up; Dan walks up with the pad)
+        IEnumerator ViolinistCheck()
+        {
+            yield return EnsurePlaying(false);
+            Head("Round 5, item 8: the Violinist (Meshy model, Mixamo clips)");
+            var v = Violinist.I;
+            Log($"  (violinists: {string.Join(", ", Object.FindObjectsByType<Violinist>(FindObjectsInactive.Include, FindObjectsSortMode.None).Select(x => $"{x.GetHashCode()} active {x.isActiveAndEnabled} model {x.HasModel}"))}; I = {(v ? v.GetHashCode() : 0)})");
+            Ok(v && v.HasModel, $"the Violinist is his model ({(v ? Violinist.Model : "missing")}), the placeholder hidden");
+            yield return SwitchTo(0);
+            yield return TpSettle(IceAge.OnGround(IceAge.ViolinistAt.x + 5, IceAge.ViolinistAt.z - 5) + Vector3.up * .1f, 315);
+            yield return Wait(1f);
+            Ok(v.ClipNow == "idle", $"idle by the campfire (clip {v.ClipNow})"); yield return Shot("60_violinist_idle");
+            yield return Go(IceAge.ViolinistAt + new Vector3(1.4f, 0, -1.4f), .5f, 15f, .6f, () => Cutscenes.Playing != null);
+            yield return WaitFor(() => Cutscenes.Playing == "ViolinistTeaches", 15f);
+            yield return Wait(1.2f);
+            Log($"  (playing {v.Playing}, cutscene {Cutscenes.Playing}, model {v.HasModel})");
+            Ok(v.ClipNow == "play", $"he plays the fiddle (clip {v.ClipNow})"); yield return Shot("61_violinist_plays");
+            yield return CloseUp(v.transform, "62_violinist_fiddle_closeup");
+            yield return WaitFor(() => !Game.InCutscene, 10f); yield return Wait(.5f);
+            Ok(v.ClipNow == "bow" || v.ClipNow == "nod", $"after the tune: a bow, then a nod (clip {v.ClipNow})"); yield return Shot("63_violinist_bows");
+            yield return Wait(1.6f); Log($"  then: {v.ClipNow}"); yield return Shot("64_violinist_nods");
+            yield return WaitFor(() => !Game.I.Busy, 6f);
+            Ok(SaveGame.Current.Has(Abilities.GroundPound), "Dan learned the ground pound");
+            Log("  " + TestRun.Report());
+        }
+
+        // a close look at a figure from in front (its own camera, off-screen)
+        IEnumerator CloseUp(Transform t, string name)
+        {
+            yield return new WaitForEndOfFrame();
+            var cam = CameraRig.I.Cam; var pos = cam.transform.position; var rot = cam.transform.rotation; var brain = cam.GetComponent<Unity.Cinemachine.CinemachineBrain>();
+            if (brain) brain.enabled = false;
+            cam.transform.position = t.position + t.forward * 1.6f + Vector3.up * 1.6f; cam.transform.LookAt(t.position + Vector3.up * 1.35f);
+            TestRun.SaveView(cam, System.IO.Path.Combine(dir, name + ".png")); Log($"  screenshot {name}.png");
+            cam.transform.SetPositionAndRotation(pos, rot); if (brain) brain.enabled = true;
+        }
+
         IEnumerator TurnView(Vector3 at)
         {
             var d = at - Player.transform.position; d.y = 0;

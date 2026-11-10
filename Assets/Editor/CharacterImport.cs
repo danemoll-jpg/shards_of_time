@@ -45,8 +45,7 @@ namespace ShardsOfTime
             ["hurt"] = new ClipSpec { first = 1, last = 20, bakeXZ = false },          // the first 0.6 s (the stumble back cut)
             ["fall_back"] = new ClipSpec(),                                            // Round 4: Dan's backward fall in the snow (cutscene)
             // Round 5: the Violinist's own clips (his Mixamo set)
-            ["violinist_idle"] = new ClipSpec { loop = true }, ["violinist_play"] = new ClipSpec { loop = true }, ["violinist_walk"] = new ClipSpec { loop = true },
-            ["violinist_bow"] = new ClipSpec(), ["violinist_nod"] = new ClipSpec(),
+            ["violinist_play"] = new ClipSpec { loop = true }, ["violinist_bow"] = new ClipSpec(), ["violinist_nod"] = new ClipSpec(),
         };
 
         void OnPreprocessModel()

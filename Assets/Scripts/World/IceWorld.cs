@@ -184,7 +184,7 @@ namespace ShardsOfTime
             var c = go.AddComponent<Campfire>(); c.flames = new Transform[3];
             Color[] cols = { new Color(1f, .45f, .1f), new Color(1f, .7f, .2f), new Color(1f, .9f, .5f) };
             // Round 5 (clean-up): small tapered glowing tongues + rising flame particles (Round 4's were solid orange blobs)
-            for (int i = 0; i < 3; i++) c.flames[i] = Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3((i - 1) * .1f, .32f + i * .06f, (i % 2) * .06f), new Vector3(.32f - i * .07f, .55f - i * .08f, .32f - i * .07f), Placeholders.Mat(cols[i], "Glow")).transform;
+            for (int i = 0; i < 3; i++) c.flames[i] = Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3((i - 1) * .12f, .28f + i * .05f, (i % 2) * .08f - .04f), new Vector3(.17f - i * .03f, .5f - i * .08f, .17f - i * .03f), Placeholders.Mat(cols[i], "Glow")).transform;
             var fx = new GameObject("Flames"); fx.transform.SetParent(go.transform, false); fx.transform.localPosition = new Vector3(0, .3f, 0);
             var ps = fx.AddComponent<ParticleSystem>(); ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = ps.main; main.startLifetime = new ParticleSystem.MinMaxCurve(.5f, .9f); main.startSpeed = new ParticleSystem.MinMaxCurve(.6f, 1.2f);
@@ -208,8 +208,8 @@ namespace ShardsOfTime
             for (int i = 0; i < flames.Length; i++)
             {
                 float k = .85f + Mathf.PerlinNoise(t * 5f + i * 3, i) * .35f;
-                flames[i].localScale = new Vector3((.6f - i * .15f) * (1.1f - k * .1f), (1f - i * .2f) * k, (.6f - i * .15f));
-                flames[i].localPosition = new Vector3(0, .45f + (1f - i * .2f) * k * .4f, 0);
+                flames[i].localScale = new Vector3((.17f - i * .03f) * (1.1f - k * .1f), (.5f - i * .08f) * k, .17f - i * .03f);   // Round 5: slim tongues
+                flames[i].localPosition = new Vector3((i - 1) * .12f, .22f + (.5f - i * .08f) * k * .5f, (i % 2) * .08f - .04f);
             }
         }
     }

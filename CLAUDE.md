@@ -243,7 +243,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 5: `game-500`, previous `Builds/LauncherRelease-500`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -252,6 +252,32 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 5 delivered: 0.5.0 (build 500), 2026-11-09.** The new arrival (Kira's silhouette, Dan's fall, "it's Kira"); props upright;
+Dan's four Suno tracks by place; Kira and Abi closed meshes (0 see-through); a bigger Ice Age (frozen lake, glacier climb,
+hot-spring grotto), 60 shards / 35 wake the necklace, 10 later-move gates as data; Meshy wolf, snow critter, mammoth (Code's
+rig) and the Violinist (Mixamo) in the game. Every process Code starts goes through `Tools/quiet.py` (after a render played sound
+and took Dan's focus). Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 5:
+- `Tools/quiet.py`: every process on a never-shown desktop, hidden, Below Normal, with a window watcher (`quiet.watch_report`).
+  Cutscene videos: `Tools/render_cutscene.py` (built exe, `-exeCheckOnly film`, fixed 30 fps frames, ffmpeg). `unity_batch.py
+  --gpu` is refused. MonoBehaviours saved in prefabs must live in a file named after the class (Round 5 found `ScreenTint`,
+  `Backlight`, `CutsceneMood` missing in the exe).
+- Music: `Game.MusicFor` picks Dan's track by place (title / act1 fading from 16.6 s / iceage / vortex); missing file = silence.
+- Closed meshes: `Tools/Blender/closed_mesh.py` (voxel solid + gap sealing + remesh + Meshy maps baked). Kira's forms and the
+  creatures through `kira_rig.py` (`CREATURES` heights, `TRIS`, `THIN`; creatures rigged at Kira's size, armature scaled up, extra
+  `stunned` clip); people through `close_person.py` (Mixamo weights copied; output `rigged_closed.fbx`, preferred by
+  `import_characters.py`; maps in `SourceArt/Rigged/<model>/`).
+- World: `WorldArt.Prop` keeps the FBX root's turn (props were lying down); `Resources/Data/WorldProps.txt` at every build.
+  `IceAge.cs`: `Lake` (west basin through z 98..132; `SlickIce` lanes grip across, slide along; `DeepWater` pushes divers up
+  without `Abilities.DeepDive`), `Glacier` (east through z 280..310; 18 ledges `LedgeStep` 1.3 m), `Grotto` (`RockWall` needs
+  `Abilities.ChargedPunch`). `WorldData.gates` = the later-move places. New abilities: ChargedPunch, DeepDive, WallJump (not
+  learnable yet). `IceAge.asset` is remade when it has no gates (delete it after changing the defaults).
+- Creatures: `CharacterModel.Creature` puts a model on a placeholder (shapes kept in a hidden "Graybox"); `CreatureAnimator.Drive`
+  feeds a motor-less creature its loop / speed. The Violinist: `Violinist.UseModel` (own playables; clips `Clips/violinist_*`
+  + shared idle / walk).
+- Exe check modes added: `tour` (valley viewpoints + prop audit), `zones` (the three new zones), `violinist`, `film`.
+
 **Round 4 delivered: 0.4.0 (build 400), 2026-11-09.** The Ice Age is the game: New game plays Act I (the living room) and the
 arrival in the snow, then one valley (snowfield and pond, mammoth ridge, gorge, ice caves, steam vents, standing stones) with
 40 shards, the necklace, the blue story shard, the vortex (Ice Age / Egypt "to be continued" / Home blocked), the Violinist

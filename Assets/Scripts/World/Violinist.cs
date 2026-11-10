@@ -51,8 +51,8 @@ namespace ShardsOfTime
             return v;
         }
 
-        // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage) and his own clips (Clips/violinist_<name>: idle,
-        // play, walk, bow, nod) replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
+        // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage), his own clips (Clips/violinist_play, _bow, _nod)
+        // and the shared idle / walk replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
         public const string Model = "violinist_iceage";
         PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
         string loop = "idle", oneShot; float oneShotEnd;
@@ -70,10 +70,11 @@ namespace ShardsOfTime
             var anim = go.GetComponentInChildren<Animator>(); anim.applyRootMotion = false; anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             graph = PlayableGraph.Create("Violinist clips"); graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             var clips = new List<AnimationClip>();
-            foreach (var n in new[] { "idle", "play", "walk", "bow", "nod" })
+            // his own clips (play, bow, nod) and the people's shared idle and walk (Dan's choice, Round 5)
+            foreach (var (n, file) in new[] { ("idle", "idle"), ("play", "violinist_play"), ("walk", "walk"), ("bow", "violinist_bow"), ("nod", "violinist_nod") })
             {
-                var c = Resources.Load<AnimationClip>("Characters/Clips/violinist_" + n);
-                if (!c) foreach (var a in Resources.LoadAll<AnimationClip>("Characters/Clips/violinist_" + n)) if (!a.name.StartsWith("__preview__")) { c = a; break; }
+                AnimationClip c = null;
+                foreach (var a in Resources.LoadAll<AnimationClip>("Characters/Clips/" + file)) if (!a.name.StartsWith("__preview__")) { c = a; break; }
                 if (c) { clipIndex[n] = clips.Count; clips.Add(c); }
             }
             mix = AnimationMixerPlayable.Create(graph, clips.Count);
@@ -81,13 +82,41 @@ namespace ShardsOfTime
             weights = new float[clips.Count];
             AnimationPlayableOutput.Create(graph, "out", anim).SetSourcePlayable(mix);
             graph.Play();
-            var hand = anim.isHuman ? anim.GetBoneTransform(HumanBodyBones.LeftHand) : null;
-            if (fiddle && hand) { fiddle.transform.SetParent(hand, false); fiddle.transform.localPosition = new Vector3(0, .08f, .04f); fiddle.transform.localRotation = Quaternion.Euler(0, 90, 0); }
+            // the fiddle and a bow follow his hands every frame (LateUpdate): placed in world space, so no bone scale inflates them
+            if (anim.isHuman && fiddle)
+            {
+                lHand = anim.GetBoneTransform(HumanBodyBones.LeftHand); rHand = anim.GetBoneTransform(HumanBodyBones.RightHand);
+                neckBone = anim.GetBoneTransform(HumanBodyBones.Neck); lShoulder = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+                fiddleT = fiddle.transform; fiddleT.SetParent(transform, true); fiddleT.localScale = Vector3.one * .75f;
+                fiddleNeck = fiddleT.Find("FiddleNeck__Bone"); fiddleBody = fiddleT.Find("FiddleBody__Bone");
+                var b = fiddleT.Find("FiddleBow__Bark"); if (b) b.gameObject.SetActive(false);
+                bowStick = Placeholders.Prim(PrimitiveType.Cylinder, transform, Vector3.zero, new Vector3(.015f, .36f, .015f), Placeholders.Mat(new Color(.42f, .28f, .18f)), name: "Model bow").transform;
+            }
             else if (fiddle) fiddle.SetActive(false);
             PlayLog.Line($"the Violinist: model {Model}, clips [{string.Join(", ", clipIndex.Keys)}]");
         }
 
         void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
+        Transform lHand, rHand, neckBone, lShoulder, fiddleT, fiddleNeck, fiddleBody, bowStick;
+
+        void LateUpdate()
+        {
+            if (!fiddleT || !lHand || !fiddleNeck || !fiddleBody) return;
+            bool play = ClipNow == "play";
+            // playing: the body under his chin (between the neck and the left shoulder), its neck toward his left hand;
+            // otherwise held by the neck in his left hand, hanging down
+            Vector3 bodyAt, aim;
+            if (play && neckBone && lShoulder) { bodyAt = Vector3.Lerp(neckBone.position, lShoulder.position, .55f) + transform.forward * .06f - Vector3.up * .08f; aim = lHand.position - bodyAt; }
+            else { bodyAt = lHand.position - Vector3.up * .3f + transform.forward * .05f; aim = lHand.position - bodyAt; }
+            var cur = fiddleNeck.position - fiddleBody.position;
+            if (cur.sqrMagnitude > 1e-6f && aim.sqrMagnitude > 1e-6f) fiddleT.rotation = Quaternion.FromToRotation(cur, aim) * fiddleT.rotation;
+            fiddleT.position += bodyAt - fiddleBody.position;
+            if (bowStick)
+            {
+                bowStick.gameObject.SetActive(play && rHand);
+                if (play && rHand) { var across = (fiddleBody.position - rHand.position); bowStick.position = rHand.position + across * .5f; bowStick.rotation = Quaternion.FromToRotation(Vector3.up, across.sqrMagnitude > 1e-6f ? across : Vector3.right); }
+            }
+        }
 
         // a one-shot (bow, nod) now; the loop comes back when it ends
         public void OneShot(string n)
@@ -122,7 +151,7 @@ namespace ShardsOfTime
             // the tune: the bow arm saws, notes drift up (during his cutscene, and a slow idle sway otherwise)
             bool play = Playing || Cutscenes.Playing == "ViolinistTeaches";
             var em = notes.emission; em.rateOverTime = play ? 6f : 0f;
-            loop = play ? "play" : "idle"; Blend();
+            var nl = play ? "play" : "idle"; if (nl != loop) PlayLog.Line($"the Violinist: {nl}"); loop = nl; Blend();
             if (bowArm) bowArm.localRotation = Quaternion.Euler(0, play ? Mathf.Sin(Time.time * 7f) * 25f : 0, play ? 0 : 10f);
             if (head) head.localRotation = Quaternion.Euler(play ? 8f : 0, 0, play ? Mathf.Sin(Time.time * 1.5f) * 8f : Mathf.Sin(Time.time * .7f) * 3f);
             if (!Game.Playing || !Party.I || Game.I.Busy) return;

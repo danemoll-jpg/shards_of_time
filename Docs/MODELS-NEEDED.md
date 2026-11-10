@@ -14,11 +14,11 @@ His Meshy model is cleaned up (1.85 m, 20.8k triangles, A-pose, facing front; pr
 
 | File | Mixamo search | For |
 |---|---|---|
-| `idle.fbx` | **Idle** (a calm standing one) | waiting by the campfire |
 | `play.fbx` | **Playing Violin** (if nothing: search "violin"; if still nothing, take **Idle** again and say so: Code animates the bow arm) | playing the tune that teaches a move |
-| `walk.fbx` | **Walking** | walking up to the heroes / away |
 | `bow.fbx` | **Quick Formal Bow** (or **Bowing**) | a small bow at the end of the tune |
 | `nod.fbx` | **Head Nod Yes** | a knowing nod to the hero who learned the move |
+
+**Idle and walk: reuse the shared clips** already in `SourceArt/Mixamo/` (`Idle.fbx`, `Walking.fbx`; Humanoid retarget, as for Dan and Abi). Dan doesn't download them again (Dan, 2026-11-09).
 
 When the files are there, tell Code: they go into the game this same round (Round 5).
 
