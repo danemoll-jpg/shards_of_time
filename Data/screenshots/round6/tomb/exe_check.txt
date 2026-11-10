@@ -1,0 +1,71 @@
+Shards of Time exe check 2026-11-10 07:29, version 0.6.0; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 98304 samples); master volume 0.00
+
+== Round 6, item 7: the tomb (inside the pyramid)
+  ok    through the doorway into the tomb: dark, the necklace lights it ((500.0, 60.0, 7.0))
+  screenshot 98_tomb_entry.png
+  ok    E50 (tomb: the blade corridor) at (500.0, 60.0, 14.5); 1 shards
+  blades, darts, sand and blocks: 1 hit(s) on the way; 4 shards (E50 E51 E52 E53)
+  ok    through the blade corridor, the sand-pit hall and the sliding blocks to the turning room ((500.0, 60.0, 86.8))
+  screenshot 100_turning_room.png
+    (bridge on from S: yaw 270.0 paused True; player (498.8, 60.1, 86.8))
+      (waiting for the bridge toward E: yaw 270.0 / 90.0, paused True, player (499.9, 60.1, 95.6))
+      (waiting for the bridge toward E: yaw 282.1 / 102.1, paused False, player (499.9, 60.1, 95.7))
+    (bridge S -> E: yaw 0.0 paused True; player (499.6, 60.1, 96.0))
+    (the turning bridge S -> E: at (509.5, 60.0, 96.0))
+  ok    across the turning bridge to the east ledge ((509.5, 60.0, 96.0)); E54 got
+  screenshot 101_kira_past_the_mummies.png
+  ok    mummy Kira walks the gallery and no mummy wakes (3 asleep)
+  ok    E55, E56 in the gallery
+  ok    the hidden chamber's cat door opens for Kira
+  ok    E57 (tomb: the hidden cat chamber (Kira opens it)) at (547.1, 60.0, 92.5); 8 shards
+  ok    the hidden chamber's heart (max hearts 4)
+  ok    as Dan, a mummy wakes (2 awake)
+  screenshot 102_mummy_wakes.png
+  (could not reach (510.0, 60.0, 96.0) in 15 s, at (505.3, 52.1, 93.2))
+    (bridge on from E: yaw 180.0 paused True; player (494.0, 60.1, 96.0))
+    (bridge E -> W: yaw 180.0 paused True; player (499.6, 60.1, 96.0))
+    (the turning bridge E -> W: at (490.5, 60.0, 96.0))
+    (before the push: player (468.4, 60.3, 96.0), weight (466.0, 61.0, 96.0))
+    (after the push: weight (463.5, 61.0, 96.0), pushed 2.5 m, last refusal: )
+  ok    Dan pushes the weight onto the golden plate (1.5 s): the lift goes up
+  ok    E58 on the high ledge from the lift (y 66.3)
+  screenshot 103_counterweight_lift.png
+    (bridge on from W: yaw 180.0 paused True; player (489.5, 60.0, 96.0))
+      (waiting for the bridge toward N: yaw 180.0 / 0.0, paused True, player (499.6, 60.1, 96.0))
+      (waiting for the bridge toward N: yaw 198.1 / 18.1, paused False, player (499.6, 60.1, 96.1))
+    (bridge W -> N: yaw 270.0 paused True; player (500.0, 60.1, 96.4))
+    (the turning bridge W -> N: at (500.0, 60.1, 104.5))
+  screenshot 104_burial_chamber.png
+  ok    the cracked wall holds (charged punch, later): "This wall is cracked... a much stronger punch could break it. (later)"
+  ok    the narrow shaft's shard is out of reach (wall jump, later): "A narrow shaft going up, its walls close together. Someone who can kick off walls could climb it... (later)"
+  shards in Egypt: 9 (E50 E51 E52 E53 E54 E55 E56 E57 E58)
+  FAIL  9 shards in Egypt (35 wake the necklace)
+    (bridge on from N: yaw 90.0 paused True; player (493.6, 60.0, 116.1))
+  (could not reach (500.0, 60.0, 96.0) in 4 s, at (500.1, 60.1, 102.8))
+      (waiting for the bridge toward S: yaw 91.2 / 91.2, paused False, player (500.1, 60.1, 102.8))
+      (waiting for the bridge toward S: yaw 180.0 / 180.0, paused True, player (506.4, 60.1, 96.0))
+      (waiting for the bridge toward S: yaw 180.0 / 180.0, paused True, player (506.4, 60.1, 96.0))
+      (waiting for the bridge toward S: yaw 255.2 / 75.2, paused False, player (501.6, 60.1, 89.8))
+    (bridge N -> S: yaw 270.0 paused True; player (500.0, 60.1, 89.6))
+    (the turning bridge N -> S: at (500.0, 60.1, 87.5))
+    (bridge on from S: yaw 90.0 paused True; player (498.7, 60.1, 86.9))
+    (bridge S -> N: yaw 90.0 paused True; player (499.9, 60.1, 95.6))
+    (the turning bridge S -> N: at (500.0, 60.1, 104.5))
+  FAIL  the necklace is awake and the red story shard waits in the burial chamber
+  (could not reach (500.0, 60.0, 126.6) in 6 s, at (500.0, 60.0, 122.1))
+  FAIL  the red story shard in the burial chamber opens the vortex (VortexOpensEgypt)
+  screenshot 106_vortex_opens_red.png
+  FAIL  0 of 8 story shards
+  (could not reach (500.0, 60.0, 131.5) in 5 s, at (500.0, 60.0, 122.1))
+  (could not reach (500.0, 60.0, 135.0) in 5 s, at (500.0, 60.0, 122.1))
+  FAIL  the red vortex takes the party into the vortex space
+  screenshot 107_vortex_after_egypt.png
+  (could not reach (0.0, 600.0, 2504.0) in 25 s, at (488.4, 60.0, 135.6))
+  (could not reach (2.5, 600.0, 2507.6) in 25 s, at (488.4, 60.0, 135.6))
+  (could not reach (5.9, 600.0, 2518.1) in 25 s, at (488.4, 60.0, 135.6))
+  (could not reach (7.4, 600.0, 2522.8) in 6 s, at (488.4, 60.0, 135.6))
+  FAIL  after Egypt the Bethlehem path opens: ", to be continued..." (saved)
+
+RESULT: 6 check(s) failed: 9 shards in Egypt (35 wake the necklace) | the necklace is awake and the red story shard waits in the burial chamber | the red story shard in the burial chamber opens the vortex (VortexOpensEgypt) | 0 of 8 story shards | the red vortex takes the party into the vortex space | after Egypt the Bethlehem path opens: ", to be continued..." (saved)
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 34682880 samples); master volume 0.00

@@ -128,7 +128,7 @@ namespace ShardsOfTime
         // ---- the town: the plaza, the main street, the houses (rooftops), the north gate, the cat temple
         static void Town(WorldProgress prog)
         {
-            Cp(Start, 0, 8, 0);
+            Playground.CheckpointHere(Start, OnGround(0, 8), 0, root, false);   // no flag pole here: the arrival cutscene stands on this spot
             Cp(VortexCp, 6, 6, 0);
             Hint(new Vector3(0, 0, 14), 6f, () => "Ancient Egypt! The red shard on Dan's necklace is calling. Find the shards: 35 of them wake it.");
             // a little vortex arch on the plaza: where the vortex sets you down (the gate itself opens in the tomb)
@@ -427,7 +427,7 @@ namespace ShardsOfTime
             W("Lift hall ceiling", -45, -12, 89, 103, 9, 10);
             W("High ledge", -30, -24, 93, 99, 5.8f, 6f);
             var lift = Box("Lift", new Vector3(X - 20, Y + .1f, 96), new Vector3(3f, .3f, 3f), "Wood");
-            var plate = Box("Weight plate", new Vector3(X - 38, Y + .03f, 96), new Vector3(3f, .06f, 3f), "Gold", false);
+            var plate = Box("Weight plate", new Vector3(X - 37.5f, Y + .03f, 96), new Vector3(3f, .06f, 3f), "Gold", false);
             var weight = Box("Counterweight", new Vector3(X - 34, Y + 1f, 96), new Vector3(1.9f, 2f, 1.9f), "Stone");
             var pb = weight.gameObject.AddComponent<PushBlock>(); pb.speed = 2.4f; pb.limits = new Bounds(new Vector3(X - 30, Y + 1f, 96), new Vector3(24f, 4f, .5f));   // it slides east-west only
             var cw = lift.gameObject.AddComponent<Counterweight>(); cw.weight = weight; cw.plate = plate; cw.low = lift.position; cw.high = lift.position + Vector3.up * 5.9f;

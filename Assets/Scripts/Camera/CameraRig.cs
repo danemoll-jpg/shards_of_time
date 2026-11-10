@@ -98,8 +98,10 @@ namespace ShardsOfTime
 
             // Round 6, item 2: under the ice the camera comes in close and level behind the hero (never up in the ice ceiling)
             bool underIce = IceHole.UnderIce(h.Motor) || IceHole.InHoleBelowIce(h.Motor);
-            Orbit.Radius = Mathf.MoveTowards(Orbit.Radius, underIce ? 3.2f : Radius, (underIce ? 8f : 4f) * dt);
+            bool riding = Camel.PlayerRiding;   // on the camel: further back and higher, over its hump, so the party and the dunes show
+            Orbit.Radius = Mathf.MoveTowards(Orbit.Radius, underIce ? 3.2f : riding ? Radius * 1.6f : Radius, (underIce ? 8f : 4f) * dt);
             if (underIce) Orbit.VerticalAxis.Value = Mathf.MoveTowards(Orbit.VerticalAxis.Value, Mathf.Clamp(Orbit.VerticalAxis.Value, -12f, 4f), 120f * dt);
+            if (riding) Orbit.VerticalAxis.Value = Mathf.MoveTowards(Orbit.VerticalAxis.Value, Mathf.Max(Orbit.VerticalAxis.Value, 24f), 40f * dt);
 
             // Recenter button: swing behind the player
             if (Controls.Recenter.WasPressedThisFrame()) { recenterUntil = Time.time + .35f; Recenters++; }

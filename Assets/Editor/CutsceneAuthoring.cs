@@ -22,7 +22,7 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 9;   // Round 6: Egypt's cutscenes; the story cutscenes per world; Dan's Egypt models and the arrival's ending (9)
+        public const int Version = 11;   // Round 6: Egypt's cutscenes; the story cutscenes per world; Dan's Egypt models and the arrival's ending (9)
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
@@ -693,11 +693,11 @@ namespace ShardsOfTime
                 float[] ts = { 0f, 11.4f, 11.8f, 12.2f, 12.6f, 13.0f, EgyptArrivalLength }; float[] ss = { 1f, 1f, 2.2f, 1.5f, 2.2f, 1.6f, 1.6f };
                 for (int i = 0; i < ts.Length; i++) k.Key(holder, "Shard", "m_LocalScale", ts[i], Vector3.one * ss[i]);
             }
-            var kiraAt = new Vector3(1.2f, 0, .8f);
+            var kiraAt = new Vector3(1.0f, 0, 2.0f);   // where she sits from 6.9 s (her actor is turned 200 deg, so her body offset turns too); she faces south-west
             k.Shot("They land", 0f, 2.4f, new Vector3(-4.5f, 1.6f, -3.5f), new Vector3(0, 1f, 1f), 52f);
             k.Shot("Egypt!", 2.4f, 5.2f, new Vector3(.4f, 1.9f, -4.2f), new Vector3(0, 6f, 60f), 50f, new Vector3(.2f, 2.6f, -6.5f));
             k.Shot("New clothes", 5.2f, 7.0f, new Vector3(-.6f, 1.5f, 3.4f), new Vector3(-.7f, 1.2f, 0), 44f, new Vector3(-.5f, 1.45f, 2.8f));
-            k.Shot("A little mummy", 7.0f, 9.0f, kiraAt + new Vector3(-.2f, .5f, -1.3f), kiraAt + new Vector3(0, .3f, 0), 38f, kiraAt + new Vector3(-.15f, .42f, -1.05f));
+            k.Shot("A little mummy", 7.0f, 9.0f, kiraAt + new Vector3(-.9f, .45f, -1.0f), kiraAt + new Vector3(0, .3f, 0), 40f, kiraAt + new Vector3(-.75f, .42f, -.85f));   // in front of her face; Dan behind the camera
             k.Shot("They react", 9.0f, 11.3f, new Vector3(1.8f, 1.3f, -2.6f), new Vector3(-.4f, 1.1f, .4f), 48f);
             k.Shot("The red shard", 11.3f, EgyptArrivalLength, new Vector3(.6f, 1.55f, 1.2f), new Vector3(0, 1.35f, 0), 36f, new Vector3(.45f, 1.5f, .95f));
             k.Sound("camel_snort", 4.0f, .5f);
@@ -737,8 +737,8 @@ namespace ShardsOfTime
             k.Shot("Walking up", 0f, 3.6f, new Vector3(.8f, 1.1f, -7.5f), new Vector3(0, 2.5f, 8f), 50f, new Vector3(.6f, .8f, -6.8f));
             k.Shot("The reveal", 3.6f, 5.3f, new Vector3(.2f, .9f, -2f), sphinxFace + new Vector3(0, -6f, 0), 46f, new Vector3(.2f, .7f, -1.6f));   // tilting up toward the face
             k.Shot("Its face", 5.3f, 5.9f, new Vector3(0, 9f, 2f), sphinxFace, 24f);
-            k.Shot("Double-take", 5.9f, 7.6f, new Vector3(.4f, 1.55f, 6.2f), new Vector3(.2f, 1.45f, 3f), 40f);
-            k.Shot("Same pose", 7.6f, 8.6f, new Vector3(1.35f, .55f, -1.2f), new Vector3(1.3f, 3.5f, 20f), 40f);   // little Kira in front, the Sphinx's face above: the same cat
+            k.Shot("Double-take", 5.9f, 7.6f, new Vector3(1.1f, 2.2f, 6.8f), new Vector3(.5f, 1.0f, 2.8f), 46f);   // high enough to see over the plinth's edge: Kira in frame
+            k.Shot("Same pose", 7.6f, 8.6f, new Vector3(1.5f, .3f, -2.2f), new Vector3(1.3f, 4.5f, 20f), 60f);   // little Kira in front, the Sphinx's face above: the same cat
             k.Shot("Abi's not impressed", 8.6f, SphinxGagLength, new Vector3(-2.4f, 1.6f, 6.4f), new Vector3(-.9f, 1.4f, 2.6f), 42f);
             k.Sound("camel_snort", 8.7f, .0f);
             k.Save();

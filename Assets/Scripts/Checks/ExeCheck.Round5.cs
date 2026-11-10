@@ -96,7 +96,7 @@ namespace ShardsOfTime
             int touches = lb ? lb.Touches : 0;
             yield return Go(XZ(-100, 202), .8f, 15f); yield return Go(XZ(-150, 202), .8f, 20f); yield return Go(XZ(-146, 128), .6f, 20f); yield return Go(XZ(-144, 124), .5f, 6f); Stick(StickFor(Vector3.left)); yield return Wait(.7f); Stick(Vector2.zero);
             Ok(lb && lb.Touches > touches && !Has("L08"), "the lake's boulder needs Muscle Man (visible, closed)");
-            yield return Go(XZ(-146, 100), .8f, 15f); yield return Go(XZ(-112, 80), .8f, 20f);
+            yield return Go(XZ(-146, 100), .8f, 15f); yield return Go(XZ(-110, 96), .8f, 20f); yield return Go(XZ(-112, 80), .8f, 20f);   // east of the near hole
             // under the ice as Kira (she never runs out of air): in at the near hole, along the bottom, back out
             yield return SwitchTo(2);
             yield return Go(XZ(-112, 85), .6f, 25f); yield return Go(XZ(-118, 85), .4f, 6f, .6f);
@@ -117,7 +117,7 @@ namespace ShardsOfTime
             Ok(low > -11f && !Has("L06") && Hud.LastMessage.Contains("Too deep"), $"the deep part pushes divers back up (lowest y {low:0.0}; L06 at -27 stays for the deep dive): \"{Hud.LastMessage}\"");
             yield return HoleOut(XZ(-118, 133), Vector3.right);
             yield return SwitchTo(0);
-            yield return Go(XZ(-120, 115), .8f, 20f); yield return Go(XZ(-90, 115), .8f, 15f); yield return GoF(XZ(-50, 115));
+            yield return Go(XZ(-100, 134), .8f, 10f); yield return Go(XZ(-100, 115), .8f, 15f); yield return Go(XZ(-90, 115), .8f, 15f); yield return GoF(XZ(-50, 115));   // round the deep hole, not across it
             Log($"  the lake took the bot {(Time.time - zoneStart) / 60f:0.0} min; {ShardsHere} shards");
         }
 
@@ -169,6 +169,7 @@ namespace ShardsOfTime
                 Stick(StickFor(dir) * .6f); yield return Wait(.5f);
                 yield return Press(GamepadButton.South); yield return Wait(.6f); Stick(StickFor(dir)); yield return Wait(.5f); Stick(Vector2.zero);
                 yield return WaitFor(() => M.Grounded, 2f);
+                Log($"    (hole out try {k + 1}: at {Fmt(Player.transform.position)}, mode {M.Mode}, climbs {M.ClimbOuts}, water top {(M.Water ? M.Water.Top : float.NaN):0.00})");
             }
             yield return Go(hole + dir * 6f, .6f, 6f);
         }

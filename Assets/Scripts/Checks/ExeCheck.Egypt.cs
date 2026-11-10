@@ -438,6 +438,7 @@ namespace ShardsOfTime
             yield return Bridge("W");
             var cw = Object.FindObjectsByType<Counterweight>(FindObjectsSortMode.None).First();
             var wt = cw.weight;
+            yield return Fight(7f, 12f);   // mummies that followed Dan in
             yield return Go(T(-26f, 96), .4f, 10f); yield return Go(new Vector3(wt.position.x + 2.2f, 0, 96f), .2f, 6f, .5f);   // lined up behind it
             Log($"    (before the push: player {Fmt(Player.transform.position)}, weight {Fmt(wt.position)})");
             float push = Time.time;

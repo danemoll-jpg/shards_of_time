@@ -47,6 +47,7 @@ namespace ShardsOfTime
         {
             if (c == clip) return;
             // fade the old one out over Crossfade, start the new one fresh
+            if (fadeOld && fadeOld != src[cur]) fadeOld.Stop();   // a track still fading out from the last change: this change reuses its source
             var old = src[cur]; cur = 1 - cur; clip = c;
             if (c) { src[cur].clip = c; src[cur].time = 0; src[cur].volume = 0; src[cur].Play(); }
             fadeOld = old; fadeT = 0;
@@ -58,7 +59,7 @@ namespace ShardsOfTime
             float v = Vol;
             if (fadeT >= 0)
             {
-                fadeT += Time.unscaledDeltaTime / fadeLen; float k = Mathf.Clamp01(fadeT);
+                fadeT += (Time.timeScale > 0 ? Time.deltaTime : Time.unscaledDeltaTime) / fadeLen; float k = Mathf.Clamp01(fadeT);   // game time, in step with the cutscenes (real time while paused)
                 if (fadeOld) fadeOld.volume = v * Mathf.Cos(k * Mathf.PI / 2);   // equal power
                 src[cur].volume = v * Mathf.Sin(k * Mathf.PI / 2);
                 if (k >= 1) { if (fadeOld && fadeOld != src[cur]) fadeOld.Stop(); fadeT = -1; fadeOld = null; }

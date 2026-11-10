@@ -244,16 +244,18 @@ namespace ShardsOfTime
         // Round 5, item 4: Dan's tracks by place. The title screen: "title"; Act I: "act1", faded out over the white-out; the
         // arrival and the valley: "iceage"; the vortex space: "vortex" (crossfades both ways); the test area: silence.
         public const float ActOneMusicFadeAt = 16.6f;
+        bool actOneFaded;
         void MusicFor()
         {
             if (State == Mode.Title) { Music.Play(TestArea ? null : "title"); return; }
             if (TestArea) { Music.Play(null); return; }
             if (Cutscenes.Playing == "ActOne")
             {
-                if (Cutscenes.Director && Cutscenes.Director.time >= ActOneMusicFadeAt) Music.Play(null, 2.2f);   // out by the full white-out
-                else Music.Play("act1", .3f);
+                if (Cutscenes.Director && Cutscenes.Director.time >= ActOneMusicFadeAt) { Music.Play(null, 2.2f); actOneFaded = true; }   // out by the full white-out
+                else if (!actOneFaded) Music.Play("act1", .3f);   // (never back on: as Act I ends its director's time goes back to 0)
                 return;
             }
+            actOneFaded = false;
             if (Cutscenes.Playing == "IceAgeArrival") { Music.Play("iceage", .8f); return; }
             if (Cutscenes.Playing == "EgyptArrival") { Music.Play("egypt", .8f); return; }   // Round 6: Dan's Egypt song (silence if missing)
             if (State != Mode.Playing || !Party.I) return;   // paused: keep what plays
@@ -455,7 +457,7 @@ namespace ShardsOfTime
         // ---- the editor's film render (Editor/CutsceneRender.cs): play one cutscene without touching the save
         public IEnumerator Film(string name)
         {
-            SaveGame.Disabled = true; Cutscenes.AllowSkip = false;
+            SaveGame.Disabled = true; Cutscenes.AllowSkip = false; Busy = true;   // Busy: the world's own triggers (the Sphinx gag) stay quiet while filming
             Menu.I.Close(); titleCam.Priority = -10; State = Mode.Playing;
             bool egypt = name == "EgyptArrival" || name == "SphinxGag" || name.EndsWith("Egypt");   // Round 6: Egypt's cutscenes in Egypt
             if (egypt != InEgypt) { World = WorldData.Load(egypt ? WorldData.Egypt : WorldData.IceAge); BuildWorld(); yield return null; }

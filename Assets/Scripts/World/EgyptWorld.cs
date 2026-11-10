@@ -273,7 +273,7 @@ namespace ShardsOfTime
         void Update()
         {
             var w = weight.position; var p = plate.position;
-            Up = Mathf.Abs(w.x - p.x) < 1.2f && Mathf.Abs(w.z - p.z) < 1.2f;
+            Up = Mathf.Abs(w.x - p.x) < 1.5f && Mathf.Abs(w.z - p.z) < 1.5f;
             // it rises with someone on it (the weight on its plate), and comes back down when they step off
             var g = Party.I ? Party.I.Player.Motor.GroundCollider : null; bool rider = g && g.transform == transform;
             var to = Up && (rider || Vector3.Distance(transform.position, low) > .05f && Party.I && Party.I.Player.transform.position.y > transform.position.y - .2f && Vector3.Distance(Party.I.Player.transform.position, transform.position) < 2.2f) ? high : low;
@@ -398,6 +398,8 @@ namespace ShardsOfTime
                 h.Motor.Teleport(transform.TransformPoint(seats[h]), transform.rotation);
             }
         }
+        public static int RidingFrame = -10;   // the last frame the player sat on a camel (the camera pulls back and up: CameraRig)
+        public static bool PlayerRiding => Time.frameCount - RidingFrame < 3;
         void HoldSeats()
         {
             foreach (var h in new List<Hero>(seats.Keys))
@@ -405,6 +407,7 @@ namespace ShardsOfTime
                 var to = transform.TransformPoint(seats[h]); var d = to - h.transform.position;
                 if (h.IsPlayer && (Controls.Jump.WasPressedThisFrame() || d.magnitude > 2f)) { seats.Clear(); PlayLog.Line("off the camel"); return; }
                 if (d.y < 0) d.y = 0;
+                if (h.IsPlayer) RidingFrame = Time.frameCount;
                 h.Motor.Cc.Move(d);
                 h.transform.rotation = Quaternion.RotateTowards(h.transform.rotation, transform.rotation, 180f * Time.deltaTime);
             }

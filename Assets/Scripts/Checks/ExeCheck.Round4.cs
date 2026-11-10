@@ -83,10 +83,10 @@ namespace ShardsOfTime
             // Act I's music fades over the white-out: the fade starts at Game.ActOneMusicFadeAt (2.2 s), the track is gone after it
             yield return WaitFor(() => Music.Track == null || !Cutscenes.Director, 25f);
             double fadeAt = Cutscenes.Director ? Cutscenes.Director.time : -1;
-            yield return new WaitForSecondsRealtime(2.4f);
+            yield return new WaitForSeconds(2.6f);   // game time: the fade runs in game time (a busy frame-capped run lags real time)
             var act1 = Game.I.GetComponents<AudioSource>().Where(x => x.isPlaying && x.clip && x.clip.name == "act1").ToList();
             Ok(fadeAt >= Game.ActOneMusicFadeAt - .1f && fadeAt < 18.3f && act1.All(x => x.volume < .02f),
-               $"Act I's music fades out over the white-out (fade from {fadeAt:0.00} s of 19; act1 {(act1.Count > 0 ? $"volume {act1.Max(x => x.volume):0.00}" : "stopped")} 2.4 s later)");
+               $"Act I's music fades out over the white-out (fade from {fadeAt:0.00} s of 19; act1 {(act1.Count > 0 ? $"volume {act1.Max(x => x.volume):0.00}" : "stopped")} 2.6 s later)");
             yield return WaitFor(() => Cutscenes.Playing == "IceAgeArrival", 8f);
             Ok(!Cutscenes.LastSkipped && Cutscenes.LastDuration > 18f, $"Act I played to the end ({Cutscenes.LastDuration:0.0} s)");
             Ok(Cutscenes.Playing == "IceAgeArrival", "then the Ice Age arrival");

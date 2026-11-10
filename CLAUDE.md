@@ -197,7 +197,8 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   plays from the title screen through the real input actions. `play` = the Ice Age from New game to the Egypt path as a
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
-  use `--minutes 40`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
+  use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
   (vsync can't run off-screen; thousands of fps make the character controller skip moves).
@@ -215,6 +216,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   `WorldData.IceAgeDefaults()`; delete it to remake it after changing the defaults); the playground's shards / requirement / what each shard needs `Assets/Resources/Data/Worlds/Playground.asset`
   (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
   check run.
+  Egypt: `Assets/Resources/Data/Worlds/Egypt.asset` (made once from `WorldData.EgyptDefaults()`; delete it to remake it).
 - **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
   `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py` (all six models + the people's shared clips into
   `Assets/Resources/Characters/`). Prompts and Mixamo status: `Docs/MODELS-NEEDED.md`.
@@ -243,7 +245,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 5: `game-500`, previous `Builds/LauncherRelease-500`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 6: `game-600`, previous `Builds/LauncherRelease-600`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -252,6 +254,34 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 6 delivered: 0.6.0 (build 600), 2026-11-10.** Ice Age fixes (straight running, an easy under-ice swim with lit holes and
+auto climb-out, ivory tusks / fangs, the Violinist's fiddle and bow) and Ancient Egypt, the second world: town, market, guards,
+cat temple, quarry, the judgmental camel (rideable), the Sphinx with Kira's face (`SphinxGag`), the pyramid scaffolding and the
+tomb, the red story shard; mummy Kira (cat plates, mummies stay asleep), Abi's double jump from the Violinist's lyre. 60 shards /
+35 wake the necklace. Published: `game-600`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 6:
+- Worlds: `Game.World` is the save's world (`SaveGame.Current.currentWorld`); `Game.InEgypt`; `GoToWorld` rebuilds the world through
+  the vortex; Egypt's builder `World/Egypt.cs` (town around z 0..120, the Sphinx ~(-30, 200), the pyramid scaffolding x 60..80,
+  the tomb at (500, 60, 0)), its pieces in `World/EgyptWorld.cs` (CatPlate, Guard, Quicksand, SwingBlade, DartWall, StepTurner,
+  Counterweight, Camel, SphinxGagZone, StaticModel). Enemies: `Combat/EnemyEgypt.cs` (Mummy, ScarabSwarm, Guardian).
+  `MovingPlatform.Hold(pos)` for things that move themselves (camel, lift, bridge).
+- Vortex: four paths (Ice Age, Egypt, Bethlehem closed until Egypt's story shard, Home). `NecklaceModel.Tint` = the world's
+  story-shard colour (blue / red). Story cutscenes per world: `NecklaceWakesEgypt`, `VortexOpensEgypt`, `ViolinistTeachesEgypt`;
+  `EgyptArrival`, `SphinxGag`. `CutsceneAuthoring.Version` 11. `Game.Film` sets `Busy` so world triggers don't fire while filming.
+- Camera: auto-recenter dead band 20 deg (`CameraRig.DeadBand`; camera-relative running fed back into the recenter); close and
+  level under the ice (`IceHole.UnderIce`); further back and higher while riding the camel (`Camel.PlayerRiding`).
+- Under the ice: `World/IceHole.cs` (holes, `Region`, rescue after 14 s / a third of the breath), `CharacterMotor.ClimbOut`;
+  breath 16 s for Dan and Abi.
+- Hard parts: `Tools/Blender/hard_parts.py` (rules per creature) through `kira_rig.py` -> `SourceArt/Rigged/<n>/hard.txt` ->
+  `<model>_hard.mat` (`CharacterImport`), used for submeshes > 0 (`CharacterModel.HardMat`).
+- Instruments: `Tools/Blender/instruments.py` -> `World/instruments.fbx` (Fiddle, Bow, Lyre + hand markers); `Violinist` holds them
+  by two-bone IK; `WorldData.violinistInstrument` per world (Egypt: Lyre, model `violinist_egypt`).
+- Models: Egypt's people (`dan_egypt`, `abi_egypt`, `violinist_egypt`, `mummy`: Mixamo, Dan's downloads) and Code's rigs
+  (`kira_mummy` counter-turned 14 deg, `camel`, `guardian`); `scarab`, `sphinx_kira` static (`Tools/Blender/static_export.py`).
+  Kira lock grey threshold 20% for the mummy form. `KiraForm` Mummy gives `Abilities.MummyHush`; new `Abilities.Pounce`.
+- Music: `Game.MusicFor` adds `egypt`; Act I's music never comes back once faded; fades run in game time.
+
 **Round 5 delivered: 0.5.0 (build 500), 2026-11-09.** The new arrival (Kira's silhouette, Dan's fall, "it's Kira"); props upright;
 Dan's four Suno tracks by place; Kira and Abi closed meshes (0 see-through); a bigger Ice Age (frozen lake, glacier climb,
 hot-spring grotto), 60 shards / 35 wake the necklace, 10 later-move gates as data; Meshy wolf, snow critter, mammoth (Code's
