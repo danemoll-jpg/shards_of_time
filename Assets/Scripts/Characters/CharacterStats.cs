@@ -55,6 +55,7 @@ namespace ShardsOfTime
                     s.color = new Color(.5f, .52f, .55f); s.height = .5f; s.radius = .22f; s.runSpeed = 7.6f; s.acceleration = 60f; s.airControl = .7f;
                     s.jumpHeight = 1.4f; s.swimSpeed = 6f; s.swimmer = true; s.breathSeconds = 0f;
                     s.attackName = "Claws"; s.attackDamage = 1; s.attackRange = .7f; s.attackRadius = .6f; s.attackCooldown = .25f;
+                    s.lockedAbility = Abilities.Pounce;   // Round 7: taught by Bethlehem's Violinist
                     break;
             }
             return s;
@@ -74,5 +75,8 @@ namespace ShardsOfTime
         // Round 6: Egypt
         public const string Pounce = "Pounce";               // Kira, Bethlehem: a long pounce over wide gaps (Egypt's rooftop gaps wait for it)
         public const string MummyHush = "MummyHush";         // mummy Kira (Egypt): mummies don't wake for her
+        // Round 7: Bethlehem
+        public const string FlockHide = "FlockHide";         // lamb Kira: in a flock of sheep, watchmen, dogs and goats don't see her
+        public const string WoolBounce = "WoolBounce";       // lamb Kira: a high springy bounce off hay bales and wool piles
     }
 }

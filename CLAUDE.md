@@ -205,7 +205,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -224,7 +224,8 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   `WorldData.IceAgeDefaults()`; delete it to remake it after changing the defaults); the playground's shards / requirement / what each shard needs `Assets/Resources/Data/Worlds/Playground.asset`
   (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
   check run.
-  Egypt: `Assets/Resources/Data/Worlds/Egypt.asset` (made once from `WorldData.EgyptDefaults()`; delete it to remake it).
+  Egypt: `Assets/Resources/Data/Worlds/Egypt.asset` (made once from `WorldData.EgyptDefaults()`; delete it to remake it). Bethlehem:
+  `Bethlehem.asset` the same way (`WorldData.BethlehemDefaults()`).
 - **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
   `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py` (all six models + the people's shared clips into
   `Assets/Resources/Characters/`). Prompts and Mixamo status: `Docs/MODELS-NEEDED.md`.
@@ -253,7 +254,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 6.1: `game-601`, previous `Builds/LauncherRelease-601`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 7: `game-700`, previous `Builds/LauncherRelease-700`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -262,6 +263,34 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 7 delivered: 0.7.0 (build 700), 2026-11-10.** Bethlehem, the third world: the roof-crash arrival into the barn, the
+farmyard, the hills (camps, flocks, goats, the Violinist with his harp), the village (night watchmen with lanterns, guard dogs, the
+inn's "no room"), the Wise Men riding the road, lamb Kira (flock hide, springy hay), Kira's pounce (also Egypt's far roof), the
+golden shard in the manger and `WiseMenArrive`. 60 shards / 112 in all wake the necklace. Waiting on Dan: Mixamo files for the seven
+people and a side-profile guard dog. Published: `game-700`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 7:
+- Worlds: `Game.InBethlehem`; `World/Bethlehem.cs` builds it (barn x -6..6, z 26..42, door south; the farmyard x -35..35, z -10..70;
+  hills east; village west; the Wise Men's road north), its pieces in `World/BethlehemWorld.cs` (BouncePad, Flock, StarRing, StarDome,
+  Caravan, NoRoom, Stealth). Shard y in its data = height over the terrain there (`Bethlehem.ShardPos`). `Bethlehem.asset` is made once
+  from `WorldData.BethlehemDefaults()` (delete it to remake). `WorldData.StoryOrder` = Ice Age, Egypt, Bethlehem.
+- Ground: `Tools/Blender/bethlehem_world.py` (terrain + props; prints the steepest ground: keep it under ~35 deg, Round 7: 29).
+- Vortex: five paths (Ice Age -60, Egypt -30, Bethlehem 0, Medieval 30 "to be continued" until Bethlehem's golden shard, Home 60).
+  Vortex doors and world gates trigger "inside the arch" (lamb Kira went under the old circles). Bethlehem's story shard plays
+  `WiseMenFinale` (no gate walk: the hay's vortex takes them in; `Bethlehem.Gate` in the barn is the way back).
+- Kira: `KiraForm.Lamb` (`kira_lamb`, Abilities.FlockHide + WoolBounce); the pounce is Kira's `lockedAbility` (B on the ground: aim
+  0.28 s, 17 m/s, 1.8 m high: ~11.8 m; `CharacterMotor.Pouncing`, `LastPounceDistance`); `Motor.Launch(h)` for bounces.
+  Egypt's far roof moved to x -43.5, z 40 (10.5 m from the west roof; E14 / E15 with it).
+- Guards: `Guard` makes a Bethlehem night watchman in Bethlehem (lantern spot light = his sight; `dozes`; `Guard.Alert(pos)` from a
+  dog's bark); `Stealth.Hidden(hero)` = lamb Kira inside a flock's 4.5 m (watchmen, dogs, goats, scorpions ignore her).
+  Enemies `Combat/EnemyBethlehem.cs`: Goat (lower, charge, headbutt), Dog, Scorpion (static model + Skitter).
+- People clips added to `CreatureAnimator.PeopleClips` (missing = skipped): sit, argue, map, offer, sad, yell, doze, surprised;
+  `import_characters.py EXTRA_CLIPS` copies them from `SourceArt/Mixamo/wisemen|watchman/`. Dan and Abi wear their Egypt models in
+  Bethlehem until `*_bethlehem` exist (`Hero.SetOutfit`). The Wise Men's riders stay placeholders until a `sit` clip is in.
+- Cutscenes: `BethlehemArrival`, `WiseMenArrive`, `NecklaceWakesBethlehem`, `ViolinistTeachesBethlehem` (Kira learns);
+  `VortexRings(..., golden)`; `CutsceneAuthoring.Version` 15. The harp: `instruments.fbx` "Harp" (the lyre's markers and clip).
+- Head check for four-legged concepts: `Tools/Blender/head_turn.py <names>` (nose vs the head's middle, from above).
+
 **Fix 6.1 delivered: 0.6.1 (build 601), 2026-11-10.** Shards are one universal total; each world's necklace wakes at a
 cumulative threshold (Ice Age 35, Egypt 75); HUD "total / Next: N", per-world counts in the pause menu; 0.6.0 saves load
 unchanged. The Violinist plays the lyre with his own clip. Published: `game-601`. Report and "For Dan to check": `TODO.md`.

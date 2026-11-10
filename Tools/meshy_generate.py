@@ -18,8 +18,12 @@ MODELS = {"dan_home": 20000, "dan_iceage": 20000, "abi_home": 20000, "abi_iceage
           "violinist_iceage": 20000, "wolf": 12000, "snow_critter": 8000, "mammoth": 15000,
           # Round 6: Egypt (people + mummy -> Mixamo; Kira, camel, scarab, guardian -> Code's rigs; the Sphinx is a static landmark)
           "dan_egypt": 20000, "abi_egypt": 20000, "violinist_egypt": 20000, "mummy": 15000, "kira_mummy": 15000,
-          "camel": 15000, "scarab": 6000, "guardian": 12000, "sphinx_kira": 30000}
-CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage", "violinist_iceage", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
+          "camel": 15000, "scarab": 6000, "guardian": 12000, "sphinx_kira": 30000,
+          # Round 7: Bethlehem (people -> Mixamo; lamb Kira, goat, sheep, guard dog, scorpion -> Code's rigs)
+          "dan_bethlehem": 20000, "abi_bethlehem": 20000, "violinist_bethlehem": 20000, "wiseman_santa": 18000, "wiseman_crown": 18000,
+          "wiseman_old": 18000, "watchman": 15000, "kira_lamb": 15000, "goat": 12000, "sheep": 8000, "guard_dog": 12000, "scorpion": 6000}
+CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage", "violinist_iceage", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy",
+              "dan_bethlehem", "abi_bethlehem", "violinist_bethlehem", "wiseman_santa", "wiseman_crown", "wiseman_old", "watchman"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
 
 
 def key():

@@ -62,7 +62,7 @@ namespace ShardsOfTime
         public string violinistPlayClip = "violinist_play";
 
         // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
-        public static readonly string[] StoryOrder = { IceAge, Egypt };
+        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem };
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -93,8 +93,8 @@ namespace ShardsOfTime
                 (gates.Count > 0 ? $"; gates: {string.Join(", ", gates.Select(g => $"{g.id} ({g.kind}, needs {g.needs}: {string.Join(" ", g.opens)})"))}" : ""));
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : Defaults());
-        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt";
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem";
 
         // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
@@ -187,7 +187,7 @@ namespace ShardsOfTime
             S("E09", 26, 0, 54, "market, behind the stalls");
             // the rooftops (crates and stairs up), a far roof across a gap only Kira's pounce clears (Bethlehem), the obelisk's top
             S("E10", -27, 4.6f, 26, "west rooftop (the plank across)"); S("E11", -27, 4.6f, 40, "west rooftop (up the outside stair)"); S("E12", 17, 4.6f, 100, "east rooftop (up the outside stair)"); S("E13", -17, 4.6f, 104, "north-west rooftop (up the outside stair)");
-            S("E14", -52, 5, 28, "the far roof (Kira's pounce)", Abilities.Pounce); S("E15", -52, 5, 38, "the far roof (Kira's pounce)", Abilities.Pounce);
+            S("E14", -43.5f, 5, 38, "the far roof (Kira's pounce)", Abilities.Pounce); S("E15", -43.5f, 5, 42, "the far roof (Kira's pounce)", Abilities.Pounce);   // Round 7: the roof moved in to a 10.5 m gap (it was 19 m)
             S("E16", 0, 5.6f, 64, "the obelisk's golden ledge (double jump)", Abilities.DoubleJump);
             // the cat temple: its door opens for Kira (a cat plate)
             S("E17", -54, 0, 66, "the cat temple (Kira opens its door)", "Kira"); S("E18", -54, 0, 78, "the cat temple (Kira opens its door)", "Kira");
@@ -218,13 +218,68 @@ namespace ShardsOfTime
             S("E59", 515, 60, 122, "tomb: behind the cracked wall (charged punch)", Abilities.ChargedPunch);
             S("E60", 486, 71, 118, "tomb: the top of the narrow shaft (wall jump)", Abilities.WallJump);
             void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
-            G("EG-pounce-roof", "pounce gap", Abilities.Pounce, new Vector3(-42, 5, 33), "the gap to the far roof (Kira's pounce, Bethlehem)", "E14", "E15");
+            G("EG-pounce-roof", "pounce gap", Abilities.Pounce, new Vector3(-36.5f, 5, 40), "the gap to the far roof (Kira's pounce, Bethlehem)", "E14", "E15");
             G("EG-ledge-obelisk", "double-jump ledge", Abilities.DoubleJump, new Vector3(0, 5.6f, 64), "the obelisk's top", "E16");
             G("EG-ledge-scaffold", "double-jump ledge", Abilities.DoubleJump, new Vector3(88, 39.3f, 199), "the high plank over the scaffolding", "E42");
             G("EG-block-quarry", "huge block", Abilities.MuscleMan, new Vector3(86, 0, 61), "the quarry's huge block (Muscle Man, Medieval)", "E24", "E25");
             G("EG-deep-nile", "deep water", Abilities.DeepDive, new Vector3(-128, -6, 77), "the Nile's deep pool (deep dive, Pirate Seas)", "E48", "E49");
             G("EG-crack-tomb", "cracked wall", Abilities.ChargedPunch, new Vector3(511, 60, 122), "the burial chamber's cracked wall (charged punch, Medieval)", "E59", "EG-H2");
             G("EG-shaft-tomb", "wall-jump shaft", Abilities.WallJump, new Vector3(486, 60, 118), "the narrow shaft by the burial chamber (wall jump, Steampunk)", "E60");
+            return w;
+        }
+
+        // Round 7: Bethlehem (World/Bethlehem.cs builds it; the ground and the props in Tools/Blender/bethlehem_world.py, the same numbers).
+        // One area, "BE". 60 small shards. Fix 6.1's rule: the threshold is on the universal total, about 60-65 % of every shard up to
+        // here (Ice Age 60 + Egypt 60 + Bethlehem 60 = 180): 112. Rule 2: the first visit has the three heroes and lamb Kira (flock hide,
+        // the wool bounce); not the ground pound or the double jump (a player may skip both Violinists), not the pounce (Kira learns it
+        // here), not the later moves.
+        public static WorldData BethlehemDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Bethlehem; w.worldId = Bethlehem; w.displayName = "Bethlehem"; w.heightsAreHints = true;
+            w.violinistInstrument = "Harp"; w.violinistPlayClip = "violinist_lyre";   // item 2: a small shepherd's harp, held and played like the lyre
+            w.areas.Add(new AreaData { id = "BE", name = "Bethlehem", requirement = 112, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.FlockHide, Abilities.WoolBounce },
+                storyShard = new Vector3(0, 1.25f, 37f), storyShardColor = new Color(1f, .78f, .2f), spawn = new Vector3(0, .1f, 29.5f), spawnYaw = 180,
+                kiraForm = KiraForm.Lamb, outfit = Outfits.Bethlehem, box = new Bounds(new Vector3(0, 0, 90), new Vector3(440, 600, 400)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "BE", position = new Vector3(x, y, z), requires = req, note = note });
+            // the barn and its farmyard (x -35..35, z -10..70): hay stacks, the loft, bounces only lamb Kira gets
+            S("F01", 0, 0, 18, "in front of the barn"); S("F02", -14, 0, 10, "the farmyard"); S("F03", 16, 0, 8, "the farmyard"); S("F04", -24, 0, 48, "behind the hay stacks");
+            S("F05", 27, 0, 54, "by the trough"); S("F06", 3, 3.2f, 41, "the hay loft (up the bales)"); S("F07", 20, 3.6f, 30, "on the bale tower");
+            S("F08", 0, 8.3f, 37, "on the barn's ridge (lamb Kira bounces up)", "Kira", Abilities.WoolBounce);
+            S("F09", -22, 4.4f, 20, "on top of the big hay stack (lamb Kira bounces up)", "Kira", Abilities.WoolBounce);
+            S("F10", 8, 0, 62, "by the cart, north yard");
+            // the hills (east): shepherds' camps, flocks, rocky outcrops, the olive grove
+            S("H01", 50, 0, 20, "the first hill"); S("H02", 62, 0, 60, "by the Violinist's camp"); S("H03", 80, 0, 30, "by the Violinist's camp"); S("H04", 95, 0, 50, "the hillside");
+            S("H05", 120, 0, 100, "the middle camp"); S("H06", 138, 0, 120, "the middle camp"); S("H07", 150, 0, 10, "the south camp"); S("H08", 165, 0, -20, "the far hill");
+            S("H09", 172, 0, 40, "the far hill"); S("H10", 100, 0, 160, "the olive grove"); S("H11", 120, 0, 182, "the olive grove"); S("H12", 140, 0, 165, "the olive grove");
+            S("H13", 90, 3.8f, 110, "on the rocky outcrop"); S("H14", 130, 0, 60, "among the goats' rocks"); S("H15", 60, 0, 130, "the north slope"); S("H16", 170, 0, 90, "the far hill");
+            // the village (west): streets, the market, courtyards, the inn, rooftops (watchmen with lanterns, guard dogs)
+            S("V01", -64, 0, 58, "the village gate"); S("V02", -90, 0, 52, "the main street"); S("V03", -115, 0, 50, "the market"); S("V04", -125, 0, 70, "the market");
+            S("V05", -108, 0, 72, "the market, behind a stall"); S("V06", -95, 0, 100, "a courtyard"); S("V07", -140, 0, 30, "a courtyard"); S("V08", -150, 0, 84, "in front of the inn");
+            S("V09", -100, 4.2f, 46, "a flat roof (up the outside stair)"); S("V10", -130, 4.2f, 104, "a flat roof (up the outside stair)"); S("V11", -160, 4.2f, 46, "a flat roof (across the planks)");
+            S("V12", -170, 0, 120, "the back alley"); S("V13", -80, 0, 10, "the south lane"); S("V14", -186, 0, 66, "the west street");
+            S("V15", -188, 0, 8, "the watchmen's yard (slip in with the flock: lamb Kira)", "Kira", Abilities.FlockHide); S("V16", -60, 0, 130, "the north lane");
+            // the Wise Men's road (north): shards along their route
+            S("R01", 150, 0, 198, "the Wise Men's road"); S("R02", 100, 0, 185, "the Wise Men's road"); S("R03", 60, 0, 190, "the Wise Men's road");
+            S("R04", 10, 0, 192, "the Wise Men's road"); S("R05", -40, 0, 182, "the Wise Men's road"); S("R06", -100, 0, 196, "the Wise Men's road");
+            // Kira's pounce (learned here from the Violinist): the hill pillars, the village's far roof
+            S("P01", 177.5f, 5f, 139, "the far rock pillar (Kira's pounce)", Abilities.Pounce);
+            S("P03", -178, 4.2f, 102, "the far roof (Kira's pounce)", Abilities.Pounce); S("P04", -179, 4.2f, 106, "the far roof (Kira's pounce)", Abilities.Pounce);
+            // the places later moves open (visible now)
+            S("W01", 108, 0, 72, "the bottom of the well, 13 m down (deep dive)", Abilities.DeepDive); S("W02", 109, 0, 73.5f, "the bottom of the well, 13 m down (deep dive)", Abilities.DeepDive);
+            S("M01", 188, 0, 62, "the shepherds' cave, behind the boulder (Muscle Man)", Abilities.MuscleMan); S("M02", 192, 0, 58, "the shepherds' cave, behind the boulder (Muscle Man)", Abilities.MuscleMan);
+            S("C01", -160, 0, 136, "behind the cracked courtyard wall (charged punch)", Abilities.ChargedPunch); S("C02", -165, 0, 138, "behind the cracked courtyard wall (charged punch)", Abilities.ChargedPunch);
+            S("J01", -90, 8.4f, 133, "the top of the narrow gap between two houses (wall jump)", Abilities.WallJump);
+            S("D01", 90.5f, 6.5f, 114, "the high rock over the outcrop (double jump)", Abilities.DoubleJump);
+            S("D02", -150, 10.1f, 97, "the inn's roof terrace (double jump)", Abilities.DoubleJump);
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("BE-pounce-pillar", "pounce gap", Abilities.Pounce, new Vector3(169, 5, 140), "the gap to the far rock pillar (Kira's pounce, learned here)", "P01", "BE-H2");
+            G("BE-pounce-roof", "pounce gap", Abilities.Pounce, new Vector3(-170, 4.2f, 104), "the gap to the village's far roof (Kira's pounce, learned here)", "P03", "P04");
+            G("BE-deep-well", "deep water", Abilities.DeepDive, new Vector3(108, -4, 72), "the well (deep dive, Pirate Seas)", "W01", "W02");
+            G("BE-boulder-cave", "boulder", Abilities.MuscleMan, new Vector3(184, 0, 60), "the shepherds' cave (Muscle Man, Medieval)", "M01", "M02");
+            G("BE-crack-courtyard", "cracked wall", Abilities.ChargedPunch, new Vector3(-160, 0, 131), "the courtyard's cracked wall (charged punch, Medieval)", "C01", "C02");
+            G("BE-gap-houses", "wall-jump gap", Abilities.WallJump, new Vector3(-90, 0, 133), "the narrow gap between two houses (wall jump, Steampunk)", "J01");
+            G("BE-ledge-rock", "double-jump ledge", Abilities.DoubleJump, new Vector3(90.5f, 6.5f, 114), "the high rock over the outcrop", "D01");
+            G("BE-ledge-inn", "double-jump ledge", Abilities.DoubleJump, new Vector3(-150, 10.1f, 97), "the inn's roof terrace", "D02");
             return w;
         }
 

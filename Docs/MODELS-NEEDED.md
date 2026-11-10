@@ -1,5 +1,55 @@
 # Shards of Time — models needed
 
+## Round 7 (2026-11-10): Mixamo for Bethlehem — for Dan, now
+
+All 12 Bethlehem images became Meshy models (previews `Data/screenshots/round7/models/`). Seven are people and go through
+Mixamo, the same steps as Egypt. The upload files are ready:
+
+| Model | Upload this (mixamo.com > Upload Character) | Height |
+|---|---|---|
+| Dan, Bethlehem | `SourceArt/Mixamo/dan_bethlehem/upload/dan_bethlehem.fbx` | 1.8 m |
+| Abi, Bethlehem | `SourceArt/Mixamo/abi_bethlehem/upload/abi_bethlehem.fbx` | 1.65 m |
+| The Violinist, Bethlehem | `SourceArt/Mixamo/violinist_bethlehem/upload/violinist_bethlehem.fbx` | 1.85 m |
+| Wise Man in the Santa hat | `SourceArt/Mixamo/wiseman_santa/upload/wiseman_santa.fbx` | 1.8 m |
+| Wise Man, young king | `SourceArt/Mixamo/wiseman_crown/upload/wiseman_crown.fbx` | 1.85 m |
+| Wise Man, old king | `SourceArt/Mixamo/wiseman_old/upload/wiseman_old.fbx` | 1.75 m |
+| Night watchman | `SourceArt/Mixamo/watchman/upload/watchman.fbx` | 1.75 m |
+
+For **each of the seven**:
+1. **Upload**, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**. Next, Next.
+   (The Wise Men's and the Violinist's robes reach the ankles: put the knee markers where the knees would be under the robe.)
+2. **Download the rigged character** with no animation picked: Format **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
+   Save it next to `upload` (not inside it): `SourceArt/Mixamo/<model>/T-Pose.fbx`.
+
+Then the **clips** (each: FBX for Unity, 30 fps, Keyframe Reduction none, **Without Skin**, **In Place** ticked where offered).
+Any one of the seven can be on screen while you download a clip (Unity retargets it to everyone). Save each under the name in
+the first column:
+
+| Save as | Mixamo search | Where to save | For |
+|---|---|---|---|
+| `Sitting Idle.fbx` | **Sitting Idle** | `SourceArt/Mixamo/wisemen/` | the Wise Men sitting on their camels |
+| `Arguing.fbx` | **Arguing** | `SourceArt/Mixamo/wisemen/` | they stop on the road and argue about the way |
+| `Looking At Map.fbx` | **Reading** (a book or paper held in both hands; if there's nothing like it: **Looking Down**) | `SourceArt/Mixamo/wisemen/` | checking the map |
+| `Offering.fbx` | **Holding Idle** / **Carrying** (both hands held out in front, as if holding a box) | `SourceArt/Mixamo/wisemen/` | gifts held out in the barn (the finale) |
+| `Disappointed.fbx` | **Disappointed** (if missing: **Sad Idle**) | `SourceArt/Mixamo/wisemen/` | they look at each other and leave |
+| `Yelling.fbx` | **Yelling** | `SourceArt/Mixamo/watchman/` | the watchman's "Halt!" |
+| `Sleeping Idle.fbx` | **Sleeping Idle** (standing, nodding off; if only lying ones: **Bored**) | `SourceArt/Mixamo/watchman/` | a watchman dozing at his post |
+| `Surprised.fbx` | **Surprised** (if missing: **Shocked** or **Reaction**) | `SourceArt/Mixamo/` (the shared people clips) | Dan and Abi seeing lamb Kira; Dan hitting the floor |
+
+**Nothing else to download:** walking, running, idle, jumping and the rest are the shared clips already in `SourceArt/Mixamo/`;
+the watchman walks his rounds with them; the Violinist plays his harp with a clip made by code (like the lyre). The Wise Men's
+gift boxes and the watchman's lantern are separate props held by code. Abi's long hair: if Mixamo ties it to her arms, Code fixes it.
+When the files are there, tell Code: they go into the game this same round. Until then Bethlehem shows Dan and Abi in their Egypt
+models, the Violinist in his Egypt model with the harp, and placeholder Wise Men and watchmen.
+
+**The guard dog needs a new image (item 1's check):** its head is turned about 51 deg toward the camera (the limit is ~35; its nose
+sits 7 cm off the body's middle line). The goat, the sheep and lamb Kira are straight. Please make `guard_dog.png` again (keep the old
+one as `guard_dog_v1.png`), same prompt (B11) with the profile rule the goat and sheep redo used:
+> ... Strict side profile: the whole dog seen exactly from the side, the head in profile too, its nose pointing at the left edge of
+> the image, only one eye visible, not looking at the camera. ...
+
+Until the new image is in, guard dogs are placeholders.
+
 ## Round 7 (2026-11-10): Bethlehem — images needed from Dan (prompts by the planning chat)
 
 Film art: `SourceArt/Reference/Characters/*/…-bethlehem-film.png`, `kira-lamb-film.png`, `Others/wise-men-*.png`,

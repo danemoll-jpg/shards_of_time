@@ -22,13 +22,15 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 11;   // Round 6: Egypt's cutscenes; the story cutscenes per world; Dan's Egypt models and the arrival's ending (9)
+        public const int Version = 15;   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
             ("VortexOpens", VortexOpens), ("ViolinistTeaches", ViolinistTeaches),
             ("EgyptArrival", EgyptArrival), ("SphinxGag", SphinxGag), ("NecklaceWakesEgypt", NecklaceWakesEgypt), ("VortexOpensEgypt", VortexOpensEgypt),
             ("ViolinistTeachesEgypt", ViolinistTeachesEgypt),
+            ("BethlehemArrival", BethlehemArrival), ("WiseMenArrive", WiseMenArrive), ("NecklaceWakesBethlehem", NecklaceWakesBethlehem),
+            ("ViolinistTeachesBethlehem", ViolinistTeachesBethlehem),
         };
 
         // Round 6: who plays in a world's story cutscenes (a model not in yet falls back: Dan's / Abi's home models, home Kira) and the
@@ -37,6 +39,7 @@ namespace ShardsOfTime
         static string Have(string model, string fallback) => CharacterModel.Exists(model) ? model : fallback;
         static Cast IceAgeCast => new Cast { dan = "dan_iceage", abi = "abi_iceage", kira = "kira_sabertooth", shard = new Color(.25f, .55f, 1f) };
         static Cast EgyptCast => new Cast { dan = Have("dan_egypt", "dan_home"), abi = Have("abi_egypt", "abi_home"), kira = Have("kira_mummy", "kira"), shard = new Color(1f, .18f, .14f) };
+        static Cast BethlehemCast => new Cast { dan = Have("dan_bethlehem", Have("dan_egypt", "dan_home")), abi = Have("abi_bethlehem", Have("abi_egypt", "abi_home")), kira = Have("kira_lamb", "kira"), shard = new Color(1f, .78f, .2f) };   // Round 7
         static Color Glow(Cast c, float whiten) => Color.Lerp(c.shard, Color.white, whiten);
 
         public static void EnsureAll()
@@ -310,10 +313,11 @@ namespace ShardsOfTime
         }
 
         // a few glowing rings that grow and turn: the vortex (a saved tint per ring, prefab-safe)
-        static GameObject VortexRings(Kit k, string name, Vector3 at, Quaternion facing, float t0, float t1, float size, float tEnd)
+        static GameObject VortexRings(Kit k, string name, Vector3 at, Quaternion facing, float t0, float t1, float size, float tEnd, bool golden = false)
         {
             var h = k.Holder(name, at, 0); h.transform.localRotation = facing;
-            Color[] cols = { new Color(.25f, .45f, 1f), new Color(.55f, .4f, 1f), new Color(.75f, .92f, 1f), new Color(.3f, .7f, 1f) };
+            Color[] cols = golden ? new[] { new Color(1f, .75f, .25f), new Color(1f, .88f, .5f), new Color(1f, .97f, .8f), new Color(1f, .65f, .2f) }   // Round 7: Bethlehem's golden vortex
+                : new[] { new Color(.25f, .45f, 1f), new Color(.55f, .4f, 1f), new Color(.75f, .92f, 1f), new Color(.3f, .7f, 1f) };
             for (int i = 0; i < cols.Length; i++)
             {
                 var r = Placeholders.Prim(PrimitiveType.Cylinder, h.transform, new Vector3(0, 0, -i * .02f), Vector3.one * .01f, Placeholders.Mat(cols[i], "Glow"), name: "Ring" + i);
@@ -618,21 +622,31 @@ namespace ShardsOfTime
         // toward Dan. No dialogue.
         public static void ViolinistTeaches() => ViolinistTeachesIn("ViolinistTeaches", "Dan", IceAgeCast.dan, IceAgeCast);
         public static void ViolinistTeachesEgypt() => ViolinistTeachesIn("ViolinistTeachesEgypt", "Abi", EgyptCast.abi, EgyptCast);
+        public static void ViolinistTeachesBethlehem() => ViolinistTeachesIn("ViolinistTeachesBethlehem", "Kira", BethlehemCast.kira, BethlehemCast);   // Round 7: Kira's pounce
         static void ViolinistTeachesIn(string name, string learner, string model, Cast c)
         {
             DataAssets.Ensure();
             NecklaceModel.Tint = c.shard;
             var k = new Kit(name, 6.5f);
-            var dan = k.Actor(learner, model, new Vector3(0, 0, 2.3f), 180);
-            k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("look"), .6f), (PeopleClip("idle"), 2.4f), (PeopleClip("cheer"), 4.6f));
-            var aura = k.Holder("Aura", new Vector3(0, 1.15f, 2.3f), 0);
+            bool cat = learner == "Kira"; float hy = cat ? .35f : 1.15f;
+            var dan = k.Actor(learner, model, new Vector3(0, 0, cat ? 1.6f : 2.3f), 180);
+            if (cat)
+            {
+                // Kira listens, head cocked; crouches low as the tune rises, then a little practice pounce toward him and back
+                k.Clips(dan, (KiraClip("idle", model), 0f), (KiraClip("land", model), 2.6f), (KiraClip("idle", model), 3.3f), (KiraClip("jump", model), 4.6f), (KiraClip("idle", model), 5.4f));
+                k.Key(dan, "Body", "m_LocalPosition", 4.6f, Vector3.zero); k.Key(dan, "Body", "m_LocalPosition", 4.95f, new Vector3(0, .55f, .7f)); k.Key(dan, "Body", "m_LocalPosition", 5.3f, new Vector3(0, 0, 1.0f));
+                k.Key(dan, "Body", "m_LocalPosition", 6.5f, new Vector3(0, 0, 1.0f));
+            }
+            else k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("look"), .6f), (PeopleClip("idle"), 2.4f), (PeopleClip("cheer"), 4.6f));
+            var aura = k.Holder("Aura", new Vector3(0, hy, cat ? 1.6f : 2.3f), 0);
             Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(.6f, .85f, 1f), "Glow"), name: "Glow");
             float[] ts = { 2.5f, 3.0f, 3.4f, 3.8f, 4.2f, 4.7f }; float[] ss = { .05f, 1.1f, .7f, 1.2f, .8f, .05f };
             for (int i = 0; i < ts.Length; i++) k.Key(aura, "Glow", "m_LocalScale", ts[i], Vector3.one * ss[i]);
             k.Show(aura, 2.5f, 4.7f);
             k.Shot("He plays", 0f, 2.5f, new Vector3(.9f, 1.95f, 3.7f), new Vector3(0, 1.55f, 0), 40f, new Vector3(.7f, 1.9f, 3.2f));
-            k.Shot("Dan learns", 2.5f, 4.6f, new Vector3(-.7f, 1.5f, .7f), new Vector3(0, 1.2f, 2.3f), 42f);
-            k.Shot("A nod", 4.6f, 6.5f, new Vector3(3.6f, 1.8f, 1.2f), new Vector3(0, 1.1f, 1.2f), 45f);
+            if (cat) k.Shot("Kira learns", 2.5f, 4.6f, new Vector3(-.9f, .55f, .3f), new Vector3(0, .35f, 1.6f), 40f);
+            else k.Shot("Dan learns", 2.5f, 4.6f, new Vector3(-.7f, 1.5f, .7f), new Vector3(0, 1.2f, 2.3f), 42f);
+            k.Shot("A nod", 4.6f, 6.5f, new Vector3(3.6f, 1.8f, 1.2f), new Vector3(0, cat ? .7f : 1.1f, 1.2f), 45f);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }
@@ -743,6 +757,176 @@ namespace ShardsOfTime
             k.Sound("camel_snort", 8.7f, .0f);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
+        }
+
+        // ================================================================================================ Round 7: Bethlehem
+        // Item 3 (film: barn-roof-landing-top.png, barn-roof-hole-top.png): the golden vortex opens over the barn, the three drop out of
+        // it and crash through the roof; Abi lands softly in the hay, Dan misses it and hits the floor; Kira pops up out of the hay as a
+        // little gray lamb; the manger glows faintly but is empty; they react to lamb Kira; the necklace glows gold. The root is the barn's
+        // middle (world (0, floor, 34)), +z north (the door is at -8, the manger at +3, the hay under the hole at (-3, -1.5)). Skippable.
+        public const float BethlehemArrivalLength = 14.5f;
+        public static void BethlehemArrival()
+        {
+            DataAssets.Ensure();
+            var c = BethlehemCast; NecklaceModel.Tint = c.shard;
+            var k = new Kit("BethlehemArrival", BethlehemArrivalLength);
+            var hole = new Vector3(-2.6f, 6.6f, -.9f); var hay = new Vector3(-3f, 0, -1.5f);
+            var dan = k.Actor("Dan", c.dan, new Vector3(-.9f, 0, .4f), 200);
+            var abi = k.Actor("Abi", c.abi, hay + new Vector3(0, .85f, 0), 150);
+            var kira = k.Actor("Kira", c.kira, hay + new Vector3(.9f, 0, .9f), 160);
+            // the vortex opens high over the barn (seen from outside), they fall: down to the roof, through the hole
+            VortexRings(k, "Golden vortex", new Vector3(0, 20f, 0), Quaternion.Euler(90, 0, 0), 0f, 1.0f, 6f, 2.6f, true);
+            foreach (var (actor, land, end, delay) in new[] { (abi, .85f, 3.25f, 0f), (kira, 0f, 3.35f, .1f), (dan, 0f, 3.45f, .2f) })
+            {
+                var home = actor.transform.localPosition; Vector3 L(Vector3 world) => world - home + new Vector3(0, -land, 0) * 0;
+                k.Key(actor, "Body", "m_LocalPosition", 0f, new Vector3(0, 30f, 0));
+                k.Key(actor, "Body", "m_LocalPosition", 1.0f + delay, new Vector3(-home.x, 19f - home.y, -home.z));   // out of the vortex
+                k.Key(actor, "Body", "m_LocalPosition", 2.55f + delay * .5f, hole - home + new Vector3(0, 1.2f, 0));   // onto the roof
+                k.Key(actor, "Body", "m_LocalPosition", end, Vector3.zero);                                          // through it, down
+                k.Key(actor, "Body", "m_LocalPosition", BethlehemArrivalLength, Vector3.zero);
+                _ = L(Vector3.zero);
+            }
+            HayPuff(k, hole, 2.6f, 2.2f, new Color(.95f, .78f, .35f));          // thatch bursting
+            HayPuff(k, hay + new Vector3(0, .9f, 0), 3.25f, 1.4f, new Color(.95f, .82f, .4f));   // Abi lands in the hay
+            HayPuff(k, new Vector3(-.9f, .1f, .4f), 3.45f, .8f, new Color(.6f, .48f, .32f));     // Dan hits the floor
+            HayPuff(k, hay + new Vector3(.9f, .5f, .9f), 7.0f, .9f, new Color(.95f, .82f, .4f)); // Kira pops out
+            // Kira under the hay until she pops up (7 s): hidden low, then a hop out
+            k.Key(kira, "Body", "m_LocalPosition", 3.35f, Vector3.zero); k.Key(kira, "Body", "m_LocalPosition", 3.6f, new Vector3(0, -.6f, 0));
+            k.Key(kira, "Body", "m_LocalPosition", 6.95f, new Vector3(0, -.6f, 0)); k.Key(kira, "Body", "m_LocalPosition", 7.3f, new Vector3(0, .55f, .2f));
+            k.Key(kira, "Body", "m_LocalPosition", 7.65f, new Vector3(0, 0, .4f)); k.Key(kira, "Body", "m_LocalPosition", BethlehemArrivalLength, new Vector3(0, 0, .4f));
+            AnimationClip Surprise() => PeopleClip("surprised") ?? PeopleClip("look");
+            k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("fall_back"), 3.3f), (PeopleClip("hurt"), 5.2f), (PeopleClip("idle"), 6.2f), (Surprise(), 8.4f), (PeopleClip("idle"), 10.4f), (PeopleClip("look"), 11.2f), (PeopleClip("idle"), 13.0f));
+            k.Clips(abi, (PeopleClip("fall"), 0f), (PeopleClip("land"), 3.2f), (PeopleClip("idle"), 4.0f), (Surprise(), 8.2f), (PeopleClip("laugh") ?? PeopleClip("cheer"), 9.6f), (PeopleClip("idle"), 11.4f));
+            k.Clips(kira, (KiraClip("fall", c.kira), 0f), (KiraClip("idle", c.kira), 3.4f), (KiraClip("jump", c.kira), 6.95f), (KiraClip("land", c.kira), 7.5f), (KiraClip("idle", c.kira), 8.0f));
+            // Dan gets up off the floor (after the fall-back clip lies him down), then they turn to Kira; Abi climbs out of the hay
+            k.KeyYaw(dan, "Body", 0f, 0); k.KeyYaw(dan, "Body", 7.6f, 0); k.KeyYaw(dan, "Body", 8.1f, -60f); k.KeyYaw(dan, "Body", 11.0f, -60f); k.KeyYaw(dan, "Body", 11.6f, 140f); k.KeyYaw(dan, "Body", 13.2f, 140f);
+            k.KeyYaw(abi, "Body", 0f, 0); k.KeyYaw(abi, "Body", 7.8f, 0); k.KeyYaw(abi, "Body", 8.2f, 50f);
+            k.KeyYaw(kira, "Body", 0f, 0); k.KeyYaw(kira, "Body", 8.0f, 0); k.KeyYaw(kira, "Body", 9.0f, 40f);
+            // the manger: a faint glow, empty
+            var glow = k.Holder("Manger glow", new Vector3(0, 1.0f, 3f), 0);
+            Placeholders.Prim(PrimitiveType.Sphere, glow.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(1f, .85f, .45f), "Glow"), name: "Glow");
+            float[] gt = { 10.8f, 11.4f, 12.2f, 13.0f, BethlehemArrivalLength }; float[] gs = { .05f, .45f, .3f, .5f, .35f };
+            for (int i = 0; i < gt.Length; i++) k.Key(glow, "Glow", "m_LocalScale", gt[i], Vector3.one * gs[i]);
+            k.Show(glow, 10.8f, BethlehemArrivalLength);
+            if (k.Necklaces.TryGetValue(dan, out var neck))
+            {
+                float[] ts = { 0f, 13.2f, 13.6f, 14.0f, BethlehemArrivalLength }; float[] ss = { 1f, 1f, 2.2f, 1.5f, 1.8f };
+                for (int i = 0; i < ts.Length; i++) k.Key(neck.gameObject, "Shard", "m_LocalScale", ts[i], Vector3.one * ss[i]);
+            }
+            var kiraAt = hay + new Vector3(.9f, 0, 1.3f);
+            k.Shot("The star opens", 0f, 1.6f, new Vector3(16f, 4f, -30f), new Vector3(0, 12f, 0), 46f, new Vector3(14f, 5f, -27f));
+            k.Shot("Onto the roof", 1.6f, 2.9f, new Vector3(6f, 21f, -11f), hole, 44f);
+            k.Shot("Crash", 2.9f, 5.0f, new Vector3(3.6f, 2.0f, -6.2f), new Vector3(-2.2f, 1.0f, -.6f), 50f);
+            k.Shot("Dan on the floor", 5.0f, 6.9f, new Vector3(1.6f, 1.3f, -2.4f), new Vector3(-.9f, .3f, .4f), 46f);
+            k.Shot("A lamb!", 6.9f, 8.6f, kiraAt + new Vector3(.9f, .6f, -1.9f), kiraAt + new Vector3(0, .35f, 0), 42f, kiraAt + new Vector3(.75f, .55f, -1.6f));
+            k.Shot("They stare", 8.6f, 10.8f, new Vector3(1.6f, 1.4f, -3.6f), new Vector3(-1.6f, .9f, -.3f), 48f);
+            k.Shot("The empty manger", 10.8f, 13.2f, new Vector3(-.6f, 1.6f, -1.2f), new Vector3(0, .9f, 3f), 44f, new Vector3(-.4f, 1.5f, -.4f));
+            k.Shot("The golden shard", 13.2f, BethlehemArrivalLength, new Vector3(-1.3f, 1.45f, 1.6f), new Vector3(-.9f, 1.3f, .4f), 36f);   // in front of Dan (his holder 200 + body 140 deg: he faces about north by then)
+            k.Sound("roof_crash", 2.6f, .8f); k.Sound("hay_rustle", 3.25f, .6f); k.Sound("sheep_bleat", 7.2f, .55f);
+            k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
+        }
+
+        // Item 10 (film): the golden shard is collected; the Wise Men walk in, presents held out, the choir swells ("Hallelujah!"); they
+        // see a glowing shard and three confused travellers (one a cat-faced lamb), look at each other and walk out disappointed; then the
+        // hay bursts up into a spinning golden vortex that pulls the party in. The root is in the barn 4 m south of the manger (world
+        // (0, floor, 33)), +z north: the party by the manger (z +2..+3), the door at -7, the hay at (-3, -.5). Skippable.
+        public const float WiseMenLength = 16.5f;
+        public static void WiseMenArrive()
+        {
+            DataAssets.Ensure();
+            var c = BethlehemCast; NecklaceModel.Tint = c.shard;
+            var k = new Kit("WiseMenArrive", WiseMenLength);
+            var dan = k.Actor("Dan", c.dan, new Vector3(.6f, 0, 2.6f), 185);
+            var abi = k.Actor("Abi", c.abi, new Vector3(-.9f, 0, 2.3f), 170);
+            var kira = k.Actor("Kira", c.kira, new Vector3(.05f, 0, 1.7f), 180);
+            // the shard in Dan's hand, held up
+            var shard = k.Holder("Golden shard", new Vector3(.75f, 1.45f, 2.25f), 0);
+            Placeholders.CrystalObject("Crystal", c.shard, .9f).transform.SetParent(shard.transform, false);
+            k.Show(shard, 0f, 13.0f);
+            // the Wise Men, presents held out in front
+            string[] models = { "wiseman_santa", "wiseman_crown", "wiseman_old" }; string[] gifts = { "GiftRed", "GiftGreen", "GiftBlue" };
+            Color[] robes = { new Color(.5f, .14f, .12f), new Color(.95f, .9f, .78f), new Color(.35f, .45f, .2f) };
+            var props = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/World/bethlehem_props.fbx");
+            var men = new GameObject[3];
+            for (int i = 0; i < 3; i++)
+            {
+                float x = (i - 1) * 1.15f;
+                var m = men[i] = WiseMan(k, "Wise Man " + i, models[i], new Vector3(x, 0, -10f), 0, robes[i], i);
+                if (props && props.transform.Find(gifts[i]) is Transform g)
+                {
+                    var gi = Object.Instantiate(g.gameObject); gi.name = "Present"; WorldArt.Dress(gi);
+                    var body = m.transform.Find("Body"); gi.transform.SetParent(body ? body : m.transform, false);
+                    gi.transform.localPosition = new Vector3(0, 1.05f, .42f); gi.transform.localRotation = g.localRotation; gi.transform.localScale = g.localScale;
+                }
+                // walk in (3 s), stand, look round at each other, turn and walk out
+                float stop = -3.6f - Mathf.Abs(i - 1) * .3f;
+                k.Key(m, "Body", "m_LocalPosition", 0f, Vector3.zero); k.Key(m, "Body", "m_LocalPosition", 3.2f + i * .15f, new Vector3(0, 0, 10f + stop));
+                k.Key(m, "Body", "m_LocalPosition", 11.2f, new Vector3(0, 0, 10f + stop)); k.Key(m, "Body", "m_LocalPosition", 14.2f, new Vector3(0, 0, 1.5f));
+                k.Key(m, "Body", "m_LocalPosition", WiseMenLength, new Vector3(0, 0, 1.5f));
+                float[] yt = { 0f, 8.6f, 9.0f, 9.6f, 10.0f, 10.8f, 11.4f, WiseMenLength }; float look = i == 0 ? 50f : i == 2 ? -50f : 40f;
+                float[] yy = { 0f, 0f, look, look, -look, -look, 180f, 180f };
+                for (int j = 0; j < yt.Length; j++) k.KeyYaw(m, "Body", yt[j], yy[j]);
+                AnimationClip offer = PeopleClip("offer") ?? PeopleClip("idle"), sad = PeopleClip("sad") ?? PeopleClip("idle");
+                k.Clips(m, (PeopleClip("walk"), 0f), (offer, 3.2f + i * .15f), (sad, 8.6f), (PeopleClip("walk"), 11.4f));
+            }
+            // the party: Dan holds up the shard, Abi gives a little wave, Kira stares (then they're pulled into the vortex)
+            k.Clips(dan, (PeopleClip("hold_up") ?? PeopleClip("idle"), 0f), (PeopleClip("idle"), 6.8f), (PeopleClip("surprised") ?? PeopleClip("look"), 13.0f), (PeopleClip("fall"), 14.4f));
+            k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("cheer"), 6.0f), (PeopleClip("idle"), 7.4f), (PeopleClip("surprised") ?? PeopleClip("look"), 13.0f), (PeopleClip("fall"), 14.4f));
+            k.Clips(kira, (KiraClip("idle", c.kira), 0f), (KiraClip("jump", c.kira), 13.3f), (KiraClip("fall", c.kira), 14.4f));
+            // the hay bursts into a golden vortex (13 s) and pulls them in (14.4 -> 15.6 s)
+            var vort = new Vector3(-3f, 2.4f, -.6f);
+            HayPuff(k, new Vector3(-3f, .8f, -.5f), 13.0f, 3f, new Color(.98f, .82f, .35f));
+            VortexRings(k, "Hay vortex", vort, Quaternion.Euler(0, 90, 0), 13.1f, 14.0f, 3.6f, WiseMenLength, true);
+            foreach (var (a, h) in new[] { (dan, 1.1f), (abi, 1.0f), (kira, .3f) })
+            {
+                var home = a.transform.localPosition;
+                k.Key(a, "Body", "m_LocalPosition", 14.4f, Vector3.zero);
+                k.Key(a, "Body", "m_LocalPosition", 15.6f, vort - home - new Vector3(0, h, 0));
+                k.Key(a, "Body", "m_LocalPosition", WiseMenLength, vort - home - new Vector3(0, h, 0));
+                k.Key(a, "Body", "m_LocalScale", 14.4f, Vector3.one); k.Key(a, "Body", "m_LocalScale", 15.6f, Vector3.one * .05f); k.Key(a, "Body", "m_LocalScale", WiseMenLength, Vector3.one * .05f);
+            }
+            Tint(k, (0f, 0f), (15.4f, 0f), (16.2f, 1f), (WiseMenLength, 1f));
+            k.Shot("They come in", 0f, 3.4f, new Vector3(.4f, 1.75f, 4.6f), new Vector3(0, 1.4f, -6f), 46f, new Vector3(.3f, 1.7f, 4.1f));
+            k.Shot("Gifts held out", 3.4f, 6.0f, new Vector3(.2f, 1.6f, -.8f), new Vector3(0, 1.45f, -4f), 44f);
+            k.Shot("What they find", 6.0f, 8.6f, new Vector3(-.1f, 1.45f, -2.6f), new Vector3(0, .95f, 2.2f), 44f, new Vector3(-.1f, 1.35f, -2.1f));
+            k.Shot("They look at each other", 8.6f, 11.2f, new Vector3(.5f, 1.7f, -1.0f), new Vector3(0, 1.5f, -3.8f), 42f);
+            k.Shot("And leave", 11.2f, 13.0f, new Vector3(5.2f, 2.4f, -1.5f), new Vector3(0, 1.2f, -4f), 50f);
+            k.Shot("The hay bursts", 13.0f, WiseMenLength, new Vector3(3.8f, 2.6f, 5.6f), new Vector3(-2f, 1.6f, -.3f), 52f, new Vector3(3.2f, 2.5f, 4.8f));
+            k.Sound("choir_hallelujah", 1.4f, .8f); k.Sound("hay_rustle", 13.0f, .7f); k.Sound("necklace", 13.4f, .6f);
+            k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
+            _ = men;
+        }
+
+        public static void NecklaceWakesBethlehem() => NecklaceWakesIn("NecklaceWakesBethlehem", BethlehemCast);
+
+        // a Wise Man for a cutscene: his model (Dan's Mixamo rig) when it is in, else a robe, a beard and a Santa hat / crown
+        static GameObject WiseMan(Kit k, string n, string model, Vector3 pos, float yaw, Color robe, int i)
+        {
+            if (CharacterModel.Exists(model)) return k.Actor(n, model, pos, yaw);
+            var h = k.Holder(n, pos, yaw); var body = new GameObject("Body").transform; body.SetParent(h.transform, false);
+            var skin = Placeholders.Mat(new Color(.82f, .62f, .48f));
+            Placeholders.Prim(PrimitiveType.Capsule, body, new Vector3(0, .75f, 0), new Vector3(.6f, .75f, .5f), Placeholders.Mat(robe), name: "Robe");
+            var head = Placeholders.Prim(PrimitiveType.Sphere, body, new Vector3(0, 1.66f, 0), new Vector3(.36f, .38f, .36f), skin, name: "Head").transform;
+            Placeholders.Prim(PrimitiveType.Sphere, head, new Vector3(0, -.45f, .25f), new Vector3(.8f, .7f, .55f), Placeholders.Mat(i == 2 ? new Color(.96f, .96f, .94f) : i == 0 ? new Color(.1f, .08f, .07f) : new Color(.45f, .28f, .15f)), name: "Beard");
+            if (i == 0) Placeholders.Prim(PrimitiveType.Cylinder, head, new Vector3(0, .5f, -.05f), new Vector3(1.05f, .35f, 1.05f), Placeholders.Mat(new Color(.85f, .1f, .12f)), name: "Santa hat");
+            else Placeholders.Prim(PrimitiveType.Cylinder, head, new Vector3(0, .5f, 0), new Vector3(.95f, .25f, .95f), Placeholders.Mat(new Color(.95f, .72f, .25f)), name: "Crown");
+            return h;
+        }
+
+        static void HayPuff(Kit k, Vector3 at, float t0, float size, Color col)
+        {
+            var h = k.Holder("Hay puff", at, 0);
+            var m = Placeholders.Mat(col, "Glow");
+            for (int i = 0; i < 7; i++)
+            {
+                Placeholders.Prim(PrimitiveType.Cube, h.transform, Vector3.zero, Vector3.one * .1f, m, name: "Bit" + i);
+                var dir = Quaternion.Euler(0, i * 51f, 0) * new Vector3(size * .55f, size * (.3f + .1f * (i % 3)), 0);
+                k.Key(h, "Bit" + i, "m_LocalPosition", t0, Vector3.zero); k.Key(h, "Bit" + i, "m_LocalPosition", t0 + .6f, dir);
+                k.Key(h, "Bit" + i, "m_LocalScale", t0, Vector3.one * .05f); k.Key(h, "Bit" + i, "m_LocalScale", t0 + .25f, new Vector3(.4f, .06f, .12f) * size); k.Key(h, "Bit" + i, "m_LocalScale", t0 + .9f, Vector3.one * .02f);
+            }
+            k.Show(h, t0, t0 + .9f);
         }
 
         static void SandPuff(Kit k, Vector3 at, float t0, float size)

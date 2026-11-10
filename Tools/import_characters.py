@@ -22,7 +22,10 @@ MIX, RIGGED, MESHY = ROOT / "SourceArt" / "Mixamo", ROOT / "SourceArt" / "Rigged
 OUT = ROOT / "Assets" / "Resources" / "Characters"
 NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_sabertooth", "wolf", "snow_critter", "mammoth", "violinist_iceage",
          # Round 6: Egypt (the people and the mummy from Dan's Mixamo files when they're in; mummy Kira, the camel, the guardian: Code's rigs)
-         "kira_mummy", "camel", "guardian", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy"]
+         "kira_mummy", "camel", "guardian", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy",
+         # Round 7: Bethlehem (lamb Kira, the goat, the sheep, the guard dog: Code's rigs; the people from Dan's Mixamo files when they're in)
+         "kira_lamb", "goat", "sheep", "guard_dog", "dan_bethlehem", "abi_bethlehem", "violinist_bethlehem", "wiseman_santa", "wiseman_crown",
+         "wiseman_old", "watchman"]
 # Round 5: the Violinist's own Mixamo clips (SourceArt/Mixamo/violinist_iceage/<Mixamo name>.fbx -> Clips/violinist_<clip>.fbx);
 # his idle and walk are the shared Idle / Walking clips (Clips/idle.fbx, walk.fbx), like Dan's and Abi's
 VIOLINIST_CLIPS = {"play": "Playing The Violin", "bow": "Quick Informal Bow", "nod": "Head Nod Yes"}
@@ -35,7 +38,12 @@ PEOPLE_CLIPS = {
     "punch": "Punching", "kick": "Mma Kick", "hurt": "Hit On Side Of Body", "cheer": "Cheering (1)", "look": "Looking Around",
     "fall_back": "Falling Down",   # Round 4: Dan's backward fall (the Ice Age arrival cutscene)
     "laugh": "Laughing", "hold_up": "Standing Idle 03 Examine",   # (Dan's picks, 2026-11-10)   # Round 6: Dan's relieved laugh and holding up the necklace (the Ice Age arrival)
+    "surprised": "Surprised",   # Round 7: Dan and Abi see lamb Kira
 }
+# Round 7: the Wise Men's clips (SourceArt/Mixamo/wisemen/) and the watchman's (SourceArt/Mixamo/watchman/), shared people clips by game name
+# (Clips/<game name>.fbx: Humanoid, any person can play them); also looked for in SourceArt/Mixamo/ itself
+EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing"), "map": ("wisemen", "Looking At Map"), "offer": ("wisemen", "Offering"),
+               "sad": ("wisemen", "Disappointed"), "yell": ("watchman", "Yelling"), "doze": ("watchman", "Sleeping Idle")}
 # Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
 # the people's clip of the same name (CreatureAnimator)
 MUMMY_CLIPS = {"idle": "Thriller Idle", "walk": "Zombie Walk", "run_slow": "Zombie Walk", "run": "Zombie Walk", "punch": "Zombie Attack",
@@ -84,6 +92,11 @@ def main():
     got = [c for c, m in MUMMY_CLIPS.items() if mummy_clip(m)]
     for c in got: shutil.copy2(mummy_clip(MUMMY_CLIPS[c]), OUT / "Clips" / f"mummy_{c}.fbx")
     print(f"the mummy's clips: {len(got)} of {len(MUMMY_CLIPS)}")
+    got = []
+    for c, (folder, m) in EXTRA_CLIPS.items():
+        src = next((p for p in (MIX / folder / f"{m}.fbx", MIX / f"{m}.fbx") if p.exists()), None)
+        if src: shutil.copy2(src, OUT / "Clips" / f"{c}.fbx"); got.append(c)
+    print(f"the Wise Men's and the watchman's clips: {len(got)} of {len(EXTRA_CLIPS)}" + (f" (missing {', '.join(c for c in EXTRA_CLIPS if c not in got)})" if len(got) < len(EXTRA_CLIPS) else ""))
     print("copied:", len(list(OUT.rglob("*.fbx"))), "fbx,", len(list(OUT.rglob("*.png"))), "png")
 
 

@@ -58,7 +58,7 @@ namespace ShardsOfTime
         // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage), his own clips (Clips/violinist_play, _bow, _nod)
         // and the shared idle / walk replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
         public const string Model = "violinist_iceage";   // the Ice Age's; Round 6: each world's own when it exists (ModelName)
-        public string ModelName => instrument == "Lyre" && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;
+        public string ModelName => instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
         PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
         string loop = "idle", oneShot; float oneShotEnd;
         public string ClipNow => oneShot ?? loop;
@@ -310,10 +310,10 @@ namespace ShardsOfTime
         {
             Game.I.SetBusy(true); Playing = true;
             PlayLog.Line($"the Violinist plays for {hero.Stats.displayName}");
-            Sfx.Play(instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
+            Sfx.Play(instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
             var face = Quaternion.LookRotation(Vector3.ProjectOnPlane(hero.transform.position - transform.position, Vector3.up).normalized);
             transform.rotation = face;
-            yield return Cutscenes.Play(Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
+            yield return Cutscenes.Play(Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
             Playing = false;
             OneShot("bow"); Game.I.StartCoroutine(NodLater());
             if (!SaveGame.Current.abilities.Contains(ability)) SaveGame.Current.abilities.Add(ability);
@@ -321,6 +321,8 @@ namespace ShardsOfTime
             Sfx.Play("story", .6f, 1.2f);
             Hud.Message(ability == Abilities.DoubleJump
                 ? $"{hero.Stats.displayName} learned the {moveName}! Press {Controls.Btn(Controls.Act.Jump)} again in the air. High ledges everywhere are in reach now (the Ice Age's too)."
+                : ability == Abilities.Pounce   // Round 7
+                ? $"{hero.Stats.displayName} learned the {moveName}! On the ground, press {Controls.Btn(Controls.Act.Dive)}: she crouches, aims with the stick, and leaps far. Wide gaps everywhere are in reach now (Egypt's rooftops too)."
                 : $"{hero.Stats.displayName} learned the {moveName}! Jump, then press {Controls.Btn(Controls.Act.Dive)}. It breaks cracked ice and stuns enemies.", 7f);
             PlayLog.Line($"ability {ability} learned from the Violinist");
             SaveGame.Save("learned " + ability);

@@ -22,9 +22,9 @@ namespace ShardsOfTime
         static bool Ours(string path) => path.Replace('\\', '/').StartsWith(Dir + "/");
         static bool IsKira(string path) => IsGeneric(path);
         // Round 5: Kira's forms and the Ice Age creatures share Code's four-legged Blender rig (Generic, clips as takes)
-        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian" };   // Round 6: Egypt's camel and temple guardian
+        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian", "goat", "sheep", "guard_dog" };   // Round 6: Egypt's camel and temple guardian; Round 7: Bethlehem's animals
         static bool IsGeneric(string path) { string n = Path.GetFileNameWithoutExtension(path); return n.StartsWith("kira") || System.Array.IndexOf(Creatures, n) >= 0; }
-        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy";   // Round 6: the Egypt Violinist and the mummy (Mixamo)
+        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy" || name.StartsWith("wiseman_") || name == "watchman";   // Round 7: the Wise Men and the watchman (Mixamo)   // Round 6: the Egypt Violinist and the mummy (Mixamo)
         static bool IsClip(string path) => path.Replace('\\', '/').StartsWith(Dir + "/Clips/");
 
         // The people's clips (Round 3; frames as Blender / Mixamo number them, 30 fps; 0 = the whole take). loop; the vertical
@@ -50,6 +50,9 @@ namespace ShardsOfTime
             ["laugh"] = new ClipSpec(), ["hold_up"] = new ClipSpec(),
             ["mummy_idle"] = new ClipSpec { loop = true }, ["mummy_walk"] = new ClipSpec { loop = true }, ["mummy_run_slow"] = new ClipSpec { loop = true },
             ["mummy_run"] = new ClipSpec { loop = true }, ["mummy_punch"] = new ClipSpec(), ["mummy_hurt"] = new ClipSpec(), ["mummy_cheer"] = new ClipSpec(),
+            // Round 7: the Wise Men's and the watchman's (Dan's Mixamo downloads), everyone's surprise
+            ["sit"] = new ClipSpec { loop = true }, ["argue"] = new ClipSpec { loop = true }, ["map"] = new ClipSpec { loop = true }, ["offer"] = new ClipSpec { loop = true },
+            ["sad"] = new ClipSpec { loop = true }, ["doze"] = new ClipSpec { loop = true }, ["yell"] = new ClipSpec(), ["surprised"] = new ClipSpec(),
         };
 
         void OnPreprocessModel()

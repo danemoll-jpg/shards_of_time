@@ -22,9 +22,12 @@ namespace ShardsOfTime
         public static bool InCutscene => Cutscenes.Playing != null;
         public static bool TestArea => World && World.worldId == WorldData.Playground;
         public static bool InEgypt => World && World.worldId == WorldData.Egypt;   // Round 6
-        // the open world's vortex gate and ground (Round 6: two worlds)
-        public static Portal Gate => InEgypt ? Egypt.Gate : IceAge.Gate;
-        public static Vector3 OnGround(float x, float z) => InEgypt ? Egypt.OnGround(x, z) : IceAge.OnGround(x, z);
+        public static bool InBethlehem => World && World.worldId == WorldData.Bethlehem;   // Round 7
+        // the open world's vortex gate and ground (Round 6: two worlds; Round 7: three)
+        public static Portal Gate => InBethlehem ? Bethlehem.Gate : InEgypt ? Egypt.Gate : IceAge.Gate;
+        public static Vector3 OnGround(float x, float z) => InBethlehem ? Bethlehem.OnGround(x, z) : InEgypt ? Egypt.OnGround(x, z) : IceAge.OnGround(x, z);
+        // the save's world (the playground aside): Round 7, three of them
+        static string SavedWorld => SaveGame.Current.currentWorld == WorldData.Egypt || SaveGame.Current.currentWorld == WorldData.Bethlehem ? SaveGame.Current.currentWorld : WorldData.IceAge;
         public static readonly Vector3 HomeAnchor = new Vector3(0, 400f, -3000f);   // the living room of Act I (inside its cutscene)
 
         public Pickup StoryShard; public GameObject StoryBeam; public Portal PortalA;
@@ -67,7 +70,7 @@ namespace ShardsOfTime
             Look.ApplyWorld(World.worldId);
             NecklaceModel.Tint = TestArea ? new Color(.25f, .55f, 1f) : World.areas[0].storyShardColor;   // Round 6, item 6: the shard's colour per world
             if (TestArea) worldRoot = Playground.Build(World);
-            else { worldRoot = InEgypt ? Egypt.Build(World) : IceAge.Build(World); Vortex.Build(worldRoot); }
+            else { worldRoot = InBethlehem ? Bethlehem.Build(World) : InEgypt ? Egypt.Build(World) : IceAge.Build(World); Vortex.Build(worldRoot); }
             var a = World.areas[0];
             Party.Create(a.spawn, Quaternion.Euler(0, a.spawnYaw, 0));
             Health.Refill();
@@ -119,7 +122,7 @@ namespace ShardsOfTime
         {
             SaveGame.Slot = "";
             if (newGame) SaveGame.NewGame(); else SaveGame.Load();
-            World = WorldData.Load(SaveGame.Current.currentWorld == WorldData.Egypt ? WorldData.Egypt : WorldData.IceAge);   // Round 6: the world the save is in
+            World = WorldData.Load(SavedWorld);   // Round 6: the world the save is in
             BuildWorld();
             Menu.I.Close();
             titleCam.Priority = -10;
@@ -135,6 +138,7 @@ namespace ShardsOfTime
             var prog = SaveGame.Current.World(World.worldId);
             if (prog.storyShard && Gate && !SaveGame.Current.portals.Contains(Gate.id)) SaveGame.Current.portals.Add(Gate.id);
             if (InEgypt && !prog.opened.Contains("EG-arrived")) StartCoroutine(ArriveInEgypt());   // stopped before the arrival ended
+            if (InBethlehem && !prog.opened.Contains("BE-arrived")) StartCoroutine(ArriveInBethlehem());
         }
 
         // Item 3: a new game plays the film's opening, then play starts at the landing spot
@@ -168,7 +172,7 @@ namespace ShardsOfTime
         public void LeaveTestArea(bool toTitle = true)
         {
             SaveGame.Slot = ""; SaveGame.Load();
-            World = WorldData.Load(SaveGame.Current.currentWorld == WorldData.Egypt ? WorldData.Egypt : WorldData.IceAge);
+            World = WorldData.Load(SavedWorld);
             BuildWorld();
             PlayLog.Line("left the test area");
             if (toTitle) { Menu.I.Close(); ToTitle(); }
@@ -223,6 +227,13 @@ namespace ShardsOfTime
                     titleCam.transform.position = c + Quaternion.Euler(0, 200f + Mathf.Sin(titleSpin * .05f) * 25f, 0) * new Vector3(0, 9f, 26f);
                     titleCam.transform.rotation = Quaternion.LookRotation(c - titleCam.transform.position);
                 }
+                else if (InBethlehem)
+                {
+                    // Round 7: over the farmyard toward the barn under the star, the hills behind
+                    float s = Mathf.Sin(titleSpin * .04f);
+                    titleCam.transform.position = new Vector3(-14f + s * 8f, 9f, -16f);
+                    titleCam.transform.rotation = Quaternion.LookRotation(new Vector3(0f + s * 6f, 12f, 40f) - titleCam.transform.position);
+                }
                 else if (InEgypt)
                 {
                     // Round 6: over the town toward the pyramids and the Sphinx
@@ -271,8 +282,10 @@ namespace ShardsOfTime
             actOneFaded = false;
             if (Cutscenes.Playing == "IceAgeArrival") { Music.Play("iceage", .8f); return; }
             if (Cutscenes.Playing == "EgyptArrival") { Music.Play("egypt", .8f); return; }   // Round 6: Dan's Egypt song (silence if missing)
+            if (Cutscenes.Playing == "BethlehemArrival") { Music.Play("bethlehem", .8f); return; }   // Round 7: Dan's Bethlehem song
+            if (Cutscenes.Playing == "WiseMenArrive") { Music.Play(null, 1.2f); return; }   // the finale: the choir sting is the cutscene's own sound
             if (State != Mode.Playing || !Party.I) return;   // paused: keep what plays
-            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : InEgypt ? "egypt" : "iceage");
+            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : InBethlehem ? "bethlehem" : InEgypt ? "egypt" : "iceage");
         }
 
         // ---- progression
@@ -281,7 +294,7 @@ namespace ShardsOfTime
             var prog = SaveGame.Current.World(World.worldId);
             if (p.kind == Pickup.Kind.StoryShard) foreach (var h in Party.I.Heroes) h.Cheer();   // Round 3: everyone cheers the story shard
             else if (p.kind == Pickup.Kind.Shard) Party.I.Player.Cheer();
-            if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : OpenVortex());
+            if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : InBethlehem ? WiseMenFinale() : OpenVortex());
         }
 
         IEnumerator WakeNecklace(AreaData area)
@@ -297,9 +310,9 @@ namespace ShardsOfTime
             var at = player.position;
             if (Physics.Raycast(at + Vector3.up * .5f, Vector3.down, out var ground, 30f, ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << 4) | (1 << 2)), QueryTriggerInteraction.Ignore)) at = ground.point;   // on the ground, even mid-jump
             Sfx.Play("necklace", .7f);
-            yield return Cutscenes.Play(InEgypt ? "NecklaceWakesEgypt" : "NecklaceWakes", at, Quaternion.LookRotation(to.sqrMagnitude > .01f ? to : player.forward));
+            yield return Cutscenes.Play(InBethlehem ? "NecklaceWakesBethlehem" : InEgypt ? "NecklaceWakesEgypt" : "NecklaceWakes", at, Quaternion.LookRotation(to.sqrMagnitude > .01f ? to : player.forward));
             StoryShard.gameObject.SetActive(true); StoryBeam.SetActive(true);
-            Hud.Message("The necklace is awake! Follow it to the story shard.", 5f);
+            Hud.Message(InBethlehem ? "The necklace is awake! Follow it... back to the barn? Something is glowing in the manger." : "The necklace is awake! Follow it to the story shard.", 5f);
             SaveGame.Save("necklace awake");
             Busy = false;
         }
@@ -327,8 +340,37 @@ namespace ShardsOfTime
             var g = Gate;
             yield return Cutscenes.Play(InEgypt ? "VortexOpensEgypt" : "VortexOpens", g.transform.position, g.transform.rotation);
             if (!SaveGame.Current.portals.Contains(g.id)) SaveGame.Current.portals.Add(g.id);
-            Hud.Message($"The {(InEgypt ? "red" : "blue")} story shard opened a vortex! Step in to travel. ({SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards)", 6f);
+            Hud.Message($"The {(InBethlehem ? "golden" : InEgypt ? "red" : "blue")} story shard opened a vortex! Step in to travel. ({SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards)", 6f);
             SaveGame.Save("story shard");
+            Busy = false;
+        }
+
+        // Round 7, item 10: the golden shard in the manger. WiseMenArrive (skippable): the Wise Men walk in with their presents, the choir
+        // swells, they find a glowing shard and three confused travellers (one a lamb with a cat's face), look at each other and leave
+        // disappointed; the hay bursts up into a spinning golden vortex that pulls the party in -> the vortex space. The vortex stays open
+        // in the barn afterwards (the gate back).
+        public int Finales { get; private set; }
+        IEnumerator WiseMenFinale()
+        {
+            Busy = true; Finales++;
+            var prog = SaveGame.Current.World(World.worldId); prog.storyShard = true;
+            StoryBeam.SetActive(false);
+            if (!SaveGame.Current.portals.Contains(Bethlehem.Gate.id)) SaveGame.Current.portals.Add(Bethlehem.Gate.id);
+            SaveGame.Save("story shard");
+            yield return new WaitForSeconds(.3f);
+            var at = new Vector3(Bethlehem.MangerAt.x, Bethlehem.Ground(Bethlehem.MangerAt.x, 33f, 2f), 33f);
+            Party.I.PlaceAll(at, Quaternion.Euler(0, 0, 0)); CameraRig.I.SnapBehind();
+            yield return Cutscenes.Play("WiseMenArrive", at, Quaternion.identity);
+            Bethlehem.Gate.gameObject.SetActive(true);
+            PlayLog.Line("the Wise Men's finale: into the vortex");
+            for (float t = 0; t < 1f; t += Time.deltaTime / .5f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(1f);
+            SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
+            SaveGame.Save("vortex");
+            yield return null;
+            for (float t = 1; t > 0; t -= Time.deltaTime / .6f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f);
+            Hud.Message($"The golden shard! {SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards. The way to the Medieval Kingdom is open.", 6f);
             Busy = false;
         }
 
@@ -348,9 +390,9 @@ namespace ShardsOfTime
         public void TakeVortexPath(Vortex.PathInfo path, VortexDoor door)
         {
             PlayLog.Line($"vortex path {path.id}{(door.Blocked ? " (blocked)" : "")}");
-            if (door.Blocked && path.id == "Bethlehem")
+            if (door.Blocked && (path.id == "Bethlehem" || path.id == "Medieval"))
             {
-                Hud.Message("The way to Bethlehem is still closed. Egypt's red story shard opens it.", 5f);
+                Hud.Message(path.id == "Bethlehem" ? "The way to Bethlehem is still closed. Egypt's red story shard opens it." : "The way to the Medieval Kingdom is still closed. Bethlehem's golden story shard opens it.", 5f);
                 Sfx.Play("hurt", .3f, .6f);
                 var back2 = (Party.I.Player.transform.position - door.transform.position); back2.y = 0;
                 Party.I.Player.Motor.Knockback(back2.normalized * 6f + Vector3.up * 4f);
@@ -365,11 +407,12 @@ namespace ShardsOfTime
                 Party.I.Player.Motor.Knockback(back.normalized * 6f + Vector3.up * 4f);
                 return;
             }
-            if (path.id == "IceAge" || path.id == "Egypt")
+            if (path.id == "IceAge" || path.id == "Egypt" || path.id == "Bethlehem")
             {
-                string world = path.id == "Egypt" ? WorldData.Egypt : WorldData.IceAge;
-                bool first = world == WorldData.Egypt && !SaveGame.Current.World(WorldData.Egypt).opened.Contains("EG-arrived");
-                string cp = world == WorldData.Egypt ? (first ? Egypt.Start : Egypt.VortexCp) : "IA-vortex";
+                string world = path.world;
+                string arrivedFlag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : null;
+                bool first = arrivedFlag != null && !SaveGame.Current.World(world).opened.Contains(arrivedFlag);
+                string cp = world == WorldData.Egypt ? (first ? Egypt.Start : Egypt.VortexCp) : world == WorldData.Bethlehem ? (first ? Bethlehem.Start : Bethlehem.VortexCp) : "IA-vortex";
                 if (!SaveGame.Current.worldsReached.Contains(world)) SaveGame.Current.worldsReached.Add(world);
                 StartCoroutine(GoToWorld(world, cp, first));
                 return;
@@ -393,8 +436,23 @@ namespace ShardsOfTime
             PlayLog.Line($"the vortex: to {world} (checkpoint {checkpoint})");
             yield return null;
             Hud.SetFade(0f); Party.I.Frozen = false; Busy = false;
-            if (arrival) yield return ArriveInEgypt();
+            if (arrival) yield return world == WorldData.Bethlehem ? ArriveInBethlehem() : ArriveInEgypt();
             else OnAreaChanged();
+        }
+
+        // Round 7, item 3: Bethlehem's arrival (BethlehemArrival, skippable): through the barn's roof; then play starts in the barn
+        IEnumerator ArriveInBethlehem()
+        {
+            Busy = true;
+            var a = World.areas[0]; var face = Quaternion.Euler(0, a.spawnYaw, 0);
+            var at = Bethlehem.ArriveAt;
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            yield return Cutscenes.Play("BethlehemArrival", new Vector3(0, at.y, 34f), Quaternion.identity);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            var prog = SaveGame.Current.World(WorldData.Bethlehem); if (!prog.opened.Contains("BE-arrived")) prog.opened.Add("BE-arrived");
+            SaveGame.Current.checkpoint = Bethlehem.Start; SaveGame.Save("arrived in Bethlehem");
+            Hud.Message($"Bethlehem! Kira is a little lamb. At {a.requirement} shards in all, the golden shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 6f);
+            Busy = false;
         }
 
         // Round 6, item 6: Egypt's arrival (EgyptArrival, skippable), then play starts on the plaza
@@ -468,7 +526,9 @@ namespace ShardsOfTime
             SaveGame.Disabled = true; Cutscenes.AllowSkip = false; Busy = true;   // Busy: the world's own triggers (the Sphinx gag) stay quiet while filming
             Menu.I.Close(); titleCam.Priority = -10; State = Mode.Playing;
             bool egypt = name == "EgyptArrival" || name == "SphinxGag" || name.EndsWith("Egypt");   // Round 6: Egypt's cutscenes in Egypt
-            if (egypt != InEgypt) { World = WorldData.Load(egypt ? WorldData.Egypt : WorldData.IceAge); BuildWorld(); yield return null; }
+            bool beth = name == "BethlehemArrival" || name == "WiseMenArrive" || name.EndsWith("Bethlehem");   // Round 7
+            string want = beth ? WorldData.Bethlehem : egypt ? WorldData.Egypt : WorldData.IceAge;
+            if (World.worldId != want) { World = WorldData.Load(want); BuildWorld(); yield return null; }
             var a = World.areas[0];
             Vector3 at; Quaternion facing;
             if (name == "ActOne") { at = HomeAnchor; facing = Quaternion.identity; }
@@ -477,6 +537,10 @@ namespace ShardsOfTime
             else if (name == "NecklaceWakes") { at = IceAge.OnGround(10f, 300f); var to = StoryShard.transform.position - at; to.y = 0; facing = Quaternion.LookRotation(to); }
             else if (name == "NecklaceWakesEgypt") { at = Egypt.OnGround(0, 60); facing = Quaternion.Euler(0, 40, 0); }
             else if (name == "SphinxGag") { at = Egypt.GagSpot; facing = Quaternion.Euler(0, 270, 0); }
+            else if (name == "BethlehemArrival") { at = new Vector3(0, Bethlehem.ArriveAt.y, 34f); facing = Quaternion.identity; }
+            else if (name == "WiseMenArrive") { at = new Vector3(0, Bethlehem.Ground(0, 33f, 2f), 33f); facing = Quaternion.identity; }
+            else if (name == "NecklaceWakesBethlehem") { at = Bethlehem.OnGround(60, 120); facing = Quaternion.Euler(0, 240, 0); }
+            else if (name == "ViolinistTeachesBethlehem") { var v = Violinist.I; at = v.transform.position; facing = v.transform.rotation; }
             else { at = OnGround(a.spawn.x, a.spawn.z); facing = Quaternion.Euler(0, a.spawnYaw, 0); }
             Party.I.PlaceAll(at, facing); CameraRig.I.SnapBehind();
             yield return new WaitForSeconds(.5f);

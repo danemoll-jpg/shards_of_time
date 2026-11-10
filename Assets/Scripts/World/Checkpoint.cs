@@ -65,7 +65,7 @@ namespace ShardsOfTime
             if (!Open || cool > 0 || !Game.Playing || !Party.I) return;
             var p = Party.I.Player.Motor.Center;
             var local = transform.InverseTransformPoint(p);
-            if (Mathf.Abs(local.z) < .6f && new Vector2(local.x, local.y - 2f).magnitude < 1.7f) Use();
+            if (Mathf.Abs(local.z) < .6f && Mathf.Abs(local.x) < 1.7f && local.y > -.3f && local.y < 3.7f) Use();   // inside the arch (Round 7: little Kira's middle is only 0.25 m up)
         }
 
         public void Use()

@@ -138,15 +138,15 @@ namespace ShardsOfTime
                 (-27, 26, 1, false), (-27, 40, 2, true), (-17, 24, 3, false), (-17, 40, 4, false),
                 (27, 26, 2, false), (27, 40, 3, true), (17, 24, 4, false), (17, 40, 1, false),
                 (-27, 104, 3, false), (-17, 104, 1, true), (-27, 116, 4, false), (27, 100, 2, true), (17, 100, 3, false), (27, 114, 1, false), (17, 116, 4, false),
-                (-52, 33, 2, false), (-40, 110, 1, false), (40, 104, 3, false), (40, 30, 4, true), (-60, 100, 2, false), (52, 20, 1, false) };
+                (-43.5f, 40, 2, false), (-40, 110, 1, false), (40, 104, 3, false), (40, 30, 4, true), (-60, 100, 2, false), (52, 20, 1, false) };
             foreach (var (x, z, k, dome) in houses)
             {
                 float yaw = x < 0 ? 90 : -90; float g = OnGround(x, z).y;   // the ground before the house's own collider is there
                 var h = Prop("House" + k, x, z, yaw, 1f, false, g); Solid(h, new Vector3(6, 4.6f, 6));
                 if (dome) Prop("Dome", x, z, 0, .9f, false, g + 4.6f);
             }
-            // the far roof (x -52): its parapet gap is 9 m from the west roofs: only Kira's pounce clears it (Bethlehem)
-            Hint(new Vector3(-30, 5, 33), 4f, () => "That far roof is too far to jump... A cat could pounce it, one day. (later)");
+            // the far roof (x -43.5): 10.5 m from the west roofs (Round 7: it was 19 m): only Kira's pounce clears it (Bethlehem); Abi's double jump reaches ~9.8 m
+            Hint(new Vector3(-29, 5, 40), 4f, () => "That far roof is too far to jump... A cat could pounce it, one day. (later)");
             // ways up: outside stairs (0.78 m steps, a jump each) beside three houses; crates as decoration
             for (int i = 0; i < 6; i++) Slab("House stair", -23.8f, -22.4f, 49 - i * 1.0f, 50 - i * 1.0f, (i + 1) * .78f, 0, "Plaster");
             foreach (var (x, z) in new[] { (-21.2f, 30f), (-21.6f, 31.4f), (22f, 34f) }) Prop("Crate", x, z, x * 9, 1f, true);

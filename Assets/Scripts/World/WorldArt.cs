@@ -62,6 +62,21 @@ namespace ShardsOfTime
             ["Gut"] = (new Color(.95f, .92f, .8f), "Lit", .4f),
             ["Hair"] = (new Color(.97f, .96f, .92f), "Lit", .2f),
             ["Lapis"] = (new Color(.12f, .25f, .7f), "Lit", .6f),
+            // Round 7: Bethlehem (Tools/Blender/bethlehem_world.py): night grass, the barn's boards and thatch, hay, mud brick, presents
+            ["Grass"] = (new Color(.42f, .45f, .22f), "Lit", .1f),
+            ["Dirt"] = (new Color(.55f, .4f, .25f), "Lit", .1f),
+            ["Plank"] = (new Color(.55f, .36f, .2f), "Lit", .2f),
+            ["Thatch"] = (new Color(.78f, .6f, .3f), "Lit", .1f),
+            ["Hay"] = (new Color(.93f, .78f, .38f), "Lit", .1f),
+            ["Mudbrick"] = (new Color(.78f, .62f, .45f), "Lit", .1f),
+            ["GiftRed"] = (new Color(.85f, .12f, .15f), "Lit", .45f),
+            ["GiftGreen"] = (new Color(.12f, .6f, .3f), "Lit", .45f),
+            ["GiftBlue"] = (new Color(.2f, .35f, .85f), "Lit", .45f),
+            ["Olive"] = (new Color(.3f, .4f, .2f), "Lit", .15f),
+            ["Rope"] = (new Color(.75f, .62f, .4f), "Lit", .1f),
+            ["Iron"] = (new Color(.25f, .25f, .27f), "Lit", .6f),
+            ["Ember"] = (new Color(1f, .45f, .12f), "Glow", 0),
+            ["Water"] = (new Color(.2f, .35f, .5f, .75f), "Water", .8f),
         };
 
         public static Material Mat(string name)

@@ -39,8 +39,13 @@ namespace ShardsOfTime
             // Round 4: Dan learns the ground pound (an existing Dan.asset had no locked ability)
             var danStats = AssetDatabase.LoadAssetAtPath<CharacterStats>(Data + "/Characters/Dan.asset");
             if (danStats && string.IsNullOrEmpty(danStats.lockedAbility)) { danStats.lockedAbility = Abilities.GroundPound; EditorUtility.SetDirty(danStats); }
+            // Round 7: Kira learns the pounce (Bethlehem's Violinist)
+            var kiraStats = AssetDatabase.LoadAssetAtPath<CharacterStats>(Data + "/Characters/Kira.asset");
+            if (kiraStats && string.IsNullOrEmpty(kiraStats.lockedAbility)) { kiraStats.lockedAbility = Abilities.Pounce; EditorUtility.SetDirty(kiraStats); }
+            string be = Data + "/Worlds/" + WorldData.Bethlehem + ".asset";   // Round 7
+            if (!File.Exists(be)) AssetDatabase.CreateAsset(WorldData.BethlehemDefaults(), be);
             Directory.CreateDirectory(Data + "/KiraForms");
-            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy })
+            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb })
             {
                 string path = $"{Data}/KiraForms/{f}.asset";
                 if (!File.Exists(path)) AssetDatabase.CreateAsset(KiraForm.Defaults(f), path);

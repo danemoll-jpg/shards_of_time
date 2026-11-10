@@ -66,6 +66,8 @@ namespace ShardsOfTime
         {
             if (!IsPerson || string.IsNullOrEmpty(outfit) || outfit == Outfit) return;
             string model = Stats.displayName.ToLowerInvariant() + "_" + outfit;
+            // Round 7: Bethlehem's clothes until their models are in: Egypt's (simple robes), not the home pyjamas
+            if (!CharacterModel.Exists(model) && outfit == Outfits.Bethlehem) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Egypt;
             if (!CharacterModel.Exists(model)) { if (Outfit == null) PlayLog.Line($"{Stats.displayName}: no model {model}, graybox"); Outfit = outfit; return; }
             Outfit = outfit;
             if (Model) { Model.SetActive(false); Destroy(Model); Model = null; Anim = null; }
@@ -110,6 +112,11 @@ namespace ShardsOfTime
             if (e == "splash" && IsPlayer) Sfx.Play("splash", .5f);
             if (e == "outofbreath" && IsPlayer) Health.Damage(1, Vector3.zero, "out of breath");
             if (e == "pound") Pound();
+            if (e == "aim") { squash = .22f; if (Anim) Anim.Trigger("land"); }
+            if (e == "pounce") { squash = -.2f; if (IsPlayer) Sfx.Play("jump", .6f, 1.5f); if (Anim) Anim.Trigger("jump"); PlayLog.Line($"{Stats.displayName}: pounce from {transform.position}"); }
+            // Round 7, item 6: lamb Kira lands on hay or wool: a high springy bounce (anyone else just lands)
+            if (e == "land" && HasAbility(Abilities.WoolBounce) && Motor.GroundCollider && Motor.GroundCollider.GetComponentInParent<BouncePad>() is BouncePad pad && !Motor.Aiming)
+                pad.Bounce(this);
         }
 
         // Round 4: the ground pound lands: a shockwave stuns (and hits) enemies round Dan, and cracked ice under him breaks
@@ -161,7 +168,7 @@ namespace ShardsOfTime
                 if (hv.magnitude > 1.5f && (stepTimer -= Time.deltaTime) <= 0)
                 {
                     stepTimer = Mathf.Lerp(.42f, .27f, hv.magnitude / Stats.runSpeed);
-                    Sfx.Play(Game.InEgypt ? "footstep_sand" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
+                    Sfx.Play(Game.InEgypt ? "footstep_sand" : Game.InBethlehem ? "footstep_grass" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
                 }
             }
             if (swipeTimer > 0) { swipeTimer -= Time.deltaTime; if (swipeTimer <= 0) swipe.gameObject.SetActive(false); }
@@ -186,5 +193,5 @@ namespace ShardsOfTime
     }
 
     // Dan's and Abi's outfits (Round 3): AreaData.outfit names one per area
-    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt"; }
+    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem"; }
 }

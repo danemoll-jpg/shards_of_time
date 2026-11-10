@@ -53,8 +53,8 @@ namespace ShardsOfTime
                 yield return GoF(XZ(0, 499), .5f); yield return Go(XZ(0, 507), .5f, 8f, 1f, () => Vortex.Inside(Player.transform.position));
                 yield return WaitFor(() => Vortex.Inside(Player.transform.position), 3f);
             }
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-18, 8), .6f); yield return Go(VPath(-18, 19), .6f);
-            yield return Go(VPath(-18, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-30, 8), .6f); yield return Go(VPath(-30, 19), .6f);   // Round 7: Egypt's path at -30
+            yield return Go(VPath(-30, 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "EgyptArrival", 8f);
             Ok(Game.InEgypt && Cutscenes.Playing == "EgyptArrival", $"the Egypt path loads Egypt and plays its arrival (world {Game.World.worldId}, cutscene {Cutscenes.Playing ?? "none"})");
             foreach (var (t, n) in new[] { (1.5f, "80a_arrival_land"), (3.8f, "80b_arrival_pyramids"), (6.0f, "80c_arrival_clothes"), (8.0f, "80d_arrival_mummy_kira"), (10.2f, "80e_arrival_react"), (12.6f, "80f_arrival_red_shard") })
@@ -497,10 +497,9 @@ namespace ShardsOfTime
             yield return WaitFor(() => Vortex.Inside(Player.transform.position), 4f);
             Ok(Vortex.Inside(Player.transform.position), "the red vortex takes the party into the vortex space");
             yield return Wait(.6f); yield return Shot("107_vortex_after_egypt");
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(18, 8), .6f); yield return Go(VPath(18, 19), .6f); yield return Go(VPath(18, 24), .5f, 6f, 1f, () => Game.I.Busy);
-            yield return WaitFor(() => Hud.TitleShown != null, 4f);
-            Ok(Hud.TitleShown == "Bethlehem", $"after Egypt the Bethlehem path opens: \"{Hud.TitleShown}, to be continued...\" (saved)");
-            yield return WaitFor(() => !Game.I.Busy, 8f);
+            // Round 7: Bethlehem is a real world now (its own route, ExeCheck.Bethlehem.cs): here only its door opens
+            var bd = VortexDoor.All.First(d => d.info.id == "Bethlehem");
+            Ok(!bd.Blocked && bd.label.text == "Bethlehem", $"after Egypt the Bethlehem path opens (\"{bd.label.text}\")");
         }
 
         // the entry -> the turning room's south ledge: the blades, the dart wall, the stepping stones, the sliding blocks
@@ -582,8 +581,8 @@ namespace ShardsOfTime
         {
             Head("Round 6, item 9: the double jump in the Ice Age");
             if (!Vortex.Inside(Player.transform.position)) yield break;
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-54, 8), .6f); yield return Go(VPath(-54, 19), .6f);
-            yield return Go(VPath(-54, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-60, 8), .6f); yield return Go(VPath(-60, 19), .6f);
+            yield return Go(VPath(-60, 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => !Game.I.Busy && Game.World.worldId == WorldData.IceAge, 12f);
             Ok(Game.World.worldId == WorldData.IceAge && !Game.InCutscene, $"the Ice Age path leads back to the valley (world {Game.World.worldId}, at {Fmt(Player.transform.position)})");
             MusicCheck("the Ice Age again", "iceage");

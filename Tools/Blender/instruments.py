@@ -18,7 +18,7 @@ from mathutils import Vector
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'Assets', 'Resources', 'World')
-SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'instruments')
+SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'instruments')
 COL = {'Bone': (.93, .88, .76), 'Ebony': (.12, .09, .08), 'Gut': (.95, .92, .8), 'Wood': (.45, .28, .16), 'Gold': (.95, .72, .25),
        'Lapis': (.12, .25, .7), 'Bark': (.42, .28, .18), 'Hair': (.97, .96, .92)}
 
@@ -157,10 +157,29 @@ def lyre():
     return e
 
 
+def harp():
+    """Round 7, item 2: Bethlehem's small shepherd's harp (0.55 m), held like the lyre (the same markers): a straight pillar on the
+    left, a slanted sound box on the right, a curved neck over the top, seven strings straight down from the neck to the box."""
+    e = empty('Harp')
+    cyl('Pillar__Wood', (-.15, 0, .02), (-.15, 0, .52), .018, .016, e, 8)
+    cyl('SoundBox__Wood', (-.13, 0, .03), (.14, 0, .44), .05, .028, e, 10)
+    pts = [(-.15 + .29 * t / 6, 0, .52 + .045 * math.sin(t / 6 * math.pi * 1.3) - .06 * t / 6) for t in range(7)]
+    for a, b in zip(pts, pts[1:]): cyl('Neck__Wood', a, b, .02, .02, e, 8); ball('Joint__Wood', b, .02, e)
+    ball('Knob__Gold', (-.15, 0, .54), .022, e); ball('Foot__Gold', (-.14, 0, .02), .02, e)
+    for i in range(7):
+        x = -.1 + i * .034
+        top = .52 + .045 * math.sin((x + .15) / .29 * math.pi * 1.3) - .06 * (x + .15) / .29 - .02
+        bot = .03 + (x + .13) / .27 * .41 + .03
+        cyl('String__Gut', (x, -.005, bot), (x, -.005, top), .0012, .0012, e, 4)
+    empty('M_Base', e, (0, 0, 0)); empty('M_Top', e, (0, 0, .55)); empty('M_Front', e, (0, -.2, .3))
+    empty('M_Hold', e, (-.16, 0, .35)); empty('M_Pluck', e, (0, -.01, .3))
+    return e
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    roots = [fiddle(), bow(), lyre()]
-    roots[1].location = (.3, 0, 0); roots[2].location = (.75, 0, 0)
+    roots = [fiddle(), bow(), lyre(), harp()]
+    roots[1].location = (.3, 0, 0); roots[2].location = (.75, 0, 0); roots[3].location = (1.2, 0, 0)
     bpy.context.view_layer.update()
     for o in bpy.context.scene.objects:   # bake the bevels
         if o.type == 'MESH' and o.modifiers:
@@ -169,9 +188,9 @@ def main():
     # preview
     os.makedirs(SHOTS, exist_ok=True)
     sc = bpy.context.scene; sc.render.engine = 'BLENDER_WORKBENCH'; sc.display.shading.color_type = 'MATERIAL'
-    sc.display.shading.light = 'STUDIO'; sc.render.resolution_x = 1200; sc.render.resolution_y = 700
+    sc.display.shading.light = 'STUDIO'; sc.render.resolution_x = 1400; sc.render.resolution_y = 700
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
-    cam.location = (.45, -1.45, 1.05); cam.rotation_euler = (math.radians(58), 0, 0); cam.data.lens = 40
+    cam.location = (.65, -1.75, 1.15); cam.rotation_euler = (math.radians(58), 0, 0); cam.data.lens = 40
     sc.render.filepath = os.path.join(SHOTS, 'instruments.png'); bpy.ops.render.render(write_still=True)
     for r in roots: r.location = (0, 0, 0)
     bpy.context.view_layer.update()

@@ -20,10 +20,16 @@ HEIGHT = {'dan_home': 1.8, 'dan_iceage': 1.8, 'abi_home': 1.65, 'abi_iceage': 1.
           'violinist_iceage': 1.85, 'wolf': 1.25, 'snow_critter': 0.8, 'mammoth': 4.4,
           # Round 6: Egypt (the mummy is a person-sized enemy for Mixamo; the Sphinx is a 22 m landmark, never rigged)
           'dan_egypt': 1.8, 'abi_egypt': 1.65, 'violinist_egypt': 1.85, 'mummy': 1.75, 'kira_mummy': 0.5,
-          'camel': 2.3, 'scarab': 0.4, 'guardian': 1.7, 'sphinx_kira': 22.0}
-PEOPLE = {'dan_home', 'dan_iceage', 'abi_home', 'abi_iceage', 'violinist_iceage', 'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy'}
+          'camel': 2.3, 'scarab': 0.4, 'guardian': 1.7, 'sphinx_kira': 22.0,
+          # Round 7: Bethlehem (people for Mixamo; animals are Code's rigs; goat / sheep / dog heights to the top of the head)
+          'dan_bethlehem': 1.8, 'abi_bethlehem': 1.65, 'violinist_bethlehem': 1.85, 'wiseman_santa': 1.8, 'wiseman_crown': 1.85,
+          'wiseman_old': 1.75, 'watchman': 1.75, 'kira_lamb': 0.5, 'goat': 1.05, 'sheep': 0.95, 'guard_dog': 0.85, 'scorpion': 0.3}
+PEOPLE = {'dan_home', 'dan_iceage', 'abi_home', 'abi_iceage', 'violinist_iceage', 'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy',
+          'dan_bethlehem', 'abi_bethlehem', 'violinist_bethlehem', 'wiseman_santa', 'wiseman_crown', 'wiseman_old', 'watchman'}
 ROUND5 = {'violinist_iceage', 'wolf', 'snow_critter', 'mammoth'}
 ROUND6 = {'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy', 'kira_mummy', 'camel', 'scarab', 'guardian', 'sphinx_kira'}
+ROUND7 = {'dan_bethlehem', 'abi_bethlehem', 'violinist_bethlehem', 'wiseman_santa', 'wiseman_crown', 'wiseman_old', 'watchman',
+          'kira_lamb', 'goat', 'sheep', 'guard_dog', 'scorpion'}
 YAW = {'guardian': 90}   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'models')
 
@@ -90,7 +96,7 @@ def render(name):
     size = max(h, hi.x - lo.x, hi.y - lo.y)
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
     cam.data.type = 'ORTHO'; cam.data.ortho_scale = size * 1.15
-    shots = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'models') if name in ROUND5 else os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'models') if name in ROUND6 else SHOTS
+    shots = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'models') if name in ROUND5 else os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'models') if name in ROUND6 else os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'models') if name in ROUND7 else SHOTS
     os.makedirs(shots, exist_ok=True)
     for tag, ang in (('front', 0), ('side', 90), ('back', 180), ('34', 35)):
         a = math.radians(ang); r = 10

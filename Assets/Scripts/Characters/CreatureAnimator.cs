@@ -15,8 +15,11 @@ namespace ShardsOfTime
     public sealed class CreatureAnimator : MonoBehaviour
     {
         public static readonly string[] KiraClips = { "idle", "walk", "run", "jump", "fall", "land", "swim", "attack", "hurt", "stunned" };
-        public static readonly string[] PeopleClips = { "idle", "walk", "run_slow", "run", "jump", "fall", "land", "land_hard", "swim", "tread", "push", "punch", "kick", "hurt", "cheer" };
-        static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer" };
+        public static readonly string[] PeopleClips = { "idle", "walk", "run_slow", "run", "jump", "fall", "land", "land_hard", "swim", "tread", "push", "punch", "kick", "hurt", "cheer",
+            // Round 7 (Dan's Mixamo downloads; missing = skipped): the Wise Men (sit on the camel, argue, read the map, hold out a gift, disappointed),
+            // the watchman (yell "Halt!", doze), everyone's surprise
+            "sit", "argue", "map", "offer", "sad", "yell", "doze", "surprised" };
+        static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer", "yell", "surprised" };
         static readonly HashSet<string> UpperBody = new HashSet<string> { "punch", "cheer", "hurt" };
         static readonly HashSet<string> CancelOnMove = new HashSet<string> { "land", "land_hard", "cheer" };
         static readonly Dictionary<string, float> Rate = new Dictionary<string, float> { ["punch"] = 1.4f, ["kick"] = 1.5f };

@@ -1,0 +1,419 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: Bethlehem
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: Bethlehem
+  displayName: Bethlehem
+  heightsAreHints: 1
+  areas:
+  - id: BE
+    name: Bethlehem
+    requirement: 112
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - FlockHide
+    - WoolBounce
+    storyShard: {x: 0, y: 1.25, z: 37}
+    storyShardColor: {r: 1, g: 0.78, b: 0.2, a: 1}
+    spawn: {x: 0, y: 0.1, z: 29.5}
+    spawnYaw: 180
+    kiraForm: Lamb
+    outfit: bethlehem
+    box:
+      m_Center: {x: 0, y: 0, z: 90}
+      m_Extent: {x: 220, y: 300, z: 200}
+  shards:
+  - id: F01
+    area: BE
+    position: {x: 0, y: 0, z: 18}
+    requires: []
+    note: in front of the barn
+  - id: F02
+    area: BE
+    position: {x: -14, y: 0, z: 10}
+    requires: []
+    note: the farmyard
+  - id: F03
+    area: BE
+    position: {x: 16, y: 0, z: 8}
+    requires: []
+    note: the farmyard
+  - id: F04
+    area: BE
+    position: {x: -24, y: 0, z: 48}
+    requires: []
+    note: behind the hay stacks
+  - id: F05
+    area: BE
+    position: {x: 27, y: 0, z: 54}
+    requires: []
+    note: by the trough
+  - id: F06
+    area: BE
+    position: {x: 3, y: 3.2, z: 41}
+    requires: []
+    note: the hay loft (up the bales)
+  - id: F07
+    area: BE
+    position: {x: 20, y: 3.6, z: 30}
+    requires: []
+    note: on the bale tower
+  - id: F08
+    area: BE
+    position: {x: 0, y: 8.3, z: 37}
+    requires:
+    - Kira
+    - WoolBounce
+    note: on the barn's ridge (lamb Kira bounces up)
+  - id: F09
+    area: BE
+    position: {x: -22, y: 4.4, z: 20}
+    requires:
+    - Kira
+    - WoolBounce
+    note: on top of the big hay stack (lamb Kira bounces up)
+  - id: F10
+    area: BE
+    position: {x: 8, y: 0, z: 62}
+    requires: []
+    note: by the cart, north yard
+  - id: H01
+    area: BE
+    position: {x: 50, y: 0, z: 20}
+    requires: []
+    note: the first hill
+  - id: H02
+    area: BE
+    position: {x: 62, y: 0, z: 60}
+    requires: []
+    note: by the Violinist's camp
+  - id: H03
+    area: BE
+    position: {x: 80, y: 0, z: 30}
+    requires: []
+    note: by the Violinist's camp
+  - id: H04
+    area: BE
+    position: {x: 95, y: 0, z: 50}
+    requires: []
+    note: the hillside
+  - id: H05
+    area: BE
+    position: {x: 120, y: 0, z: 100}
+    requires: []
+    note: the middle camp
+  - id: H06
+    area: BE
+    position: {x: 138, y: 0, z: 120}
+    requires: []
+    note: the middle camp
+  - id: H07
+    area: BE
+    position: {x: 150, y: 0, z: 10}
+    requires: []
+    note: the south camp
+  - id: H08
+    area: BE
+    position: {x: 165, y: 0, z: -20}
+    requires: []
+    note: the far hill
+  - id: H09
+    area: BE
+    position: {x: 172, y: 0, z: 40}
+    requires: []
+    note: the far hill
+  - id: H10
+    area: BE
+    position: {x: 100, y: 0, z: 160}
+    requires: []
+    note: the olive grove
+  - id: H11
+    area: BE
+    position: {x: 120, y: 0, z: 182}
+    requires: []
+    note: the olive grove
+  - id: H12
+    area: BE
+    position: {x: 140, y: 0, z: 165}
+    requires: []
+    note: the olive grove
+  - id: H13
+    area: BE
+    position: {x: 90, y: 3.8, z: 110}
+    requires: []
+    note: on the rocky outcrop
+  - id: H14
+    area: BE
+    position: {x: 130, y: 0, z: 60}
+    requires: []
+    note: among the goats' rocks
+  - id: H15
+    area: BE
+    position: {x: 60, y: 0, z: 130}
+    requires: []
+    note: the north slope
+  - id: H16
+    area: BE
+    position: {x: 170, y: 0, z: 90}
+    requires: []
+    note: the far hill
+  - id: V01
+    area: BE
+    position: {x: -64, y: 0, z: 58}
+    requires: []
+    note: the village gate
+  - id: V02
+    area: BE
+    position: {x: -90, y: 0, z: 52}
+    requires: []
+    note: the main street
+  - id: V03
+    area: BE
+    position: {x: -115, y: 0, z: 50}
+    requires: []
+    note: the market
+  - id: V04
+    area: BE
+    position: {x: -125, y: 0, z: 70}
+    requires: []
+    note: the market
+  - id: V05
+    area: BE
+    position: {x: -108, y: 0, z: 72}
+    requires: []
+    note: the market, behind a stall
+  - id: V06
+    area: BE
+    position: {x: -95, y: 0, z: 100}
+    requires: []
+    note: a courtyard
+  - id: V07
+    area: BE
+    position: {x: -140, y: 0, z: 30}
+    requires: []
+    note: a courtyard
+  - id: V08
+    area: BE
+    position: {x: -150, y: 0, z: 84}
+    requires: []
+    note: in front of the inn
+  - id: V09
+    area: BE
+    position: {x: -100, y: 4.2, z: 46}
+    requires: []
+    note: a flat roof (up the outside stair)
+  - id: V10
+    area: BE
+    position: {x: -130, y: 4.2, z: 104}
+    requires: []
+    note: a flat roof (up the outside stair)
+  - id: V11
+    area: BE
+    position: {x: -160, y: 4.2, z: 46}
+    requires: []
+    note: a flat roof (across the planks)
+  - id: V12
+    area: BE
+    position: {x: -170, y: 0, z: 120}
+    requires: []
+    note: the back alley
+  - id: V13
+    area: BE
+    position: {x: -80, y: 0, z: 10}
+    requires: []
+    note: the south lane
+  - id: V14
+    area: BE
+    position: {x: -186, y: 0, z: 66}
+    requires: []
+    note: the west street
+  - id: V15
+    area: BE
+    position: {x: -188, y: 0, z: 8}
+    requires:
+    - Kira
+    - FlockHide
+    note: 'the watchmen''s yard (slip in with the flock: lamb Kira)'
+  - id: V16
+    area: BE
+    position: {x: -60, y: 0, z: 130}
+    requires: []
+    note: the north lane
+  - id: R01
+    area: BE
+    position: {x: 150, y: 0, z: 198}
+    requires: []
+    note: the Wise Men's road
+  - id: R02
+    area: BE
+    position: {x: 100, y: 0, z: 185}
+    requires: []
+    note: the Wise Men's road
+  - id: R03
+    area: BE
+    position: {x: 60, y: 0, z: 190}
+    requires: []
+    note: the Wise Men's road
+  - id: R04
+    area: BE
+    position: {x: 10, y: 0, z: 192}
+    requires: []
+    note: the Wise Men's road
+  - id: R05
+    area: BE
+    position: {x: -40, y: 0, z: 182}
+    requires: []
+    note: the Wise Men's road
+  - id: R06
+    area: BE
+    position: {x: -100, y: 0, z: 196}
+    requires: []
+    note: the Wise Men's road
+  - id: P01
+    area: BE
+    position: {x: 177.5, y: 5, z: 139}
+    requires:
+    - Pounce
+    note: the far rock pillar (Kira's pounce)
+  - id: P03
+    area: BE
+    position: {x: -178, y: 4.2, z: 102}
+    requires:
+    - Pounce
+    note: the far roof (Kira's pounce)
+  - id: P04
+    area: BE
+    position: {x: -179, y: 4.2, z: 106}
+    requires:
+    - Pounce
+    note: the far roof (Kira's pounce)
+  - id: W01
+    area: BE
+    position: {x: 108, y: 0, z: 72}
+    requires:
+    - DeepDive
+    note: the bottom of the well, 13 m down (deep dive)
+  - id: W02
+    area: BE
+    position: {x: 109, y: 0, z: 73.5}
+    requires:
+    - DeepDive
+    note: the bottom of the well, 13 m down (deep dive)
+  - id: M01
+    area: BE
+    position: {x: 188, y: 0, z: 62}
+    requires:
+    - MuscleMan
+    note: the shepherds' cave, behind the boulder (Muscle Man)
+  - id: M02
+    area: BE
+    position: {x: 192, y: 0, z: 58}
+    requires:
+    - MuscleMan
+    note: the shepherds' cave, behind the boulder (Muscle Man)
+  - id: C01
+    area: BE
+    position: {x: -160, y: 0, z: 136}
+    requires:
+    - ChargedPunch
+    note: behind the cracked courtyard wall (charged punch)
+  - id: C02
+    area: BE
+    position: {x: -165, y: 0, z: 138}
+    requires:
+    - ChargedPunch
+    note: behind the cracked courtyard wall (charged punch)
+  - id: J01
+    area: BE
+    position: {x: -90, y: 8.4, z: 133}
+    requires:
+    - WallJump
+    note: the top of the narrow gap between two houses (wall jump)
+  - id: D01
+    area: BE
+    position: {x: 90.5, y: 6.5, z: 114}
+    requires:
+    - DoubleJump
+    note: the high rock over the outcrop (double jump)
+  - id: D02
+    area: BE
+    position: {x: -150, y: 10.1, z: 97}
+    requires:
+    - DoubleJump
+    note: the inn's roof terrace (double jump)
+  gates:
+  - id: BE-pounce-pillar
+    kind: pounce gap
+    needs: Pounce
+    position: {x: 169, y: 5, z: 140}
+    opens:
+    - P01
+    - BE-H2
+    note: the gap to the far rock pillar (Kira's pounce, learned here)
+  - id: BE-pounce-roof
+    kind: pounce gap
+    needs: Pounce
+    position: {x: -170, y: 4.2, z: 104}
+    opens:
+    - P03
+    - P04
+    note: the gap to the village's far roof (Kira's pounce, learned here)
+  - id: BE-deep-well
+    kind: deep water
+    needs: DeepDive
+    position: {x: 108, y: -4, z: 72}
+    opens:
+    - W01
+    - W02
+    note: the well (deep dive, Pirate Seas)
+  - id: BE-boulder-cave
+    kind: boulder
+    needs: MuscleMan
+    position: {x: 184, y: 0, z: 60}
+    opens:
+    - M01
+    - M02
+    note: the shepherds' cave (Muscle Man, Medieval)
+  - id: BE-crack-courtyard
+    kind: cracked wall
+    needs: ChargedPunch
+    position: {x: -160, y: 0, z: 131}
+    opens:
+    - C01
+    - C02
+    note: the courtyard's cracked wall (charged punch, Medieval)
+  - id: BE-gap-houses
+    kind: wall-jump gap
+    needs: WallJump
+    position: {x: -90, y: 0, z: 133}
+    opens:
+    - J01
+    note: the narrow gap between two houses (wall jump, Steampunk)
+  - id: BE-ledge-rock
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 90.5, y: 6.5, z: 114}
+    opens:
+    - D01
+    note: the high rock over the outcrop
+  - id: BE-ledge-inn
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: -150, y: 10.1, z: 97}
+    opens:
+    - D02
+    note: the inn's roof terrace
+  violinistInstrument: Harp
+  violinistPlayClip: violinist_lyre

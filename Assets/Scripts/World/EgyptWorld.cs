@@ -107,7 +107,12 @@ namespace ShardsOfTime
         public static readonly List<Guard> All = new List<Guard>();
         public Vector3 a, b; public float speed = 1.6f, sight = 8f, halfAngle = 50f;
         public int Spotted { get; private set; }
-        bool toB = true; float pause, cool; Transform head;
+        public int Alerts { get; private set; }
+        // Round 7, item 5: Bethlehem's night watchmen (a lantern, his own "Halt!" line, a doze now and then); a dog's bark calls him over
+        public bool watchman, dozes; public string haltLine;
+        public bool Dozing { get; private set; }
+        public CreatureAnimator Anim;
+        bool toB = true; float pause, cool, alertT, dozeT = 20f, creakAt; Vector3 alertAt; Transform head; float moving;
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
 
@@ -115,6 +120,7 @@ namespace ShardsOfTime
         {
             a = Egypt.OnGround(a.x, a.z); b = Egypt.OnGround(b.x, b.z);
             var go = new GameObject(name); go.transform.SetParent(parent, false); go.transform.position = a;
+            if (Game.InBethlehem) return Watchman(go, a, b);
             var kilt = Placeholders.Mat(new Color(.96f, .93f, .85f)); var skin = Placeholders.Mat(new Color(.62f, .42f, .3f)); var blue = Placeholders.Mat(new Color(.15f, .3f, .7f));
             Placeholders.Prim(PrimitiveType.Capsule, go.transform, new Vector3(0, 1.2f, 0), new Vector3(.55f, .5f, .4f), skin, name: "Chest");
             Placeholders.Prim(PrimitiveType.Cylinder, go.transform, new Vector3(0, .7f, 0), new Vector3(.58f, .25f, .45f), kilt, name: "Kilt");
@@ -131,6 +137,47 @@ namespace ShardsOfTime
             cone.AddComponent<MeshFilter>().sharedMesh = SightMesh(g.sight, g.halfAngle);
             var mr = cone.AddComponent<MeshRenderer>(); mr.sharedMaterial = Placeholders.Mat(new Color(1f, .85f, .3f, .18f), "Water"); mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             return g;
+        }
+
+        // Round 7: a sleepy, grumpy night watchman (round belly, droopy mustache, leather helmet) with a lantern lighting his way: the
+        // lantern's warm cone on the ground is his sight. His model (Dan's Mixamo rig) when it is in.
+        static Guard Watchman(GameObject go, Vector3 a, Vector3 b)
+        {
+            var g = go.AddComponent<Guard>(); g.a = a; g.b = b; g.watchman = true; g.sight = 9f; g.halfAngle = 42f; g.speed = 1.3f;
+            g.haltLine = "\"HALT! Who goes there? ...Nobody? Then nobody goes back where they came from!\"";
+            var tunic = Placeholders.Mat(new Color(.72f, .6f, .45f)); var cloak = Placeholders.Mat(new Color(.25f, .3f, .45f)); var skin = Placeholders.Mat(new Color(.82f, .62f, .48f)); var leather = Placeholders.Mat(new Color(.4f, .26f, .14f));
+            Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3(0, 1.0f, .05f), new Vector3(.7f, .8f, .65f), tunic, name: "Belly");
+            Placeholders.Prim(PrimitiveType.Capsule, go.transform, new Vector3(0, 1.3f, -.12f), new Vector3(.62f, .45f, .3f), cloak, name: "Cloak");
+            foreach (float x in new[] { -.14f, .14f }) Placeholders.Prim(PrimitiveType.Capsule, go.transform, new Vector3(x, .3f, 0), new Vector3(.17f, .3f, .17f), skin, name: "Leg");
+            g.head = Placeholders.Prim(PrimitiveType.Sphere, go.transform, new Vector3(0, 1.72f, 0), new Vector3(.34f, .36f, .34f), skin, name: "Head").transform;
+            Placeholders.Prim(PrimitiveType.Sphere, g.head, new Vector3(0, .3f, -.02f), new Vector3(1.1f, .55f, 1.1f), leather, name: "Helmet");
+            Placeholders.Prim(PrimitiveType.Cube, g.head, new Vector3(0, -.2f, .45f), new Vector3(.75f, .12f, .12f), Placeholders.Mat(new Color(.25f, .16f, .1f)), name: "Mustache");
+            foreach (float s in new[] { -1f, 1f }) Placeholders.Prim(PrimitiveType.Cube, g.head, new Vector3(s * .2f, .06f, .44f), new Vector3(.16f, .06f, .05f), Placeholders.Mat(new Color(.1f, .08f, .08f)), name: "Sleepy eye");
+            g.Anim = CharacterModel.Creature(go.transform, "watchman", 1.4f, 3f);
+            if (g.Anim) g.Anim.Drive = () => (g.Dozing && g.Anim.Has("doze") ? "doze" : null, g.moving);
+            // the lantern in his right hand, its light a cone ahead and down
+            var hand = new GameObject("Lantern hand").transform; hand.SetParent(go.transform, false); hand.localPosition = new Vector3(.38f, 1.05f, .3f);
+            if (g.Anim && g.Anim.GetComponentInChildren<Animator>() is Animator an && an.isHuman && an.GetBoneTransform(HumanBodyBones.RightHand) is Transform rh) { hand.SetParent(rh, false); hand.localPosition = new Vector3(0, .08f, 0); }
+            var lan = WorldArt.Prop("bethlehem_props", "Lantern", hand, hand.position, 0, 1.2f);
+            if (lan) { lan.transform.SetParent(hand, true); lan.transform.localPosition = Vector3.zero; }
+            var lgo = new GameObject("Lantern light"); lgo.transform.SetParent(go.transform, false); lgo.transform.localPosition = new Vector3(.3f, 1.6f, .3f);
+            lgo.transform.localRotation = Quaternion.Euler(28, 0, 0);
+            var lt = lgo.AddComponent<Light>(); lt.type = LightType.Spot; lt.spotAngle = g.halfAngle * 2.2f; lt.range = g.sight + 4f; lt.intensity = 6f; lt.color = new Color(1f, .78f, .42f); lt.shadows = LightShadows.None;
+            var glow = new GameObject("Lantern glow"); glow.transform.SetParent(go.transform, false); glow.transform.localPosition = new Vector3(.35f, 1.1f, .35f);
+            var gl = glow.AddComponent<Light>(); gl.type = LightType.Point; gl.range = 4f; gl.intensity = 2f; gl.color = new Color(1f, .75f, .4f); gl.shadows = LightShadows.None;
+            var cone = new GameObject("Sight"); cone.transform.SetParent(go.transform, false); cone.transform.localPosition = new Vector3(0, .05f, 0);
+            cone.AddComponent<MeshFilter>().sharedMesh = SightMesh(g.sight, g.halfAngle);
+            var mr = cone.AddComponent<MeshRenderer>(); mr.sharedMaterial = Placeholders.Mat(new Color(1f, .75f, .35f, .2f), "Water"); mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            return g;
+        }
+
+        // Round 7, item 5: a guard dog barked: the nearest watchman comes to look (quick march there, a look round, back to his rounds)
+        public static Guard Alert(Vector3 at, float within = 40f)
+        {
+            Guard best = null; float bd = within;
+            foreach (var g in All) { float d = Vector3.Distance(g.transform.position, at); if (d < bd) { bd = d; best = g; } }
+            if (best) { best.alertAt = at; best.alertT = 9f; best.Dozing = false; best.Alerts++; PlayLog.Line($"{best.name} comes to look (a dog barked)"); }
+            return best;
         }
 
         static Mesh SightMesh(float r, float half)
@@ -152,21 +199,29 @@ namespace ShardsOfTime
         void Update()
         {
             if (!Game.Playing || !Party.I) return;
-            cool -= Time.deltaTime;
-            var goal = toB ? b : a; var d = goal - transform.position; d.y = 0;
+            cool -= Time.deltaTime; moving = 0;
+            // Round 7: a watchman who dozes stands still a while with his eyes shut (he can't see); a dog's bark wakes him and calls him over
+            if (dozes && alertT <= 0) { dozeT -= Time.deltaTime; if (dozeT <= 0) { Dozing = !Dozing; dozeT = Dozing ? 9f : 14f; } }
+            if (Dozing) return;
+            var goal = alertT > 0 ? alertAt : toB ? b : a; var d = goal - transform.position; d.y = 0;
+            if (alertT > 0) alertT -= Time.deltaTime;
             if (pause > 0) { pause -= Time.deltaTime; if (head) head.localRotation = Quaternion.Euler(0, Mathf.Sin(Time.time * 1.6f) * 50f, 0); }
-            else if (d.magnitude < .3f) { toB = !toB; pause = 1.6f; }
+            else if (d.magnitude < .3f || alertT > 0 && d.magnitude < 2f) { if (alertT <= 0) toB = !toB; pause = alertT > 0 ? 3f : 1.6f; if (alertT > 0) alertT = Mathf.Min(alertT, 3f); }
             else
             {
-                transform.position += d.normalized * speed * Time.deltaTime;
+                float sp = alertT > 0 ? speed * 2.2f : speed; moving = sp;
+                if (watchman && Time.time > creakAt && Party.I && Vector3.Distance(Party.I.Player.transform.position, transform.position) < 14f) { creakAt = Time.time + 3.2f; Sfx.Play("lantern_creak", .22f, Random.Range(.92f, 1.08f)); }
+                transform.position += d.normalized * sp * Time.deltaTime;
                 transform.position = new Vector3(transform.position.x, Egypt.Ground(transform.position.x, transform.position.z, transform.position.y + 3f), transform.position.z);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(d), 240f * Time.deltaTime);
                 if (head) head.localRotation = Quaternion.identity;
             }
             if (cool > 0 || Game.I.Busy || !Sees(Party.I.Player.transform.position)) return;
+            if (Stealth.Hidden(Party.I.Player)) { Flock.Hides(Party.I.Player); return; }   // Round 7: just another sheep
             cool = 4f; Spotted++;
             Sfx.Play("guard_halt", .7f);
-            Hud.Message($"\"Halt! No wandering in the market!\" The guard marches {Party.I.Player.Stats.displayName} back.", 4f);
+            if (Anim) Anim.Trigger("yell");
+            Hud.Message(watchman ? $"{haltLine} The watchman marches {Party.I.Player.Stats.displayName} back." : $"\"Halt! No wandering in the market!\" The guard marches {Party.I.Player.Stats.displayName} back.", 4.5f);
             PlayLog.Line($"{name} spotted {Party.I.Player.Stats.displayName}: back to checkpoint {SaveGame.Current.checkpoint}");
             Checkpoint.RespawnParty();
         }

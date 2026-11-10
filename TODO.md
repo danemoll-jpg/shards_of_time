@@ -24,102 +24,73 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 7: Bethlehem (target 0.7.0)
-Fix 6.1's plan is in `TODO-ARCHIVE.md`. Report per item: done / not done /
-deferred, and why. DEFAULT = planning chat's choice, Dan can overrule after
-playing. Testing rules as always (`Tools/quiet.py`, muted with the level
-reported, never a window in front of Dan).
-
-**Inputs, all in (Dan, 2026-11-10):** the 12 concept images B1–B12 in
-`SourceArt/Concepts/` (`dan_bethlehem`, `abi_bethlehem`, `kira_lamb`,
-`wiseman_santa`, `wiseman_crown`, `wiseman_old`, `violinist_bethlehem`,
-`watchman`, `goat`, `sheep`, `guard_dog`, `scorpion`; the prompts are in
-`Docs/MODELS-NEEDED.md`), Dan's film references in
-`SourceArt/Reference/Worlds/03-Bethlehem/` and `Characters/*`, and Dan's song
-`Music/bethlehem.mp3` (3:00, with choir). `guard_dog`'s head is turned toward
-the camera a little: measure it; under ~35 deg use it with the counter-turn,
-else stop and ask Dan for a side-profile redo (the goat and sheep prompts
-show how).
-
-**Tone (Dan, 2026-11-10):** irreverent, Monty Python-style humor is welcome
-here. The film's own gags stay: one Wise Man wears a Santa hat, their gifts
-are modern wrapped presents with bows, they mistake the vortex for the star
-and leave disappointed. Situational comedy, minimal dialogue.
-
-1. **Models.** Meshy → clean-up → previews for all 12. Mixamo upload files and
-   clip lists for the people (`dan_bethlehem`, `abi_bethlehem`, the three Wise
-   Men, `violinist_bethlehem`, `watchman`), reusing the shared idle / walk /
-   run clips; **stop and tell Dan exactly what to download** as soon as those
-   files are ready, then import his clips in this same round. Animals and the
-   scorpion: Code's rigs and clips (four- / eight-legged), heads checked like
-   Kira's. Lamb Kira: Kira lock check, fur matched to her gray. Keep building
-   with placeholders while waiting.
-2. **Props from the film shots** (Blender / Meshy text-to-3D): the barn (rustic
-   boards, X-braced doors, a round window in the gable, thatched roof that can
-   show the crash hole), the manger, hay bales, barrels, rail fences, the
-   Wise Men's gift boxes with bows, the watchman's lantern, the Violinist's
-   instrument (DEFAULT: a small shepherd's harp, held with its own playing
-   clip like the lyre, not the violin clip). The Wise Men ride Egypt's camel
-   model with plainer blankets.
-3. **`BethlehemArrival`** (skippable, ~12–15 s): the golden vortex opens over
-   the barn, they drop out of it and **crash through the roof** (film:
-   `barn-roof-landing-top.png`, `barn-roof-hole-top.png`); Abi lands softly in
-   the hay, Dan misses the hay and hits the floor; Kira pops up as a little gray
-   lamb. The manger glows faintly but is empty. The hole stays in the roof for
-   the rest of the world. Dan and Abi react to lamb Kira.
-4. **Layout** (DEFAULT), about 10–15 minutes first visit, a starry night:
-   - **The barn and its farmyard:** fences, hay stacks to climb, the golden
-     vortex ring hovering above with its beam down (everyone in the world
-     calls it "the star").
-   - **The hills:** rolling dark grass hills with shepherds' campfires and
-     flocks of sheep wandering; rocky outcrops, a well, an olive grove.
-   - **The village:** a small night village beside the fields: flat rooftops to
-     run across, a lantern-lit market with closed stalls, courtyards, an inn
-     with a "no room" sign gag.
-   - **The Wise Men's caravan:** the three Wise Men ride their camels along a
-     road across the map toward the star the whole time (they stop, argue,
-     check a map); they're always reachable and a few shards sit along their
-     route.
-   - **Future-move gates** as data, visible on the first visit: Muscle Man
-     blocks, charged-punch walls, deep water (the well), wall-jump chimneys.
-5. **Light stealth (DEFAULT):** night watchmen with lantern light cones patrol
-   the village; caught = a short comic "Halt!" moment and back to the last
-   checkpoint, not damage. Guard dogs sniff around and bark to call a watchman.
-6. **Lamb Kira's abilities:** **hide in a flock** (step into a flock of sheep:
-   watchmen, dogs and goats ignore her while she moves with it), and
-   **springy bounce** on hay bales and wool piles (a high bounce only she gets).
-   Cat-face lamb gags welcome (the sheep stare at her).
-7. **New move: Kira's pounce** (a long leap with a short aim), taught by the
-   Violinist on his harp. It works everywhere, so Egypt's pounce gaps (E14 /
-   E15 and the far roof) open too: check one in Egypt after learning it.
-8. **Enemies:** grumpy goats (lower their head, charge, headbutt), guard dogs
-   (bark, chase a short way), scorpions (small, scuttle, snap). Light combat,
-   no boss (DEFAULT).
-9. **Shards (universal rule):** about 60 small shards in Bethlehem; the
-   threshold for Bethlehem is cumulative, set by rule 2 (about 60–65% of all
-   shards in the Ice Age + Egypt + Bethlehem, reachable on arrival with the
-   moves you have, the pounce only after the Violinist). Two hearts. Report the
-   numbers.
-10. **The finale (`WiseMenArrive`, skippable):** when the necklace wakes it leads
-    to the barn: the **golden story shard** now glows in the manger (film:
-    `manger-golden-shard.png`). Collecting it: the Wise Men walk in, gifts held
-    out, the choir swells ("Hallelujah!"), they see a glowing shard and three
-    confused travelers (one of them a cat-faced lamb), look at each other,
-    and walk out disappointed. Then the hay explodes upward into a spinning
-    golden vortex that pulls the party in → the vortex space (Home: 3 / 8).
-11. **Look:** from Dan's references: deep blue starry sky, warm golden light
-    spilling from the barn, dark rolling hills, golden grass in the lamplight,
-    stylized like the characters. Frame rate checked on both settings.
-12. **Music and sound:** `Music/bethlehem.mp3` in the world, the vortex track in
-    the vortex as before. ElevenLabs effects: hay rustle and bounce, sheep
-    bleats, goat bleat-charge, dog bark, scorpion click, lantern creak, the
-    roof crash, the harp tune.
-13. Build, check (a full run: … Egypt → vortex → Bethlehem → golden shard →
-    vortex; plus the pounce in Egypt), publish 0.7.0, update `TODO.md` /
-    `CLAUDE.md`, clean up.
+Current round — none (the planning chat writes Round 8)
+Round 7's plan is in `TODO-ARCHIVE.md`. Waiting on Dan: the Mixamo files for Bethlehem's seven people and a
+side-profile `guard_dog.png` (both in `Docs/MODELS-NEEDED.md`, top); they go in as a follow-up fix.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 7: Bethlehem (0.7.0, build 700, 2026-11-10)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round7/full` (New game -> Ice Age -> Egypt -> vortex ->
+Bethlehem -> golden shard -> vortex -> Egypt's far roof + Bethlehem frame rate): all passed but 3 bot-side misses, fixed and passed in
+`local/round7/final` (the Bethlehem route alone, from the vortex: RESULT all passed, 65 ok); `perf_deck` passed. A Round 1 starter
+install updated itself from GitHub to 0.7.0 and started (no window, never in the foreground). Audio output 0.000 RMS in every run; window watcher: no window, never in
+the foreground. Evidence: `Data/screenshots/round7/`.
+1. Models: **done for Code's part; Dan's Mixamo part waiting.** All 12 images -> Meshy -> clean-up (previews `round7/models/`). Code's
+   rigs: lamb Kira (head straight, -1 deg; fur matched to Kira's gray; Kira lock OK: 51% gray, 0% white, amber eyes, no ear bones;
+   whiskers removed like home Kira), goat, sheep (`round7/rigs/`); the scorpion moves by code like the scarab. **Guard dog: head turned
+   51 deg** (limit ~35): asked Dan for a side-profile redo; dogs are placeholders until then. **Mixamo:** upload files for the 7 people
+   ready, Dan told what to download (`Docs/MODELS-NEEDED.md` top); **not in by the end of the round**, so not imported
+   (the import is wired: `import_characters.py` names + clip map, Humanoid settings, the riders / watchmen switch to the models and clips
+   when present). A follow-up fix brings them in.
+2. Props: **done.** Blender (`bethlehem_world.py`): the barn (boards, X-braced doors, round gable window, thatch with the crash hole),
+   manger, hay bales and stacks, barrels, rail fences, the three gift boxes with bows, the watchman's lantern, houses, the inn, closed
+   stalls, the well, olive trees, campfires, rocks, cart, trough, sign. The Violinist's small shepherd's harp (`instruments.py`), held
+   and played like the lyre (the lyre's clip). The Wise Men ride Egypt's camel model with plain cream blankets.
+3. `BethlehemArrival` (14.5 s, skippable): **done.** The golden vortex opens over the barn, they drop through the roof hole; Abi lands
+   in the hay, Dan on the floor; Kira pops out of the hay as a lamb; the manger glows faintly, empty; they stare; the necklace glows
+   gold. The hole stays in the roof (it's part of the barn).
+4. Layout: **done** (DEFAULT): farmyard (hay loft, bale tower, the big hay stack, fences), the star over the barn with its beam, the
+   hills (3 shepherds' camps with fires, 4 flocks, goats' rocks, the outcrop, olive grove, the well, the cave), the village (houses,
+   main street, closed market, courtyard, the inn with "NO ROOM" and a voice through the door, rooftops and outside stairs), the road
+   with the Wise Men (stop, argue, check the map, a line of their bickering when you're near). Gates as data and visible: 2 pounce gaps,
+   the well (deep dive), the cave boulder (Muscle Man), a cracked courtyard wall (charged punch), a wall-jump gap, 2 double-jump ledges.
+   Bot: 9.2 min arrival to the necklace (a player is slower).
+5. Light stealth: **done.** 6 night watchmen with lantern light cones (one at the inn dozes now and then; one guards the watchmen's
+   yard): seen = "HALT! Who goes there? ...Nobody?..." and back to the checkpoint. A dog's bark brings the nearest watchman over.
+6. Lamb Kira: **done.** Flock hide (the yard's watchman saw her 0 times walking in with the flock; Dan is caught at the gate); the
+   sheep turn and stare at her. Springy hay / wool: up the 4.4 m hay stack (bounce 6.4 m), onto the barn's roof, up through the roof
+   hole from the hay under it; others don't bounce.
+7. Kira's pounce: **done.** The Violinist teaches it on his harp (`ViolinistTeachesBethlehem`); B on the ground: a short aim, then
+   11.7 m. Used on Bethlehem's two pillars (P01 + heart) and the far roof (P03, P04), and on Egypt's far roof (E14 / E15). Egypt's far
+   roof was 19 m away (Round 6's note said 9): moved in to 10.5 m (Abi's double jump reaches ~9.8, so only the pounce makes it).
+8. Enemies: **done.** Grumpy goats (lower the head 0.8 s, charge, headbutt knock-back), guard dogs (bark, short chase; placeholders),
+   scorpions (Meshy model, scuttle and snap). No boss.
+9. Shards: **done.** 60 + 2 hearts (the barn's ridge by bounce; the far pillar by pounce). Threshold 112 = 62% of the 180 shards up to
+   here; rule 2: 141 available on arrival (Ice Age 43 + Egypt 50 + Bethlehem 48), the pounce's 3 and 9 later-move shards not counted.
+10. `WiseMenArrive` (16.5 s, skippable): **done.** The golden shard in the manger; the Wise Men walk in, presents out, the choir; they
+   see the shard and three confused travellers, look at each other, walk out; the hay bursts into a golden vortex that pulls the party
+   in -> the vortex space (3 of 8; the Medieval Kingdom path opens; the hay's vortex stays as the gate back).
+11. Look: **done.** Deep blue night, 900 stars, soft blue moonlight, warm lamps (barn, windows, lanterns, fires). Frame rate:
+   155 fps at the slowest place on Dan's PC (1080p), 159 fps with the Steam Deck setting (1280x800) (need 60 / 40).
+12. Music / sounds: **done.** Dan's `bethlehem.mp3` in the world (checked playing, muted); 12 ElevenLabs effects (grass steps, hay
+   rustle and bounce, sheep, goat, dog, scorpion, lantern creak, roof crash, a knock at the inn, the harp tune, the choir sting).
+13. Build / check / publish: **done.** 0.7.0 published as `game-700`. MP4s rendered from the exe: `BethlehemArrival`, `WiseMenArrive`
+   (`Recordings/`, 0.000 RMS). Disk: 5.7 GB -> 5.5 GB.
+
+Also fixed on the way: lamb Kira (0.5 m) couldn't pass through vortex doors or world gates (their trigger was a circle 2 m up: her
+middle sat under it; now "inside the arch"); the old checks walked the vortex paths at Round 6's angles (five paths now).
+
+Decisions Code made (Dan can overrule): Dan and Abi wear their Egypt clothes in Bethlehem until their Bethlehem models are in; the
+harp uses the lyre's playing clip; the pounce is B on the ground (crouch-aim 0.28 s, 17 m/s); Egypt's far roof moved (above); the
+Wise Men's riders stay placeholders until a sitting clip is in (a standing model on a camel looked wrong).
+
+**For Dan to check:** the roof-crash arrival and the Wise Men finale (MP4s in `Recordings/`, and in game); lamb Kira's look; the
+pounce's feel (distance, the short aim); bouncing on hay (wool pile by the barn's east wall, the stack, under the roof hole); the
+watchmen (fair? too many?) and sneaking in with the flock; the night look (dark enough / too dark?); Bethlehem's song in place. Known:
+the Wise Men, the watchmen and the dogs are placeholders until your Mixamo files / the dog redo; the sheep's walk shows a leg
+poking out of the wool at times; the rock pillars and the cave are plain stone boxes.
+
 ### Fix 6.1: universal shards + the Violinist's lyre (0.6.1, build 601, 2026-11-10)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix61/full` (New game -> Ice Age -> vortex ->
 Egypt -> red shard -> vortex + Egypt frame rate): RESULT all passed. `local/fix61/c4` (lyre + 0.6.0 saves): all passed but one
@@ -214,115 +185,13 @@ the camel ride and the Sphinx gag (MP4s in `Recordings/`; the gag's double-take 
 (two framing tries, your call)); mummy Kira's look; Egypt's song in place. Known: Abi's Egypt sandal
 has a thin dark strand between the ankles; a few big shapes (walls, plinths, scaffold planks) are still plain boxes.
 
-### Round 5: Ice Age polish, a bigger valley, creature models (0.5.0, build 500, 2026-11-09)
-Final checks so far (built exe, batch mode, muted, separate never-shown desktop, virtual pad from the title screen):
-`local/round5/play4` play-through RESULT all passed (116 ok); `zones4`, `fixes2`, `perf`, `perf_deck` passed; `tour2` 1 prop
-fixed after it. Audio output 0.000 RMS in every run; window watcher: no window, never in the foreground. Evidence:
-`Data/screenshots/round5/`.
-1. Arrival: **done.** New `IceAgeArrival` (15.5 s, skippable): white-out landing; Kira on a snow rock shot from below as a dark
-   silhouette against a near-white sky (sun disk, growl x2), fangs; Dan flinches, scrambles back, falls flat; she leaps onto his
-   chest; close-up from over his head: folded ears, amber eyes; she paws, the necklace pulses blue; Abi laughs. MP4 rendered again
-   (`Recordings/`). Not in it: Dan laughing / holding the necklace up (no clips for that). Found: the white-outs, Act I's warm light
-   and the silhouette never ran in the exe since Round 4 (MonoBehaviours in wrongly named files); each has its own file now.
-1b. See-through: **done, 0.** Kira (both forms) and Abi (both outfits) rebuilt as one closed surface (`closed_mesh.py`: Meshy's
-   surface voxelized, gaps sealed, remeshed, Meshy's maps baked on; Kira re-rigged, Abi's Mixamo weights copied, same skeleton).
-   Exe: 0 see-through pixels each over 24 views (16 angles + head, ears, tail, paws, fangs) / 20 views (Abi); runs look normal.
-   Home Kira's whiskers went (too thin); Kira lock OK. Materials are opaque (no alpha).
-2. Trees: **done.** Cause: `WorldArt.Prop` replaced each prop's root rotation (the FBX's 90 deg Blender-to-Unity turn) with the
-   yaw. Fixed there; build report `Resources/Data/WorldProps.txt`; exe audit: 142 props upright and on the ground.
-3. Clean-up: **done** (list fixed / not): fixed: props lying (pines, standing stones, rock caps); a vent rock 7.9 m in the air;
-   bare graybox slabs (snow caps); smooth-sphere boulder (a rock now); rectangular lava (round pools, rim); solid-blob campfire
-   (glowing tongues + flame particles); hint text over the hero (now below); a pine blocking the grotto; a rock blocking the
-   pillars; a half-buried crystal; Act I white-out/light missing in the exe. Not fixed: big slabs (cave block, shelf, terraces)
-   are still boxes (snow-capped); faint lighter bake seams on Abi's skin; checkpoint flags are graybox.
-4. Music: **done.** Dan's four tracks, chosen by place: title, Act I (fades from 16.6 s, gone by the white-out), arrival + valley
-   (Ice Age, wind under it), vortex (crossfades both ways). Stand-in gone from `make_sounds.py`. Checked playing in each place.
-5. Bigger valley: **done** (DEFAULT layout): frozen lake (west basin; slick ice, a skating lane with an island ramp, three holes,
-   under-ice swim), glacier climb (18 ice ledges to a 24.7 m summit with a view), hot-spring grotto (east of the stones). Bot:
-   landing to story shard 10.5 min (Round 4: 6.6; a player is slower).
-6. Later-move places: **done** as data (`WorldData.gates`, 10): 4 double-jump ledges (+1 glacier), 2 boulders (+1 lake),
-   the grotto's cracked rock wall (charged punch), the deep lake (deep dive: divers are pushed back up), 2 wall-jump chimneys.
-   All visible on the first visit, each says what it waits for; checked closed in the exe.
-7. Shards / hearts: **done.** 60 shards, 35 wake the necklace. Rule 2 by data: 43 reachable on the first visit; play-through:
-   37 before the ground pound. Hearts: IA-H1 (cave) + IA-H2 in the grotto (charged punch).
-8. Violinist: **done.** Meshy model (1.85 m) rigged by Dan in Mixamo; his clips play (violin), bow, nod + the shared idle / walk.
-   In the game he idles by the fire, plays through `ViolinistTeaches`, then bows and nods; the bone fiddle and a bow follow his
-   hands (placed each frame; the hand bone's scale had made the fiddle huge). Check `violinist`: idle -> play -> bow -> nod.
-9. Wolf, critter, mammoth: **done.** Meshy, closed rebuild, Code's quadruped rig + clips (+ stunned), Generic; in the game on
-   the placeholders (kept as fallback): walk/run by speed, lunge, hit, stunned. Mammoth skin: distance weights (bone heat failed).
-10. Build / check / publish: **done.** Final check `local/round5/final` (play-through + see-through + frame rate: RESULT all passed, 121 ok; 0.000 RMS; bot 10.1 min landing to story shard; 200 fps); 0.5.0 (211 MB) published as `game-500`; a fresh Round 1 starter install updated itself from GitHub to 0.5.0 and started (ready handshake; launcher hidden, never in the foreground). Disk: 3.4 GB -> 3.3 GB.
-
-Also fixed on the way: the campfire's flicker code reset its flames to big blobs every frame (now slim tongues).
-
-Testing incident (fixed, Dan's rule widened): Code rendered `IceAgeArrival` with the Unity editor in batch
-mode *with graphics* (`unity_batch.py --gpu`, Play mode + Unity Recorder): the editor (and the licensing client it starts)
-took Dan's focus and the cutscene's music came out of his speakers (the recorder only kept audio out of the file). Changed:
-every process now starts through `Tools/quiet.py` (a separate, never-shown Windows desktop, so no window can appear or take
-focus; hidden; Below Normal; Blender only with `-b`, Unity only with `-batchmode`; a watcher reports any visible window or
-foreground grab); the editor mutes itself in batch mode (`Editor/QuietEditor.cs`); `--gpu` is refused; cutscene videos are
-rendered from the built exe in batch mode (`Tools/render_cutscene.py`: muted, frames off-screen at a fixed 30 fps, ffmpeg
-hidden); the editor menu calls the same script. Found on the way: even a batch-mode exe check's hidden
-`Unity.BatchModeWindow` briefly took the foreground (no window shown) before the separate desktop. Check: ActOne and
-IceAgeArrival re-rendered this way: measured output 0.000 RMS / peak 0.000 for both, and the watcher (every 0.25 s) saw no
-visible window and no foreground grab for the game exe or ffmpeg; the build and the exe checks report the same.
-
-Decisions Code made (Dan can overrule): the skating lane grips across it (you can steer) and slides along it; Kira 20k
-triangles (closed); the necklace waits for open sky (unchanged); hearts in the valley = 2 (H1 kept, H2 new).
-
-**For Dan to check:** the new arrival (MP4 and in game); Kira's / Abi's look up close after the rebuild (smoother than Meshy's
-fur, whiskers gone); the music in each place (only checked muted); the lake's slipperiness and the skating lane; the glacier
-climb and the view; whether 35 shards feels right; the wolves / critters / mammoths moving; the Violinist playing (Mixamo's violin
-clip holds his arms low, so the fiddle sits in front of his chest, not under his chin: say if you want another clip).
-
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **(Superseded by the Round 7 above; kept for reference.) Round 7: Bethlehem (draft by the planning chat, 2026-11-10; written in full
-  once Dan's film references are in `SourceArt/Reference/Worlds/03-Bethlehem/`
-  and he's played 0.6.1).** From the film: a quiet starry night; the Wise Men
-  follow a bright "star" that is really the vortex; the party crashes through a
-  stable roof (Abi lands in the hay, Dan misses it); Kira is a tiny gray lamb
-  (folded ears, amber eyes); the golden story shard glows in the manger; the Wise
-  Men arrive expecting a miracle, find a glowing shard and confused travelers,
-  and leave disappointed; the hay explodes into a golden vortex. **Comedy: Dan
-  doesn't mind irreverent / Monty Python-style humor here (2026-11-10)**; the
-  film's own gags: one Wise Man wears a Santa hat, their gifts are modern
-  wrapped presents with bows. **The scene was very short in the film, so most of
-  the world is the game's own.** Film look (Dan's references in
-  `Worlds/03-Bethlehem/`, 2026-11-10): a rustic wooden barn (X-braced doors, a
-  round window in the gable, thatched / shingled roof) inside a rail fence, hay
-  bales and barrels, rolling dark hills, a deep blue starry sky, warm golden
-  light pouring from the barn, the golden vortex ring hovering above it with a
-  beam down (seen from far away as the "star"); the roof crash leaves a hole
-  (`barn-roof-hole-top.png`). Dan: brown homespun tunic + cream sash; Abi:
-  beige dress + head scarf; Kira: a round gray woolly lamb with a cat face.
-  Image prompts B1–B12 in `Docs/MODELS-NEEDED.md`, music in `Docs/MUSIC.md`. **In so far (2026-11-10, checked by the
-  planning chat):** `dan_bethlehem`, `abi_bethlehem`, `kira_lamb` (straight
-  head, ears folded, all gray), `violinist_bethlehem`, `wiseman_old`,
-  `watchman` (a small bell is part of his belt: fine), `scorpion`, and Dan's
-  song `Music/bethlehem.mp3` (3:00, choir). **Then (same day):**
-  `wiseman_santa`, `wiseman_crown`, and side-profile redos of `goat` and
-  `sheep` (old ones kept as `*_v1.png`): all checked, all usable. So all 12
-  are in. `guard_dog` is turned toward the camera a little: Code measures it
-  and uses it if it's under ~35 deg, else asks Dan for a redo.
-  Plan (DEFAULT): arrival = the roof crash into the barn (the manger glows
-  faintly but is empty); the world = the barn's farm and fields, the hills with
-  shepherds and flocks, and a small night village next to it (rooftops,
-  lantern-lit market, wells, courtyards); light stealth (night
-  watchmen with lantern light cones; getting seen sends you back a bit); lamb
-  Kira hides in flocks (guards and enemies ignore her there) and bounces on
-  springy hay / wool; the Violinist (shepherd's pipe or small harp) teaches
-  Kira's pounce, which also opens Egypt's pounce gaps; enemies: grumpy goats
-  (headbutt), guard dogs, scorpions; the Wise Men on camels cross the map toward
-  the star the whole time; when the necklace wakes the golden shard appears in
-  the manger, and the finale is the Wise Men cutscene + the hay vortex.
-  Universal-shard threshold set by rule 2. Dan's to-do: film references, then
-  the concept images (planning chat writes the prompts), Mixamo, Suno song.
-- **Also suggested for Round 7 (Code's notes, the planning chat decides):** Dan's
-  notes on 0.6.0 first; then Bethlehem (Kira's pounce, which opens Egypt's
-  pounce gaps E14 / E15 and the far roof). Art left over: real meshes for the
-  big plain boxes (walls, plinths, scaffold planks, Ice Age slabs), Abi's Egypt
-  sandal strand, the Sphinx gag's double-take shot.
+- **Code's notes for Round 8 (the planning chat decides):** Dan's notes on 0.7.0 first; Bethlehem's
+  Mixamo people (the Wise Men sitting on their camels, the watchmen) and the guard dog once Dan's files
+  are in; art left over: real meshes for the plain boxes (Bethlehem's rock pillars and cave, Egypt's walls
+  and plinths, Ice Age slabs), Abi's Egypt sandal strand, the Sphinx gag's double-take shot.
 - Muscle Man companion (Medieval): heavy-object interactions, the "lift Dan"
   boost, follower rules. Deferred until the Medieval world.
 - Memory Fragments (Dan's time-echo visions when touching temporal artifacts)

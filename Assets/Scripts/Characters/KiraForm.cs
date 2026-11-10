@@ -18,7 +18,7 @@ namespace ShardsOfTime
 
         public bool Has(string ability) => abilities != null && abilities.Contains(ability);
 
-        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy";
+        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb";
 
         public static KiraForm Load(string id)
         {
@@ -38,6 +38,10 @@ namespace ShardsOfTime
                 case Mummy:   // Round 6
                     f.displayName = "Mummy Kira"; f.model = "kira_mummy"; f.abilities = new[] { Abilities.MummyHush };
                     f.note = "Ancient Egypt: a little mummy cat (folded ears showing through the bandages). Mummies don't wake for her; cat-statue doors open for her (any form).";
+                    break;
+                case Lamb:   // Round 7
+                    f.displayName = "Lamb Kira"; f.model = "kira_lamb"; f.abilities = new[] { Abilities.FlockHide, Abilities.WoolBounce };
+                    f.note = "Bethlehem: a round gray woolly lamb with her own cat face (folded ears, amber eyes). In a flock nobody notices her; she bounces high off hay and wool.";
                     break;
                 default:
                     f.displayName = "Kira"; f.model = "kira"; f.abilities = new string[0];

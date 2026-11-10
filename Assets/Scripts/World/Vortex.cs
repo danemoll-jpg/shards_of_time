@@ -20,11 +20,13 @@ namespace ShardsOfTime
         public sealed class PathInfo { public string id, label, world; public Color color; public float yaw; }
         public static readonly PathInfo[] Paths =
         {
-            new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -54f },
-            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -18f },
-            // Round 6: Egypt is real; Bethlehem is next (to be continued once Egypt's red story shard is found)
-            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = "Bethlehem", color = new Color(.95f, .9f, .55f), yaw = 18f },
-            new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 54f },
+            new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -60f },
+            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -30f },
+            // Round 6: Egypt is real; Round 7: Bethlehem is real (open once Egypt's red story shard is found); the Medieval Kingdom is next
+            // (to be continued once Bethlehem's golden story shard is found)
+            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = WorldData.Bethlehem, color = new Color(.95f, .9f, .55f), yaw = 0f },
+            new PathInfo { id = "Medieval", label = "The Medieval Kingdom", world = "Medieval", color = new Color(.65f, .45f, .95f), yaw = 30f },
+            new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 60f },
         };
 
         public static void Build(Transform root)
@@ -74,7 +76,7 @@ namespace ShardsOfTime
                 tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = Color.Lerp(p.color, Color.white, .5f);
                 label.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
                 var d = door.AddComponent<VortexDoor>(); d.info = p; d.label = tm;
-                if (p.id == "Home" || p.id == "Bethlehem")
+                if (p.id == "Home" || p.id == "Bethlehem" || p.id == "Medieval")
                 {
                     var bar = Placeholders.Prim(PrimitiveType.Cube, door.transform, new Vector3(0, 2.4f, -.6f), new Vector3(4.6f, 4.6f, .2f), Placeholders.Mat(new Color(1f, .85f, .6f, .35f), "Water"), true, "Barrier");
                     d.barrier = bar;
@@ -147,17 +149,19 @@ namespace ShardsOfTime
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
         public bool Blocked => (info.id == "Home" && SaveGame.Current.StoryShards < Vortex.StoryShardsTotal) ||
-                               (info.id == "Bethlehem" && !SaveGame.Current.World(WorldData.Egypt).storyShard);
+                               (info.id == "Bethlehem" && !SaveGame.Current.World(WorldData.Egypt).storyShard) ||
+                               (info.id == "Medieval" && !SaveGame.Current.World(WorldData.Bethlehem).storyShard);
 
         void Update()
         {
             if (info.id == "Home" && label) label.text = Blocked ? $"Home\n{SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards" : "Home";
             if (info.id == "Bethlehem" && label) label.text = Blocked ? "Bethlehem\n(after Egypt's red shard)" : "Bethlehem";
+            if (info.id == "Medieval" && label) label.text = Blocked ? "The Medieval Kingdom\n(after Bethlehem's golden shard)" : "The Medieval Kingdom";
             if (barrier) barrier.SetActive(Blocked);
             cool -= Time.deltaTime;
             if (cool > 0 || !Game.Playing || !Party.I || Game.I.Busy) return;
             var local = transform.InverseTransformPoint(Party.I.Player.Motor.Center);
-            if (Mathf.Abs(local.z) > 1.2f || new Vector2(local.x, local.y - 2.4f).magnitude > 2f) return;
+            if (Mathf.Abs(local.z) > 1.2f || Mathf.Abs(local.x) > 2f || local.y < -.3f || local.y > 4.4f) return;   // inside the arch (Round 7: lamb Kira went under the old circle)
             cool = 2.5f;
             Game.I.TakeVortexPath(info, this);
         }

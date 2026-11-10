@@ -28,11 +28,11 @@ from mathutils.kdtree import KDTree
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
 COUNTER_TURN = {'kira', 'kira_mummy'}   # Round 6: mummy Kira's head measures 14 deg turned (home Kira 34)
-THIN = {'kira': 1, 'kira_mummy': 1}   # Round 6: mummy Kira's whiskers too
+THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1}   # Round 6: mummy Kira's whiskers too
 # Round 5, item 9: the Ice Age creatures get the same four-legged rig. Their real heights (metres): each is rigged at Kira's size
 # (0.5 m: every number here was tuned for her), then the armature is scaled back up for the export.
-CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7}   # Round 6: Egypt's camel and temple guardian
-TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
+CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7, 'goat': 1.05, 'sheep': .95, 'guard_dog': .85}   # Round 7: Bethlehem's animals   # Round 6: Egypt's camel and temple guardian
+TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000, 'goat': 12000, 'sheep': 8000, 'guard_dog': 12000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
 FPS = 30
 # Round 6: mummy Kira's cream bandages pass the eye colour test; her amber eyes are much more saturated
 EYE_RB = {'kira_mummy': .33}

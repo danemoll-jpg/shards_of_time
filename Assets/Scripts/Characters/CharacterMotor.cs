@@ -33,6 +33,15 @@ namespace ShardsOfTime
         public bool CanDoubleJump;                       // set by the party from the save (Abi's ability)
         public bool CanGroundPound;                      // set by the party from the save (Dan's, Round 4)
         public bool CanDeepDive;                         // Round 5: everyone, once the deep dive is learned (Pirate Seas)
+        // Round 7, item 7: Kira's pounce. On the ground, Dive = a short aim (she crouches and turns to the stick), then a long low leap
+        // (17 m/s, 1.8 m high: about 11.8 m roof to roof; Abi's double jump reaches about 9.8). It keeps its speed through the air.
+        public bool CanPounce;
+        public bool Aiming => aimT > 0;
+        public bool Pouncing { get; private set; }
+        public int Pounces { get; private set; }
+        public float LastPounceDistance { get; private set; }
+        public const float PounceSpeed = 17f, PounceHeight = 1.8f, PounceAim = .28f;
+        float aimT; Vector3 pounceDir, pounceFrom;
         public bool Pounding { get; private set; }       // the ground pound: a short hang, then straight down
         public int Pounds { get; private set; }
         public const float PoundSpeed = 26f, PoundHang = .14f;
@@ -73,10 +82,18 @@ namespace ShardsOfTime
         {
             Cc.enabled = false; transform.SetPositionAndRotation(pos, rot); Cc.enabled = true;
             Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false; Climbing = false; swimDeepest = 0; swimTime = 0;
+            aimT = 0; Pouncing = false;
             if (!Stats.swimmer) Breath = Stats.breathSeconds;
         }
 
-        public void Knockback(Vector3 v) { Velocity = v; Grounded = false; rising = false; platform = null; coyote = 0; Pounding = false; }
+        public void Knockback(Vector3 v) { Velocity = v; Grounded = false; rising = false; platform = null; coyote = 0; Pounding = false; aimT = 0; Pouncing = false; }
+        // Round 7, item 6: lamb Kira's springy bounce (straight up to `height`, keeping her run)
+        public void Launch(float height)
+        {
+            var hv = new Vector3(Velocity.x, 0, Velocity.z);
+            Knockback(hv + Vector3.up * Mathf.Sqrt(2f * Gravity * height));
+            takeoffY = apexY = transform.position.y; airTime = 0; JumpsThisAir = 1;
+        }
 
         public void Step(MotorInput input, float dt)
         {
@@ -88,7 +105,7 @@ namespace ShardsOfTime
             Updraft = UpdraftVolume.At(Center);
             leapTimer -= dt;
             bool swim = Water && leapTimer <= 0 && Water.Top - transform.position.y > Stats.height * .55f;
-            if (swim && Mode != MoveMode.Swim) { if (Velocity.y < -4f) Event?.Invoke("splash"); rising = false; JumpsThisAir = 0; Pounding = false; swimDeepest = 0; swimTime = 0; cameFromUnderIce = false; }
+            if (swim && Mode != MoveMode.Swim) { if (Velocity.y < -4f) Event?.Invoke("splash"); rising = false; JumpsThisAir = 0; Pounding = false; Pouncing = false; aimT = 0; swimDeepest = 0; swimTime = 0; cameFromUnderIce = false; }
             Mode = swim ? MoveMode.Swim : LowGravity ? MoveMode.LowGravity : Grounded ? MoveMode.Ground : MoveMode.Air;
             if (swim) SwimStep(input, dt); else WalkStep(input, dt);
             Breathe(dt);
@@ -99,7 +116,7 @@ namespace ShardsOfTime
             var s = Stats; float g = Gravity;
             float jumpScale = LowGravity ? LowGravity.jumpScale : 1f;
             // horizontal: analog run toward the stick's speed
-            var hv = new Vector3(Velocity.x, 0, Velocity.z);
+            var hv = new Vector3(Velocity.x, 0, Velocity.z); var hv0 = hv;
             var target = Vector3.ClampMagnitude(input.move, 1f) * s.runSpeed * SpeedScale;
             float accel = Grounded ? s.acceleration * (target.sqrMagnitude < .01f ? 1.3f : 1f) : s.acceleration * s.airControl;
             var slick = Grounded ? SlickIce.At(transform.position + Vector3.up * .2f) : null;   // Round 5: the frozen lake: slide
@@ -122,6 +139,30 @@ namespace ShardsOfTime
                 Pounding = true; poundHang = PoundHang; rising = false; buffer = 0; Event?.Invoke("poundstart");
             }
             if (Pounding) { hv = Vector3.zero; input.jumpPressed = false; }
+            // Round 7: the pounce: aim on the ground, then leap
+            if (CanPounce && aimT <= 0 && !Pouncing && Grounded && input.divePressed)
+            {
+                aimT = PounceAim; pounceDir = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.z).normalized : transform.forward; Event?.Invoke("aim");
+            }
+            if (aimT > 0)
+            {
+                if (input.move.sqrMagnitude > .04f) pounceDir = Vector3.RotateTowards(pounceDir, new Vector3(input.move.x, 0, input.move.z).normalized, 8f * dt, 0);
+                hv = Vector3.zero; input.jumpPressed = false; aimT -= dt;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(pounceDir), 900f * dt);
+                if (aimT <= 0 && Grounded)
+                {
+                    Pouncing = true; Pounces++; pounceFrom = transform.position;
+                    hv = pounceDir * PounceSpeed; vy = Mathf.Sqrt(2f * s.gravity * PounceHeight);
+                    Grounded = false; rising = false; coyote = 0; buffer = 0; platform = null; JumpsThisAir = 1; takeoffY = apexY = transform.position.y; airTime = 0;
+                    Event?.Invoke("pounce");
+                }
+                else if (aimT <= 0) aimT = 0;
+            }
+            else if (Pouncing)
+            {
+                var keep = pounceDir * PounceSpeed;   // a little steering, no slowing down
+                hv = Vector3.MoveTowards(hv0, keep + Vector3.ProjectOnPlane(input.move, pounceDir) * 3f, 6f * dt);   // from last frame's speed: the air drag above doesn't apply
+            }
             if (input.jumpPressed) buffer = JumpBuffer; else buffer -= dt;
             if (Grounded) coyote = CoyoteTime; else coyote -= dt;
             if (buffer > 0 && (Grounded || coyote > 0))
@@ -167,6 +208,7 @@ namespace ShardsOfTime
             {
                 LastJumpHeight = apexY - takeoffY; LastAirTime = airTime; JumpsThisAir = 0; LandSpeed = -vyBefore;
                 if (Pounding) { Pounding = false; Pounds++; Event?.Invoke("pound"); }
+                if (Pouncing) { Pouncing = false; var d = transform.position - pounceFrom; d.y = 0; LastPounceDistance = d.magnitude; }
                 Event?.Invoke("land");
             }
             if (!Grounded && wasGrounded && !rising) { takeoffY = apexY = transform.position.y; airTime = 0; JumpsThisAir = Mathf.Max(JumpsThisAir, 0); }

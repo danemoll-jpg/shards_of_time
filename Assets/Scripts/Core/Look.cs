@@ -45,6 +45,12 @@ namespace ShardsOfTime
                 Sun.color = new Color(1f, .93f, .78f); sunIntensity = 1.3f; Sun.transform.rotation = Quaternion.Euler(52f, -40f, 0);
                 ambSky = new Color(.6f, .72f, .92f); ambEq = new Color(.78f, .7f, .58f); ambGround = new Color(.62f, .52f, .38f);
             }
+            else if (world == WorldData.Bethlehem)   // Round 7, item 11: a starry night: deep blue sky, soft blue moonlight, warm lamps do the rest
+            {
+                Sky = new Color(.035f, .07f, .2f); FogColor = new Color(.05f, .08f, .19f); FogStart = 70f; FogEnd = 900f; FarClip = 1500f;
+                Sun.color = new Color(.62f, .7f, 1f); sunIntensity = .42f; Sun.transform.rotation = Quaternion.Euler(42f, 150f, 0);
+                ambSky = new Color(.2f, .26f, .48f); ambEq = new Color(.16f, .17f, .3f); ambGround = new Color(.1f, .09f, .1f);
+            }
             else   // the Ice Age (Dan's reference: a wide snowy valley, soft blue-white light, warm rock, fog for depth)
             {
                 Sky = new Color(.66f, .79f, .94f); FogColor = new Color(.8f, .87f, .95f); FogStart = 45f; FogEnd = 1700f; FarClip = 2200f;
@@ -87,7 +93,7 @@ namespace ShardsOfTime
         {
             if (on == vortex) return; vortex = on;
             if (CameraRig.I) CameraRig.I.Cam.backgroundColor = on ? new Color(.08f, .06f, .2f) : Sky;
-            FogColor = on ? new Color(.2f, .15f, .4f) : (world == WorldData.Playground ? new Color(.72f, .86f, .98f) : world == WorldData.Egypt ? new Color(.86f, .8f, .68f) : new Color(.8f, .87f, .95f));
+            FogColor = on ? new Color(.2f, .15f, .4f) : (world == WorldData.Playground ? new Color(.72f, .86f, .98f) : world == WorldData.Egypt ? new Color(.86f, .8f, .68f) : world == WorldData.Bethlehem ? new Color(.05f, .08f, .19f) : new Color(.8f, .87f, .95f));
             SnowFall.Show(!on);
             Refresh();
         }

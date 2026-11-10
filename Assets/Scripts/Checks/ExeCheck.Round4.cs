@@ -319,17 +319,17 @@ namespace ShardsOfTime
             yield return Wait(.6f); yield return Shot("18_vortex_space"); MusicCheck("the vortex space", "vortex");
             var c = Vortex.Centre;
             Vector3 PathPt(float yaw, float d) => c + Quaternion.Euler(0, yaw, 0) * new Vector3(0, 0, d);
-            // Round 6: four paths (the Ice Age -54, Egypt -18, Bethlehem 18, Home 54); Egypt is real now (EgyptRoute), so here Home and
-            // Bethlehem bounce, then back to the valley
-            yield return Go(PathPt(54, 8), .6f); yield return Go(PathPt(54, 19), .6f); yield return Go(PathPt(54, 24), .5f, 6f);
+            // Round 7: five paths (the Ice Age -60, Egypt -30, Bethlehem 0, Medieval 30, Home 60); here Home and Bethlehem bounce, then
+            // back to the valley
+            yield return Go(PathPt(60, 8), .6f); yield return Go(PathPt(60, 19), .6f); yield return Go(PathPt(60, 24), .5f, 6f);
             yield return Wait(.5f);
             Ok(Vortex.Inside(Player.transform.position) && Hud.LastMessage.Contains("still missing"), $"Home is blocked: \"{Hud.LastMessage}\"");
             yield return Shot("19_home_blocked");
-            yield return Go(PathPt(54, 12), .6f); yield return Go(PathPt(54, 6), .6f); yield return Go(PathPt(18, 6), .6f);
-            yield return Go(PathPt(18, 19), .6f); yield return Go(PathPt(18, 24), .5f, 6f); yield return Wait(.5f);
+            yield return Go(PathPt(60, 12), .6f); yield return Go(PathPt(60, 6), .6f); yield return Go(PathPt(0, 6), .6f);
+            yield return Go(PathPt(0, 19), .6f); yield return Go(PathPt(0, 24), .5f, 6f); yield return Wait(.5f);
             Ok(Vortex.Inside(Player.transform.position) && Hud.LastMessage.Contains("Bethlehem"), $"Bethlehem waits for Egypt's red shard: \"{Hud.LastMessage}\"");
             yield return Shot("20_bethlehem_closed");
-            yield return Go(PathPt(18, 12), .6f); yield return Go(PathPt(0, 4), .8f);
+            yield return Go(PathPt(0, 12), .6f); yield return Go(PathPt(0, 4), .8f);
             yield return Go(PathPt(-54, 8), .6f); yield return Go(PathPt(-54, 19), .6f); yield return Go(PathPt(-54, 24), .5f, 6f, 1f, () => !Vortex.Inside(Player.transform.position));
             yield return WaitFor(() => !Vortex.Inside(Player.transform.position), 3f);
             Ok(!Vortex.Inside(Player.transform.position) && Player.transform.position.z > 480f && Player.transform.position.z < 520f && Player.transform.position.y < 50f, $"the Ice Age path leads back to the valley ({Fmt(Player.transform.position)})");
