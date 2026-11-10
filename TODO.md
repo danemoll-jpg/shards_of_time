@@ -151,6 +151,49 @@ moves reopen earlier worlds):**
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 5: Ice Age polish, a bigger valley, creature models (0.5.0, build 500, 2026-11-09) — waiting for the Violinist's clips
+Final checks so far (built exe, batch mode, muted, separate never-shown desktop, virtual pad from the title screen):
+`local/round5/play4` play-through RESULT all passed (116 ok); `zones4`, `fixes2`, `perf`, `perf_deck` passed; `tour2` 1 prop
+fixed after it. Audio output 0.000 RMS in every run; window watcher: no window, never in the foreground. Evidence:
+`Data/screenshots/round5/`.
+1. Arrival: **done.** New `IceAgeArrival` (15.5 s, skippable): white-out landing; Kira on a snow rock shot from below as a dark
+   silhouette against a near-white sky (sun disk, growl x2), fangs; Dan flinches, scrambles back, falls flat; she leaps onto his
+   chest; close-up from over his head: folded ears, amber eyes; she paws, the necklace pulses blue; Abi laughs. MP4 rendered again
+   (`Recordings/`). Not in it: Dan laughing / holding the necklace up (no clips for that). Found: the white-outs, Act I's warm light
+   and the silhouette never ran in the exe since Round 4 (MonoBehaviours in wrongly named files); each has its own file now.
+1b. See-through: **done, 0.** Kira (both forms) and Abi (both outfits) rebuilt as one closed surface (`closed_mesh.py`: Meshy's
+   surface voxelized, gaps sealed, remeshed, Meshy's maps baked on; Kira re-rigged, Abi's Mixamo weights copied, same skeleton).
+   Exe: 0 see-through pixels each over 24 views (16 angles + head, ears, tail, paws, fangs) / 20 views (Abi); runs look normal.
+   Home Kira's whiskers went (too thin); Kira lock OK. Materials are opaque (no alpha).
+2. Trees: **done.** Cause: `WorldArt.Prop` replaced each prop's root rotation (the FBX's 90 deg Blender-to-Unity turn) with the
+   yaw. Fixed there; build report `Resources/Data/WorldProps.txt`; exe audit: 142 props upright and on the ground.
+3. Clean-up: **done** (list fixed / not): fixed: props lying (pines, standing stones, rock caps); a vent rock 7.9 m in the air;
+   bare graybox slabs (snow caps); smooth-sphere boulder (a rock now); rectangular lava (round pools, rim); solid-blob campfire
+   (glowing tongues + flame particles); hint text over the hero (now below); a pine blocking the grotto; a rock blocking the
+   pillars; a half-buried crystal; Act I white-out/light missing in the exe. Not fixed: big slabs (cave block, shelf, terraces)
+   are still boxes (snow-capped); faint lighter bake seams on Abi's skin; checkpoint flags are graybox.
+4. Music: **done.** Dan's four tracks, chosen by place: title, Act I (fades from 16.6 s, gone by the white-out), arrival + valley
+   (Ice Age, wind under it), vortex (crossfades both ways). Stand-in gone from `make_sounds.py`. Checked playing in each place.
+5. Bigger valley: **done** (DEFAULT layout): frozen lake (west basin; slick ice, a skating lane with an island ramp, three holes,
+   under-ice swim), glacier climb (18 ice ledges to a 24.7 m summit with a view), hot-spring grotto (east of the stones). Bot:
+   landing to story shard 10.5 min (Round 4: 6.6; a player is slower).
+6. Later-move places: **done** as data (`WorldData.gates`, 10): 4 double-jump ledges (+1 glacier), 2 boulders (+1 lake),
+   the grotto's cracked rock wall (charged punch), the deep lake (deep dive: divers are pushed back up), 2 wall-jump chimneys.
+   All visible on the first visit, each says what it waits for; checked closed in the exe.
+7. Shards / hearts: **done.** 60 shards, 35 wake the necklace. Rule 2 by data: 43 reachable on the first visit; play-through:
+   37 before the ground pound. Hearts: IA-H1 (cave) + IA-H2 in the grotto (charged punch).
+8. Violinist: **Meshy + Mixamo file done, waiting for Dan's clips** (`Docs/MODELS-NEEDED.md` top). Import + game code ready.
+9. Wolf, critter, mammoth: **done.** Meshy, closed rebuild, Code's quadruped rig + clips (+ stunned), Generic; in the game on
+   the placeholders (kept as fallback): walk/run by speed, lunge, hit, stunned. Mammoth skin: distance weights (bone heat failed).
+10. Build / check / publish: build and checks **done**; publish **after item 8**.
+
+Decisions Code made (Dan can overrule): the skating lane grips across it (you can steer) and slides along it; Kira 20k
+triangles (closed); the necklace waits for open sky (unchanged); hearts in the valley = 2 (H1 kept, H2 new).
+
+**For Dan to check:** the new arrival (MP4 and in game); Kira's / Abi's look up close after the rebuild (smoother than Meshy's
+fur, whiskers gone); the music in each place (only checked muted); the lake's slipperiness and the skating lane; the glacier
+climb and the view; whether 35 shards feels right; the wolves / critters / mammoths moving.
+
 ### Round 4: the Ice Age, the first real world (0.4.0, build 400, 2026-11-09)
 Final check `local/round4/final2` (built exe, batch mode, muted, no window, virtual pad from the title screen; Ice Age
 play-through + items 1-2 + frame rate): RESULT all checks passed (96 ok); audio output 0.000 RMS. Evidence:

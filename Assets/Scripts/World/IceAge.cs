@@ -441,7 +441,7 @@ namespace ShardsOfTime
             }
             foreach (var (x, z, y) in new[] { (-22f, 30f, 40f), (30f, 96f, 200f), (-40f, 200f, 110f), (36f, 300f, 15f), (-30f, 430f, 70f) })
                 WorldArt.Prop("iceage_props", "Bones", root, OnGround(x, z) + Vector3.down * .3f, y, 1f);
-            foreach (var (x, z) in new[] { (-30f, 243f), (34f, 238f), (-48f, 266f), (8f, 268f), (-20f, 380f), (44f, 392f) })
+            foreach (var (x, z) in new[] { (-30f, 235f), (34f, 238f), (-48f, 266f), (8f, 268f), (-20f, 380f), (44f, 392f) })
                 WorldArt.Prop("iceage_props", "IceCrystal", root, OnGround(x, z) + Vector3.down * .2f, x * 7, 1.2f);
             // the stone ruins from Dan's reference (by the cave and on the way to the stones)
             foreach (var (x, z, yaw) in new[] { (-26f, 400f, 10f), (-23f, 404f, 80f), (-29f, 407f, 40f), (24f, 300f, 0f), (-6f, 140f, 20f) })
