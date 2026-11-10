@@ -8,7 +8,7 @@ via ElevenLabs.
 
 **Direction (Dan, 2026-11-09): whimsical and cartoony, not orchestral or
 serious.** Light, bouncy, playful, a little silly, like a classic cartoon:
-plucky strings, woodwinds, xylophone, tuba, music box, slide whistles. Avoid
+plucky strings, woodwinds, xylophone, tuba, music box. **No whistling or slide whistle (Dan, 2026-11-09): it made tracks sound alike.** Give each world its own instrument palette so the songs don't blur together. Avoid
 epic, heroic, sweeping orchestral, dark or dramatic. Every new music prompt
 follows this, except the vortex (mysterious, not quirky; Dan 2026-11-09).
 
@@ -106,3 +106,24 @@ Suno prompt (instrumental):
 
 Style tags: `mysterious, ambient, dreamy, ethereal, magical, harp, chimes, music box, slow, instrumental`.
 Exclude: `quirky, cartoon, upbeat, drums, epic, horror, dark`.
+
+## Ancient Egypt theme (Suno, for Dan) — planning chat, 2026-11-09
+
+Egypt's level song: plays in the world and loops. Whimsical and cartoony like
+the Ice Age theme, with an Egyptian flavor. Instrumental, 2–3 minutes. Save Dan's
+pick as `Assets/Resources/Music/egypt.mp3`.
+
+Suno prompt (instrumental):
+
+> Bouncy, whimsical, cartoony theme for a funny animated family adventure in
+> ancient Egypt, among pyramids, a busy market and a grumpy camel. Light and
+> playful, not serious or epic. Lead melody on plucked oud and qanun, answered
+> by a cheeky bassoon and pizzicato strings, a sneaky tiptoeing feel, darbuka
+> and frame-drum groove with finger cymbals, a soft marimba counter-line,
+> around 100 bpm. Sunny, mischievous and a little silly, its own sound, like a
+> cartoon caper in a sandy marketplace. Strictly instrumental: no whistling, no
+> slide whistle, no flute, no vocals. Steady energy from start to end (no long
+> intro, no fade-out) so it loops.
+
+Style tags: `whimsical, cartoon, egyptian, oud, qanun, darbuka, bassoon, pizzicato, playful, instrumental`.
+Exclude: `whistling, slide whistle, flute, orchestral, epic, cinematic, dramatic, vocals`.

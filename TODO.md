@@ -24,8 +24,129 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — none yet: the planning chat writes Round 6 (suggested: Egypt, mummy Kira, the judgmental camel, Abi's
-double jump from the Violinist). Round 5's plan is in `TODO-ARCHIVE.md`.
+Current round — Round 6: Ice Age fixes + Ancient Egypt (target 0.6.0)
+Round 5's plan is in `TODO-ARCHIVE.md`. Report per item: done / not done /
+deferred, and why. DEFAULT = planning chat's choice, Dan can overrule after
+playing. Testing rule as always: everything through `Tools/quiet.py`, muted
+with the level reported, never a window in front of Dan.
+
+**Dan's notes on 0.5.0 (do these first)**
+1. **"They can't walk a straight line."** Measure before fixing: in the exe,
+   hold the stick straight up for 10 s (and W on the keyboard) with each
+   hero, on flat snow, and log heading drift per second, camera yaw, and the
+   raw stick values. Likely suspects, in order: movement is camera-relative
+   while the camera's auto-recenter keeps turning, so the path curves; the
+   stick deadzone / a radial-vs-axial deadzone bending the direction; the
+   heroes turning toward the input too slowly or overshooting; followers
+   pushing the player. Fix the real cause; holding forward must go straight
+   (drift under 1 deg/s) and still steer smoothly when the stick moves. Show the
+   before / after numbers. Dan checks it on his pad.
+2. **Under the ice was awkward and hard to get out of.** Rework the under-ice
+   swim so getting out is always easy and obvious: every under-ice stretch is
+   short with a lit opening ahead (light shafts through the holes), holes big
+   enough to surface through from any angle, swimming up under a hole pops the
+   hero out onto the ice (auto climb-out), and the camera never ends up inside
+   the ice ceiling. Breath must last longer than the longest stretch with
+   room to spare. Nobody can get stuck under the ice: if a hero is under it for
+   too long without a way up, bring them to the nearest hole. Check with the
+   bot and with screenshots from the player's view.
+3. **Mammoth fur sticking out of its tusks.** The closed-mesh rebuild baked the
+   fur texture onto the tusks / hair poked through them. Give the tusks (and any
+   other hard parts: wolf and critter teeth and claws, Kira's fangs) clean
+   geometry and their own plain material (ivory), no fur on them. Close-ups of
+   each creature's head as the check.
+4. **The Violinist had no instrument.** The Round 4 bone fiddle was lost when
+   his real model came in. Model his Ice Age instrument (bone fiddle + bow) and
+   attach it to his hands (fiddle in the left hand under the chin, bow in the
+   right), so it moves with his `play` clip and sits right in idle / walk (or
+   rests on his back when walking, DEFAULT). Make it data per world: each world
+   gives him its own instrument (Egypt: lyre). Close-up shots playing and idle.
+
+**Ancient Egypt (world 2)**
+5. **Concept images: the planning chat wrote the prompts** (E1–E9 at the top of
+   `Docs/MODELS-NEEDED.md`, from Dan's film art in `SourceArt/Reference/`); Dan
+   is making the images. Don't rewrite the prompts; check each image when it
+   arrives (the usual list). **All nine are in (Dan, 2026-11-09), saved in
+   `SourceArt/Concepts/`** (`dan_egypt`, `abi_egypt`, `kira_mummy`, `camel`,
+   `violinist_egypt`, `mummy`, `scarab`, `guardian`, `sphinx_kira`); the
+   planning chat looked at each: all usable. Two notes: **mummy Kira's head is
+   turned a little toward the viewer** (less than home Kira's 34 deg by eye):
+   measure it; up to ~35 deg use the counter-turn as for home Kira and check the
+   face close up (Fix 3.1's trouble was 83 deg); if it's worse, stop and ask Dan
+   for a straight-headed image. Her fur is darker / browner than home Kira's:
+   match it (`match_fur.py`). The Violinist is the older gray-bearded man of
+   his Ice Age sheet (the prompt said "young": the image is right). Dan's
+   Egypt level song is in too: `Music/egypt.mp3` (3:00). The set: Dan and Abi in
+   Egyptian clothes (A-pose), **mummy Kira** (Kira lock: folded ears showing
+   through the bandages, solid gray where fur shows, amber eyes), the
+   **judgmental camel**, a mummy enemy, a scarab enemy, a temple guardian
+   (stone jackal / cat statue that wakes up), and the Violinist with a **lyre**
+   (only the instrument changes if his outfit can stay; DEFAULT: an Egyptian
+   robe over the same body). Tell Dan as soon as the prompts are ready, and keep
+   building with placeholders. When the images arrive: Meshy → clean-up →
+   Mixamo files for Dan, Abi and the Violinist → **stop for Dan's Mixamo** →
+   import in this same round. Add to Dan's Mixamo list: a laugh ("Laughing")
+   and a "hold up / look at item" clip, so the Ice Age arrival can have Dan's
+   relieved laugh and holding up the necklace (Round 5 left them out).
+6. **Getting there:** the vortex's Egypt path is real now (Home blocked: 2 / 8
+   after Egypt). `EgyptArrival` cutscene (skippable, ~10–15 s): the vortex
+   drops them among pyramids and busy workers; they're in Egyptian clothes;
+   Kira is a little mummy cat; Dan and Abi react to her. Look and staging from
+   `Worlds/02-Egypt/trio-arrival-pyramids-*.png`.
+   **Dan's necklace shard takes the color of the world's story shard** (the
+   film: blue in the Ice Age, red in Egypt), for the necklace prop and its glow.
+7. **Layout** (DEFAULT, from the film + concept), about 10–15 minutes first
+   visit: a sunny desert town by the Nile and the pyramids:
+   - **Town and market:** merchants with baskets, workers hauling huge stones on
+     rollers (moving platforms), guards patrolling (they spot you and push you
+     back to the last checkpoint: light stealth, not combat), and the
+     **judgmental camel** (a running gag: it stares at whichever hero you
+     play, snorts, turns away) and **rideable: the whole party rides it across the dunes, as in the film** (`camel-ride-trio.png`).
+   - **The Great Sphinx with Kira's face: THE big gag of Egypt (Dan,
+     2026-11-09), must be in.** Model from E9 (`sphinx_kira.png`); film shots
+     `sphinx-kira-far / -mid / -closeup.png`. Make it a landmark seen from far
+     away, and build the `SphinxGag` cutscene properly: the party walks up, the
+     camera slowly reveals the face, Dan does a big double-take between the
+     Sphinx and mummy Kira (Kira sits in the same pose), Abi rolls her eyes.
+     Comic timing over length (~10 s). The Sphinx can also be climbed (shards
+     on its paws, head and back).
+   - **The pyramid under construction** (film: `market-workers-pyramid-scaffold.png`):
+     wooden scaffolding up one face, ramps, workers pushing stone carts: a
+     climbing route to the top and the way in.
+   - **Pyramid interior:** traps (swinging blades, sliding blocks, sand pits,
+     dart walls), dark corridors lit by the necklace, ancient machinery
+     (rotating rooms, counterweights), hidden chambers.
+   - **The Nile bank:** reeds, boats as moving platforms, a swim.
+   - **Future-move gates** (data, visible first visit): Kira's pounce gaps
+     (Bethlehem), Muscle Man blocks (Medieval), cracked walls (charged punch),
+     deep water (deep dive), wall-jump shafts (Steampunk).
+8. **Mummy Kira's ability** (DEFAULT): Egypt honors cats, so **cat-statue doors
+   and cat mechanisms open only for her** (she sits on a cat plate and the
+   mechanism wakes), and as a mummy she can walk past the mummies without
+   them waking. Placeholder until her model exists.
+9. **New move: Abi's double jump**, taught by the Violinist on his lyre. Once
+   learned it works everywhere, so the Ice Age's double-jump ledges open too:
+   check one in the Ice Age after learning it.
+10. **Shards, hearts, story shard:** about 60 shards, 35 needed (DEFAULT); Rule 2
+    holds (35 reachable with the moves you have on arrival; the double jump
+    only after the Violinist). Two hearts. The **red story shard** (DEFAULT: in
+    the pharaoh's burial chamber at the heart of the pyramid) opens the vortex.
+11. **Enemies:** mummies (slow, shamble, grab), scarabs (small, fast, swarm a
+    little), temple guardians (statues that wake when you pass, a short chase).
+    Light combat; no boss (DEFAULT).
+12. **Look:** from Dan's film references in `SourceArt/Reference/Worlds/02-Egypt/`
+    (added 2026-11-09): golden dunes under a deep blue sky, two big pyramids,
+    a colorful pastel town (pink, turquoise, lilac and gold buildings with
+    domes and palm trees) beyond the dunes, a busy market with striped
+    awnings, baskets and workers hauling stone on carts, camels everywhere.
+    Stylized like the characters. Frame rate checked
+    on both settings.
+13. **Music:** Egypt's level song is Dan's (prompt in `Docs/MUSIC.md`, save as
+    `Music/egypt.mp3`; silence until it exists). Sound effects with ElevenLabs
+    (sand steps, trap clicks, stone grinding, mummy groan, scarab skitter,
+    camel snort, the Violinist's lyre tune).
+14. Build, check (a full run: Ice Age → vortex → Egypt → red shard → vortex),
+    publish 0.6.0, update `TODO.md` / `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------

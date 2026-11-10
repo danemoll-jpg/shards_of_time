@@ -1,5 +1,93 @@
 # Shards of Time — models needed
 
+## Round 6 (2026-11-09): Ancient Egypt — images needed from Dan (prompts by the planning chat)
+
+Dan's film art for Egypt is in `SourceArt/Reference/` (characters: `Characters/*/…-egypt-film.png`,
+`kira-mummy-film.png`, `Others/camel-judgmental-film.png`, `Violinist/violinist-egypt-lyre-film.png`; the world:
+`Worlds/02-Egypt/`). The stills are the look; Meshy still needs clean sheets, so these prompts ask for them. Give the
+matching still to the image tool as a reference where it takes one. **The concept sheets are the official design**:
+Dan's and Abi's faces and hair follow their existing sheets (`SourceArt/Concepts/dan_iceage.png`, `abi_iceage.png`),
+the Violinist's follows `violinist_iceage.png`. Save each as the file named in its heading, in `SourceArt/Concepts/`.
+
+Every image: at least 1024 px tall (animals and the Sphinx: 1536 px wide), the whole body in frame (feet, paws, tail),
+plain light background, soft even light, no ground shadow, mouth closed, no glow, no text, one view per image.
+
+Negative prompt, if the tool has one: `cropped, cut off feet, cut off paws, cut off tail, multiple views, necklace,
+pendant, held object, instrument, prop, weapon, glowing, open mouth, teeth showing, text, logo, watermark, background
+scenery, ground shadow, motion blur, depth of field, photorealistic, scary, horror` (leave out "prop" for the camel,
+whose saddle is part of it).
+
+### E1. Dan, Egypt — `dan_egypt.png`
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead.
+> Ancient Egyptian outfit: short-sleeved white linen tunic to the knees, a royal-blue sash from the left shoulder across
+> the body to the hip, a broad gold and blue striped collar over the shoulders, a gold belt with a long striped gold
+> apron panel hanging at the front, wide gold cuffs on both wrists, black flip-flop sandals. No necklace or pendant.
+> Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### E2. Abi, Egypt — `abi_egypt.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair,
+> green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not
+> touching the body, feet shoulder-width apart, mouth closed with a gentle smile, hair falling behind her shoulders.
+> Ancient Egyptian outfit: white sleeveless knee-length dress, the lower skirt covered in shimmering rose-gold sequins
+> with an uneven hem, a thin gold cord belt crossing diagonally, a broad collar of blue beads trimmed with gold, a thin
+> gold headband, gold cuffs on the upper arms and wrists, sandals with small white feathered wings at the ankles.
+> Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### E3. Kira, mummy cat — `kira_mummy.png`
+> Pixar-style 3D render of Kira, a tiny gray Scottish Fold kitten dressed up as a cute little mummy. Full body, side
+> view, standing on all four legs, head facing straight ahead in line with her body (not turned to the camera), tail up
+> and away from the body. Loose cream linen bandages wrapped around her body, legs, tail and the top of her head, with
+> solid gray fur showing between the wraps; her face is uncovered. Folded-down Scottish Fold ears that lie flat and
+> forward, never raised, poking out above the head bandage. Solid gray fur with absolutely no white fur or markings.
+> Golden-amber eyes. Mouth closed. Plain light gray background, soft even light, no shadow, whole body in frame,
+> every paw and the tail visible.
+
+### E4. The judgmental camel — `camel.png`
+> Pixar-style 3D render of a cartoon camel with a big personality, side view, standing on all four legs, head facing
+> straight ahead, tail down. Sandy tan fur, one hump, a long curved neck, heavy expressive eyebrows and half-closed,
+> deeply unimpressed eyes with a smug little smirk, mouth closed. A colorful woven Egyptian saddle blanket in blue,
+> turquoise, gold and red with tassels, and a small saddle on the hump. Funny and lovable, not realistic. Plain light
+> gray background, soft even light, no shadow, whole body in frame with all four hooves and the tail visible.
+
+### E5. The Violinist, Egypt — `violinist_egypt.png`
+> Pixar-style 3D character render of the Violinist, the same young man as in his Ice Age character sheet (same face and
+> hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not touching the body,
+> feet shoulder-width apart, mouth closed with a calm knowing smile. Ancient Egyptian musician's outfit: white linen
+> kilt with a striped blue and gold front panel, a broad blue and gold striped collar, gold bands on the upper arms,
+> wrists and ankles, simple leather sandals. Holding nothing (no instrument). Plain light gray background, soft even
+> light, no shadow, whole body in frame.
+
+### E6. Mummy (enemy) — `mummy.png`
+> Pixar-style 3D render of a cute, clumsy cartoon mummy for a family video game, not scary. Short and round, wrapped in
+> loose cream bandages with a few loose ends, one big curious eye peeking out between the wraps, a sleepy grumpy look.
+> Full body, front view, A-pose: arms about 45 degrees out, hands open, feet apart. Plain light gray background, soft
+> even light, no shadow, whole body in frame.
+
+### E7. Scarab (enemy) — `scarab.png`
+> Pixar-style 3D render of a small cute cartoon scarab beetle for a family video game, not scary. Side view, standing
+> on its six legs. A round glossy shell in deep blue-green with gold edges, big shiny cartoon eyes, little mandibles,
+> a mischievous look. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### E8. Temple guardian (enemy) — `guardian.png`
+> Pixar-style 3D render of an ancient Egyptian temple guardian statue that has come to life: a sandstone cat, sleek
+> and tall, with a blue and gold striped collar and gold earrings, carved stone texture with small cracks, stern
+> painted eyes. Side view, standing on all four legs, head facing straight ahead, tail down and away from the body.
+> Stylized and family friendly, not scary. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### E9. The Great Sphinx with Kira's face — `sphinx_kira.png` (the big gag: a landmark, not animated)
+> Pixar-style 3D render of the Great Sphinx of Egypt, but its face is Kira's: a big round gray Scottish Fold cat face
+> carved in the stone, folded-down ears that lie flat and forward under the striped royal headdress, huge golden-amber
+> eyes, a small pink nose, whiskers, a calm slightly puzzled expression, mouth closed. Weathered sandstone lion body
+> lying down with both front paws stretched forward, on a low stepped stone base. Three-quarter front view, the whole
+> statue and base in frame. Plain light gray background, soft even light, no shadow.
+
+When the images are saved: Code checks them (same list as always), then Meshy → clean-up → Mixamo files for
+`dan_egypt`, `abi_egypt`, `violinist_egypt` and `mummy` → stops for Dan's Mixamo. Kira, the camel, the scarab and the
+guardian are rigged by Code (four-legged / six-legged). The Sphinx is a static landmark (no rig).
+
+
 ## Round 5 (2026-11-09): the Violinist in Mixamo — for Dan, now
 
 His Meshy model is cleaned up (1.85 m, 20.8k triangles, A-pose, facing front; previews
