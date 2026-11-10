@@ -24,8 +24,99 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — none. Fix 6.1 is delivered (below); Round 7 (Bethlehem) is
-drafted under "Next rounds". Fix 6.1's plan is in `TODO-ARCHIVE.md`.
+Current round — Round 7: Bethlehem (target 0.7.0)
+Fix 6.1's plan is in `TODO-ARCHIVE.md`. Report per item: done / not done /
+deferred, and why. DEFAULT = planning chat's choice, Dan can overrule after
+playing. Testing rules as always (`Tools/quiet.py`, muted with the level
+reported, never a window in front of Dan).
+
+**Inputs, all in (Dan, 2026-11-10):** the 12 concept images B1–B12 in
+`SourceArt/Concepts/` (`dan_bethlehem`, `abi_bethlehem`, `kira_lamb`,
+`wiseman_santa`, `wiseman_crown`, `wiseman_old`, `violinist_bethlehem`,
+`watchman`, `goat`, `sheep`, `guard_dog`, `scorpion`; the prompts are in
+`Docs/MODELS-NEEDED.md`), Dan's film references in
+`SourceArt/Reference/Worlds/03-Bethlehem/` and `Characters/*`, and Dan's song
+`Music/bethlehem.mp3` (3:00, with choir). `guard_dog`'s head is turned toward
+the camera a little: measure it; under ~35 deg use it with the counter-turn,
+else stop and ask Dan for a side-profile redo (the goat and sheep prompts
+show how).
+
+**Tone (Dan, 2026-11-10):** irreverent, Monty Python-style humor is welcome
+here. The film's own gags stay: one Wise Man wears a Santa hat, their gifts
+are modern wrapped presents with bows, they mistake the vortex for the star
+and leave disappointed. Situational comedy, minimal dialogue.
+
+1. **Models.** Meshy → clean-up → previews for all 12. Mixamo upload files and
+   clip lists for the people (`dan_bethlehem`, `abi_bethlehem`, the three Wise
+   Men, `violinist_bethlehem`, `watchman`), reusing the shared idle / walk /
+   run clips; **stop and tell Dan exactly what to download** as soon as those
+   files are ready, then import his clips in this same round. Animals and the
+   scorpion: Code's rigs and clips (four- / eight-legged), heads checked like
+   Kira's. Lamb Kira: Kira lock check, fur matched to her gray. Keep building
+   with placeholders while waiting.
+2. **Props from the film shots** (Blender / Meshy text-to-3D): the barn (rustic
+   boards, X-braced doors, a round window in the gable, thatched roof that can
+   show the crash hole), the manger, hay bales, barrels, rail fences, the
+   Wise Men's gift boxes with bows, the watchman's lantern, the Violinist's
+   instrument (DEFAULT: a small shepherd's harp, held with its own playing
+   clip like the lyre, not the violin clip). The Wise Men ride Egypt's camel
+   model with plainer blankets.
+3. **`BethlehemArrival`** (skippable, ~12–15 s): the golden vortex opens over
+   the barn, they drop out of it and **crash through the roof** (film:
+   `barn-roof-landing-top.png`, `barn-roof-hole-top.png`); Abi lands softly in
+   the hay, Dan misses the hay and hits the floor; Kira pops up as a little gray
+   lamb. The manger glows faintly but is empty. The hole stays in the roof for
+   the rest of the world. Dan and Abi react to lamb Kira.
+4. **Layout** (DEFAULT), about 10–15 minutes first visit, a starry night:
+   - **The barn and its farmyard:** fences, hay stacks to climb, the golden
+     vortex ring hovering above with its beam down (everyone in the world
+     calls it "the star").
+   - **The hills:** rolling dark grass hills with shepherds' campfires and
+     flocks of sheep wandering; rocky outcrops, a well, an olive grove.
+   - **The village:** a small night village beside the fields: flat rooftops to
+     run across, a lantern-lit market with closed stalls, courtyards, an inn
+     with a "no room" sign gag.
+   - **The Wise Men's caravan:** the three Wise Men ride their camels along a
+     road across the map toward the star the whole time (they stop, argue,
+     check a map); they're always reachable and a few shards sit along their
+     route.
+   - **Future-move gates** as data, visible on the first visit: Muscle Man
+     blocks, charged-punch walls, deep water (the well), wall-jump chimneys.
+5. **Light stealth (DEFAULT):** night watchmen with lantern light cones patrol
+   the village; caught = a short comic "Halt!" moment and back to the last
+   checkpoint, not damage. Guard dogs sniff around and bark to call a watchman.
+6. **Lamb Kira's abilities:** **hide in a flock** (step into a flock of sheep:
+   watchmen, dogs and goats ignore her while she moves with it), and
+   **springy bounce** on hay bales and wool piles (a high bounce only she gets).
+   Cat-face lamb gags welcome (the sheep stare at her).
+7. **New move: Kira's pounce** (a long leap with a short aim), taught by the
+   Violinist on his harp. It works everywhere, so Egypt's pounce gaps (E14 /
+   E15 and the far roof) open too: check one in Egypt after learning it.
+8. **Enemies:** grumpy goats (lower their head, charge, headbutt), guard dogs
+   (bark, chase a short way), scorpions (small, scuttle, snap). Light combat,
+   no boss (DEFAULT).
+9. **Shards (universal rule):** about 60 small shards in Bethlehem; the
+   threshold for Bethlehem is cumulative, set by rule 2 (about 60–65% of all
+   shards in the Ice Age + Egypt + Bethlehem, reachable on arrival with the
+   moves you have, the pounce only after the Violinist). Two hearts. Report the
+   numbers.
+10. **The finale (`WiseMenArrive`, skippable):** when the necklace wakes it leads
+    to the barn: the **golden story shard** now glows in the manger (film:
+    `manger-golden-shard.png`). Collecting it: the Wise Men walk in, gifts held
+    out, the choir swells ("Hallelujah!"), they see a glowing shard and three
+    confused travelers (one of them a cat-faced lamb), look at each other,
+    and walk out disappointed. Then the hay explodes upward into a spinning
+    golden vortex that pulls the party in → the vortex space (Home: 3 / 8).
+11. **Look:** from Dan's references: deep blue starry sky, warm golden light
+    spilling from the barn, dark rolling hills, golden grass in the lamplight,
+    stylized like the characters. Frame rate checked on both settings.
+12. **Music and sound:** `Music/bethlehem.mp3` in the world, the vortex track in
+    the vortex as before. ElevenLabs effects: hay rustle and bounce, sheep
+    bleats, goat bleat-charge, dog bark, scorpion click, lantern creak, the
+    roof crash, the harp tune.
+13. Build, check (a full run: … Egypt → vortex → Bethlehem → golden shard →
+    vortex; plus the pounce in Egypt), publish 0.7.0, update `TODO.md` /
+    `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
@@ -186,7 +277,7 @@ clip holds his arms low, so the fiddle sits in front of his chest, not under his
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Round 7: Bethlehem (draft by the planning chat, 2026-11-10; written in full
+- **(Superseded by the Round 7 above; kept for reference.) Round 7: Bethlehem (draft by the planning chat, 2026-11-10; written in full
   once Dan's film references are in `SourceArt/Reference/Worlds/03-Bethlehem/`
   and he's played 0.6.1).** From the film: a quiet starry night; the Wise Men
   follow a bright "star" that is really the vortex; the party crashes through a
@@ -205,7 +296,15 @@ Next rounds (do not start yet)
   beam down (seen from far away as the "star"); the roof crash leaves a hole
   (`barn-roof-hole-top.png`). Dan: brown homespun tunic + cream sash; Abi:
   beige dress + head scarf; Kira: a round gray woolly lamb with a cat face.
-  Image prompts B1–B12 in `Docs/MODELS-NEEDED.md`, music in `Docs/MUSIC.md`.
+  Image prompts B1–B12 in `Docs/MODELS-NEEDED.md`, music in `Docs/MUSIC.md`. **In so far (2026-11-10, checked by the
+  planning chat):** `dan_bethlehem`, `abi_bethlehem`, `kira_lamb` (straight
+  head, ears folded, all gray), `violinist_bethlehem`, `wiseman_old`,
+  `watchman` (a small bell is part of his belt: fine), `scorpion`, and Dan's
+  song `Music/bethlehem.mp3` (3:00, choir). **Then (same day):**
+  `wiseman_santa`, `wiseman_crown`, and side-profile redos of `goat` and
+  `sheep` (old ones kept as `*_v1.png`): all checked, all usable. So all 12
+  are in. `guard_dog` is turned toward the camera a little: Code measures it
+  and uses it if it's under ~35 deg, else asks Dan for a redo.
   Plan (DEFAULT): arrival = the roof crash into the barn (the manger glows
   faintly but is empty); the world = the barn's farm and fields, the hills with
   shepherds and flocks, and a small night village next to it (rooftops,
