@@ -78,6 +78,16 @@ namespace ShardsOfTime
         public AreaData Area => Party.I ? World.AreaAt(Party.I.Player.transform.position) : null;
         public int AreaShards(string area) { var got = SaveGame.Current.World(World.worldId).shards; return World.InArea(area).Count(s => got.Contains(s.id)); }
 
+        // Fix 6.1: the pause menu's completion tracker: each world's own count (the HUD shows the universal total)
+        public string ShardTracker()
+        {
+            var s = SaveGame.Current;
+            if (TestArea) return $"Test area: {s.World(World.worldId).shards.Count} / {World.shards.Count} shards";
+            var lines = WorldData.StoryOrder.Where(w => w == WorldData.IceAge || s.worldsReached.Contains(w))
+                .Select(w => { var d = WorldData.Load(w); return $"{d.displayName}: {s.World(w).shards.Count} / {d.shards.Count}"; });
+            return string.Join("\n", lines) + $"\nShards in all: {s.Total}";
+        }
+
         // ---- title, play, pause
         public void ToTitle()
         {
@@ -168,7 +178,7 @@ namespace ShardsOfTime
         {
             if (State != Mode.Playing || InCutscene) return;
             State = Mode.Paused; Time.timeScale = 0f; Necklace.StopRumble();
-            var p = new Menu.Page { title = "Paused", back = Resume };
+            var p = new Menu.Page { title = "Paused", back = Resume, body = () => "\n" + ShardTracker() };
             p.rows.Add(new Menu.Row { label = "Resume", submit = Resume });
             p.rows.Add(new Menu.Row { label = "Settings", submit = () => Menu.I.Push(Menu.SettingsPage()) });
             p.rows.Add(new Menu.Row { label = "Controls", submit = () => Menu.I.Push(Menu.ControlsPage()) });
@@ -233,6 +243,9 @@ namespace ShardsOfTime
             {
                 var area = Area; var prog = SaveGame.Current.World(World.worldId);
                 Necklace.Tick(area != null ? area.id : "", area != null && area.requirement > 0 && prog.necklaceAwake && !prog.storyShard);
+                // Fix 6.1: the necklace wakes when the universal total reaches this world's threshold (also on arriving with enough already)
+                if (area != null && area.requirement > 0 && !prog.necklaceAwake && !prog.storyShard && !Busy && !InCutscene && SaveGame.Current.Total >= area.requirement)
+                    StartCoroutine(WakeNecklace(area));
                 if (area != null) { ApplyKiraForm(area); ApplyOutfits(area); }
                 bool dark = DarkVolume.At(Party.I.Player.Motor.Center) && !InCutscene;
                 Look.InVortex(Vortex.Inside(Party.I.Player.transform.position) && !InCutscene);
@@ -268,19 +281,14 @@ namespace ShardsOfTime
             var prog = SaveGame.Current.World(World.worldId);
             if (p.kind == Pickup.Kind.StoryShard) foreach (var h in Party.I.Heroes) h.Cheer();   // Round 3: everyone cheers the story shard
             else if (p.kind == Pickup.Kind.Shard) Party.I.Player.Cheer();
-            if (p.kind == Pickup.Kind.Shard)
-            {
-                var area = World.Area(p.area);
-                if (area != null && area.requirement > 0 && !prog.necklaceAwake && AreaShards(area.id) >= area.requirement) StartCoroutine(WakeNecklace(area));
-            }
-            else if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : OpenVortex());
+            if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : OpenVortex());
         }
 
         IEnumerator WakeNecklace(AreaData area)
         {
             Busy = true;
             var prog = SaveGame.Current.World(World.worldId); prog.necklaceAwake = true;
-            PlayLog.Line($"area {area.id}: {AreaShards(area.id)} of {area.requirement} shards, the necklace wakes");
+            PlayLog.Line($"area {area.id}: {SaveGame.Current.Total} shards in all (threshold {area.requirement}; {AreaShards(area.id)} from here), the necklace wakes");
             yield return new WaitForSeconds(.4f);
             // not mid-air (a vent, a jump) and not in a cave (its cameras need the open sky): it waits for the party to come out
             while ((!Party.I.Player.Motor.Grounded && Party.I.Player.Motor.Mode != MoveMode.Swim) || DarkVolume.At(Party.I.Player.Motor.Center) || !Game.Playing) yield return null;
@@ -400,7 +408,7 @@ namespace ShardsOfTime
             Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
             var prog = SaveGame.Current.World(WorldData.Egypt); if (!prog.opened.Contains("EG-arrived")) prog.opened.Add("EG-arrived");
             SaveGame.Current.checkpoint = Egypt.Start; SaveGame.Save("arrived in Egypt");
-            Hud.Message($"Ancient Egypt! Find the shards: {a.requirement} of them wake the red shard on Dan's necklace.", 6f);
+            Hud.Message($"Ancient Egypt! Every shard counts: at {a.requirement} in all, the red shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 6f);
             Busy = false;
         }
 

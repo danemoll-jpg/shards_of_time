@@ -23,11 +23,13 @@ namespace ShardsOfTime
         void OnDisable() { if (I == this) I = null; }
 
         public string instrument = "Fiddle";   // Round 6, item 4: per world (WorldData.violinistInstrument)
+        public string playClip = "violinist_play";   // Fix 6.1, item 2: per world (WorldData.violinistPlayClip): the fiddle's or the lyre's
 
-        public static Violinist Make(Transform parent, Vector3 at, float yaw, string instrument = "Fiddle")
+        public static Violinist Make(Transform parent, Vector3 at, float yaw, string instrument = "Fiddle", string playClip = null)
         {
             var go = new GameObject("Violinist"); go.transform.SetParent(parent, false); go.transform.SetPositionAndRotation(at, Quaternion.Euler(0, yaw, 0));
             var t = go.transform; var v = go.AddComponent<Violinist>(); v.instrument = instrument;
+            v.playClip = playClip ?? (Game.World && !string.IsNullOrEmpty(Game.World.violinistPlayClip) ? Game.World.violinistPlayClip : "violinist_play");
             var hide = Placeholders.Mat(new Color(.72f, .58f, .4f)); var cloak = Placeholders.Mat(new Color(.86f, .86f, .88f)); var skin = Placeholders.Mat(new Color(.93f, .78f, .66f));
             var silver = Placeholders.Mat(new Color(.82f, .83f, .86f)); var wrap = Placeholders.Mat(new Color(.55f, .5f, .46f));
             Placeholders.Prim(PrimitiveType.Capsule, t, new Vector3(0, .95f, 0), new Vector3(.5f, .62f, .38f), hide, name: "Tunic");
@@ -74,10 +76,11 @@ namespace ShardsOfTime
             graph = PlayableGraph.Create("Violinist clips"); graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             var clips = new List<AnimationClip>();
             // his own clips (play, bow, nod) and the people's shared idle and walk (Dan's choice, Round 5)
-            foreach (var (n, file) in new[] { ("idle", "idle"), ("play", "violinist_play"), ("walk", "walk"), ("bow", "violinist_bow"), ("nod", "violinist_nod") })
+            foreach (var (n, file) in new[] { ("idle", "idle"), ("play", playClip), ("walk", "walk"), ("bow", "violinist_bow"), ("nod", "violinist_nod") })
             {
                 AnimationClip c = null;
                 foreach (var a in Resources.LoadAll<AnimationClip>("Characters/Clips/" + file)) if (!a.name.StartsWith("__preview__")) { c = a; break; }
+                if (!c && n == "play" && file != "violinist_play") { PlayLog.Line($"the Violinist: clip {file} missing, the fiddle's instead"); foreach (var a in Resources.LoadAll<AnimationClip>("Characters/Clips/violinist_play")) if (!a.name.StartsWith("__preview__")) { c = a; break; } }
                 if (c) { clipIndex[n] = clips.Count; clips.Add(c); }
             }
             mix = AnimationMixerPlayable.Create(graph, clips.Count);
@@ -94,7 +97,7 @@ namespace ShardsOfTime
                 if (instrument == "Fiddle") { var bg = WorldArt.Prop("instruments", "Bow", transform, transform.position); if (bg) { bowT = bg.transform; bowT.localScale = Vector3.one; } }
             }
             else if (fiddle) fiddle.SetActive(false);
-            PlayLog.Line($"the Violinist: model {ModelName} ({instrument}), clips [{string.Join(", ", clipIndex.Keys)}]");
+            PlayLog.Line($"the Violinist: model {ModelName} ({instrument}, playing clip {playClip}), clips [{string.Join(", ", clipIndex.Keys)}]");
         }
 
         void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
@@ -181,13 +184,28 @@ namespace ShardsOfTime
                 if (!bas || !top || !front || !hold || !pluck) return;
                 if (pose == "play")
                 {
-                    // upright against his left side, the yoke at shoulder height; the left hand on its arm, the right hand plucking
-                    var at = hips.position + f * .34f + l * .14f - u * .12f;   // its top at his chest, his face clear (Round 6 close-up)
-                    Align(inst, bas, top, front, at, (u * .9f + l * .36f + f * .2f).normalized, (f * .8f + r * .6f).normalized);
-                    Reach(lu, ll, lh, hold.position, lu.position - u * .3f + l * .35f);
-                    var side = (hold.position - pluck.position).normalized;
-                    var pl = pluck.position + side * Mathf.Sin(Time.time * 6f) * .05f + (front.position - pluck.position).normalized * .02f;
-                    Reach(ru, rl, rh, pl, ru.position + r * .4f - u * .3f);
+                    // Fix 6.1, item 2: a frame on his body that sways with his lyre clip (hips -> neck up, shoulder to shoulder across)
+                    var bu = (neck.position - hips.position).normalized;
+                    var br = Vector3.ProjectOnPlane(ru.position - lu.position, bu).normalized; var bf = Vector3.Cross(br, bu); var bl = -br;
+                    // the lyre upright against his left hip, its yoke at his chest, leaning a little out and forward, the strings to the front
+                    Align(inst, bas, top, front, hips.position + bf * .16f + bl * .17f - bu * .14f, (bu * .94f + bl * .26f + bf * .12f).normalized, (bf * .9f + br * .2f).normalized);
+                    var lyUp = (top.position - bas.position).normalized; var lyFront = Vector3.ProjectOnPlane(front.position - bas.position, lyUp).normalized;
+                    var side = Vector3.Cross(lyUp, lyFront).normalized; var outer = Vector3.Dot(side, bl) > 0 ? side : -side;   // toward his left
+                    // the frame arm on his left (outer) side: the hold marker, mirrored across the strings if it sits on the inner one
+                    float off = Vector3.Dot(hold.position - top.position, outer); var holdPt = off >= 0 ? hold.position : hold.position - 2f * off * outer;
+                    // left: the arm round the outer frame arm, the hand behind the strings, palm toward them, fingers in across the strings
+                    var lF = (-outer * .8f + lyUp * .35f - lyFront * .1f).normalized;
+                    var lt = holdPt - lyFront * .05f + outer * .03f - lF * .03f;
+                    Reach(lu, ll, lh, lt, lu.position + bl * .35f - bf * .3f - bu * .45f);
+                    Palm(lh, ll, true, lF, lyFront);
+                    // right: in front of the strings, the fingers down and out across them, strumming side to side
+                    float k = Mathf.Sin(Time.time * 5.2f);
+                    var touch = pluck.position + lyFront * .02f + outer * (-.01f + k * .045f) - lyUp * .02f;   // (wider and his arm falls short at the outer end)
+                    var rF = (outer * .45f - lyUp * .55f - lyFront * .35f).normalized;
+                    var rt = touch - rF * .1f + lyFront * .02f;
+                    Reach(ru, rl, rh, rt, ru.position + br * .4f - bu * .4f - bf * .05f);
+                    Palm(rh, rl, false, rF, -lyFront);
+                    ArmReport = Arms(lt, rt, pluck.position, lyFront, lh, rh, ll, rl, hips, neck);
                 }
                 else if (pose == "back")
                     Align(inst, bas, top, front, chest.position - f * .22f - u * .35f, (u * .95f + r * .2f).normalized, -f);
@@ -196,6 +214,50 @@ namespace ShardsOfTime
                     Align(inst, hold, top, front, lh.position + f * .04f, u, f);
                 }
             }
+        }
+
+        // Fix 6.1: turn a hand so its fingers point along `fingers` and its palm faces `palm`; half the twist about the forearm goes
+        // into the forearm (no candy-wrapped wrist on a rig without twist bones)
+        void Palm(Transform hand, Transform lower, bool left, Vector3 fingers, Vector3 palm)
+        {
+            var mid = B(left ? HumanBodyBones.LeftMiddleProximal : HumanBodyBones.RightMiddleProximal);
+            var idx = B(left ? HumanBodyBones.LeftIndexProximal : HumanBodyBones.RightIndexProximal);
+            var lit = B(left ? HumanBodyBones.LeftLittleProximal : HumanBodyBones.RightLittleProximal);
+            if (!mid || !idx || !lit || !lower) return;
+            var cf = mid.position - hand.position; var ts = idx.position - lit.position;
+            var cp = left ? Vector3.Cross(ts, cf) : Vector3.Cross(cf, ts);   // the palm's normal (out of the palm)
+            if (cf.sqrMagnitude < 1e-8f || cp.sqrMagnitude < 1e-8f) return;
+            var delta = Quaternion.LookRotation(fingers, palm) * Quaternion.Inverse(Quaternion.LookRotation(cf, cp));
+            var want = delta * hand.rotation;
+            var axis = (hand.position - lower.position).normalized; var v = new Vector3(delta.x, delta.y, delta.z); var p = Vector3.Dot(v, axis) * axis;
+            var twist = new Quaternion(p.x, p.y, p.z, delta.w); float m = Mathf.Sqrt(twist.x * twist.x + twist.y * twist.y + twist.z * twist.z + twist.w * twist.w);
+            if (m > 1e-5f) { twist = new Quaternion(twist.x / m, twist.y / m, twist.z / m, twist.w / m); lower.rotation = Quaternion.Slerp(Quaternion.identity, twist, .5f) * lower.rotation; }
+            hand.rotation = want;
+        }
+
+        // Fix 6.1 (checks): did each hand reach its spot (IK miss), how far the fingertips are from the strings' plane, and how close
+        // the forearms come to his spine
+        public string ArmReport { get; private set; } = "";
+        public float MissL { get; private set; } = 9; public float MissR { get; private set; } = 9;
+        public float TipL { get; private set; } = 9; public float TipR { get; private set; } = 9; public float ForearmClear { get; private set; }
+        string Arms(Vector3 lt, Vector3 rt, Vector3 strings, Vector3 lyFront, Transform lh, Transform rh, Transform ll, Transform rl, Transform hips, Transform neck)
+        {
+            float Tip(Transform hand, bool left)
+            {
+                var mid = B(left ? HumanBodyBones.LeftMiddleProximal : HumanBodyBones.RightMiddleProximal);
+                if (!mid) return 9f;
+                var tip = mid.position + (mid.position - hand.position) * .8f;   // about the fingertips
+                return Mathf.Abs(Vector3.Dot(tip - strings, lyFront));
+            }
+            float Clear(Transform a, Transform b)
+            {
+                float best = 9f;
+                for (int i = 2; i <= 10; i++) { var q = Vector3.Lerp(a.position, b.position, i / 10f); var on = hips.position + Vector3.Project(q - hips.position, neck.position - hips.position); best = Mathf.Min(best, Vector3.Distance(q, on)); }
+                return best;
+            }
+            MissL = Vector3.Distance(lh.position, lt); MissR = Vector3.Distance(rh.position, rt); TipL = Tip(lh, true); TipR = Tip(rh, false);
+            ForearmClear = Mathf.Min(Clear(ll, lh), Clear(rl, rh));
+            return $"hands {MissL * 100:0.0} / {MissR * 100:0.0} cm from their spots (left on the frame, right at the strings); fingertips {TipL * 100:0} / {TipR * 100:0} cm from the strings' plane; forearms at least {ForearmClear * 100:0} cm from his spine";
         }
 
         // a one-shot (bow, nod) now; the loop comes back when it ends

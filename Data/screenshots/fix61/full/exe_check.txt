@@ -1,0 +1,431 @@
+Shards of Time exe check 2026-11-10 11:31, version 0.6.1; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 77824 samples); master volume 0.00
+
+== Title screen
+  ok    title screen over the Ice Age valley
+  ok    no save yet: Continue greyed out, New game selected
+  screenshot 00_key_art.png
+  screenshot 01_title.png
+  ok    music in the title screen: title (179.6 s, at 2.0 s)
+
+== Item 3: Act I (the living room) and the Ice Age arrival
+  ok    New game starts Act I (save written)
+  screenshot 02a_act1_evening.png
+  ok    music in Act I: act1 (22.5 s, at 2.1 s)
+  screenshot 02b_act1_kira.png
+  screenshot 02c_act1_swipe.png
+  screenshot 02d_act1_shatter.png
+  screenshot 02e_act1_vortex.png
+  screenshot 02f_act1_pulled_in.png
+  ok    Act I's music fades out over the white-out (fade from 16.60 s of 19; act1 stopped 2.6 s later)
+  ok    Act I played to the end (19.0 s)
+  ok    then the Ice Age arrival
+  screenshot 03a_arrival_landing.png
+  ok    music in the arrival: iceage (180.0 s, at 0.7 s)
+  screenshot 03b_arrival_dan_gets_up.png
+  screenshot 03c_arrival_silhouette.png
+  screenshot 03d_arrival_fall.png
+  screenshot 03e_arrival_its_kira.png
+  screenshot 03f_arrival_necklace.png
+  screenshot 03g_arrival_abi_laughs.png
+  ok    holding A skips the arrival (after 14.5 s)
+  ok    play starts in the snow: caveman outfits, sabertooth Kira; at (0.0, 0.1, 12.0)
+  screenshot 04_start_view.png
+  area V (The Ice Age): available on arrival The Ice Age 43 of 60 = 43 with [Dan, Abi, Kira, ClawIce], threshold 35 (the universal total); locked here: R08 needs DoubleJump, C06 needs GroundPound, C07 needs GroundPound, H05 needs DoubleJump, T03 needs MuscleMan, T04 needs GroundPound, T05 needs DoubleJump, L06 needs DeepDive, L07 needs DeepDive, L08 needs MuscleMan, G06 needs WallJump, G07 needs WallJump, G08 needs DoubleJump, P01 needs ChargedPunch, P02 needs ChargedPunch, P03 needs ChargedPunch, P04 needs ChargedPunch; gates: IA-ledge-ridge (double-jump ledge, needs DoubleJump: R08), IA-ledge-vents (double-jump ledge, needs DoubleJump: H05), IA-ledge-lintel (double-jump ledge, needs DoubleJump: T05), IA-ledge-glacier (double-jump ledge, needs DoubleJump: G08), IA-boulder-grotto (boulder, needs MuscleMan: T03), IA-boulder-lake (boulder, needs MuscleMan: L08), IA-rock-hotspring (cracked rock wall, needs ChargedPunch: P01 P02 P03 P04 IA-H2), IA-deep-lake (deep water, needs DeepDive: L06 L07), IA-chimney-near (wall-jump chimney, needs WallJump: G06), IA-chimney-far (wall-jump chimney, needs WallJump: G07)
+  ok    rule 2 by data: 43 of 60 shards reachable on the first visit, requirement 35
+
+== Item 4: the landing snowfield and the pond
+  ok    S01 (snowfield path) at (0.0, 0.0, 23.5); 1 shards
+  ok    S02 (snowfield path) at (-5.8, 0.0, 35.6); 2 shards
+  ok    S03 (snowfield path) at (5.6, 0.1, 45.7); 3 shards
+  ok    followers arrived at the snowfield: Abi 2.5 m (0 warps); Kira 3.6 m (0 warps); 
+  ok    Kira for the pond (she never runs out of air)
+  ok    S09 on an ice floe (at (16.2, -0.2, 52.1))
+  ok    S07 on the pond bottom (dived to y -2.2)
+  screenshot 05_pond_underwater.png
+  ok    S08 on the pond bottom
+  ok    out of the pond at (36.2, 0.0, 61.9)
+  (could not reach (-14.0, 0.0, 62.0) in 4 s, at (17.9, -1.8, 61.9))
+  (could not reach (-14.0, 0.0, 62.0) in 4 s, at (-8.0, 0.2, 62.0))
+  ok    S04 (by the rocks) at (-13.5, 0.2, 62.0); 7 shards
+  ok    S05 (snowfield path) at (-4.2, 0.3, 79.6); 8 shards
+  ok    S06 (snowfield path) at (9.7, 0.0, 95.6); 9 shards
+
+== Round 5, item 5: the frozen lake (the west basin)
+  (could not reach (-40.0, 0.0, 115.0) in 4 s, at (-15.9, 0.1, 105.6))
+  (could not reach (-88.0, 0.0, 115.0) in 4 s, at (-67.2, 0.0, 114.9))
+  ok    on the lake's slick ice at (-99.5, 0.1, 100.6)
+  screenshot 50_frozen_lake.png
+  ok    L01, L02 on the skating lane (speed 3.2 m/s at the end)
+  ok    L03 on the ice island at the lane's end (y 1.6)
+  screenshot 51_ice_island.png
+  ok    L04 (frozen lake: by the far hole) at (-101.6, 0.1, 172.3); 13 shards
+  ok    the lake's boulder needs Muscle Man (visible, closed)
+  ok    L05 under the ice (Kira dived in at the near hole, y -8.0)
+  screenshot 52_under_the_ice.png
+    (hole out try 1: at (-113.4, 0.1, 89.6), mode Ground, climbs 1, water top NaN)
+  ok    out of the hole onto the ice ((-111.6, 0.1, 85.4))
+  ok    the deep part pushes divers back up (lowest y -9.0; L06 at -27 stays for the deep dive): "Too deep! Nobody can hold their breath that long... yet."
+    (hole out try 1: at (-105.8, 0.1, 134.6), mode Ground, climbs 2, water top NaN)
+  (could not reach (-50.0, 0.0, 115.0) in 4 s, at (-62.9, 0.0, 114.9))
+  the lake took the bot 2.0 min; 14 shards
+
+== Item 4: the mammoth ridge (ride a mammoth to the shelf)
+  (could not reach (30.0, 0.0, 120.0) in 4 s, at (-22.9, 0.1, 116.7))
+  (could not reach (30.0, 0.0, 120.0) in 4 s, at (5.1, 0.2, 118.5))
+  ok    R01 (ridge) at (29.5, 0.2, 120.0); 15 shards
+  ok    R07 on the loading rock (y 3.9)
+  ok    a mammoth comes past the loading rock
+  ok    jumped onto its back (y 4.1, riding True)
+  screenshot 06_riding_mammoth.png
+  ok    the mammoth carried the party 37 m up the ridge
+  ok    jumped from its back onto the high shelf (y 5.0)
+  ok    R04 (the high shelf (ride a mammoth)) at (50.5, 5.0, 158.0); 17 shards
+  ok    R05 (the high shelf (ride a mammoth)) at (54.9, 5.0, 179.5); 18 shards
+  ok    R06 (the high shelf (ride a mammoth)) at (51.1, 5.0, 201.5); 19 shards
+  screenshot 07_shelf.png
+  (could not reach (28.0, 0.0, 190.0) in 4 s, at (33.2, 0.0, 195.8))
+  ok    R03 (ridge) at (28.3, 0.0, 190.4); 20 shards
+  ok    the ridge wolves: hp 3, 0 lunges, hp 3, 0 lunges, hp 3, 0 lunges
+  (could not reach (20.0, 0.0, 150.0) in 4 s, at (22.5, 0.1, 165.1))
+  ok    R02 (ridge) at (20.1, 0.2, 150.5); 21 shards
+
+== Item 4: the ice pillars, the cracked bridge, the river
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (20.1, 0.0, 177.8))
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (20.0, 0.1, 205.9))
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (20.0, 0.2, 233.9))
+  ok    hearts 1/3
+  ok    V01 on an ice pillar (at (20.0, 0.0, 243.5))
+  ok    V02 on an ice pillar (at (20.0, 0.0, 248.0))
+  ok    V03 on an ice pillar (at (20.0, 0.0, 252.5))
+  ok    V04 on an ice pillar (at (20.0, 0.0, 257.0))
+  screenshot 08_pillars.png
+  ok    across the gorge on the pillars ((20.0, 0.1, 266.0))
+  ok    the cracked plank dropped under Kira (1 drops): into the river
+  ok    V05 on the river bottom under the bridge
+  (in the river at (49.1, -7.9, 246.6): out by the ramp)
+  ok    V06 (the ramp out of the gorge) at (49.0, -4.7, 235.5); 27 shards
+  ok    up the ramp out of the gorge ((49.0, -0.5, 226.6))
+  (could not reach (20.0, 0.0, 239.5) in 4 s, at (23.9, 0.2, 237.8))
+
+== Round 5, item 5: the glacier climb (east)
+  (could not reach (50.0, 0.0, 295.0) in 4 s, at (39.8, -0.4, 285.1))
+  (could not reach (96.0, 0.0, 290.0) in 4 s, at (77.1, 0.0, 291.9))
+  screenshot 53_glacier.png
+  ok    the chimney's shard is out of reach (Abi's wall jump, later)
+  ok    G01 (glacier: ledge 4) at (122.0, 5.2, 285.8); 28 shards
+  ok    G02 (glacier: ledge 9) at (130.0, 11.7, 286.2); 29 shards
+  ok    G03 (glacier: ledge 14) at (137.9, 18.2, 277.7); 30 shards
+  ok    G04 (glacier: the summit) at (147.7, 24.7, 305.5); 31 shards
+  ok    G05 (glacier: the summit, the view) at (154.6, 24.7, 311.6); 32 shards
+  ok    on the glacier's summit (y 24.7)
+  screenshot 54_glacier_summit_view.png
+  ok    G08 over the summit is out of a single jump's reach (Abi's double jump, later)
+  (could not reach (60.0, 0.0, 296.0) in 4 s, at (72.9, 0.0, 296.0))
+  the glacier took the bot 1.2 min; 32 shards; hearts 3/3
+
+== Item 4: the ice caves (dark; Kira's crawl tunnel; the ice wall)
+  (could not reach (-8.0, 0.0, 333.0) in 4 s, at (36.2, -0.1, 309.2))
+  (could not reach (-8.0, 0.0, 333.0) in 4 s, at (11.5, 0.2, 322.5))
+  ok    inside the cave it is dark and Dan's necklace gives a light (sun 0.07)
+  screenshot 09_cave_dark.png
+  ok    C01 (dark hall (the necklace lights it)) at (-37.7, 0.0, 316.4); 33 shards
+  (could not reach (-38.0, 0.0, 352.0) in 4 s, at (-37.9, 0.0, 343.8))
+  ok    C02 (dark hall (the necklace lights it)) at (-38.0, 0.0, 351.5); 34 shards
+  ok    Kira crawls through the gap (at (-43.7, 0.0, 320.0))
+  ok    C03 (crawl chamber (Kira)) at (-57.5, 0.0, 316.1); 35 shards
+  ok    C04 (crawl chamber (Kira)) at (-58.0, 0.0, 323.5); 36 shards
+  screenshot 10_crawl_chamber.png
+  (at the ice wall: Kira at (-31.1, 0.0, 356.1) facing (0.0, 0.0, 1.0), wall (-31.0, 2.5, 357.0), player Kira, form Sabertooth, near: Cave floor N,Ice wall (cave),Kira)
+  ok    sabertooth Kira claws the ice wall open
+  ok    C05 (behind the ice wall (sabertooth Kira)) at (-31.0, 0.0, 361.5); 37 shards
+  ok    37 shards without the ground pound, the double jump or Muscle Man (rule 2, play-through; Round 5: 35 needed)
+
+== Items 5, 11: the necklace wakes (35 shards, Round 5)
+  ok    out of the cave, the necklace wakes (cutscene NecklaceWakes, Ice Age actors)
+  screenshot 11a_necklace_wakes_1.png
+  screenshot 11b_necklace_wakes_2.png
+  ok    the blue story shard appears; the necklace leads to it (161 m)
+
+== Item 6: the Violinist teaches Dan the ground pound
+  ok    Kira reaches him: he looks past her, at Dan ("The musician smiles, but he is looking past you, at Dan.")
+  ok    Dan reaches him: he plays (cutscene ViolinistTeaches)
+  screenshot 12a_violinist_plays.png
+  screenshot 12b_dan_learns.png
+  ok    Dan learned the ground pound (saved): "Dan learned the Ground Pound! Jump, then press B. It breaks cracked ice and stuns enemies."
+
+== Item 6: the ground pound (the cave's cracked ice)
+  ok    jump, then B: Dan slams down
+  ok    the cracked ice breaks: Dan drops into the pit (y -4.5)
+  ok    C06 (the pit under the cracked ice (ground pound)) at (-32.8, -4.5, 338.4); 38 shards
+  ok    C07 (the pit under the cracked ice (ground pound)) at (-26.4, -4.5, 346.8); 39 shards
+  ok    up the steps out of the pit ((-25.5, 0.0, 342.5))
+
+== Item 4: the volcano vents (steam lifts the party)
+  (could not reach (10.0, 0.0, 380.0) in 4 s, at (-3.4, 0.1, 355.3))
+  ok    the steam lifts Dan to y 13.8
+  screenshot 13_steam_vent.png
+  ok    H01 (terrace 1 (steam)) at (47.0, 8.0, 435.5); 40 shards
+  ok    the steam lifts Dan to y 19.0
+  ok    H02 (terrace 2 (steam)) at (57.8, 16.0, 436.6); 41 shards
+  ok    the steam lifts Dan to y 27.0
+  (could not reach (58.5, 0.0, 420.0) in 4 s, at (57.7, 24.0, 420.0))
+  ok    H03 (terrace 3 (steam)) at (59.8, 24.0, 414.4); 42 shards
+  ok    H04 (terrace 3 (steam)) at (59.7, 24.0, 425.7); 43 shards
+  screenshot 14_terrace_top.png
+
+== Round 5, item 6: the hot-spring grotto (cracked rock wall)
+  screenshot 55_grotto_wall.png
+  ok    the cracked rock wall holds (Dan's charged punch, later): "Cracked rock, warm to the touch. A much stronger punch could break it... (later)"
+  ok    gates as data: 10 (4 double-jump ledge, 2 boulder, 1 cracked rock wall, 1 deep water, 2 wall-jump chimney)
+  ok    60 shards, 35 wake the necklace
+
+== Item 4: the standing stones, the frozen well, the story shard
+  (could not reach (0.0, 0.0, 456.0) in 4 s, at (13.0, 0.1, 457.3))
+  ok    T01 (standing stones) at (-11.6, 0.2, 475.7); 44 shards
+  (could not reach (12.0, 0.0, 500.0) in 4 s, at (7.3, 0.0, 495.1))
+  ok    T02 (standing stones) at (11.7, -0.1, 499.7); 45 shards
+  ok    the ground pound breaks the frozen well's ice
+  ok    T04 (the frozen well (ground pound)) at (18.0, -3.5, 477.5); 46 shards
+  screenshot 15_stones.png
+  ok    the boulder needs Muscle Man (a future-ability gate, visible but closed)
+  ok    T05 on the stone lintel is out of a single jump's reach (Abi's double jump, later)
+  46 of 60 shards before the story shard; hearts 2/4; respawns 0
+  ok    the blue story shard opens the vortex (cutscene VortexOpens)
+  screenshot 16_vortex_opens.png
+  ok    skipped after 3.7 s; the vortex gate is open (saved)
+  screenshot 17_vortex_gate.png
+
+== Item 5: the vortex (paths: Ice Age, Egypt, Home)
+  ok    stepping into the vortex takes the party into the vortex space
+  screenshot 18_vortex_space.png
+  ok    music in the vortex space: vortex (180.0 s, at 0.7 s)
+  (could not reach (19.4, 600.0, 2514.1) in 6 s, at (17.4, 600.0, 2512.6))
+  ok    Home is blocked: "The way home is closed. 7 story shards are still missing: rebuild them all to open it."
+  screenshot 19_home_blocked.png
+  (could not reach (7.4, 600.0, 2522.8) in 6 s, at (6.6, 600.0, 2520.4))
+  ok    Bethlehem waits for Egypt's red shard: "The way to Bethlehem is still closed. Egypt's red story shard opens it."
+  screenshot 20_bethlehem_closed.png
+  ok    the Ice Age path leads back to the valley ((5.0, 0.0, 497.0))
+  screenshot 21_back_in_the_valley.png
+  ok    music in back in the valley: iceage (180.0 s, at 0.6 s)
+  ok    followers arrived at back from the vortex: Abi 0.4 m (24 warps, last: 12 m behind); Kira 0.5 m (64 warps, last: 12 m behind); 
+  ok    no follower stuck; warps over the run: Dan 5, Abi 24, Kira 64
+  shards: 46 of 60 (S01 S02 S03 S09 S07 S08 S04 S05 S06 L01 L02 L03 L04 L05 R01 R07 R04 R05 R06 R03 R02 V01 V02 V03 V04 V05 V06 G01 G02 G03 G04 G05 C01 C02 C03 C04 C05 C06 C07 H01 H02 H03 H04 T01 T02 T04); story shards 1; abilities [GroundPound]; worlds reached [IceAge]
+  enemies: Critter 0/7 defeated; Wolf 4/7 defeated; hits taken 6, respawns 0
+  ok    music: the Ice Age theme and the wind are playing (vortex 180 s, iceage 180 s, wind_loop 12 s); 1658 sound effects played over the run
+  ok    sound footstep_snow is in the build (ElevenLabs)
+  ok    sound crack is in the build (ElevenLabs)
+  ok    sound shard is in the build (ElevenLabs)
+  ok    sound necklace is in the build (ElevenLabs)
+  ok    sound growl is in the build (ElevenLabs)
+  ok    sound pound is in the build (ElevenLabs)
+  ok    sound violinist_tune is in the build (ElevenLabs)
+  sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 64266240 samples); master volume 0.00
+
+== Round 6, item 6: the vortex's Egypt path
+  ok    the Egypt path loads Egypt and plays its arrival (world Egypt, cutscene EgyptArrival)
+  screenshot 80a_arrival_land.png
+  screenshot 80b_arrival_pyramids.png
+  screenshot 80c_arrival_clothes.png
+  screenshot 80d_arrival_mummy_kira.png
+  screenshot 80e_arrival_react.png
+  screenshot 80f_arrival_red_shard.png
+  ok    in Egyptian clothes (Dan Model dan_egypt, Abi Model abi_egypt); Kira is Mummy Kira (Model kira_mummy)
+  ok    the necklace's shard is red here (tint RGBA(1.000, 0.180, 0.140, 1.000), the gem now RGBA(0.791, 0.308, 0.285, 0.791))
+  ok    music in Egypt: egypt (179.9 s, at 14.7 s)
+  screenshot 81_plaza_pyramids.png
+  area E (Ancient Egypt): available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 = 93 with [Dan, Abi, Kira, MummyHush], threshold 75 (the universal total); locked here: E14 needs Pounce, E15 needs Pounce, E16 needs DoubleJump, E24 needs MuscleMan, E25 needs MuscleMan, E42 needs DoubleJump, E48 needs DeepDive, E49 needs DeepDive, E59 needs ChargedPunch, E60 needs WallJump; gates: EG-pounce-roof (pounce gap, needs Pounce: E14 E15), EG-ledge-obelisk (double-jump ledge, needs DoubleJump: E16), EG-ledge-scaffold (double-jump ledge, needs DoubleJump: E42), EG-block-quarry (huge block, needs MuscleMan: E24 E25), EG-deep-nile (deep water, needs DeepDive: E48 E49), EG-crack-tomb (cracked wall, needs ChargedPunch: E59 EG-H2), EG-shaft-tomb (wall-jump shaft, needs WallJump: E60)
+  ok    rule 2 (Fix 6.1, universal total): 93 available on arrival (Ice Age + Egypt first visit), threshold 75
+  arrival message: "Ancient Egypt! Every shard counts: at 75 in all, the red shard on Dan's necklace wakes (46 so far)."
+  ok    HUD on arrival: the big number 46 (the total), under it "Next: 75"
+
+== Round 6, item 7: the town and the market
+  ok    E01 (the arrival plaza) at (0.0, 0.0, 17.5); 1 shards
+  ok    E02 (main street) at (0.0, 0.0, 31.5); 2 shards
+  ok    E03 (main street) at (-3.9, 0.0, 43.5); 3 shards
+  ok    up the outside stair onto the west roofs (y 4.6)
+  ok    E10, E11 on the west rooftops (5 shards)
+  screenshot 82_rooftops_far_roof.png
+  ok    the far roof stays out of reach (Kira's pounce, later)
+  ok    E06 (market) at (-20.0, 0.0, 57.5); 6 shards
+  screenshot 83_market.png
+  (could not reach (31.0, 0.0, 62.0) in 1 s, at (5.9, 0.0, 60.5))
+  (could not reach (31.0, 0.0, 63.6) in 1 s, at (12.9, 0.0, 61.4))
+  (could not reach (31.0, 0.0, 65.2) in 1 s, at (19.7, 0.0, 62.8))
+  (could not reach (31.0, 0.0, 66.8) in 1 s, at (26.3, 0.0, 65.1))
+  ok    a guard spots the player and sends the party back to checkpoint EG-start: ""Halt! No wandering in the market!" The guard marches Dan back."
+  screenshot 84_guard_halt.png
+  ok    E08 (market, behind the stalls) at (-25.5, 0.0, 82.0); 7 shards
+  (could not reach (20.0, 0.0, 80.0) in 4 s, at (11.2, 0.0, 80.5))
+  ok    E07 (market) at (19.5, 0.0, 80.0); 8 shards
+  ok    E09 (market, behind the stalls) at (25.5, 0.0, 54.0); 9 shards
+  guards: Guard west spotted the player 0 time(s), Guard east spotted the player 1 time(s)
+  (could not reach (4.0, 0.0, 96.0) in 4 s, at (8.3, 0.0, 82.2))
+  ok    E04 (main street) at (4.1, 0.0, 95.5); 10 shards
+  ok    E12 on the east roof (up the outside stair, y 4.6)
+  ok    E13 on the north-west roof (y 4.6)
+  ok    E05 (the north gate) at (-0.4, 0.0, 113.7); 13 shards
+
+== Round 6, items 4 and 9: the Violinist's lyre, Abi's double jump
+  ok    the Violinist in the market with his lyre (model violinist_egypt, instrument Lyre)
+  (could not reach (12.5, 0.0, 76.5) in 25 s, at (12.5, 0.0, 84.3))
+  (could not reach (10.6, 0.0, 74.6) in 6 s, at (10.9, 0.0, 84.3))
+  ok    for Dan he only smiles: "The musician smiles, but he is looking past you, at Abi."
+  screenshot 85_lyre_idle.png
+  (could not reach (13.0, 0.0, 77.0) in 6 s, at (13.0, 0.0, 84.3))
+  ok    he plays the lyre for Abi (clip play, pose play)
+  screenshot 86_lyre_plays.png
+  screenshot 86b_lyre_closeup.png
+  ok    Abi learned the double jump: "Abi learned the Double Jump! Press A again in the air. High ledges everywhere are in reach now (the Ice Age's too)."
+  ok    E16 on the obelisk's ledge with Abi's double jump (y 5.6)
+  screenshot 87_obelisk_ledge.png
+
+== Round 6, item 8: the cat temple (its door opens only for Kira)
+  ok    Dan on the plate: nothing ("Nothing happens. The plate is shaped for a cat's paws... (Kira)")
+  ok    mummy Kira on the plate: the temple door sinks ("The cat statue's eyes glow... the door opens for Kira!")
+  screenshot 88_cat_temple_open.png
+  ok    E17 (the cat temple (Kira opens its door)) at (-53.6, 0.1, 66.3); 15 shards
+  ok    E18 (the cat temple (Kira opens its door)) at (-54.0, 0.1, 77.5); 16 shards
+
+== Round 6, item 7: the quarry road (stones on rollers, quicksand, the huge block)
+  (could not reach (60.0, 0.0, 60.0) in 4 s, at (8.7, 0.0, 68.4))
+  (could not reach (60.0, 0.0, 60.0) in 4 s, at (36.4, 0.0, 63.9))
+  ok    E19 (the quarry road) at (59.5, 0.0, 60.1); 17 shards
+  (could not reach (64.0, 0.0, 90.0) in 4 s, at (63.6, 0.0, 87.3))
+  ok    E20 (the quarry road) at (63.9, 0.0, 89.5); 18 shards
+  (could not reach (58.0, 0.0, 120.0) in 4 s, at (58.7, 0.0, 116.6))
+  ok    E21 (the quarry road) at (58.1, 0.0, 119.6); 19 shards
+  (could not reach (86.0, 5.0, 59.4) in 4 s, at (86.0, 0.0, 54.6))
+  ok    the quarry's huge block needs Muscle Man (visible, closed)
+  screenshot 89_quicksand_ride.png
+  ok    across the quicksand on the shuttle stone (z 168.5)
+  ok    E22 (past the quicksand (ride the stone)) at (60.0, 0.0, 171.5); 20 shards
+  ok    E23 (past the quicksand) at (73.5, 0.0, 175.9); 21 shards
+
+== Round 6, item 7: the judgmental camel, the ride across the dunes, the Sphinx
+  (could not reach (40.0, 0.0, 192.0) in 4 s, at (48.8, 0.0, 187.8))
+  ok    E29 (a dune top) at (40.4, 0.0, 191.8); 22 shards
+    (camel at (24.0, 0.0, 128.0), mount step (27.7, 0.0, 129.7), block (26.2, 0.0, 129.0), player (30.1, 3.5, 140.7))
+    (at the mount: player (29.2, 0.4, 130.8), hearts 3, checkpoint EG-quicksand)
+  ok    the camel stares at Dan and snorts ("The camel looks Dan up and down... and snorts.")
+  screenshot 90_camel_stare.png
+    (after mounting: player (24.1, 2.3, 128.1), riding True)
+  ok    on the camel's saddle (y 2.3)
+  screenshot 91_camel_ride.png
+      (riding: camel (18.6, 0.0, 139.8) seated 3, player (18.7, 2.3, 139.7) ground Saddle)
+      (riding: camel (16.0, 0.0, 145.6) seated 3, player (16.0, 2.3, 145.5) ground Saddle)
+      (riding: camel (12.9, 0.0, 151.2) seated 3, player (13.0, 2.3, 151.1) ground Saddle)
+      (riding: camel (8.6, 0.0, 155.9) seated 3, player (8.7, 2.3, 155.8) ground Saddle)
+      (riding: camel (4.3, 0.0, 160.7) seated 3, player (4.4, 2.3, 160.6) ground Saddle)
+      (riding: camel (0.0, 0.0, 165.4) seated 3, player (0.1, 2.3, 165.3) ground Saddle)
+      (riding: camel (-4.3, 0.0, 170.2) seated 3, player (-4.2, 2.3, 170.1) ground Saddle)
+      (riding: camel (-9.1, 0.0, 174.4) seated 3, player (-9.0, 2.3, 174.3) ground Saddle)
+      (riding: camel (-14.2, 0.0, 178.4) seated 3, player (-14.1, 2.3, 178.3) ground Saddle)
+      (riding: camel (-19.2, 0.0, 182.3) seated 3, player (-19.1, 2.3, 182.2) ground Saddle)
+  ok    the camel carried the whole party across the dunes to the Sphinx in 20 s (at (-23.9, 2.3, 185.9); Abi 0.7 m (4 warps, last: 12 m behind); Kira 0.7 m (25 warps, last: not caught up in 3 s); )
+  screenshot 92_sphinx_from_the_camel.png
+  ok    E28 (dunes (the camel's route)) at (-14.2, 0.0, 178.4); 23 shards
+  ok    E27 (dunes (the camel's route)) at (1.6, 0.0, 164.3); 24 shards
+  ok    E26 (dunes (the camel's route)) at (19.7, 0.0, 146.3); 25 shards
+  (could not reach (-12.0, 3.2, 140.0) in 4 s, at (-7.2, 3.3, 141.0))
+  ok    E30 (a dune hollow) at (-11.5, 3.3, 140.1); 26 shards
+  (could not reach (-20.0, 0.0, 212.0) in 4 s, at (-15.5, 4.0, 165.2))
+  (could not reach (-20.0, 0.0, 212.0) in 4 s, at (-18.2, 0.4, 193.1))
+  ok    reaching the Sphinx plays SphinxGag (the first time)
+  screenshot 93a_gag_walk_up.png
+  screenshot 93b_gag_reveal.png
+  screenshot 93c_gag_its_face.png
+  screenshot 93d_gag_double_take.png
+  screenshot 93e_gag_same_pose.png
+  screenshot 93f_gag_abi.png
+  ok    E36 (the Sphinx's plinth) at (-28.8, 2.0, 201.5); 27 shards
+  ok    E31 on the Sphinx's paw (y 4.4)
+  (could not reach (-72.0, 0.0, 215.0) in 8 s, at (-71.4, 13.0, 215.0))
+  ok    E33, E34 on the Sphinx's back (y 13.0)
+  screenshot 94_from_the_sphinx.png
+  ok    E35 on the Sphinx's head (y 22.3)
+  screenshot 95_on_the_sphinx_head.png
+
+== Round 6, item 7: the pyramid under construction (the scaffolding up its south face)
+  (could not reach (84.0, 0.0, 190.0) in 4 s, at (83.1, 0.0, 189.4))
+  screenshot 96_scaffold.png
+  ok    E37 (scaffolding, level 2) at (60.5, 8.0, 199.8); 32 shards
+  ok    Fix 6.1: the necklace wakes at 78 shards in all (46 Ice Age + 32 Egypt; threshold 75) (NecklaceWakesEgypt, red) at (60.4, 8.0, 199.8)
+  screenshot 105_necklace_wakes.png
+  ok    E38 (scaffolding, level 4) at (79.5, 16.0, 199.9); 33 shards
+  ok    E39 (scaffolding, level 6) at (60.5, 24.0, 199.8); 34 shards
+  ok    E40 (scaffolding, level 8) at (79.5, 32.0, 199.9); 35 shards
+  ok    up the scaffolding to level 9 (y 36.0)
+  ok    E41 (the pyramid's unfinished top) at (73.8, 36.0, 235.6); 36 shards
+  screenshot 97_pyramid_top_view.png
+
+== Round 6, item 7: the tomb (inside the pyramid)
+  ok    through the doorway into the tomb: dark, the necklace lights it ((500.0, 60.0, 7.0))
+  screenshot 98_tomb_entry.png
+  ok    E50 (tomb: the blade corridor) at (500.0, 60.0, 14.5); 37 shards
+  blades, darts, sand and blocks: 1 hit(s) on the way; 40 shards (E50 E51 E52 E53)
+  ok    through the blade corridor, the sand-pit hall and the sliding blocks to the turning room ((500.0, 60.0, 86.8))
+  screenshot 100_turning_room.png
+    (bridge on from S: yaw 90.0 paused True; player (498.8, 60.1, 86.9))
+      (waiting for the bridge toward E: yaw 90.0 / 90.0, paused True, player (499.9, 60.1, 95.6))
+      (waiting for the bridge toward E: yaw 102.2 / 102.2, paused False, player (499.9, 60.1, 95.7))
+    (bridge S -> E: yaw 180.0 paused True; player (499.6, 60.1, 96.0))
+    (the turning bridge S -> E: at (509.5, 60.0, 96.0))
+  ok    across the turning bridge to the east ledge ((509.5, 60.0, 96.0)); E54 got
+  screenshot 101_kira_past_the_mummies.png
+  ok    mummy Kira walks the gallery and no mummy wakes (3 asleep)
+  ok    E55, E56 in the gallery
+  ok    the hidden chamber's cat door opens for Kira
+  ok    E57 (tomb: the hidden cat chamber (Kira opens it)) at (547.1, 60.0, 92.5); 44 shards
+  ok    the hidden chamber's heart (max hearts 5)
+  ok    as Dan, a mummy wakes (2 awake)
+  screenshot 102_mummy_wakes.png
+    (bridge on from E: yaw 180.0 paused True; player (510.5, 60.0, 96.0))
+    (bridge E -> W: yaw 180.0 paused True; player (500.4, 60.1, 96.0))
+    (the turning bridge E -> W: at (490.5, 60.0, 96.0))
+    (before the push: player (468.4, 60.2, 96.0), weight (466.0, 61.0, 96.0))
+    (after the push: weight (464.0, 61.0, 96.0), pushed 2.0 m, last refusal: )
+  ok    Dan pushes the weight onto the golden plate (1.2 s): the lift goes up
+  ok    E58 on the high ledge from the lift (y 66.3)
+  screenshot 103_counterweight_lift.png
+    (bridge on from W: yaw 180.0 paused True; player (489.5, 60.0, 96.0))
+      (waiting for the bridge toward N: yaw 180.0 / 180.0, paused True, player (499.6, 60.1, 96.0))
+      (waiting for the bridge toward N: yaw 198.2 / 18.2, paused False, player (499.7, 60.1, 96.1))
+    (bridge W -> N: yaw 270.0 paused True; player (500.0, 60.1, 96.4))
+    (the turning bridge W -> N: at (500.0, 60.1, 104.5))
+  screenshot 104_burial_chamber.png
+  ok    the cracked wall holds (charged punch, later): "This wall is cracked... a much stronger punch could break it. (later)"
+  ok    the narrow shaft's shard is out of reach (wall jump, later): "A narrow shaft going up, its walls close together. Someone who can kick off walls could climb it... (later)"
+  shards in Egypt: 45 (E01 E02 E03 E11 E10 E06 E08 E07 E09 E04 E12 E13 E05 E16 E17 E18 E19 E20 E21 E22 E23 E29 E28 E27 E26 E30 E36 E31 E33 E34 E35 E37 E38 E39 E40 E41 E50 E51 E52 E53 E54 E55 E56 E57 E58)
+  ok    91 shards in all (46 Ice Age + 45 Egypt; 75 wake Egypt's necklace)
+  ok    the necklace is awake and the red story shard waits in the burial chamber
+  ok    the red story shard in the burial chamber opens the vortex (VortexOpensEgypt)
+  screenshot 106_vortex_opens_red.png
+  ok    2 of 8 story shards
+  ok    the red vortex takes the party into the vortex space
+  screenshot 107_vortex_after_egypt.png
+  ok    after Egypt the Bethlehem path opens: "Bethlehem, to be continued..." (saved)
+  Egypt took the bot 10.3 min; 45 shards (E01 E02 E03 E11 E10 E06 E08 E07 E09 E04 E12 E13 E05 E16 E17 E18 E19 E20 E21 E22 E23 E29 E28 E27 E26 E30 E36 E31 E33 E34 E35 E37 E38 E39 E40 E41 E50 E51 E52 E53 E54 E55 E56 E57 E58); hits 16, respawns 1
+
+== Round 6, item 9: the double jump in the Ice Age
+  ok    the Ice Age path leads back to the valley (world IceAge, at (5.0, 0.0, 497.0))
+  ok    music in the Ice Age again: iceage (180.0 s, at 0.0 s)
+  ok    the necklace's shard is blue again in the Ice Age (tint RGBA(0.250, 0.550, 1.000, 1.000))
+  ok    Abi double-jumps to the Ice Age's ridge ledge (R08, y 3.2)
+  screenshot 108_iceage_double_jump.png
+  sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 125298688 samples); master volume 0.00
+
+== Round 6, item 12: frame rate in Egypt, the full view drawn every frame (1920 x 1080 off-screen, Steam Deck setting off)
+  the plaza toward the pyramids: 141 fps average, slowest frame 114 ms
+  screenshot 110_perf_the_plaza_toward_the_pyramids.png
+  the market: 197 fps average, slowest frame 43 ms
+  screenshot 110_perf_the_market.png
+  the Sphinx's front: 278 fps average, slowest frame 41 ms
+  screenshot 110_perf_the_Sphinxs_front.png
+  the scaffolding's foot: 236 fps average, slowest frame 61 ms
+  screenshot 110_perf_the_scaffoldings_foot.png
+  ok    Egypt: 141 fps at the slowest place (the plaza toward the pyramids); need 60 (NVIDIA GeForce GTX 1660 Ti, 1920x1080)
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 128638976 samples); master volume 0.00

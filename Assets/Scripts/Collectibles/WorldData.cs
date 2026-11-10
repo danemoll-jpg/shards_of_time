@@ -36,7 +36,7 @@ namespace ShardsOfTime
     {
         public string id;
         public string name;
-        public int requirement;                    // small shards (in this area) that wake the necklace; 0 = no story shard here
+        public int requirement;                    // Fix 6.1: the universal shard total (all worlds) that wakes the necklace here; 0 = no story shard here
         public string[] firstVisit = new string[0];// heroes and abilities the party has the first time it can get here
         public Vector3 storyShard;
         public Color storyShardColor = new Color(.3f, .6f, 1f);
@@ -58,20 +58,38 @@ namespace ShardsOfTime
         public List<GateData> gates = new List<GateData>();   // Round 5
         [Tooltip("Round 6: the Violinist's instrument here (a part of Resources/World/instruments.fbx: Fiddle, Lyre)")]
         public string violinistInstrument = "Fiddle";
+        [Tooltip("Fix 6.1: the clip his playing loop uses (Resources/Characters/Clips/<name>): violinist_play (the fiddle), violinist_lyre")]
+        public string violinistPlayClip = "violinist_play";
+
+        // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
+        public static readonly string[] StoryOrder = { IceAge, Egypt };
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
         public IEnumerable<ShardSpot> InArea(string id) => shards.Where(s => s.area == id);
 
-        // Rule 2's check: the shards of an area reachable with only what the party has there on its first visit.
+        // Rule 2's check (Fix 6.1: shards are universal). Available on arrival = every earlier world's shards reachable with that world's
+        // own first-visit set plus what the party has on arriving here (moves learned on the way, such as the ground pound, are not
+        // counted: a player may skip them), plus this area's first-visit shards. ok = available >= the threshold.
         public (int reachable, int requirement, bool ok, string detail) RequirementReport(string areaId)
         {
             var a = Area(areaId); var have = new HashSet<string>(a.firstVisit);
             var inArea = InArea(areaId).ToList();
             var ok = inArea.Where(s => s.requires.All(have.Contains)).ToList();
             var locked = inArea.Except(ok).Select(s => $"{s.id} needs {string.Join("+", s.requires)}");
-            return (ok.Count, a.requirement, ok.Count >= a.requirement,
-                $"area {a.id} ({a.name}): {ok.Count} of {inArea.Count} shards reachable with [{string.Join(", ", a.firstVisit)}], requirement {a.requirement}" + (locked.Any() ? $"; locked: {string.Join(", ", locked)}" : "") +
+            int earlier = 0; var parts = new List<string>();
+            int idx = Array.IndexOf(StoryOrder, worldId);
+            for (int i = 0; i < idx; i++)
+            {
+                var e = Load(StoryOrder[i]); if (!e || e.areas.Count == 0) continue;
+                var eh = new HashSet<string>(e.areas[0].firstVisit.Concat(a.firstVisit));
+                int n = e.shards.Count(s => s.requires.All(eh.Contains)); earlier += n;
+                parts.Add($"{e.displayName} {n} of {e.shards.Count}");
+            }
+            int avail = earlier + ok.Count;
+            parts.Add($"{a.name} {ok.Count} of {inArea.Count}");
+            return (avail, a.requirement, avail >= a.requirement,
+                $"area {a.id} ({a.name}): available on arrival {string.Join(" + ", parts)} = {avail} with [{string.Join(", ", a.firstVisit)}], threshold {a.requirement} (the universal total)" + (locked.Any() ? $"; locked here: {string.Join(", ", locked)}" : "") +
                 (gates.Count > 0 ? $"; gates: {string.Join(", ", gates.Select(g => $"{g.id} ({g.kind}, needs {g.needs}: {string.Join(" ", g.opens)})"))}" : ""));
         }
 
@@ -157,8 +175,9 @@ namespace ShardsOfTime
         public static WorldData EgyptDefaults()
         {
             var w = CreateInstance<WorldData>(); w.name = Egypt; w.worldId = Egypt; w.displayName = "Ancient Egypt"; w.heightsAreHints = true;
-            w.violinistInstrument = "Lyre";
-            w.areas.Add(new AreaData { id = "E", name = "Ancient Egypt", requirement = 35, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.MummyHush },
+            w.violinistInstrument = "Lyre"; w.violinistPlayClip = "violinist_lyre";   // Fix 6.1: his own lyre clip
+            // Fix 6.1: 75 = the universal total (Ice Age + Egypt; 120 exist, 93 available on arrival)
+            w.areas.Add(new AreaData { id = "E", name = "Ancient Egypt", requirement = 75, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.MummyHush },
                 storyShard = new Vector3(500, 61.6f, 127f), storyShardColor = new Color(1f, .18f, .14f), spawn = new Vector3(0, .3f, 8f), spawnYaw = 0,
                 kiraForm = KiraForm.Mummy, outfit = Outfits.Egypt, box = new Bounds(new Vector3(160, 0, 160), new Vector3(800, 600, 700)) });
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "E", position = new Vector3(x, y, z), requires = req, note = note });

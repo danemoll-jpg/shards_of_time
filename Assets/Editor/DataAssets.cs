@@ -49,6 +49,7 @@ namespace ShardsOfTime
             BaseMaterial("Glow", "Universal Render Pipeline/Unlit", false);
             BaseMaterial("Water", "Universal Render Pipeline/Lit", true);
             ParticleMaterial();
+            LyreClip.Ensure();   // Fix 6.1: the Violinist's lyre-playing clip
             AssetDatabase.SaveAssets();
             HookPlaceholders();
         }

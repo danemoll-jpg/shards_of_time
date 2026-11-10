@@ -13,6 +13,9 @@ namespace ShardsOfTime
     public sealed partial class ExeCheck
     {
         int ShardsEG => SaveGame.Current.World(WorldData.Egypt).shards.Count;
+        // Fix 6.1: Egypt's necklace wakes from the universal total (Ice Age + Egypt)
+        int NeedEG => WorldData.Load(WorldData.Egypt).areas[0].requirement;
+        int ShardsIA => SaveGame.Current.World(WorldData.IceAge).shards.Count;
         Vector3 EG(float x, float z) => Egypt.OnGround(x, z);
         Vector3 T(float x, float z) => new Vector3(Egypt.Tomb.x + x, Egypt.Tomb.y, z);   // a spot in the tomb (x from its middle)
 
@@ -21,6 +24,10 @@ namespace ShardsOfTime
             yield return EnsurePlaying(false);
             // the Ice Age done as far as its story shard (the vortex gate open), then into the vortex
             var ia = SaveGame.Current.World(WorldData.IceAge); ia.storyShard = true; ia.necklaceAwake = true;
+            // Fix 6.1: as a save would have it: the Ice Age's first-visit shards (43), counted toward Egypt's threshold
+            var iaw = WorldData.Load(WorldData.IceAge); var fv = iaw.areas[0].firstVisit;
+            foreach (var sp in iaw.shards) if (sp.requires.All(fv.Contains) && !ia.shards.Contains(sp.id)) ia.shards.Add(sp.id);
+            Log($"  (the Ice Age set up with {ia.shards.Count} shards)");
             if (!SaveGame.Current.portals.Contains("IA-vortex")) SaveGame.Current.portals.Add("IA-vortex");
             SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
             yield return Wait(.6f);
@@ -65,7 +72,10 @@ namespace ShardsOfTime
             MusicCheck("Egypt", "egypt");
             yield return Shot("81_plaza_pyramids");
             Log("  " + Game.World.RequirementReport("E").detail);
-            Ok(Game.World.RequirementReport("E").ok && Game.World.shards.Count == 60 && Game.World.areas[0].requirement == 35, $"rule 2: {Game.World.RequirementReport("E").reachable} of 60 reachable on the first visit, 35 needed");
+            var rr = Game.World.RequirementReport("E");
+            Ok(rr.ok && Game.World.shards.Count == 60 && rr.requirement == 75, $"rule 2 (Fix 6.1, universal total): {rr.reachable} available on arrival (Ice Age + Egypt first visit), threshold {rr.requirement}");
+            Log($"  arrival message: \"{Hud.LastMessage}\"");
+            Ok(Hud.TotalShown == SaveGame.Current.Total.ToString() && Hud.UnderTotal == $"Next: {NeedEG}", $"HUD on arrival: the big number {Hud.TotalShown} (the total), under it \"{Hud.UnderTotal}\"");
 
             yield return TownAndMarket();
             yield return ViolinistEgypt();
@@ -139,11 +149,11 @@ namespace ShardsOfTime
         bool necklaceSeen;
         IEnumerator NecklaceIfAwake()
         {
-            if (necklaceSeen || ShardsEG < 35) yield break;
-            yield return WaitFor(() => played.Contains("NecklaceWakesEgypt"), ShardsEG == 35 ? 8f : .1f);
+            if (necklaceSeen || SaveGame.Current.Total < NeedEG) yield break;
+            yield return WaitFor(() => played.Contains("NecklaceWakesEgypt"), SaveGame.Current.Total == NeedEG ? 8f : .1f);
             if (!played.Contains("NecklaceWakesEgypt")) yield break;
             necklaceSeen = true;
-            Ok(SaveGame.Current.World(WorldData.Egypt).necklaceAwake, $"the 35th shard wakes the necklace (NecklaceWakesEgypt, red) at {Fmt(Player.transform.position)}");
+            Ok(SaveGame.Current.World(WorldData.Egypt).necklaceAwake, $"Fix 6.1: the necklace wakes at {SaveGame.Current.Total} shards in all ({ShardsIA} Ice Age + {ShardsEG} Egypt; threshold {NeedEG}) (NecklaceWakesEgypt, red) at {Fmt(Player.transform.position)}");
             yield return Wait(2f); yield return Shot("105_necklace_wakes");
             yield return WaitFor(() => !Game.I.Busy && !Game.InCutscene, 15f);
         }
@@ -464,7 +474,7 @@ namespace ShardsOfTime
             yield return Go(T(-6, 116), .5f, 5f);
             int n = ShardsEG;
             Log($"  shards in Egypt: {n} ({string.Join(" ", SaveGame.Current.World(WorldData.Egypt).shards)})");
-            Ok(n >= 35, $"{n} shards in Egypt (35 wake the necklace)");
+            Ok(SaveGame.Current.Total >= NeedEG, $"{SaveGame.Current.Total} shards in all ({ShardsIA} Ice Age + {n} Egypt; {NeedEG} wake Egypt's necklace)");
             if (!SaveGame.Current.World(WorldData.Egypt).necklaceAwake)
             {
                 // the necklace needs open sky: out through the tomb, and back in

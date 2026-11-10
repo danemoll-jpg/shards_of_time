@@ -1,0 +1,53 @@
+Shards of Time exe check 2026-11-10 11:30, version 0.6.1; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 79872 samples); master volume 0.00
+
+== Fix 6.1, item 2: the Violinist plays the lyre (his own clip, hands on the lyre)
+  ok    the Violinist in Egypt: model violinist_egypt, instrument Lyre, playing clip violinist_lyre
+  ok    idle: the lyre in his hand (clip idle, pose hold)
+  screenshot 01_lyre_idle_player_view.png
+  screenshot 02_lyre_idle_front.png
+  screenshot 02_lyre_idle_side_left.png
+  screenshot 02_lyre_idle_side_right.png
+  screenshot 02_lyre_idle_34.png
+  ok    he plays for Abi (cutscene ViolinistTeachesEgypt, clip play, pose play)
+  screenshot 03_lyre_plays_cutscene_0.png
+    (hands 0.0 / 4.8 cm from their spots (left on the frame, right at the strings); fingertips 12 / 9 cm from the strings' plane; forearms at least 19 cm from his spine)
+  screenshot 03_lyre_plays_cutscene_1.png
+    (hands 0.0 / 0.0 cm from their spots (left on the frame, right at the strings); fingertips 12 / 7 cm from the strings' plane; forearms at least 19 cm from his spine)
+  screenshot 04_lyre_plays_front.png
+  screenshot 04_lyre_plays_side_left.png
+  screenshot 04_lyre_plays_side_right.png
+  screenshot 04_lyre_plays_34.png
+  screenshot 03_lyre_plays_cutscene_2.png
+    (hands 0.0 / 3.4 cm from their spots (left on the frame, right at the strings); fingertips 12 / 8 cm from the strings' plane; forearms at least 20 cm from his spine)
+  screenshot 03_lyre_plays_cutscene_3.png
+    (hands 0.0 / 0.0 cm from their spots (left on the frame, right at the strings); fingertips 12 / 7 cm from the strings' plane; forearms at least 20 cm from his spine)
+  FAIL  hands on the lyre over 4 moments: each hand within 4.8 cm of its spot, fingertips within 12 (left, behind) / 9 (right, in front) cm of the strings' plane (look at the close-ups)
+  ok    no forearm through his body: they stay at least 19 cm from his spine
+  ok    Abi learned the double jump
+  after: clip nod, pose hold
+  screenshot 05_lyre_after_player_view.png
+
+== Fix 6.1, item 1: saves from 0.6.0 (the total is their sum; nothing relocks)
+  loaded: world Egypt, checkpoint EG-pyramid, total 92
+  ok    0.6.0 save after Egypt: total 92 = Ice Age 47 + Egypt 45 (the save said 92)
+  ok    both story shards kept, the vortex gates open (IA-vortex, EG-tomb-in, EG-vortex-gate)
+  ok    HUD: 92, nothing under it (Egypt's story shard is found): ""
+  screenshot 10_oldsave_after_egypt_hud.png
+  ok    the pause menu's tracker: The Ice Age: 47 / 60 | Ancient Egypt: 45 / 60 | Shards in all: 92
+  screenshot 11_pause_tracker.png
+  mid-Egypt save: Ice Age 47 + Egypt 30 = 77 (0.6.0 needed 35 of Egypt's own)
+  loaded: world Egypt, checkpoint EG-start, total 77
+  ok    the total (77 >= 75) wakes Egypt's necklace on Continue (NecklaceWakesEgypt)
+  screenshot 12_oldsave_mid_egypt_wakes.png
+  ok    awake, the red story shard waits; HUD 77, "Follow the necklace"
+  loaded: world Egypt, checkpoint EG-start, total 60
+  ok    Ice Age 40 + Egypt 20: the necklace sleeps; HUD 60, "Next: 75"
+  screenshot 13_hud_next_75.png
+  ok    E43 (the reeds) at (-90.0, 4.2, 29.5); 21 shards
+  ok    one more Egypt shard (E43): the total 61, HUD 61, "Next: 75"
+  screenshot 14_hud_61.png
+  sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 3248128 samples); master volume 0.00
+
+RESULT: 1 check(s) failed: hands on the lyre over 4 moments: each hand within 4.8 cm of its spot, fingertips within 12 (left, behind) / 9 (right, in front) cm of the strings' plane (look at the close-ups)
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 3248128 samples); master volume 0.00

@@ -53,12 +53,19 @@ Design sources (read these when a round touches story, worlds or characters):
    portal's shard requirement may need an ability or companion the player
    doesn't have yet at that point in the story. Every world's level data lists
    which shards are reachable with which abilities, and a check proves the
-   requirement is met with the abilities available on first visit.
-3. **Shards:** many small shards per world (a shared, never-spent total) plus
-   one colored story shard per world. Reaching the world's small-shard
-   requirement wakes Dan's necklace, which leads to the story shard; the story
-   shard opens the portal. Tomorrowland has no story shard: the rocket plays
-   that role.
+   threshold is met with the shards available on arrival: every earlier world
+   with the moves the party has by then, plus this world's first-visit shards
+   (`WorldData.RequirementReport`; Egypt: Ice Age 43 + Egypt 50 = 93 >= 75).
+3. **Shards are universal (Dan, 2026-11-10; Fix 6.1):** many small shards per
+   world, but the player has **one total** across all worlds (every small shard
+   ever collected, never spent), plus one colored story shard per world. Each
+   world's necklace wakes when the **total** reaches that world's cumulative
+   threshold (Ice Age 35, Egypt 75; later worlds about 60-65% of all shards
+   that exist up to them), so extra shards from any world count toward later
+   ones. Never go back to per-world requirements. The necklace leads to the
+   story shard; the story shard opens the vortex. HUD: the total, "Next: N"
+   under it; per-world counts in the pause menu. Tomorrowland has no story
+   shard: the rocket plays that role.
 4. **All characters are visible.** The two inactive heroes (and Muscle Man from
    Medieval on) follow the player. A follower that falls behind, falls off, or
    can't make a move warps in just behind the player out of camera view. No
@@ -198,7 +205,8 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
   (vsync can't run off-screen; thousands of fps make the character controller skip moves).
@@ -245,7 +253,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 6: `game-600`, previous `Builds/LauncherRelease-600`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 6.1: `game-601`, previous `Builds/LauncherRelease-601`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -254,6 +262,20 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 6.1 delivered: 0.6.1 (build 601), 2026-11-10.** Shards are one universal total; each world's necklace wakes at a
+cumulative threshold (Ice Age 35, Egypt 75); HUD "total / Next: N", per-world counts in the pause menu; 0.6.0 saves load
+unchanged. The Violinist plays the lyre with his own clip. Published: `game-601`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Fix 6.1:
+- `AreaData.requirement` = a threshold on `SaveGame.Total` (all worlds); `Game.Update` wakes the necklace when it is reached
+  (also on arrival). `WorldData.StoryOrder` (worlds in story order: add each new world) drives rule 2's "available on arrival"
+  in `RequirementReport`. New world: set its threshold to ~60-65% of all shards up to it and check the report.
+- `Game.ShardTracker()` = the pause menu's per-world counts; `Hud.TotalShown` / `Hud.UnderTotal` for checks.
+- Violinist: `WorldData.violinistPlayClip` (Ice Age `violinist_play`, Egypt `violinist_lyre`). `violinist_lyre.anim` is made by
+  `Editor/LyreClip.cs` at every build when missing or when `LyreClip.Version` changes (stamp `Assets/Editor/violinist_lyre.version.txt`).
+  The lyre's hold is IK in `Violinist.LateUpdate` (body frame from hips / neck / shoulders; `Palm` turns a hand by its finger
+  bones, half the twist into the forearm); `ArmReport` / `MissL` / `MissR` for checks.
+
 **Round 6 delivered: 0.6.0 (build 600), 2026-11-10.** Ice Age fixes (straight running, an easy under-ice swim with lit holes and
 auto climb-out, ivory tusks / fangs, the Violinist's fiddle and bow) and Ancient Egypt, the second world: town, market, guards,
 cat temple, quarry, the judgmental camel (rideable), the Sphinx with Kira's face (`SphinxGag`), the pyramid scaffolding and the

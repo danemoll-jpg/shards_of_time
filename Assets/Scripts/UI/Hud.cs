@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ShardsOfTime
 {
-    // Round 1: the HUD. Hearts (shared pool), shard total + the area's requirement, Dan's necklace (pulses; awake it points to the
+    // Round 1: the HUD. Hearts (shared pool), shard total + the world's threshold (Fix 6.1: "Next: N"), Dan's necklace (pulses; awake it points to the
     // story shard), the party strip (who you are, how to switch), breath (non-swimmers under water), messages, hurt flash, underwater
     // tint, cutscene letterbox + "hold to skip", and a black fade.
     public sealed class Hud : MonoBehaviour
@@ -99,13 +99,10 @@ namespace ShardsOfTime
             // shards
             var s = SaveGame.Current; var g = Game.I;
             shardText.text = s.Total.ToString();
+            // Fix 6.1: the big number is the universal total; under it this world's threshold until its necklace wakes (the per-world
+            // counts are in the pause menu)
             var area = g.Area; var wp = s.World(Game.World.worldId);
-            if (area != null && area.requirement > 0)
-            {
-                int have = g.AreaShards(area.id);
-                areaText.text = wp.storyShard ? $"{area.name}: story shard found, the {(Game.TestArea ? "portal" : "vortex")} is open" : wp.necklaceAwake ? $"{area.name}: the necklace is awake - follow it to the story shard" : $"{area.name}: {have} / {area.requirement} shards to wake the necklace";
-            }
-            else areaText.text = area != null ? $"{area.name}: {g.AreaShards(area.id)} / {Game.World.InArea(area.id).Count()} shards" : "";
+            areaText.text = area == null || area.requirement <= 0 ? "" : wp.storyShard ? "" : wp.necklaceAwake ? "Follow the necklace" : $"Next: {area.requirement}";
             // necklace
             float pulse = Necklace.Pulse;
             necklace.color = new Color(.35f, .85f, 1f, pulse * .55f);
@@ -145,5 +142,7 @@ namespace ShardsOfTime
         public static void SetUnderwater(bool on) { if (I) I.water.enabled = on && Game.I && Game.I.State != Game.Mode.Title; }
         public static void SetFade(float a) => FadeAmount = Mathf.Clamp01(a);
         public static Canvas Canvas => I ? I.canvas : null;
+        public static string TotalShown => I ? I.shardText.text : "";   // Fix 6.1 (checks)
+        public static string UnderTotal => I ? I.areaText.text : "";
     }
 }

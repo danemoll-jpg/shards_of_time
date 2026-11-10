@@ -130,7 +130,7 @@ namespace ShardsOfTime
         {
             Playground.CheckpointHere(Start, OnGround(0, 8), 0, root, false);   // no flag pole here: the arrival cutscene stands on this spot
             Cp(VortexCp, 6, 6, 0);
-            Hint(new Vector3(0, 0, 14), 6f, () => "Ancient Egypt! The red shard on Dan's necklace is calling. Find the shards: 35 of them wake it.");
+            Hint(new Vector3(0, 0, 14), 6f, () => $"Ancient Egypt! The red shard on Dan's necklace is calling. Every shard counts: at {Game.World.areas[0].requirement} in all it wakes ({SaveGame.Current.Total} so far).");
             // a little vortex arch on the plaza: where the vortex sets you down (the gate itself opens in the tomb)
             for (int i = 0; i < 9; i++) { float a = i * Mathf.PI / 8; Box("Arrival arch", new Vector3(6 + Mathf.Cos(a) * 2.2f, .2f + Mathf.Sin(a) * 2.2f, 1), new Vector3(.6f, .6f, .5f), "Sandstone"); }
             // houses: west and east rows along the main street, both sides of the market; 6 x 6 m, roofs at 4.6 m (5 with the parapet)

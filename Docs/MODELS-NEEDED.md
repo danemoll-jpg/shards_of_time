@@ -1,5 +1,96 @@
 # Shards of Time — models needed
 
+## Round 7 (2026-11-10): Bethlehem — images needed from Dan (prompts by the planning chat)
+
+Film art: `SourceArt/Reference/Characters/*/…-bethlehem-film.png`, `kira-lamb-film.png`, `Others/wise-men-*.png`,
+and the world in `Worlds/03-Bethlehem/`. Same rules and negative prompt as Egypt (above). People: front view, A-pose,
+empty hands (the Wise Men's gift boxes and the Violinist's instrument are separate props). Save in `SourceArt/Concepts/`.
+
+### B1. Dan, Bethlehem — `dan_bethlehem.png`
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead.
+> Simple ancient shepherd's clothes: a rough short-sleeved brown homespun tunic to the knees with frayed edges and a
+> wide neckline, a thick cream cloth sash tied at the waist with hanging ends, black flip-flop sandals. No necklace or
+> pendant. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### B2. Abi, Bethlehem — `abi_bethlehem.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair,
+> green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not
+> touching the body, feet shoulder-width apart, mouth closed with a gentle smile. Simple ancient village clothes: a long
+> beige linen dress with wide sleeves to the ankles, a soft cream head scarf draped over her hair and around her
+> shoulders with her hair showing at the front, a tan cloth belt, brown leather sandals. Plain light gray background,
+> soft even light, no shadow, whole body in frame.
+
+### B3. Kira, lamb — `kira_lamb.png`
+> Pixar-style 3D render of Kira, a tiny gray Scottish Fold kitten transformed into a cute little lamb. Full body, side
+> view, standing on all four legs, head facing straight ahead in line with her body (not turned to the camera). A round
+> fluffy body of curly solid gray wool, short gray legs with little cat paws, a smooth round gray cat face with a small
+> nose and whiskers, soft folded-down ears that lie flat and forward, never raised. Solid gray everywhere with
+> absolutely no white wool, fur or markings. Golden-amber eyes. Mouth closed. Plain light gray background, soft even
+> light, no shadow, whole body in frame with every paw and the little tail visible.
+
+### B4. Wise Man 1 (the one in the Santa hat) — `wiseman_santa.png`
+> Pixar-style 3D character render of a funny cartoon Wise Man from a nativity play: big round nose, a thick black
+> beard, wearing a red Santa hat with a white pom-pom, a long maroon-brown robe with gold trim, a purple-blue scarf
+> wrapped round his neck, a gold sash, brown slippers. Full body, front view, A-pose: arms about 45 degrees out, hands
+> open and empty, feet apart, mouth closed, cheerful. Plain light gray background, soft even light, no shadow, whole
+> body in frame.
+
+### B5. Wise Man 2 (the young king) — `wiseman_crown.png`
+> Pixar-style 3D character render of a funny cartoon Wise Man from a nativity play: big round nose, long brown hair and
+> a full brown beard, a gold crown with little round points, a long cream robe with gold trim, a deep red mantle over
+> the shoulders, brown slippers. Full body, front view, A-pose: arms about 45 degrees out, hands open and empty, feet
+> apart, mouth closed, earnest and a little wide-eyed. Plain light gray background, soft even light, no shadow, whole
+> body in frame.
+
+### B6. Wise Man 3 (the old king) — `wiseman_old.png`
+> Pixar-style 3D character render of a funny cartoon Wise Man from a nativity play: an old man with a big round nose, a
+> long fluffy white beard and a white headcloth under a gold crown, a long olive-green robe with gold embroidered trim,
+> a gold shoulder cape, a red sash, brown slippers. Full body, front view, A-pose: arms about 45 degrees out, hands open
+> and empty, feet apart, mouth closed, kindly. Plain light gray background, soft even light, no shadow, whole body in
+> frame.
+
+### B7. The Violinist, Bethlehem — `violinist_bethlehem.png`
+> Pixar-style 3D character render of the Violinist, the same older gray-haired, gray-bearded man as in his other
+> character sheets (same face and hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands
+> open and not touching the body, feet shoulder-width apart, mouth closed with a calm knowing smile. A shepherd's
+> outfit: a long sand-colored wool robe, a striped brown and cream cloak over the shoulders, a rope belt, a cloth
+> headband, leather sandals. Holding nothing (no instrument). Plain light gray background, soft even light, no shadow,
+> whole body in frame.
+
+### B8. Night watchman (stealth guard) — `watchman.png`
+> Pixar-style 3D character render of a sleepy, grumpy cartoon night watchman from an ancient village, not scary: round
+> belly, droopy mustache, heavy-lidded eyes, a simple leather helmet, a tunic with a short cloak, sandals. Full body,
+> front view, A-pose: arms about 45 degrees out, hands open and empty, feet apart, mouth closed. Plain light gray
+> background, soft even light, no shadow, whole body in frame. (His lantern is a separate prop.)
+
+### B9. Grumpy goat (enemy) — `goat.png`
+> Pixar-style 3D render of a grumpy cartoon billy goat for a family video game, not scary: shaggy brown and cream coat,
+> curled horns, a scruffy beard, narrowed annoyed eyes, head lowered as if about to charge. Side view, standing on all
+> four legs, head facing straight ahead, tail visible. Plain light gray background, soft even light, no shadow, whole
+> body in frame.
+
+### B10. Sheep (the flock) — `sheep.png`
+> Pixar-style 3D render of a cute fluffy cartoon sheep: a round body of creamy white curly wool, a black face and black
+> legs, sleepy friendly eyes, small floppy ears. Side view, standing on all four legs, head facing straight ahead.
+> Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### B11. Guard dog (enemy) — `guard_dog.png`
+> Pixar-style 3D render of a scruffy cartoon village guard dog for a family video game, not scary: lanky, sandy brown
+> fur, one ear up and one ear down, a big nose, a suspicious squint, a leather collar. Side view, standing on all four
+> legs, head facing straight ahead, tail visible. Plain light gray background, soft even light, no shadow, whole body
+> in frame.
+
+### B12. Scorpion (enemy) — `scorpion.png`
+> Pixar-style 3D render of a small cute cartoon scorpion for a family video game, not scary: glossy amber-orange shell,
+> big round cartoon eyes, little pincers held up, a curled tail with a rounded tip. Side view, standing on its legs.
+> Plain light gray background, soft even light, no shadow, whole body in frame.
+
+Reused, no new image: the camels (the Wise Men ride Egypt's camel model with plainer blankets), the barn, hay bales,
+manger, fences and gift boxes (built by Code from the film shots: Blender / Meshy text-to-3D).
+Mixamo after Meshy: `dan_bethlehem`, `abi_bethlehem`, the three Wise Men, `violinist_bethlehem`, `watchman`.
+
 ## Round 6 (2026-11-10): Mixamo for Egypt — for Dan, now
 
 Your nine Egypt images became Meshy models (all usable; previews `Data/screenshots/round6/models/`). Four of them are

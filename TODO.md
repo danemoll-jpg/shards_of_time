@@ -24,52 +24,42 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Fix 6.1: universal shards + the Violinist's lyre arms (target 0.6.1)
-Round 6's plan is in `TODO-ARCHIVE.md`. Dan played 0.6.0 (2026-11-10). Report
-per item: done / not done / deferred, and why. Bethlehem (Round 7) comes after
-this fix.
-
-1. **Shards are universal (Dan, 2026-11-10; the original concept, section 5:
-   "a shared collection total, not consumed").** Rounds 4–6 wrongly made each
-   world's requirement count only that world's shards (35 of Egypt's 60), so
-   extra shards had no purpose. Change it:
-   - The player has **one shard total** across all worlds (every small shard
-     ever collected, never spent).
-   - Each world's necklace wakes when the **total** reaches that world's
-     threshold (cumulative). DEFAULT thresholds: Ice Age 35, Egypt 75. Later
-     worlds get theirs when they're built, about 60–65% of all shards that
-     exist up to that world.
-   - So extra shards from any world (e.g. Ice Age ledges reopened by the double
-     jump) count toward later worlds: collecting more means less hunting later.
-   - **Rule 2, updated:** a world's threshold must be reachable with the shards
-     available on arrival there: all earlier worlds with the moves you have by
-     then, plus this world's first-visit shards. Report the numbers per world
-     (e.g. Egypt: Ice Age 43 + Egypt 50 = 93 available on arrival >= 75).
-   - **HUD:** the big number is the total; under it "Next: N" (the current
-     world's threshold) until the necklace wakes there. The per-world count
-     ("Egypt: 41 / 60") stays in the pause menu as the completion tracker.
-   - **Saves:** existing saves keep their collected shards; the total is just
-     their sum. If a save already has a world's story shard, nothing relocks.
-   - Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md` to say
-     this, so it doesn't drift back.
-   - Check: a play-through where the Egypt necklace wakes from the total (with
-     Ice Age extras counted), and a save from 0.6.0 loaded into 0.6.1.
-2. **The Violinist's arms look wrong playing the lyre (Dan, 2026-11-10).** The
-   Mixamo clip is a violin pose (left arm up under the chin, bow arm sawing),
-   which the two-arm IK bends round a lyre. The lyre needs its own playing
-   animation: hold the lyre upright against his chest / left hip with the left
-   arm wrapped round the frame, the right hand plucking the strings in front of
-   it, a gentle body sway, head tilted toward the strings. Make it per
-   instrument (data next to `violinistInstrument`): fiddle keeps the violin clip,
-   lyre gets the new one (author it in Blender or with Animation Rigging; no
-   new Mixamo download needed unless Code finds a fitting clip, then say which).
-   Check: close-ups from the front, side and the player's camera during
-   `ViolinistTeachesEgypt` and his idle playing, hands on the instrument, no
-   arm through the body or the lyre.
-3. Build, check, publish 0.6.1, update `TODO.md` / `CLAUDE.md`, clean up.
+Current round — none. Fix 6.1 is delivered (below); Round 7 (Bethlehem) is
+drafted under "Next rounds". Fix 6.1's plan is in `TODO-ARCHIVE.md`.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 6.1: universal shards + the Violinist's lyre (0.6.1, build 601, 2026-11-10)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix61/full` (New game -> Ice Age -> vortex ->
+Egypt -> red shard -> vortex + Egypt frame rate): RESULT all passed. `local/fix61/c4` (lyre + 0.6.0 saves): all passed but one
+(below). Audio output 0.000 RMS in every run; window watcher: no window, never in the foreground. Evidence: `Data/screenshots/fix61/`.
+1. Universal shards: **done.** One total (`SaveGame.Total`, never spent); a world's necklace wakes when the total reaches its
+   threshold (`AreaData.requirement` is now cumulative: Ice Age 35, Egypt 75), checked every frame, so arriving with enough
+   already wakes it too. Rule 2 by data (`WorldData.RequirementReport`, `WorldData.StoryOrder`): Ice Age 43 >= 35; Egypt: Ice
+   Age 43 + Egypt 50 = 93 on arrival >= 75. HUD: the total, "Next: 75" under it until the necklace wakes ("Follow the necklace"
+   after); the pause menu lists "The Ice Age: 47 / 60", "Ancient Egypt: 45 / 60", "Shards in all: 92". Egypt's messages say the
+   threshold. `CLAUDE.md` rules 2 and 3 updated (the design doc already said it). Play-through: Egypt's necklace woke at 78 in
+   all (46 Ice Age + 32 Egypt). 0.6.0 saves (`Data/fixtures/save_0.6.0_after_egypt.json`, a real one): total 92 = 47 + 45,
+   both story shards and the vortex gates kept; a mid-Egypt 0.6.0 save (47 + 30 of Egypt's, asleep) wakes the necklace on
+   Continue; 40 + 20 = 60 stays asleep with "Next: 75", one more shard makes 61.
+2. The Violinist's lyre: **done, one number short.** His own clip `violinist_lyre` (humanoid, made by `Editor/LyreClip.cs` at
+   build: the idle's legs, a gentle sway, head tilted down toward the strings, curled fingers, plucking right fingers), chosen per
+   world (`WorldData.violinistPlayClip`; the Ice Age keeps `violinist_play` for the fiddle). The IK holds the lyre upright against
+   his left hip, the left arm round the outer frame arm with the hand behind the strings, the right hand in front plucking; palms
+   turned by the finger bones. Close-ups front / both sides / 3/4 / player's view, idle and in `ViolinistTeachesEgypt`
+   (`fix61/lyre_and_saves/`; Round 6's for comparison in `lyre_round6_before/`): hands on the lyre, no arm through his body or
+   the lyre (forearms 19+ cm from his spine). The one miss: at the outer end of the strum his right hand stops 3-5 cm short of
+   the planned spot (arm length; still in front of the strings). Two tries (6 cm -> 4.5 cm strum), then stopped per the tuning
+   limit. No Mixamo download needed.
+3. Build / check / publish: **done.** 0.6.1 published as `game-601` (175 MB download). Disk: 4.7 GB -> 4.5 GB.
+
+Decisions Code made (Dan can overrule): the pause menu lists only worlds reached; earlier worlds count toward rule 2 with their
+own first-visit moves plus the new world's (moves learned on the way, like the ground pound, are not counted).
+
+**For Dan to check:** the HUD's total and "Next: 75" in Egypt; the pause menu's per-world counts; your own 0.6.0 save in 0.6.1
+(Ice Age 39 + Egypt 47 = 86, both shards found: nothing should change); the Violinist playing the lyre for Abi (does the hold
+read right? the strum is narrow).
+
 ### Round 6: Ice Age fixes + Ancient Egypt (0.6.0, build 600, 2026-11-10)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad from the title screen): `local/round6/full4` (New game ->
 Ice Age -> vortex -> Egypt -> red shard -> vortex, + Egypt frame rate): RESULT all passed (196 ok; bot 10.3 min in Egypt, 45 shards). Targeted: `final_straight`, `final_underice`,
@@ -193,62 +183,43 @@ fur, whiskers gone); the music in each place (only checked muted); the lake's sl
 climb and the view; whether 35 shards feels right; the wolves / critters / mammoths moving; the Violinist playing (Mixamo's violin
 clip holds his arms low, so the fiddle sits in front of his chest, not under his chin: say if you want another clip).
 
-### Round 4: the Ice Age, the first real world (0.4.0, build 400, 2026-11-09)
-Final check `local/round4/final2` (built exe, batch mode, muted, no window, virtual pad from the title screen; Ice Age
-play-through + items 1-2 + frame rate): RESULT all checks passed (96 ok); audio output 0.000 RMS. Evidence:
-`Data/screenshots/round4/` (`game/` exe shots from the player's view + turntable sheets, `cutscenes/` frames of the MP4s,
-`holes/` Blender before/after, `exe_check_final.txt`). The plan as written is in `TODO-ARCHIVE.md`.
-1. Kira's holes: **done.** Cause: single-sheet fur tufts and whiskers seen from behind (culled). Fix at the source: every face
-   a camera can see from behind gets a reversed twin (`Tools/Blender/mesh_fix.py`, in `kira_rig.py`). See-through pixels over
-   14 Blender views: home 298 -> 0, sabertooth 2,290 -> 499; in the exe (12 views, two-sided vs. normal): home 0, sabertooth 168 (worst view 44).
-2. Abi's hair: **done.** Same cause (one-sided strands) plus the strip Round 2's hair fix cut between hair and shoulders. Same
-   fix in `fix_hair_weights.py`. Blender: home 12,882 -> 63, Ice Age 9,469 -> 322; exe: 32 and 30 (worst view 19). Turntables at 8
-   angles + head close-ups, and running shots in the player's view: `game/r4_turntable_*.png`, `game/r4_run_*`. Dan unchanged (0 before).
-3. Opening: **done.** New game plays `ActOne` (19 s, the living room from Dan's references, Kira bats the dark silver bauble off
-   the tree, it shatters, the vortex pulls them in) then `IceAgeArrival` (13.5 s: they land in the snow in caveman clothes, Dan falls
-   flat on his back, sabertooth Kira jumps on his chest and paws at the necklace, which pulses blue). Both skippable (checked).
-   Both rendered to MP4 (`Recordings/`). The graybox playground: Settings > Test area (debug), its own save file.
-4. Layout: **done** as the DEFAULT: one valley (~500 m), snowfield + pond, mammoth ridge (two mammoths walk a loop; ride one up to a
-   high shelf), gorge with a cracked bridge (planks drop), ice pillars and a river with a ramp out, ice caves (dark; Kira's crawl
-   tunnel; an ice wall for sabertooth Kira; cracked ice over a pit), three steam-vent terraces, standing stones; future gates: two
-   double-jump ledges, a boulder (Muscle Man). The bot crossed all of it with the pad: 6.6 min from landing to the story shard, 36 shards (target 5-8 min).
-5. Shards / story shard / vortex: **done.** 40 shards, 25 needed (DEFAULT). Rule 2: 33 of 40 reachable without double jump, Muscle Man
-   or the ground pound (data); the play-through had 27 before Dan learned the ground pound. Necklace wakes (cutscene, now Ice Age
-   actors) -> blue story shard on the altar -> `VortexOpens` -> the vortex space: Ice Age (back), Egypt ("to be continued", saved),
-   Home (blocked: "7 story shards are still missing"). Replaces the portal (the test area keeps its own).
-6. Ground pound + Violinist: **done.** Dan: jump, then B / Ctrl: breaks cracked ice (2 places) and stuns enemies. The Violinist
-   (placeholder figure with a Blender bone fiddle, by a campfire at the cave) plays (`ViolinistTeaches`) when Dan reaches him; to
-   anyone else he "is looking past you, at Dan". Added to item 9's prompts.
-7. Enemies: **done.** Wolves (spot you, circle at 5.5 m, one lunges at a time) and snow critters (patrol), placeholder shapes;
-   the ground pound stuns them. No boss.
-8. Look: **done.** Blender terrain (snow / faceted rock), two distant volcanoes with lava and ash plumes, fog to 1.7 km, blowing snow,
-   pines, rocks, bones, ice crystals, standing stones. Frame rate with the view drawn every frame: 262 fps at 1080p on Dan's GTX 1660
-   Ti (need 60); Steam Deck setting at 1280x800 on the same PC: 271 fps (need 40). The Deck itself was not measured (no Deck here).
-9. Creature prompts: **done**, then Dan made the images the same day: `SourceArt/Concepts/wolf.png`, `snow_critter.png`,
-   `mammoth.png`, `violinist_iceage.png` (renamed from Dan's files; checked: full body, plain background, >= 1024 px, no props).
-   Models: **not started** (as planned: next round). The mammoth's back came out rounded, not flat: fine (the game rides a flat collider).
-10. Music and sound: **done with one stand-in.** ElevenLabs: footsteps on snow, ice cracking, shard, necklace, wolf growl, ground
-    pound, the Violinist's tune, wind loop, and the Ice Age theme (its music API worked: 90 s). The theme is meant to be Suno: Code
-    can't call Suno, so the prompt is in `Docs/MUSIC.md` for Dan; his file replaces the stand-in. Checked: clips loaded and playing,
-    1,022 effects fired; nothing audible was played on this PC (every run muted, 0.000 output).
-11. Build / check / publish: **done.** 0.4.0 (179.5 MB), `game-400` published; a fresh Round 1 starter install from GitHub updated
-    itself to 0.4.0 and started (ready handshake; muted test mode). Disk: 3.2 GB -> 2.5 GB.
-
-Decisions Code made (Dan can overrule): the high shelf is one long shelf 1 m over a mammoth's back (three shelves 1.3 m up were too
-hard to reach); ice pillars 2.1 m apart; the necklace wakes only once you're out of a cave (its cutscene needs open sky); a fall off
-the vortex platform costs a heart like any fall (rails added); invisible walls round the valley; the music volume is a new setting.
-
-**For Dan to check:** New game on a pad: the Act I cutscene (does the room feel like your film?) and the arrival (Dan's fall, Kira
-on his chest); riding a mammoth up to the shelf; the cracked bridge; the dark cave with the necklace's light; the Violinist and the
-ground pound; the steam vents; the vortex and "to be continued". Whether wolves are too easy / too hard. Kira's fur and Abi's hair
-from behind and close up. The stand-in music and the sounds (they've only been checked as files, never heard). The volcanoes read
-as distant brown cones (lava barely visible through the fog): say if you want them closer or brighter.
-
-
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Suggested for Round 7 (Code's notes, the planning chat decides):** Dan's
+- **Round 7: Bethlehem (draft by the planning chat, 2026-11-10; written in full
+  once Dan's film references are in `SourceArt/Reference/Worlds/03-Bethlehem/`
+  and he's played 0.6.1).** From the film: a quiet starry night; the Wise Men
+  follow a bright "star" that is really the vortex; the party crashes through a
+  stable roof (Abi lands in the hay, Dan misses it); Kira is a tiny gray lamb
+  (folded ears, amber eyes); the golden story shard glows in the manger; the Wise
+  Men arrive expecting a miracle, find a glowing shard and confused travelers,
+  and leave disappointed; the hay explodes into a golden vortex. **Comedy: Dan
+  doesn't mind irreverent / Monty Python-style humor here (2026-11-10)**; the
+  film's own gags: one Wise Man wears a Santa hat, their gifts are modern
+  wrapped presents with bows. **The scene was very short in the film, so most of
+  the world is the game's own.** Film look (Dan's references in
+  `Worlds/03-Bethlehem/`, 2026-11-10): a rustic wooden barn (X-braced doors, a
+  round window in the gable, thatched / shingled roof) inside a rail fence, hay
+  bales and barrels, rolling dark hills, a deep blue starry sky, warm golden
+  light pouring from the barn, the golden vortex ring hovering above it with a
+  beam down (seen from far away as the "star"); the roof crash leaves a hole
+  (`barn-roof-hole-top.png`). Dan: brown homespun tunic + cream sash; Abi:
+  beige dress + head scarf; Kira: a round gray woolly lamb with a cat face.
+  Image prompts B1–B12 in `Docs/MODELS-NEEDED.md`, music in `Docs/MUSIC.md`.
+  Plan (DEFAULT): arrival = the roof crash into the barn (the manger glows
+  faintly but is empty); the world = the barn's farm and fields, the hills with
+  shepherds and flocks, and a small night village next to it (rooftops,
+  lantern-lit market, wells, courtyards); light stealth (night
+  watchmen with lantern light cones; getting seen sends you back a bit); lamb
+  Kira hides in flocks (guards and enemies ignore her there) and bounces on
+  springy hay / wool; the Violinist (shepherd's pipe or small harp) teaches
+  Kira's pounce, which also opens Egypt's pounce gaps; enemies: grumpy goats
+  (headbutt), guard dogs, scorpions; the Wise Men on camels cross the map toward
+  the star the whole time; when the necklace wakes the golden shard appears in
+  the manger, and the finale is the Wise Men cutscene + the hay vortex.
+  Universal-shard threshold set by rule 2. Dan's to-do: film references, then
+  the concept images (planning chat writes the prompts), Mixamo, Suno song.
+- **Also suggested for Round 7 (Code's notes, the planning chat decides):** Dan's
   notes on 0.6.0 first; then Bethlehem (Kira's pounce, which opens Egypt's
   pounce gaps E14 / E15 and the far roof). Art left over: real meshes for the
   big plain boxes (walls, plinths, scaffold planks, Ice Age slabs), Abi's Egypt

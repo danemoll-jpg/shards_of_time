@@ -130,3 +130,22 @@ Suno prompt (instrumental):
 
 Style tags: `whimsical, cartoon, egyptian, oud, qanun, darbuka, bassoon, pizzicato, playful, instrumental`.
 Exclude: `whistling, slide whistle, flute, orchestral, epic, cinematic, dramatic, vocals`.
+
+## Bethlehem theme (Suno, for Dan) — planning chat, 2026-11-10
+
+Bethlehem's level song: a starry night on the hills around the barn, with sneaking past watchmen. Whimsical and
+cartoony, its own instruments, no whistling. Instrumental, 2–3 minutes. Save Dan's pick as
+`Assets/Resources/Music/bethlehem.mp3`.
+
+Suno prompt (instrumental):
+
+> Sneaky, whimsical, cartoony night-time theme for a funny animated family adventure on a starry night in the hills
+> around a little wooden barn, tiptoeing past sleepy watchmen and flocks of sheep. Light and playful, not serious or
+> epic: a tiptoeing pizzicato and upright-bass walk, a cheeky clarinet and muted trumpet melody, soft handbells and
+> glockenspiel twinkling like stars, harp ripples, brushed snare, a cozy hint of a Christmas carol in the melody, around
+> 95 bpm. Mischievous, warm and a little silly, like a cartoon caper on Christmas night. Strictly instrumental: no
+> whistling, no slide whistle, no flute, no vocals. Steady energy from start to end (no long intro, no fade-out) so it
+> loops.
+
+Style tags: `whimsical, cartoon, sneaky, night, pizzicato, upright bass, clarinet, muted trumpet, handbells, christmas, instrumental`.
+Exclude: `whistling, slide whistle, flute, orchestral, epic, cinematic, dramatic, vocals`.
