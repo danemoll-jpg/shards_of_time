@@ -10,7 +10,7 @@ via ElevenLabs.
 serious.** Light, bouncy, playful, a little silly, like a classic cartoon:
 plucky strings, woodwinds, xylophone, tuba, music box. **No whistling or slide whistle (Dan, 2026-11-09): it made tracks sound alike.** Give each world its own instrument palette so the songs don't blur together. Avoid
 epic, heroic, sweeping orchestral, dark or dramatic. Every new music prompt
-follows this (texture vocals like oohs / aahs / hallelujahs are fine where they fit, Dan 2026-11-10; no real sung lyrics unless he asks), except the vortex (mysterious, not quirky; Dan 2026-11-09).
+follows this (and avoids words Suno reads as artist names, e.g. "strongman"; use "Muscle Man") (texture vocals like oohs / aahs / hallelujahs are fine where they fit, Dan 2026-11-10; no real sung lyrics unless he asks), except the vortex (mysterious, not quirky; Dan 2026-11-09).
 
 ## The Ice Age theme (Suno, for Dan) — Round 4
 
@@ -176,3 +176,22 @@ Hal-le-lu-jaaah!
 
 Style tags: `whimsical, cartoon, christmas, church choir, wordless choir, pizzicato, upright bass, clarinet, handbells, playful`.
 Exclude: `whistling, slide whistle, flute, solo vocalist, pop vocals, epic, cinematic, dark`.
+
+## Medieval Kingdom theme (Suno, for Dan) — planning chat, 2026-11-11 (rewritten: the first was too serious)
+
+The Medieval Kingdom's level song. Instrumental, 2–3 minutes. Save Dan's pick as `Assets/Resources/Music/medieval.mp3`.
+**Suno notes (Dan, 2026-11-11):** the first version came out serious; and Suno rejects "strongman" (an artist's
+name), so never use it: say "Muscle Man". Avoid words that pull toward epic: fanfare, brass section, renaissance fair,
+knights' march.
+
+Suno prompt (instrumental):
+
+> Silly, bouncy, zany cartoon music for a goofy animated comedy set in a little toy-like castle where clumsy knights
+> trip over their own armor and a big show-off called Muscle Man flexes at everyone. Super light and playful, never
+> serious: a plucky toy lute and pizzicato strings bouncing along, a honking oom-pah tuba, a goofy bassoon stumbling
+> after the melody, a cheeky kazoo answering it, xylophone runs, woodblock clip-clops, tambourine shakes and comic
+> boings, a happy hop-skip rhythm around 120 bpm, like a Saturday-morning cartoon chase through a castle. Strictly
+> instrumental: no whistling, no slide whistle, no flute, no vocals. Steady energy from start to end so it loops.
+
+Style tags: `cartoon, zany, silly, comedic, bouncy, kazoo, tuba, bassoon, xylophone, pizzicato, lute, playful, instrumental`.
+Exclude: `epic, orchestral, cinematic, dramatic, serious, heroic, fanfare, choir, whistling, slide whistle, flute, vocals`.

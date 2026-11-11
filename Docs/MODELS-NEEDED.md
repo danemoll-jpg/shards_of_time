@@ -1,5 +1,92 @@
 # Shards of Time — models needed
 
+## Round 8 (2026-11-10): the Medieval Kingdom — images needed from Dan (prompts by the planning chat)
+
+Film art: `SourceArt/Reference/Characters/*/…-medieval-film.png`, `MuscleMan/muscleman-medieval-film.png`,
+`Kira/kira-dragon-film.png`, `Violinist/bard-*.png`, and the world in `Worlds/04-Medieval/`. Same rules and negative
+prompt as before. People: front view, A-pose, empty hands. Animals: strict side profile. Save in `SourceArt/Concepts/`.
+
+### M1. Dan, Medieval — `dan_medieval.png`
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead.
+> Medieval adventurer's clothes: a short-sleeved brown leather tunic with frayed edges, a dusty pink cloth sash tied at
+> the waist with hanging ends, a charcoal-black hooded cloak over the shoulders, gray-brown trousers, brown open-toed
+> leather boot sandals. No necklace or pendant. Plain light gray background, soft even light, no shadow, whole body in
+> frame.
+
+### M2. Abi, Medieval — `abi_medieval.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair,
+> green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not
+> touching the body, feet shoulder-width apart, mouth closed with a gentle smile, hair falling behind her shoulders.
+> Medieval gown: a sky-blue fitted dress to mid-calf with long bell sleeves, gold trim along the square neckline, down
+> the front and around the sleeves and hem, a brown leather belt with a buckle, a thin gold headband, tall brown leather
+> boots. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### M3. Kira, baby dragon — `kira_dragon.png`
+> Pixar-style 3D render of Kira, a tiny gray Scottish Fold kitten transformed into a cute baby dragon. Full body, strict
+> side profile: the whole body and the head seen exactly from the side, nose pointing at the left edge of the image,
+> only one eye visible, not looking at the camera. Standing on all four legs. A round cat face with a small nose and
+> whiskers, folded-down ears that lie flat and forward, never raised, two tiny nub horns, small gray bat-like wings
+> folded half open on her back, a row of little soft spikes down the back and a short dragon tail. Covered in soft
+> solid gray scales, with a lighter gray scaled belly; absolutely no white anywhere. Golden-amber eyes. Mouth closed.
+> Plain light gray background, soft even light, no shadow, whole body in frame with every paw and the tail visible.
+
+### M4. Muscle Man, Medieval — `muscleman_medieval.png` (the new companion)
+> Pixar-style 3D character render of Muscle Man, a huge, extremely muscular, cheerful medieval strongman: a big grin,
+> a square jaw with a short brown beard, brown hair swept back into a small ponytail, a broad chest and enormous arms.
+> Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not touching the body, feet
+> shoulder-width apart, mouth closed in a big confident smile. A dark navy padded vest over a gray linen shirt, dark
+> steel shoulder plates, two brown leather straps crossing his chest with silver buckles, a brown leather belt, dark
+> steel bracers on his forearms, tan trousers, brown leather boots. Plain light gray background, soft even light, no
+> shadow, whole body in frame.
+
+### M5. The Violinist, Medieval bard — `violinist_medieval.png`
+> Pixar-style 3D character render of the Violinist, the same older gray-haired, gray-bearded man as in his other
+> character sheets (same face and hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands
+> open and not touching the body, feet shoulder-width apart, mouth closed with a calm knowing smile. A medieval bard's
+> outfit: a hooded brown traveling cloak, a blue-gray tunic with an embroidered hem over white sleeves, dark gray
+> leggings, soft brown boots with fur cuffs. Holding nothing (no instrument). Plain light gray background, soft even
+> light, no shadow, whole body in frame.
+
+### M6. Knight (enemy) — `knight.png`
+> Pixar-style 3D character render of a clumsy cartoon knight for a family video game, not scary: short and stocky in
+> slightly too-big shiny armor, a round helmet with the visor up showing a small grumpy face and a big mustache, a red
+> and gold tabard over the armor. Full body, front view, A-pose: arms about 45 degrees out, hands open and empty, feet
+> apart, mouth closed. Plain light gray background, soft even light, no shadow, whole body in frame. (Sword and shield
+> are separate props.)
+
+### M7. Archer (enemy) — `archer.png`
+> Pixar-style 3D character render of a skinny, nervous cartoon castle archer for a family video game, not scary: a
+> leather cap with a feather, a green tunic, a brown leather jerkin, a quiver strap across the chest, brown boots, a
+> long thin nose and a worried look. Full body, front view, A-pose: arms about 45 degrees out, hands open and empty,
+> feet apart, mouth closed. Plain light gray background, soft even light, no shadow, whole body in frame. (The bow is a
+> separate prop.)
+
+### M8. Rat (dungeon enemy) — `rat.png`
+> Pixar-style 3D render of a chubby cheeky cartoon rat for a family video game, not scary: gray-brown fur, big round
+> ears, big cartoon eyes, a pink nose and a long pink tail. Strict side profile: the whole body and the head seen
+> exactly from the side, nose pointing at the left edge of the image, only one eye visible. Standing on all four legs.
+> Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### M9. Wagon horse — `horse.png`
+> Pixar-style 3D render of a sturdy, goofy cartoon farm horse: chestnut brown with a cream blaze down the face, a shaggy
+> mane, fluffy feathered hooves, a simple leather harness, a slightly dopey expression. Strict side profile: the whole
+> body and the head seen exactly from the side, nose pointing at the left edge of the image, only one eye visible.
+> Standing on all four legs. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### M10. Wagon driver — `wagon_driver.png`
+> Pixar-style 3D character render of a sleepy old cartoon peasant wagon driver: a round red nose, bushy white eyebrows,
+> a floppy brown felt hat, a patched brown tunic and a rope belt, baggy trousers, worn boots. Full body, front view,
+> A-pose: arms about 45 degrees out, hands open and empty, feet apart, mouth closed. Plain light gray background, soft
+> even light, no shadow, whole body in frame.
+
+Built by Code, no image: the castle, courtyard, the stone pedestal with the purple shard, the hay wagon, torches,
+benches, flower pots, the lute, sword, shield, bow, boulders.
+Mixamo after Meshy: `dan_medieval`, `abi_medieval`, `muscleman_medieval` (plus his own clips: lift, push, throw,
+flex, cheer, fall on his back), `violinist_medieval`, `knight`, `archer`, `wagon_driver`.
+
+
 ## Round 7 (2026-11-10): Mixamo for Bethlehem — DONE (Fix 7.1)
 
 **Fix 7.1:** all in. Dan's seven rigged people and eight clips are imported; "Carrying" plays as "offer", "Looking Down" as "map",

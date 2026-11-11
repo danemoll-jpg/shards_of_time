@@ -52,6 +52,9 @@ changed for gameplay.
 - **Travel = the vortex** (Dan, 2026-11-09). Every world's story shard opens a
   vortex; inside, the player picks a path: any unlocked world, the next world,
   or Home. The path home is blocked until all the shards are rebuilt.
+- **Muscle Man joins at the end of the Medieval world, as in the film** (Dan, 2026-11-11). Until then he
+  mocks Dan; he's only won over when Dan pulls the shard from the stone, a feat of strength he couldn't do.
+  The Medieval world's boulder gates are therefore for coming back later.
 - **The ornament that shatters** is the dark silver glass bauble Dan holds in
   `SourceArt/Reference/Worlds/00-Home/home-decorating-tree-ornament.png`.
 
