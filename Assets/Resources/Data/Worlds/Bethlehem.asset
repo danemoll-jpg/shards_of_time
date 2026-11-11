@@ -415,5 +415,39 @@ MonoBehaviour:
     opens:
     - D02
     note: the inn's roof terrace
+  lowSpots:
+  - id: BE-well
+    kind: water
+    drop: {x: 108, y: 2, z: 72}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 108, y: 0, z: 77}
+    radius: 3.5
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the well (the rope climbs out)
+  - id: BE-barn
+    kind: enclosed
+    drop: {x: 0, y: 0.3, z: 34}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 0, y: 0, z: 20}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: inside the barn (the door is south)
+  - id: BE-cave
+    kind: enclosed
+    drop: {x: 190, y: 0.3, z: 60}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 178, y: 0, z: 60}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the shepherds' cave behind the boulder
   violinistInstrument: Harp
   violinistPlayClip: violinist_lyre

@@ -87,6 +87,15 @@ Design sources (read these when a round touches story, worlds or characters):
     own film art in `SourceArt/Reference/` (see its README).
 11. **Original assets only:** nothing from Banjo-Kazooie, Mario or any other
     game. The inspiration is the genre, not the content.
+12. **Never stuck (Dan, 2026-11-10; Fix 7.2):** every pit, well, pool, hole,
+    crawl space and enclosed area in every world has a way out with the moves
+    the player has at that point, or can't be entered without them. Each
+    world's data lists them (`WorldData.lowSpots`, defaults in
+    `WorldData.LowSpotDefaults`: add every new one there), and the exe check
+    `stuck` drops each hero into every listed spot and proves the bot gets out
+    within 20 s (it also fails any water volume that isn't on the list). Run
+    it for every new world. Safety net: Pause > "Return to checkpoint", and a
+    "Stuck?" hint after ~15 s of pushing without getting anywhere.
 
 ## Code Style & Architecture
 - **Systems, not scripted one-offs:** character switching, motor, camera,
@@ -205,7 +214,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck; see rule 12). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12). Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -254,7 +263,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 7.1: `game-701`, previous `Builds/LauncherRelease-701`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 7.2: `game-702`, previous `Builds/LauncherRelease-702`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -263,6 +272,22 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 7.2 delivered: 0.7.2 (build 702), 2026-11-11.** Never stuck: Bethlehem's well has a rope out (and was rebuilt: it sat in a
+dry crater); every world's pits, pools and enclosed spots are listed and checked (rule 12); Pause > "Return to checkpoint" and a
+"Stuck?" hint. Published: `game-702`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Fix 7.2:
+- `WorldData.lowSpots` (`LowSpot`: drop, via, exit, radius, needs, heroes, opens, checkpoint); defaults in
+  `WorldData.LowSpotDefaults(world)`; `DataAssets` adds missing ones to existing world assets by id. Exe check modes: `stuck` (the
+  sweep, all three worlds, ~12 min), `well` (Bethlehem's well + the reset), `fix72` (both, ~15 min, `--minutes 40`).
+- `WellExit` (World/WellExit.cs): a round water shaft's way out; in it Jump (any depth) or swimming into the wall (not with the deep
+  dive) climbs straight up and over (`CharacterMotor.ClimbOut(to, straightUp: true)`, `WellClimbs`; climbs are logged in Player.log).
+- Bethlehem's well: `wy` from the flat ground at (108, 82); the stone ring solid from -15 to wy + 1.8; water to the bottom; a stone
+  apron x 98.5..117.5, z 62.5..81.5 over the terrain's hole. The Ice Age cave's floor slabs go down to -4.6 (no hollow).
+- `Game.ReturnToCheckpoint` (pause row, not while `Busy`), `Game.CheckpointReturns`; the stuck hint `Game.WatchStuck`
+  (`StuckSeconds` 15 of pushing the stick within `StuckRange` 4 m), `Game.StuckHints`.
+- The well's 1.8 m rim: only Abi clears it with a jump from the ground.
+
 **Fix 7.1 delivered: 0.7.1 (build 701), 2026-11-10.** Bethlehem's people are Dan's Mixamo rigs (Dan, Abi, the Violinist in their
 Bethlehem models, the three Wise Men, the watchman) with his eight clips; a new side-profile guard dog (head -1 deg). Nothing waits
 on Dan for Bethlehem. Published: `game-701`. Report and "For Dan to check": `TODO.md`.

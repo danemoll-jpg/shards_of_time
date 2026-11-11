@@ -235,6 +235,12 @@ namespace ShardsOfTime
             {
                 ClimbOut(hole.ExitFrom(transform.position, input.move)); return;
             }
+            // Fix 7.2: a well: up the rope and over the rim (Jump, or swimming into the wall; not the wall once divers can explore the bottom)
+            var well = WellExit.At(transform.position);
+            if (well && !input.diveHeld && (input.jumpPressed || input.jumpHeld || !CanDeepDive && input.move.sqrMagnitude > .2f && well.AtWall(transform.position)))   // any depth: the rope reaches down
+            {
+                ClimbOut(well.ExitFrom(transform.position, input.move), true); return;
+            }
             var deep = DeepWater.At(transform.position);                                                   // Round 5: too deep without the deep dive
             if (deep && !CanDeepDive) { target.y = Mathf.Max(target.y, 2.6f); if (CompareTag("Player")) deep.Hint(); }
             if (atSurface && input.jumpPressed && !input.diveHeld)
@@ -254,8 +260,12 @@ namespace ShardsOfTime
             _ = flags;
         }
 
-        public void ClimbOut(Vector3 onIce)
+        public int WellClimbs { get; private set; }
+        bool climbStraight;   // Fix 7.2: a well: straight up the rope until clear of the wall, then over
+        public void ClimbOut(Vector3 onIce, bool straightUp = false)
         {
+            climbStraight = straightUp; if (straightUp) WellClimbs++;
+            if (CompareTag("Player")) PlayLog.Line($"climb out ({(straightUp ? "well" : "ice hole")}) from {transform.position} to {onIce}");
             climbTo = onIce; climbTime = 0; Climbing = true; ClimbOuts++; swimDeepest = 0; swimTime = 0; cameFromUnderIce = false;
             Velocity = Vector3.zero; Pounding = false; rising = false; Event?.Invoke("leap");
         }
@@ -267,13 +277,14 @@ namespace ShardsOfTime
             bool clear = p.y > climbTo.y + .15f;
             float vy = clear ? 0f : 6f;
             var hv = flat.magnitude > .05f ? flat.normalized * Mathf.Min(4.5f, flat.magnitude / dt) : Vector3.zero;
-            if (!clear && flat.magnitude < 1.4f) hv = Vector3.zero;   // still below the edge: straight up first
+            if (!clear && (flat.magnitude < 1.4f || climbStraight)) hv = Vector3.zero;   // still below the edge: straight up first
             Velocity = new Vector3(hv.x, vy, hv.z);
             Cc.Move(Velocity * dt);
             Mode = MoveMode.Air; Grounded = false; platform = null;
             Face(hv, dt);
-            if ((clear && flat.magnitude < .25f) || climbTime > 2.5f)
+            if ((clear && flat.magnitude < .25f) || climbTime > (climbStraight ? 3.5f : 2.5f))
             {
+                if (CompareTag("Player")) PlayLog.Line($"climb ended at {transform.position} after {climbTime:0.00} s{(climbTime > 2.5f ? " (timed out)" : "")}");
                 Climbing = false; Velocity = Vector3.zero; leapTimer = .3f;
                 takeoffY = apexY = transform.position.y; airTime = 0;
             }

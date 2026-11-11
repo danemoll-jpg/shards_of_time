@@ -173,8 +173,9 @@ namespace ShardsOfTime
             Slab("Cave mouth sill", -24, -20, 330, 336, 0, bottom);
             Slab("Cave roof", -66, -20, 308, 372, top + .5f, 7f);
             // the floor (top 0) round the hole of the cracked ice (x -32..-27, z 340..345)
-            Slab("Cave floor W", -62, -32, 312, 368, 0, -.6f); Slab("Cave floor E", -27, -24, 312, 368, 0, -.6f);
-            Slab("Cave floor S", -32, -27, 312, 340, 0, -.6f); Slab("Cave floor N", -32, -27, 345, 368, 0, -.6f);
+            // Fix 7.2: solid down to the pit's floor (a 0.6 m slab left a hollow under the cave that Kira walked into from the pit)
+            Slab("Cave floor W", -62, -32, 312, 368, 0, -4.6f); Slab("Cave floor E", -27, -24, 312, 368, 0, -4.6f);
+            Slab("Cave floor S", -32, -27, 312, 340, 0, -4.6f); Slab("Cave floor N", -32, -27, 345, 368, 0, -4.6f);
             if (!prog.opened.Contains("IA-crack-cave"))
             {
                 var ice = Slab("Cracked ice (cave)", -32, -27, 340, 345, 0, -.4f, "Ice");

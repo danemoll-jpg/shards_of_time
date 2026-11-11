@@ -226,11 +226,20 @@ namespace ShardsOfTime
             Hidden(Slab("High rock", 89.6f, 91.4f, 113.1f, 114.9f, g + 6.5f, g - 1));
             Hint(new Vector3(90, g + 3.8f, 112), 2.5f, () => SaveGame.Current.Has(Abilities.DoubleJump) ? "The high rock: Abi's double jump reaches it!" : "A high rock above the outcrop. Too high for one jump... (Abi's double jump)");
             // the well (deep: the deep dive, Pirate Seas)
-            var well = OnGround(108, 72, 30f); float wy = Terrain(108, 76) - .1f; Prop("Well", 108, 72, 0, 2f, false, wy);
-            for (int i = 0; i < 14; i++) { float a = i * Mathf.PI * 2 / 14; Solid(new Vector3(108 + Mathf.Cos(a) * 2.6f, wy - .5f, 72 + Mathf.Sin(a) * 2.6f), new Vector3(1.2f, 2.3f, 1.0f), -a * Mathf.Rad2Deg + 90); }
-            var water = Box("Well water", new Vector3(108, -7f, 72), new Vector3(4.4f, 12f, 4.4f), new Color(.15f, .3f, .45f, .7f), "Water", false); water.gameObject.layer = 4; water.gameObject.AddComponent<WaterVolume>();
-            var deep = Box("Deep water (deep dive)", new Vector3(108, -10f, 72), new Vector3(4.4f, 8f, 4.4f), Color.clear, "Water", false); deep.GetComponent<Renderer>().enabled = false; deep.gameObject.layer = 2; deep.gameObject.AddComponent<DeepWater>();
+            var well = OnGround(108, 72, 30f); float wy = Terrain(108, 82) - .1f; Prop("Well", 108, 72, 0, 2f, false, wy);   // Fix 7.2: wy from the flat ground past the terrain's hole (at z 76 it was down in it, ~5 m)
+            for (int i = 0; i < 14; i++) { float a = i * Mathf.PI * 2 / 14; Solid(new Vector3(108 + Mathf.Cos(a) * 2.6f, -15f, 72 + Mathf.Sin(a) * 2.6f), new Vector3(1.2f, wy + 1.8f + 15f, 1.0f), -a * Mathf.Rad2Deg + 90); }   // Fix 7.2: down to the bottom (the terrain's hole is wider than the water: a dry ledge outside it trapped heroes)
+            var water = Box("Well water", new Vector3(108, (wy - 1.2f - 15f) / 2f, 72), new Vector3(4.4f, wy - 1.2f + 15f, 4.4f), new Color(.15f, .3f, .45f, .7f), "Water", false); water.gameObject.layer = 4; water.gameObject.AddComponent<WaterVolume>();
+            var deep = Box("Deep water (deep dive)", new Vector3(108, -10.5f, 72), new Vector3(4.4f, 9f, 4.4f), Color.clear, "Water", false); deep.GetComponent<Renderer>().enabled = false; deep.gameObject.layer = 2; deep.gameObject.AddComponent<DeepWater>();
+            // Fix 7.2: a stone apron round the well over the terrain's wide hole (a dry moat outside the ring trapped heroes), solid to the bottom
+            Slab("Well apron N", 98.5f, 117.5f, 74.2f, 81.5f, wy + .05f, -15f, "Stone"); Slab("Well apron S", 98.5f, 117.5f, 62.5f, 69.8f, wy + .05f, -15f, "Stone");
+            Slab("Well apron E", 110.2f, 117.5f, 69.8f, 74.2f, wy + .05f, -15f, "Stone"); Slab("Well apron W", 98.5f, 105.8f, 69.8f, 74.2f, wy + .05f, -15f, "Stone");
             Hint(new Vector3(108, 0, 76), 4f, () => "An old well. It goes down a very long way... too deep to dive, for now.");
+            // Fix 7.2, item 1: never stuck in the well: a rope from the beam down to a bucket on the water; Jump (or swim to the wall)
+            // climbs it and over the rim (WellExit)
+            Placeholders.Prim(PrimitiveType.Cylinder, root, new Vector3(108, wy + 1.55f, 72), new Vector3(.07f, 2.75f, .07f), WorldArt.Mat("Rope"), false, "Well rope");
+            Placeholders.Prim(PrimitiveType.Cylinder, root, new Vector3(108, wy - 1.05f, 72), new Vector3(.55f, .25f, .55f), WorldArt.Mat("Plank"), false, "Well bucket");
+            var exit = new GameObject("Well exit").AddComponent<WellExit>(); exit.transform.SetParent(root, false);
+            exit.centre = new Vector3(108, 0, 72); exit.radius = 2.1f; exit.rimTop = wy + 2f; exit.outAt = 4.4f;
             _ = well;
             // the shepherds' cave behind a boulder (Muscle Man, Medieval)
             float cg = Terrain(190, 60);

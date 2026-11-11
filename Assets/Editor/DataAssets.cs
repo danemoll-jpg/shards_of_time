@@ -44,6 +44,14 @@ namespace ShardsOfTime
             if (kiraStats && string.IsNullOrEmpty(kiraStats.lockedAbility)) { kiraStats.lockedAbility = Abilities.Pounce; EditorUtility.SetDirty(kiraStats); }
             string be = Data + "/Worlds/" + WorldData.Bethlehem + ".asset";   // Round 7
             if (!File.Exists(be)) AssetDatabase.CreateAsset(WorldData.BethlehemDefaults(), be);
+            // Fix 7.2: the never-stuck spots (new defaults added to an existing world asset by id)
+            foreach (var wp2 in new[] { ia, eg, be })
+            {
+                var wd = AssetDatabase.LoadAssetAtPath<WorldData>(wp2); if (!wd) continue;
+                int n = 0;
+                foreach (var ls in WorldData.LowSpotDefaults(wd.worldId)) if (!wd.lowSpots.Any(x => x.id == ls.id)) { wd.lowSpots.Add(ls); n++; }
+                if (n > 0) { EditorUtility.SetDirty(wd); Debug.Log($"DataAssets: {wd.worldId}.asset: {n} never-stuck spot(s) added"); }
+            }
             Directory.CreateDirectory(Data + "/KiraForms");
             foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb })
             {

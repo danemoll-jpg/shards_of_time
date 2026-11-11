@@ -31,6 +31,25 @@ namespace ShardsOfTime
         public string note;
     }
 
+    // Fix 7.2, item 2 (never stuck): a pit, pool, well, hole, crawl space or enclosed spot. The exe check `stuck` drops each hero at
+    // `drop` and proves the bot gets out (toward `via`, then `exit`) within ~20 s with only the moves the party is sure to have there.
+    // `needs` = what it takes to get in (empty: anyone can fall in); a later move = not enterable yet (reported, not tested).
+    [Serializable]
+    public sealed class LowSpot
+    {
+        public string id;
+        public string kind;                         // "water", "pit", "crawl space", "enclosed"
+        public Vector3 drop;                        // where a hero lands in it (world numbers)
+        public Vector3 via;                         // a waypoint on the way out (zero = none)
+        public Vector3 exit;                        // a spot outside (y: about the rim's height; the check finds the ground there)
+        public float radius = 4f;                   // out = at least this far from `drop`, on the ground, at the rim's height
+        public string needs = "";                   // to get in
+        public string heroes = "";                  // only these can get in ("Kira": the crawl gap); empty = all three
+        public string opens = "";                   // a cracked floor over it the check breaks first (getting in breaks it)
+        public string checkpoint = "";              // the checkpoint a player has when they get here (falls send you back to it)
+        public string note;
+    }
+
     [Serializable]
     public sealed class AreaData
     {
@@ -56,6 +75,7 @@ namespace ShardsOfTime
         public List<AreaData> areas = new List<AreaData>();
         public List<ShardSpot> shards = new List<ShardSpot>();
         public List<GateData> gates = new List<GateData>();   // Round 5
+        public List<LowSpot> lowSpots = new List<LowSpot>();  // Fix 7.2 (never stuck)
         [Tooltip("Round 6: the Violinist's instrument here (a part of Resources/World/instruments.fbx: Fiddle, Lyre)")]
         public string violinistInstrument = "Fiddle";
         [Tooltip("Fix 6.1: the clip his playing loop uses (Resources/Characters/Clips/<name>): violinist_play (the fiddle), violinist_lyre")]
@@ -91,6 +111,46 @@ namespace ShardsOfTime
             return (avail, a.requirement, avail >= a.requirement,
                 $"area {a.id} ({a.name}): available on arrival {string.Join(" + ", parts)} = {avail} with [{string.Join(", ", a.firstVisit)}], threshold {a.requirement} (the universal total)" + (locked.Any() ? $"; locked here: {string.Join(", ", locked)}" : "") +
                 (gates.Count > 0 ? $"; gates: {string.Join(", ", gates.Select(g => $"{g.id} ({g.kind}, needs {g.needs}: {string.Join(" ", g.opens)})"))}" : ""));
+        }
+
+        // Fix 7.2: every low or enclosed spot per world (new worlds: add theirs here; DataAssets adds missing ones to an existing asset)
+        public static List<LowSpot> LowSpotDefaults(string world)
+        {
+            var l = new List<LowSpot>();
+            void L(string id, string kind, Vector3 drop, Vector3 exit, float radius, string note, string needs = "", Vector3 via = default, string heroes = "", string opens = "", string cp = "") =>
+                l.Add(new LowSpot { id = id, kind = kind, drop = drop, via = via, exit = exit, radius = radius, note = note, needs = needs, heroes = heroes, opens = opens, checkpoint = cp });
+            if (world == IceAge)
+            {
+                L("IA-pond", "water", new Vector3(24, 1, 60), new Vector3(5, 0, 55), 12, "the half-frozen pond");
+                L("IA-river", "water", new Vector3(0, -6.5f, 252), new Vector3(49, -1, 228), 14, "the river in the gorge (out up the ramp, x 44..54)", via: new Vector3(49, -8, 250.25f));
+                L("IA-cave-pit", "pit", new Vector3(-29.5f, -3, 342.5f), new Vector3(-25.5f, 0, 342.5f), 3.3f, "the cave's pit under the cracked ice (steps up the east side)", Abilities.GroundPound, opens: "IA-crack-cave");
+                L("IA-well", "pit", new Vector3(18, -2, 478), new Vector3(26, 0, 478), 4.6f, "the frozen well (steps up the east side)", Abilities.GroundPound, opens: "IA-crack-well");
+                L("IA-lake-near", "water", new Vector3(-118, 1, 84), new Vector3(-110, 0, 84), 4.5f, "the frozen lake's near hole");
+                L("IA-lake-mid", "water", new Vector3(-118, 1, 108), new Vector3(-110, 0, 108), 4.5f, "the frozen lake's exit hole");
+                L("IA-lake-deep", "water", new Vector3(-118, 1, 133), new Vector3(-110, 0, 133), 4.5f, "the hole over the lake's deep part");
+                L("IA-lake-far", "water", new Vector3(-101, 1, 160), new Vector3(-101, 0, 167), 4.5f, "the frozen lake's far hole");
+                L("IA-crawl", "crawl space", new Vector3(-52, .3f, 320), new Vector3(-34, 0, 320), 8, "Kira's crawl chamber in the cave", heroes: "Kira");
+                L("IA-grotto", "enclosed", new Vector3(71, .3f, 460), new Vector3(54, 0, 464), 8, "the hot-spring grotto (behind the cracked rock)", Abilities.ChargedPunch);
+                L("IA-grotto-boulder", "enclosed", new Vector3(-49, .3f, 484), new Vector3(-40, 0, 484), 6, "the grotto behind the boulder", Abilities.MuscleMan);
+                L("IA-lake-hollow", "enclosed", new Vector3(-154, .3f, 124), new Vector3(-144, 0, 124), 6, "the ice hollow behind the boulder", Abilities.MuscleMan);
+            }
+            else if (world == Egypt)
+            {
+                L("EG-nile", "water", new Vector3(-128, 1, 130), new Vector3(-98, 0, 130), 20, "the Nile (out onto the east bank)");
+                L("EG-nile-deep", "water", new Vector3(-128, 1, 77), new Vector3(-98, 0, 77), 20, "the Nile's deep pool");
+                L("EG-quicksand", "pit", new Vector3(50, 1, 150), new Vector3(60, 0, 172), 6, "the quicksand pit (sinking sand sends you back)", cp: "EG-quicksand");
+                L("EG-tomb-sand", "pit", new Vector3(506, 61, 52), new Vector3(500, 60, 43), 3, "the tomb's sand-pit hall (sinking sand)", cp: "EG-tomb-sand");
+                L("EG-tomb-pit", "pit", new Vector3(506, 52.5f, 96), new Vector3(500, 60, 87), 3, "the turning room's pit (falls send you back)", cp: "EG-tomb-turn");
+                L("EG-quarry", "enclosed", new Vector3(92, .3f, 61), new Vector3(80, 0, 61), 6, "the quarry behind the huge block", Abilities.MuscleMan);
+                L("EG-secret-room", "enclosed", new Vector3(516, 60.3f, 122), new Vector3(505, 60, 122), 6, "the secret room behind the cracked wall", Abilities.ChargedPunch);
+            }
+            else if (world == Bethlehem)
+            {
+                L("BE-well", "water", new Vector3(108, 2, 72), new Vector3(108, 0, 77), 3.5f, "the well (the rope climbs out)");
+                L("BE-barn", "enclosed", new Vector3(0, .3f, 34), new Vector3(0, 0, 20), 8, "inside the barn (the door is south)");
+                L("BE-cave", "enclosed", new Vector3(190, .3f, 60), new Vector3(178, 0, 60), 6, "the shepherds' cave behind the boulder", Abilities.MuscleMan);
+            }
+            return l;
         }
 
         public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : Defaults());
@@ -164,6 +224,7 @@ namespace ShardsOfTime
             G("IA-deep-lake", "deep water", Abilities.DeepDive, new Vector3(-118, -8, 130), "the deep part under the lake (Round 5)", "L06", "L07");
             G("IA-chimney-near", "wall-jump chimney", Abilities.WallJump, new Vector3(113, 0, 301), "the glacier's near chimney (Round 5)", "G06");
             G("IA-chimney-far", "wall-jump chimney", Abilities.WallJump, new Vector3(113, 0, 331), "the glacier's far chimney (Round 5)", "G07");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
         }
 
@@ -225,6 +286,7 @@ namespace ShardsOfTime
             G("EG-deep-nile", "deep water", Abilities.DeepDive, new Vector3(-128, -6, 77), "the Nile's deep pool (deep dive, Pirate Seas)", "E48", "E49");
             G("EG-crack-tomb", "cracked wall", Abilities.ChargedPunch, new Vector3(511, 60, 122), "the burial chamber's cracked wall (charged punch, Medieval)", "E59", "EG-H2");
             G("EG-shaft-tomb", "wall-jump shaft", Abilities.WallJump, new Vector3(486, 60, 118), "the narrow shaft by the burial chamber (wall jump, Steampunk)", "E60");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
         }
 
@@ -280,6 +342,7 @@ namespace ShardsOfTime
             G("BE-gap-houses", "wall-jump gap", Abilities.WallJump, new Vector3(-90, 0, 133), "the narrow gap between two houses (wall jump, Steampunk)", "J01");
             G("BE-ledge-rock", "double-jump ledge", Abilities.DoubleJump, new Vector3(90.5f, 6.5f, 114), "the high rock over the outcrop", "D01");
             G("BE-ledge-inn", "double-jump ledge", Abilities.DoubleJump, new Vector3(-150, 10.1f, 97), "the inn's roof terrace", "D02");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
         }
 

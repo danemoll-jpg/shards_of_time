@@ -24,32 +24,47 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Fix 7.2: never stuck (the well) + a reset option (target 0.7.2)
-Round 7 and Fix 7.1 are delivered (below). Round 8 (the Medieval Kingdom) is
-next; the planning chat writes it once Dan's film references are in. Report
-per item: done / not done / deferred, and why.
-
-1. **"If you get stuck in the well you can't get out" (Dan, 2026-11-10).** The
-   well is a deep-dive gate (divers are pushed back up), but a hero who falls
-   in can't climb out. Fix it: a rope and bucket (or rungs) inside to climb up,
-   and swimming up to the rim climbs out automatically (like the ice holes in
-   Round 6). Check from the player's view, each hero, both from a fall and a jump.
-2. **Never stuck anywhere (standing rule, add to `CLAUDE.md`).** Every pit,
-   well, pool, hole, crawl space and enclosed area in every world must have a
-   way out with the moves the player has at that point, or not be enterable
-   without them. Add a check that runs for every world: drop each hero into
-   every water volume and every low enclosed spot (the level data lists them)
-   and prove the bot gets out within ~20 s; report any it can't, then fix them.
-   Run it on the Ice Age, Egypt and Bethlehem now.
-3. **A reset button (Dan, 2026-11-10).** Pause menu: **"Return to checkpoint"**
-   (back to the last checkpoint with the party, no heart lost, shards kept),
-   plus a safety net: if the player hasn't been able to move far for ~15 s in a
-   spot with no exit (no progress, stuck against geometry), show a small hint
-   "Stuck? Pause → Return to checkpoint". Works in every world and in the vortex.
-4. Build, check, publish 0.7.2, update `TODO.md` / `CLAUDE.md`, clean up.
+Current round: none. Fix 7.2 is delivered (below). Round 8 (the Medieval Kingdom) is next; the planning chat
+writes it once Dan's film references / concept images are in.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 7.2: never stuck (the well) + Return to checkpoint (0.7.2, build 702, 2026-11-11)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix72/final` (`--only fix72`: New game -> the
+never-stuck sweep of the Ice Age, Egypt and Bethlehem -> the well -> the reset): RESULT all passed (76 ok). Audio 0.000 RMS in every
+run; window watcher: no window, never in the foreground. The Round 1 starter install in `local/sc` updated itself to 0.7.2 and
+started. Evidence: `Data/screenshots/fix72/`.
+1. The well: **done.** Two level bugs made it a trap, not just the missing way out: the well's height was taken from a point inside
+   the terrain's wide hole (the rim sat ~5 m down in a dry crater), and its stone ring only went 1.75 m down, so a swimmer drifted
+   sideways out of the water onto the crater's floor 10 m down. Now: the well stands on the flat ground with a stone apron over the
+   hole, the ring is solid to the bottom, the water fills the shaft to the bottom, and a rope hangs from the beam to a bucket on the
+   water. In the well, Jump (pressed or held, any depth) or swimming into the wall climbs the rope up and over the rim
+   (`WellExit`, `CharacterMotor.ClimbOut(.., straightUp)`), with a hint "In the well! Grab the rope: A climbs out." Checked from the
+   player's view for Dan, Abi and Kira, from a jump and from a fall, Jump and wall both: out in about 3 s. Only Abi can jump over
+   the 1.8 m rim from the ground (Dan 1.6 m, Kira 1.4 m), so for them the "jump in" test drops them in instead.
+2. Never stuck everywhere: **done.** Rule 12 in `CLAUDE.md`. Each world's data lists its low / enclosed spots (`WorldData.lowSpots`:
+   Ice Age 12, Egypt 7, Bethlehem 3). The exe check `stuck` drops each hero into each one (with only the moves held, plus what it
+   takes to get in) and a pad bot must get out within 20 s; it also fails any water volume that isn't on the list (all 7 are).
+   Results: pond, river (up the ramp), the cave pit, the frozen well, the lake's four holes, Kira's crawl chamber, the Nile and its
+   deep pool, both quicksands, the tomb's pit, the barn, Bethlehem's well: all out, 0.3-14 s. Closed until a later move (reported,
+   not enterable yet): the hot-spring grotto, the grotto and the lake hollow behind boulders, Egypt's quarry and secret room, the
+   shepherds' cave. **Found and fixed on the way:** the Ice Age cave's floor was a thin slab over a 4 m hollow; little Kira walked
+   off the pit's steps underneath it (now solid to the pit's floor). And Bethlehem's well (item 1).
+3. Return to checkpoint: **done.** Pause menu row 4 "Return to checkpoint": a short fade, the party at the last checkpoint, no heart
+   lost, shards kept (checked in Bethlehem and in the vortex). The safety net: pushing the stick for 15 s without getting 4 m
+   anywhere shows "Stuck? Pause (Menu) > Return to checkpoint" (checked against the barn's wall; it also showed for the bot in the
+   old dry well).
+4. Build / check / publish: **done.** 0.7.2 published as `game-702`. Disk: 7.4 GB -> 7.1 GB.
+
+Decisions Code made (Dan can overrule): the rope works from any depth (Jump) and on touching the wall (not once the deep dive is
+learned, so divers can explore the bottom later); the well's stone apron is plain grey stone (placeholder look); the stuck hint
+counts only time spent pushing the stick (standing still never triggers it).
+
+**For Dan to check:** fall into Bethlehem's well and get out with A or by swimming to the wall (does the climb feel right?); the
+stone apron round the well (fine, or should it look like ground?); Pause > Return to checkpoint anywhere; the "Stuck?" hint
+(15 s too long / too short?). Not re-run this fix: the long Bethlehem / Egypt routes (the changes are the well, the cave floor and
+the pause menu; the sweep covered each of them).
+
 ### Fix 7.1: Bethlehem's real people + the new guard dog (0.7.1, build 701, 2026-11-10)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix71/final` (the Bethlehem route): RESULT all passed
 (65 ok). An earlier run (`beth2`) missed the far-pillar pounce once and the bot then got stuck on a fence (4 knock-on misses); the same
@@ -135,40 +150,49 @@ watchmen (fair? too many?) and sneaking in with the flock; the night look (dark 
 the Wise Men, the watchmen and the dogs are placeholders until your Mixamo files / the dog redo; the sheep's walk shows a leg
 poking out of the wool at times; the rock pillars and the cave are plain stone boxes.
 
-### Fix 6.1: universal shards + the Violinist's lyre (0.6.1, build 601, 2026-11-10)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix61/full` (New game -> Ice Age -> vortex ->
-Egypt -> red shard -> vortex + Egypt frame rate): RESULT all passed. `local/fix61/c4` (lyre + 0.6.0 saves): all passed but one
-(below). Audio output 0.000 RMS in every run; window watcher: no window, never in the foreground. Evidence: `Data/screenshots/fix61/`.
-1. Universal shards: **done.** One total (`SaveGame.Total`, never spent); a world's necklace wakes when the total reaches its
-   threshold (`AreaData.requirement` is now cumulative: Ice Age 35, Egypt 75), checked every frame, so arriving with enough
-   already wakes it too. Rule 2 by data (`WorldData.RequirementReport`, `WorldData.StoryOrder`): Ice Age 43 >= 35; Egypt: Ice
-   Age 43 + Egypt 50 = 93 on arrival >= 75. HUD: the total, "Next: 75" under it until the necklace wakes ("Follow the necklace"
-   after); the pause menu lists "The Ice Age: 47 / 60", "Ancient Egypt: 45 / 60", "Shards in all: 92". Egypt's messages say the
-   threshold. `CLAUDE.md` rules 2 and 3 updated (the design doc already said it). Play-through: Egypt's necklace woke at 78 in
-   all (46 Ice Age + 32 Egypt). 0.6.0 saves (`Data/fixtures/save_0.6.0_after_egypt.json`, a real one): total 92 = 47 + 45,
-   both story shards and the vortex gates kept; a mid-Egypt 0.6.0 save (47 + 30 of Egypt's, asleep) wakes the necklace on
-   Continue; 40 + 20 = 60 stays asleep with "Next: 75", one more shard makes 61.
-2. The Violinist's lyre: **done, one number short.** His own clip `violinist_lyre` (humanoid, made by `Editor/LyreClip.cs` at
-   build: the idle's legs, a gentle sway, head tilted down toward the strings, curled fingers, plucking right fingers), chosen per
-   world (`WorldData.violinistPlayClip`; the Ice Age keeps `violinist_play` for the fiddle). The IK holds the lyre upright against
-   his left hip, the left arm round the outer frame arm with the hand behind the strings, the right hand in front plucking; palms
-   turned by the finger bones. Close-ups front / both sides / 3/4 / player's view, idle and in `ViolinistTeachesEgypt`
-   (`fix61/lyre_and_saves/`; Round 6's for comparison in `lyre_round6_before/`): hands on the lyre, no arm through his body or
-   the lyre (forearms 19+ cm from his spine). The one miss: at the outer end of the strum his right hand stops 3-5 cm short of
-   the planned spot (arm length; still in front of the strings). Two tries (6 cm -> 4.5 cm strum), then stopped per the tuning
-   limit. No Mixamo download needed.
-3. Build / check / publish: **done.** 0.6.1 published as `game-601` (175 MB download). Disk: 4.7 GB -> 4.5 GB.
-
-Decisions Code made (Dan can overrule): the pause menu lists only worlds reached; earlier worlds count toward rule 2 with their
-own first-visit moves plus the new world's (moves learned on the way, like the ground pound, are not counted).
-
-**For Dan to check:** the HUD's total and "Next: 75" in Egypt; the pause menu's per-world counts; your own 0.6.0 save in 0.6.1
-(Ice Age 39 + Egypt 47 = 86, both shards found: nothing should change); the Violinist playing the lyre for Abi (does the hold
-read right? the strum is narrow).
-
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
+- **Round 8: the Medieval Kingdom (draft by the planning chat, 2026-11-10; written in full after Fix 7.2 and
+  once Dan's concept images are in).** Film references in `SourceArt/Reference/Worlds/04-Medieval/` and
+  `Characters/*` (added 2026-11-10); image prompts M1–M10 in `Docs/MODELS-NEEDED.md`; music in `Docs/MUSIC.md`.
+    **All in (Dan, 2026-11-11), checked by the planning chat:** the 10 concept sheets in
+    `SourceArt/Concepts/` (`dan_medieval`, `abi_medieval`, `kira_dragon`, `muscleman_medieval`,
+    `violinist_medieval`, `knight`, `archer`, `rat`, `horse` (a round dappled pony: the first prompt was blocked
+    for looking like an existing character), `wagon_driver`) and Dan's song `Music/medieval.mp3` (2:59). Notes for
+    Code: Muscle Man grins with his teeth showing (fine for a static face; check the mouth after Meshy); dragon Kira
+    is a darker charcoal gray than her usual gray: match it (`match_fur.py`); her thin wings may close up in the
+    closed-mesh rebuild: keep them as their own thin two-sided part; the archer's quiver is part of his outfit.
+  - **Arrival (`MedievalArrival`, Dan's version of the film, 2026-11-10):** the vortex opens over the castle
+    courtyard; they fall into a horse-drawn wagon full of hay; Kira pops up as a baby dragon, discovers her fire,
+    and a puff sets the hay alight; they all leap out; the wagon (driver still aboard, horse galloping) careens into
+    the castle wall and explodes (cartoon: the driver staggers out singed, hat smoking; the horse is fine) as the
+    party runs off. Irreverent comedy is fine.
+  - **Look:** a torch-lit stone castle at night: cobblestone courtyard, round towers with conical slate roofs,
+    crenellated walls, a row of arches, wall torches, wooden benches, flower pots, the keep at the back.
+  - **The story shard:** the purple shard stuck in a round stone pedestal in the courtyard (the film's sword in the
+    stone). The film gag stays: Muscle Man brags, heaves, fails and falls flat on his back; Dan, whose necklace
+    answers the shard, pulls it out with no effort; Muscle Man becomes his devoted fan ("Master!").
+  - **Muscle Man joins only at the end, as in the film (DECIDED, Dan 2026-11-11).** Through the world he's a
+    rival who **mocks Dan**: he shows up around the castle (the courtyard, the tournament field, the great hall)
+    flexing, lifting things Dan can't, laughing at Dan's attempts (short comic moments, no dialogue needed beyond
+    grunts and laughs). He's only impressed when Dan does something of strength he can't: the stone. At the end he
+    brags, heaves, fails and falls flat on his back; Dan pulls the shard out with no effort; Muscle Man becomes his
+    devoted fan ("Master!") and the purple vortex sweeps him along. From then on he's a companion (follower, never
+    controlled): moves boulders, lifts portcullises and heavy things, boosts Dan to high ledges, cheers at pickups.
+    So **the Medieval world's own boulder gates are for coming back later** (like the earlier worlds' boulders),
+    and rule 2 counts none of them for the Medieval threshold.
+  - **Kira, baby dragon:** glide with her little wings (long gaps), and fire puffs that light braziers and torches,
+    burn ropes, hay and brambles (weak, comic, never a weapon that hurts people).
+  - **New move:** the Violinist as a bard with a lute teaches Dan the **charged punch** (breaks cracked walls and
+    knights' shields; opens every earlier world's cracked walls).
+  - **Places (DEFAULT):** the courtyard and the stone, the castle walls and towers (climb, archers), the great hall,
+    a dungeon (dark, rats, the necklace's light), the moat (deep-dive gate), the tournament field outside the walls
+    (a comic joust / strength contest), the village and market below the castle.
+  - **Enemies:** clumsy knights (shields; the charged punch breaks them), nervous archers on the walls (slow,
+    dodgeable arrows), dungeon rats.
+  - **Exit:** collecting the purple shard opens the purple vortex, which sweeps Muscle Man along with the party,
+    much to Dan's bewilderment.
 - **Code's notes for Round 8 (the planning chat decides):** Dan's notes on 0.7.0 first; Bethlehem's
   Mixamo people (the Wise Men sitting on their camels, the watchmen) and the guard dog once Dan's files
   are in; art left over: real meshes for the plain boxes (Bethlehem's rock pillars and cave, Egypt's walls

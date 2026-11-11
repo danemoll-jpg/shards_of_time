@@ -186,11 +186,45 @@ namespace ShardsOfTime
             p.rows.Add(new Menu.Row { label = "Resume", submit = Resume });
             p.rows.Add(new Menu.Row { label = "Settings", submit = () => Menu.I.Push(Menu.SettingsPage()) });
             p.rows.Add(new Menu.Row { label = "Controls", submit = () => Menu.I.Push(Menu.ControlsPage()) });
+            // Fix 7.2, item 3: back to the last checkpoint with the party (no heart lost, shards kept), in every world and the vortex
+            p.rows.Add(new Menu.Row { label = "Return to checkpoint", enabled = () => !Busy, submit = () => { Resume(); StartCoroutine(ReturnToCheckpoint()); } });
             if (TestArea) p.rows.Add(new Menu.Row { label = "Leave the test area", submit = () => { Menu.I.Close(); ToTitle(); } });
             else p.rows.Add(new Menu.Row { label = "Quit to title", submit = () => { SaveGame.Save("quit to title"); Menu.I.Close(); ToTitle(); } });
             p.rows.Add(new Menu.Row { label = "Quit game", submit = Quit });
             Menu.I.Show(p, false);
             PlayLog.Line("paused");
+        }
+
+        public int CheckpointReturns { get; private set; }
+        IEnumerator ReturnToCheckpoint()
+        {
+            if (Busy) yield break;
+            Busy = true; Party.I.Frozen = true;
+            for (float t = 0; t < 1f; t += Time.deltaTime / .35f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(1f);
+            Checkpoint.RespawnParty(); CheckpointReturns++; stuckFor = 0; stuckAnchor = Party.I.Player.transform.position;
+            PlayLog.Line($"returned to checkpoint {SaveGame.Current.checkpoint}");
+            yield return null;
+            for (float t = 1; t > 0f; t -= Time.deltaTime / .35f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f); Party.I.Frozen = false; Busy = false;
+            OnAreaChanged();
+        }
+
+        // Fix 7.2, item 3: the safety net. Pushing the stick for ~15 s without getting more than 4 m anywhere = stuck: a small hint.
+        public const float StuckSeconds = 15f, StuckRange = 4f;
+        public int StuckHints { get; private set; }
+        Vector3 stuckAnchor; float stuckFor; bool stuckShown;
+        void WatchStuck()
+        {
+            var p = Party.I.Player.transform.position;
+            if ((p - stuckAnchor).sqrMagnitude > StuckRange * StuckRange) { stuckAnchor = p; stuckFor = 0; stuckShown = false; return; }
+            if (Busy || InCutscene || Party.I.Frozen) return;
+            if (Controls.Move.ReadValue<Vector2>().sqrMagnitude > .25f) stuckFor += Time.deltaTime;
+            if (stuckFor > StuckSeconds && !stuckShown)
+            {
+                stuckShown = true; StuckHints++;
+                Hud.Message($"Stuck? Pause ({Controls.Btn(Controls.Act.Pause)}) > Return to checkpoint", 6f);
+            }
         }
 
         public void Resume()
@@ -258,6 +292,7 @@ namespace ShardsOfTime
                 if (area != null && area.requirement > 0 && !prog.necklaceAwake && !prog.storyShard && !Busy && !InCutscene && SaveGame.Current.Total >= area.requirement)
                     StartCoroutine(WakeNecklace(area));
                 if (area != null) { ApplyKiraForm(area); ApplyOutfits(area); }
+                WatchStuck();
                 bool dark = DarkVolume.At(Party.I.Player.Motor.Center) && !InCutscene;
                 Look.InVortex(Vortex.Inside(Party.I.Player.transform.position) && !InCutscene);
                 Look.SetDark(dark);

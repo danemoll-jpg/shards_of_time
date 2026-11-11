@@ -431,3 +431,138 @@ MonoBehaviour:
     opens:
     - G07
     note: the glacier's far chimney (Round 5)
+  lowSpots:
+  - id: IA-pond
+    kind: water
+    drop: {x: 24, y: 1, z: 60}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 5, y: 0, z: 55}
+    radius: 12
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the half-frozen pond
+  - id: IA-river
+    kind: water
+    drop: {x: 0, y: -6.5, z: 252}
+    via: {x: 49, y: -8, z: 250.25}
+    exit: {x: 49, y: -1, z: 228}
+    radius: 14
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the river in the gorge (out up the ramp, x 44..54)
+  - id: IA-cave-pit
+    kind: pit
+    drop: {x: -29.5, y: -3, z: 342.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -25.5, y: 0, z: 342.5}
+    radius: 3.3
+    needs: GroundPound
+    heroes: 
+    opens: IA-crack-cave
+    checkpoint: 
+    note: the cave's pit under the cracked ice (steps up the east side)
+  - id: IA-well
+    kind: pit
+    drop: {x: 18, y: -2, z: 478}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 26, y: 0, z: 478}
+    radius: 4.6
+    needs: GroundPound
+    heroes: 
+    opens: IA-crack-well
+    checkpoint: 
+    note: the frozen well (steps up the east side)
+  - id: IA-lake-near
+    kind: water
+    drop: {x: -118, y: 1, z: 84}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -110, y: 0, z: 84}
+    radius: 4.5
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the frozen lake's near hole
+  - id: IA-lake-mid
+    kind: water
+    drop: {x: -118, y: 1, z: 108}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -110, y: 0, z: 108}
+    radius: 4.5
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the frozen lake's exit hole
+  - id: IA-lake-deep
+    kind: water
+    drop: {x: -118, y: 1, z: 133}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -110, y: 0, z: 133}
+    radius: 4.5
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the hole over the lake's deep part
+  - id: IA-lake-far
+    kind: water
+    drop: {x: -101, y: 1, z: 160}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -101, y: 0, z: 167}
+    radius: 4.5
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the frozen lake's far hole
+  - id: IA-crawl
+    kind: crawl space
+    drop: {x: -52, y: 0.3, z: 320}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -34, y: 0, z: 320}
+    radius: 8
+    needs: 
+    heroes: Kira
+    opens: 
+    checkpoint: 
+    note: Kira's crawl chamber in the cave
+  - id: IA-grotto
+    kind: enclosed
+    drop: {x: 71, y: 0.3, z: 460}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 54, y: 0, z: 464}
+    radius: 8
+    needs: ChargedPunch
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the hot-spring grotto (behind the cracked rock)
+  - id: IA-grotto-boulder
+    kind: enclosed
+    drop: {x: -49, y: 0.3, z: 484}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -40, y: 0, z: 484}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the grotto behind the boulder
+  - id: IA-lake-hollow
+    kind: enclosed
+    drop: {x: -154, y: 0.3, z: 124}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -144, y: 0, z: 124}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the ice hollow behind the boulder
+  violinistInstrument: Fiddle
+  violinistPlayClip: violinist_play

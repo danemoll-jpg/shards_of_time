@@ -402,5 +402,83 @@ MonoBehaviour:
     opens:
     - E60
     note: the narrow shaft by the burial chamber (wall jump, Steampunk)
+  lowSpots:
+  - id: EG-nile
+    kind: water
+    drop: {x: -128, y: 1, z: 130}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -98, y: 0, z: 130}
+    radius: 20
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the Nile (out onto the east bank)
+  - id: EG-nile-deep
+    kind: water
+    drop: {x: -128, y: 1, z: 77}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -98, y: 0, z: 77}
+    radius: 20
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the Nile's deep pool
+  - id: EG-quicksand
+    kind: pit
+    drop: {x: 50, y: 1, z: 150}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 60, y: 0, z: 172}
+    radius: 6
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: EG-quicksand
+    note: the quicksand pit (sinking sand sends you back)
+  - id: EG-tomb-sand
+    kind: pit
+    drop: {x: 506, y: 61, z: 52}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 500, y: 60, z: 43}
+    radius: 3
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: EG-tomb-sand
+    note: the tomb's sand-pit hall (sinking sand)
+  - id: EG-tomb-pit
+    kind: pit
+    drop: {x: 506, y: 52.5, z: 96}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 500, y: 60, z: 87}
+    radius: 3
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: EG-tomb-turn
+    note: the turning room's pit (falls send you back)
+  - id: EG-quarry
+    kind: enclosed
+    drop: {x: 92, y: 0.3, z: 61}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 80, y: 0, z: 61}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the quarry behind the huge block
+  - id: EG-secret-room
+    kind: enclosed
+    drop: {x: 516, y: 60.3, z: 122}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 505, y: 60, z: 122}
+    radius: 6
+    needs: ChargedPunch
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the secret room behind the cracked wall
   violinistInstrument: Lyre
   violinistPlayClip: violinist_lyre
