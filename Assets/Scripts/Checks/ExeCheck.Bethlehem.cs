@@ -56,8 +56,9 @@ namespace ShardsOfTime
             Head("Round 7, item 3: the vortex's Bethlehem path, the arrival");
             var door = VortexDoor.All.FirstOrDefault(d => d.info.id == "Medieval");
             Ok(door && door.Blocked, $"the vortex has a Medieval Kingdom path, closed until Bethlehem's golden shard ({(door ? door.label.text.Replace("\n", " ") : "none")})");
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(0, 19), .6f);
-            yield return Go(VPath(0, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            float by = Yaw("Bethlehem");   // Round 8: the paths moved (six now)
+            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(by, 8), .6f); yield return Go(VPath(by, 19), .6f);
+            yield return Go(VPath(by, 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "BethlehemArrival", 8f);
             Ok(Game.InBethlehem && Cutscenes.Playing == "BethlehemArrival", $"the Bethlehem path loads Bethlehem and plays its arrival (world {Game.World.worldId}, cutscene {Cutscenes.Playing ?? "none"})");
             foreach (var (t, n) in new[] { (1.0f, "120a_star_opens"), (2.3f, "120b_onto_the_roof"), (3.9f, "120c_crash"), (6.0f, "120d_dan_on_the_floor"), (7.9f, "120e_a_lamb"), (9.8f, "120f_they_stare"), (12.2f, "120g_empty_manger"), (14.0f, "120h_golden_shard") })
@@ -391,8 +392,8 @@ namespace ShardsOfTime
         IEnumerator PounceInEgypt()
         {
             Head("Round 7, item 7: Kira's pounce in Egypt (the far roof, E14 / E15)");
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-30, 8), .6f); yield return Go(VPath(-30, 19), .6f);
-            yield return Go(VPath(-30, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(Yaw("Egypt"), 8), .6f); yield return Go(VPath(Yaw("Egypt"), 19), .6f);
+            yield return Go(VPath(Yaw("Egypt"), 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Game.InEgypt && !Game.I.Busy, 12f);
             Ok(Game.InEgypt, $"the Egypt path from the vortex ({Game.World.worldId})");
             Ok(P.Heroes[2].Form && P.Heroes[2].Form.id == KiraForm.Mummy, $"Kira is mummy Kira again ({P.Heroes[2].Form.displayName})");

@@ -60,7 +60,7 @@ namespace ShardsOfTime
             me.Step(input, Time.deltaTime);
 
             // warps
-            FarFor = toPlayer > NearEnough ? FarFor + Time.deltaTime : 0;
+            FarFor = toPlayer > Mathf.Max(NearEnough, Gap + 2.2f) ? FarFor + Time.deltaTime : 0;   // Round 8: the third follower (Muscle Man) walks further back
             belowFor = ppos.y - pos.y > 4f ? belowFor + Time.deltaTime : 0;
             if (pos.y < Party.KillY || pos.y < Party.I.Player.transform.position.y - 25f) WarpNearPlayer("fell out of the world");
             else if (toPlayer > WarpDistance) WarpNearPlayer($"{toPlayer:0} m behind");

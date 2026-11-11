@@ -135,7 +135,7 @@ namespace ShardsOfTime
         public static Enemy Rat(Transform parent, Vector3 a, Vector3 b)
         {
             var e = Body("Rat", parent, a, .35f, .22f); e.kind = Kind.Rat; e.a = a; e.b = b; e.hp = 1;
-            e.patrolSpeed = 1.6f; e.chaseSpeed = 4.6f; e.sight = 6f; e.leash = 12f;
+            e.patrolSpeed = 1.4f; e.chaseSpeed = 3.2f; e.sight = 4f; e.leash = 8f;
             var t = e.transform; var fur = new Material(Placeholders.Mat(new Color(.5f, .45f, .4f)));
             Placeholders.Prim(PrimitiveType.Sphere, t, new Vector3(0, .17f, 0), new Vector3(.3f, .26f, .5f), fur, name: "Body");
             Placeholders.Prim(PrimitiveType.Sphere, t, new Vector3(0, .22f, .27f), new Vector3(.2f, .2f, .22f), fur, name: "Head");

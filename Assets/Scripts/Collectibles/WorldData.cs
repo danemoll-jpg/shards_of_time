@@ -157,7 +157,7 @@ namespace ShardsOfTime
                 L("ME-moat-east", "water", new Vector3(42, 0, 30), new Vector3(55, 0, 30), 8, "the moat, east side");
                 L("ME-moat-south", "water", new Vector3(24, 0, -12), new Vector3(24, 0, -25), 8, "the moat, south side (by the drawbridge)");
                 L("ME-moat-deep", "water", new Vector3(-42, 0, 96), new Vector3(-55, 0, 96), 8, "over the moat's deep pit (NW corner)");
-                L("ME-dungeon", "enclosed", new Vector3(400, .3f, 30), new Vector3(-27, 0, 44), 30, "the dungeon (its stair door back to the courtyard)", via: new Vector3(400, 0, 1.2f));
+                L("ME-dungeon", "enclosed", new Vector3(400, .3f, 30), new Vector3(-27, 0, 44), 30, "the dungeon (its stair door back to the courtyard)", via: new Vector3(400, 0, -1.4f));   // (past the door line: the bot counts a waypoint reached 1.5 m early)
                 L("ME-hall", "enclosed", new Vector3(8, .3f, 70), new Vector3(0, 0, 56), 10, "the great hall (the door is south)", via: new Vector3(0, 0, 64.5f));
                 L("ME-yard", "enclosed", new Vector3(-25, .3f, 7), new Vector3(-12, 0, 8), 6, "the walled yard behind the boulder", Abilities.MuscleMan, opens: "ME-boulder-yard");
                 L("ME-armory", "enclosed", new Vector3(22, .3f, 4), new Vector3(22, 0, 14), 6, "the armory behind the portcullis", Abilities.MuscleMan, opens: "ME-portcullis-armory");
@@ -377,8 +377,8 @@ namespace ShardsOfTime
             S("C04", -20, 0, 50, "the courtyard: the north-west corner"); S("C05", 18, 0, 14, "the courtyard: the south-east corner"); S("C06", 27, 0, 30, "under the arcade");
             S("C07", 27, 6.6f, 20, "the arcade's roof (up its stair)"); S("C08", 27, 6.6f, 44, "the arcade's roof (up its stair)");
             // the walls and towers: the west wall walk (stair from the courtyard), the north-west tower top; the east walk (from the arcade's roof)
-            S("W01", -31.5f, 10, 20, "the west wall walk"); S("W02", -31.5f, 10, 36, "the west wall walk"); S("W03", -31.5f, 10, 50, "the west wall walk");
-            S("W04", -31.5f, 16, 61.5f, "the north-west tower's top"); S("W05", 31.5f, 10, 30, "the east wall walk"); S("W06", 31.5f, 10, 48, "the east wall walk");
+            S("W01", -31.5f, 10, 20, "the west wall walk"); S("W02", -31.5f, 10, 36, "the west wall walk"); S("W03", -31.5f, 10, 42, "the west wall walk");
+            S("W04", -31.5f, 16, 61.5f, "the north-west tower's top"); S("W05", 31.5f, 10, 30, "the east wall walk"); S("W06", 31.5f, 10, 42, "the east wall walk");
             S("W07", 31.5f, 16, 61.5f, "the north-east tower's top");
             // the great hall (the keep: floor 0, the gallery at 6, chandeliers to swing across to the east ledge)
             S("G01", 0, .95f, 73, "the great hall: on the feast table"); S("G02", -7, 0, 77, "the great hall"); S("G03", 8, 0, 69, "the great hall: by the fireplace");
@@ -397,17 +397,17 @@ namespace ShardsOfTime
             S("T01", 60, 0, -50, "the tournament field: the way in"); S("T02", 100, 0, -72, "the tournament field: the lists"); S("T03", 112, 0, -95, "the tournament field: by the tilt");
             S("T04", 80, 1, -63.2f, "the stands, the first tier"); S("T05", 90, 3, -60.3f, "the stands, the top tier");
             S("T06", 122, 0, -110, "behind the hay bales (dragon Kira burns them)", "Kira", Abilities.FirePuff);
-            S("T07", 95, 0, -116, "the prize chest (light the three braziers on the stands: dragon Kira)", "Kira", Abilities.FirePuff);
+            S("T07", 95, -.9f, -116, "the prize chest (light the three braziers on the stands: dragon Kira)", "Kira", Abilities.FirePuff);
             // the village and market (south-west)
             S("V01", -40, 0, -70, "the village gate"); S("V02", -70, 0, -60, "the village"); S("V03", -85, 0, -85, "the market square");
-            S("V04", -95, 2.6f, -88, "on a market stall's awning (up the crates)"); S("V05", -115, 0, -100, "a back street"); S("V06", -60, 0, -124, "behind the brambles (dragon Kira burns them)", "Kira", Abilities.FirePuff);
+            S("V04", -95, 2.6f, -90, "on a market stall's awning (up the crates)"); S("V05", -115, 0, -100, "a back street"); S("V06", -60, 0, -124, "behind the brambles (dragon Kira burns them)", "Kira", Abilities.FirePuff);
             S("V07", -128, 0, -60, "the village's far end");
             // the places later moves open (visible now)
             S("B01", -25, 0, 8, "the walled yard behind the boulder (Muscle Man)", Abilities.MuscleMan); S("B02", -27, 0, 5, "the walled yard behind the boulder (Muscle Man)", Abilities.MuscleMan);
             S("A01", 20, 0, 4, "the armory behind the portcullis (Muscle Man)", Abilities.MuscleMan); S("A02", 24, 0, 4, "the armory behind the portcullis (Muscle Man)", Abilities.MuscleMan);
             S("K01", -26, 0, 55, "the store room behind the cracked wall (charged punch, learned here)", Abilities.ChargedPunch); S("K02", -26, 0, 58, "the store room behind the cracked wall (charged punch, learned here)", Abilities.ChargedPunch);
             S("J01", -99, 9, -124, "the top of the chimney between two village houses (wall jump)", Abilities.WallJump);
-            S("X01", 85, 5.6f, -58.5f, "the stands' flag platform (double jump)", Abilities.DoubleJump);
+            S("X01", 86.3f, 5.6f, -58.5f, "the stands' flag platform (double jump)", Abilities.DoubleJump);
             S("DD1", -42, -16, 96, "the moat's deep pit (deep dive)", Abilities.DeepDive); S("DD2", -40, -16, 98, "the moat's deep pit (deep dive)", Abilities.DeepDive);
             void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
             G("ME-boulder-yard", "boulder", Abilities.MuscleMan, new Vector3(-18.5f, 0, 7.5f), "the walled yard in the courtyard (Muscle Man: he joins at the stone)", "B01", "B02");

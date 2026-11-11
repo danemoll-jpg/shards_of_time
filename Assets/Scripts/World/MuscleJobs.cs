@@ -170,6 +170,7 @@ namespace ShardsOfTime
     public sealed class BoostSpot : MuscleJob
     {
         public float height = 7f;
+        public Vector3 landAt;                  // where the throw lands (zero: straight up)
         public int Boosts { get; private set; }
         protected override string Verb => "boosts you up";
         protected override string Clip => "mm_boost";
@@ -182,7 +183,15 @@ namespace ShardsOfTime
             player.Motor.Teleport(transform.position + Vector3.up * .05f, transform.rotation);
             yield return new WaitForSeconds(.45f);
             Sfx.Play("jump", .7f, .8f);
-            player.Motor.Launch(height); Boosts++;
+            if (landAt != Vector3.zero)
+            {
+                // the throw's arc: up to `height`, down onto landAt (the horizontal speed that gets there in that time)
+                float g = player.Motor.Gravity, up = Mathf.Sqrt(2f * height / g), down = Mathf.Sqrt(2f * Mathf.Max(.1f, transform.position.y + height - landAt.y) / g);
+                var d = landAt - transform.position; d.y = 0;
+                player.Motor.Throw(d / (up + down), height);
+            }
+            else player.Motor.Launch(height);
+            Boosts++;
             PlayLog.Line($"Muscle Man boosts {player.Stats.displayName} up {height} m at {transform.position}");
             yield return new WaitForSeconds(.4f);
         }

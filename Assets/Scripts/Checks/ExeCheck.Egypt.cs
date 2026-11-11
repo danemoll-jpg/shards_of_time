@@ -41,6 +41,7 @@ namespace ShardsOfTime
             yield return PerfEgypt();
         }
 
+        static float Yaw(string path) => System.Array.Find(Vortex.Paths, p => p.id == path).yaw;
         Vector3 VPath(float yaw, float d) => Vortex.Centre + Quaternion.Euler(0, yaw, 0) * new Vector3(0, 0, d);
 
         IEnumerator EgyptRoute(bool inVortex)
@@ -53,8 +54,8 @@ namespace ShardsOfTime
                 yield return GoF(XZ(0, 499), .5f); yield return Go(XZ(0, 507), .5f, 8f, 1f, () => Vortex.Inside(Player.transform.position));
                 yield return WaitFor(() => Vortex.Inside(Player.transform.position), 3f);
             }
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-30, 8), .6f); yield return Go(VPath(-30, 19), .6f);   // Round 7: Egypt's path at -30
-            yield return Go(VPath(-30, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(Yaw("Egypt"), 8), .6f); yield return Go(VPath(Yaw("Egypt"), 19), .6f);   // Round 8: from the path's data
+            yield return Go(VPath(Yaw("Egypt"), 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "EgyptArrival", 8f);
             Ok(Game.InEgypt && Cutscenes.Playing == "EgyptArrival", $"the Egypt path loads Egypt and plays its arrival (world {Game.World.worldId}, cutscene {Cutscenes.Playing ?? "none"})");
             foreach (var (t, n) in new[] { (1.5f, "80a_arrival_land"), (3.8f, "80b_arrival_pyramids"), (6.0f, "80c_arrival_clothes"), (8.0f, "80d_arrival_mummy_kira"), (10.2f, "80e_arrival_react"), (12.6f, "80f_arrival_red_shard") })
@@ -581,8 +582,8 @@ namespace ShardsOfTime
         {
             Head("Round 6, item 9: the double jump in the Ice Age");
             if (!Vortex.Inside(Player.transform.position)) yield break;
-            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(-60, 8), .6f); yield return Go(VPath(-60, 19), .6f);
-            yield return Go(VPath(-60, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(0, 4), .8f); yield return Go(VPath(Yaw("IceAge"), 8), .6f); yield return Go(VPath(Yaw("IceAge"), 19), .6f);
+            yield return Go(VPath(Yaw("IceAge"), 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => !Game.I.Busy && Game.World.worldId == WorldData.IceAge, 12f);
             Ok(Game.World.worldId == WorldData.IceAge && !Game.InCutscene, $"the Ice Age path leads back to the valley (world {Game.World.worldId}, at {Fmt(Player.transform.position)})");
             MusicCheck("the Ice Age again", "iceage");

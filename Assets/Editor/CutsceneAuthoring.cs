@@ -22,7 +22,7 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 17;   // Fix 7.1: the Wise Men, Dan and Abi in their Bethlehem models   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
+        public const int Version = 19;   // Round 8: the Medieval cutscenes   // Fix 7.1: the Wise Men, Dan and Abi in their Bethlehem models   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
@@ -1003,7 +1003,7 @@ namespace ShardsOfTime
             DataAssets.Ensure();
             var c = MedievalCast; NecklaceModel.Tint = c.shard;
             var k = new Kit("MedievalArrival", MedievalArrivalLength);
-            var hay = new Vector3(2f, 1.55f, 10f);
+            var hay = new Vector3(2f, 2.15f, 10f);   // the top of the HayWagon's heap
             var dan = k.Actor("Dan", c.dan, new Vector3(3.6f, 0, 6.6f), 160);
             var abi = k.Actor("Abi", c.abi, new Vector3(.8f, 0, 6.8f), 200);
             var kira = k.Actor("Kira", c.kira, new Vector3(2.4f, 0, 6.2f), 180);
@@ -1057,7 +1057,7 @@ namespace ShardsOfTime
             var inHay = new[] { (dan, new Vector3(-.5f, -.15f, .3f)), (abi, new Vector3(.6f, -.15f, -.3f)), (kira, new Vector3(.15f, .1f, .5f)) };
             for (int j = 0; j < inHay.Length; j++)
             {
-                var (actor, off) = inHay[j]; var home = actor.transform.localPosition; var spot = hay + off - home;
+                var (actor, off) = inHay[j]; var home = actor.transform.localPosition; var spot = Quaternion.Inverse(actor.transform.localRotation) * (hay + off - home);   // in the actor's own (turned) frame
                 float d = j * .12f;
                 k.Key(actor, "Body", "m_LocalPosition", 0f, spot + new Vector3(0, 14f, 0)); k.Key(actor, "Body", "m_LocalPosition", 1.5f + d, spot + new Vector3(0, 11f, 0));
                 k.Key(actor, "Body", "m_LocalPosition", 2.9f + d, spot + new Vector3(0, -.7f, 0));   // into the hay, out of sight
@@ -1093,8 +1093,8 @@ namespace ShardsOfTime
             }
             k.Shot("The vortex opens", 0f, 1.8f, new Vector3(9f, 1.4f, -2f), hay + new Vector3(0, 8f, 0), 52f, new Vector3(8f, 1.6f, 0f));
             k.Shot("Into the hay", 1.8f, 3.4f, new Vector3(6.5f, 4.2f, 4.5f), hay + new Vector3(0, .5f, 0), 46f);
-            k.Shot("They pop up", 3.4f, 5.8f, new Vector3(4.6f, 2.3f, 7.0f), hay + new Vector3(0, .5f, 0), 42f, new Vector3(4.3f, 2.2f, 7.4f));
-            k.Shot("Achoo!", 5.8f, 7.3f, hay + new Vector3(1.4f, .9f, -1.2f), hay + new Vector3(.15f, .55f, .4f), 38f);
+            k.Shot("They pop up", 3.4f, 5.8f, new Vector3(6.2f, 3.4f, 5.2f), hay + new Vector3(0, .7f, 0), 42f, new Vector3(5.8f, 3.3f, 5.8f));
+            k.Shot("Achoo!", 5.8f, 7.3f, hay + new Vector3(2.6f, 1.2f, -2.6f), hay + new Vector3(.15f, .45f, .4f), 34f);
             k.Shot("Fire! Jump!", 7.3f, 9.2f, new Vector3(9f, 3.2f, 3f), hay + new Vector3(-.5f, .4f, -1f), 50f);
             k.Shot("Runaway wagon", 9.2f, 11.9f, new Vector3(-6f, 2.4f, 2f), new Vector3(-6f, 1.4f, 10f), 52f, new Vector3(-14f, 2.6f, 3.5f));
             k.Shot("Kaboom", 11.9f, 14.2f, new Vector3(-14f, 3.4f, 1.5f), new Vector3(-25f, 2f, 10f), 50f);
@@ -1123,7 +1123,7 @@ namespace ShardsOfTime
             // the shard in the stone (the world's own is hidden while this plays)
             var shard = k.Holder("Purple shard", new Vector3(0, 1.1f, 0), 15);
             Placeholders.CrystalObject("Crystal", c.shard, .9f).transform.SetParent(shard.transform, false);
-            k.Key(shard, "Crystal", "m_LocalPosition", 0f, new Vector3(0, .45f, 0)); k.Key(shard, "Crystal", "m_LocalPosition", 11.2f, new Vector3(0, .45f, 0));
+            k.Key(shard, "Crystal", "m_LocalPosition", 0f, new Vector3(0, .15f, 0)); k.Key(shard, "Crystal", "m_LocalPosition", 11.2f, new Vector3(0, .15f, 0));   // stuck in the stone
             k.Key(shard, "Crystal", "m_LocalPosition", 12.6f, new Vector3(0, 1.3f, -.15f)); k.Key(shard, "Crystal", "m_LocalPosition", 13.4f, new Vector3(-.15f, 1.45f, -.6f));
             k.Key(shard, "Crystal", "m_LocalPosition", 15.6f, new Vector3(-.15f, 1.45f, -.6f));
             k.Show(shard, 0f, 15.8f);
@@ -1171,7 +1171,7 @@ namespace ShardsOfTime
             k.Shot("The heave", 2.4f, 6.6f, new Vector3(3.2f, 1.6f, 1.4f), new Vector3(0, 1.1f, -.6f), 44f, new Vector3(2.8f, 1.4f, .9f));
             k.Shot("Flat on his back", 6.6f, 8.6f, new Vector3(.4f, 3.6f, -4.0f), new Vector3(.6f, .3f, -1.8f), 46f);
             k.Shot("Dan steps up", 8.6f, 11.2f, new Vector3(-2.6f, 1.5f, 1.6f), new Vector3(-.2f, 1.2f, -.6f), 44f);
-            k.Shot("It slides out", 11.2f, 13.6f, new Vector3(-.2f, 1.6f, 1.6f), new Vector3(0, 1.7f, -.3f), 38f, new Vector3(-.15f, 1.75f, 1.3f));
+            k.Shot("It slides out", 11.2f, 13.6f, new Vector3(2.1f, 1.5f, .4f), new Vector3(-.1f, 1.75f, -.3f), 40f, new Vector3(1.8f, 1.7f, .2f));
             k.Shot("Master!", 13.6f, 15.6f, new Vector3(-1.6f, 1.5f, -3.4f), new Vector3(.5f, 1.0f, -1.6f), 42f);
             k.Shot("The vortex", 15.6f, TheStoneLength, new Vector3(.4f, 2.4f, -7.4f), new Vector3(0, 2.2f, 0), 54f, new Vector3(.3f, 2.6f, -6.4f));
             k.Sound("mm_laugh", 1.6f, .7f); k.Sound("mm_grunt", 3.2f, .7f); k.Sound("mm_grunt", 4.6f, .8f); k.Sound("mm_grunt", 5.8f, .9f); k.Sound("boulder_roll", 6.9f, .4f);

@@ -233,7 +233,7 @@ namespace ShardsOfTime
             SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
             yield return Wait(.6f);
             var vx = Player.transform.position;
-            yield return Go(VPath(-30, 12), .8f, 8f);
+            yield return Go(VPath(Yaw("Egypt"), 12), .8f, 8f);
             n0 = Game.I.CheckpointReturns;
             yield return PauseAndReturn();
             yield return WaitFor(() => Game.I.CheckpointReturns > n0 && !Game.I.Busy, 4f);

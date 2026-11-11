@@ -23,6 +23,8 @@ namespace ShardsOfTime
             if (!Game.Playing || !Party.I) return;
             var c = Party.I.Player.Motor.Center;
             float reach = radius + Party.I.Player.Stats.radius;
+            // Round 8: the stone's shard answers only Dan's necklace (the film); anyone else gets a line from StoneHum
+            if (kind == Kind.StoryShard && Game.InMedieval && Party.I.Player.Stats.displayName != "Dan") return;
             if ((c - transform.position).sqrMagnitude < reach * reach || (Party.I.Player.transform.position - transform.position).sqrMagnitude < reach * reach) Collect();
         }
 

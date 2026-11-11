@@ -1,0 +1,211 @@
+Shards of Time exe check 2026-11-11 05:38, version 0.8.0; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 71680 samples); master volume 0.00
+  (set up: the Ice Age 43 + Egypt 50 + Bethlehem 48 = 141 shards, three story shards, no moves learned)
+
+== Round 8, item 3: the vortex's Medieval path, the arrival
+  ok    the vortex's Medieval Kingdom path is open after Bethlehem's golden shard (The Medieval Kingdom)
+  ok    the Pirate Seas path is there and closed until the purple shard (The Pirate Seas (after the Medieval purple shard))
+  ok    the path loads the Medieval Kingdom and plays its arrival (world Medieval, cutscene MedievalArrival)
+  screenshot 200a_vortex_over_courtyard.png
+  screenshot 200b_into_the_hay.png
+  screenshot 200c_pop_up.png
+  screenshot 200d_achoo.png
+  screenshot 200e_fire_jump.png
+  screenshot 200f_runaway_wagon.png
+  screenshot 200g_kaboom.png
+  screenshot 200h_wreck.png
+  screenshot 200i_slink_away.png
+  ok    dressed for the Medieval Kingdom (Dan Model dan_medieval, Abi Model abi_medieval); Kira is Dragon Kira (Model kira_dragon)
+  ok    the necklace's shard is purple here (tint RGBA(0.620, 0.320, 1.000, 1.000))
+  ok    music in the Medieval Kingdom: medieval (178.8 s, at 27.9 s)
+  ok    after the arrival the wagon's wreck, its singed driver and the pony are in the courtyard
+  ok    play starts in the courtyard ((0.0, 0.0, 8.0))
+  screenshot 201_courtyard_start.png
+  area ME (The Medieval Kingdom): available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 + Bethlehem 48 of 60 + The Medieval Kingdom 50 of 60 = 191 with [Dan, Abi, Kira, Glide, FirePuff], threshold 150 (the universal total); locked here: B01 needs MuscleMan, B02 needs MuscleMan, A01 needs MuscleMan, A02 needs MuscleMan, K01 needs ChargedPunch, K02 needs ChargedPunch, J01 needs WallJump, X01 needs DoubleJump, DD1 needs DeepDive, DD2 needs DeepDive; gates: ME-boulder-yard (boulder, needs MuscleMan: B01 B02), ME-portcullis-armory (portcullis, needs MuscleMan: A01 A02), ME-crack-store (cracked wall, needs ChargedPunch: K01 K02), ME-chimney-village (wall-jump chimney, needs WallJump: J01), ME-ledge-stands (double-jump ledge, needs DoubleJump: X01), ME-deep-moat (deep water, needs DeepDive: DD1 DD2)
+  ok    item 9 / rule 2 (universal total): 191 available on arrival (three worlds + the Medieval first visit), threshold 150 (240 shards exist up to here: 63%)
+  ok    HUD on arrival: 141, under it "Next: 150"
+
+== Round 8, item 5: the rival Muscle Man in the courtyard (shows off, laughs at Dan's try at the boulder)
+  ok    he shows off as the party comes near (3 rival spots; shows 1)
+  screenshot 202_rival_lifts.png
+  ok    Dan pushes the yard's boulder (it won't move: 539 touches) and the rival laughs at him (mocks 2)
+  screenshot 203_rival_laughs.png
+  ok    the rival has no collider (he blocks nothing)
+
+== Round 8, item 6: dragon Kira glides (hold Jump in the air) off the west wall walk
+  ok    dragon Kira can glide (form Dragon Kira)
+  screenshot 204_kira_on_the_wall.png
+  screenshot 205_kira_gliding.png
+  ok    she glides 59.3 m from 10 m up (glides 1; lands at (29.8, 0.0, 30.0))
+  ok    a plain jump off the wall lands 6.6 m out (the glide carries much further)
+  ok    C02 (the courtyard: by the benches) at (-12.4, 0.0, 22.4); 1 here, 142 in all
+
+== Round 8, items 4, 6, 8: the dungeon (dark; dragon Kira's fire lights the braziers; keys open the cells; rats run from the fire)
+  ok    the stair door takes the party down into the dungeon ((400.0, 0.1, 9.0))
+  ok    it's dark down here (the necklace's light)
+  screenshot 210_dungeon.png
+  ok    D01 (the dungeon: the stair's foot) at (400.0, 0.0, 6.6); 2 here, 143 in all
+  ok    dragon Kira's fire puff sends a rat squeaking away (scared 1, hits taken 0: it doesn't hurt it)
+  ok    Kira lights the dungeon's three braziers (3 lit); the bars at the end open (3 things burned so far)
+  screenshot 211_braziers_lit.png
+  ok    D09 (the dungeon: the brazier room (dragon Kira lights the three braziers)) at (398.3, 0.0, 53.5); 3 here, 144 in all
+  ok    D10 (the dungeon: the brazier room (dragon Kira lights the three braziers)) at (401.4, 0.0, 53.9); 4 here, 145 in all
+  ok    the brazier room's heart (max hearts 4)
+  ok    the key in the east alcove opens cell 1
+  screenshot 212_key_cell_open.png
+  ok    D03 (the dungeon: cell 1 (its key)) at (392.6, 0.0, 12.1); 5 here, 146 in all
+  ok    D04 (the dungeon: cell 1 (its key)) at (392.1, 0.0, 13.9); 6 here, 147 in all
+  ok    the key in the east alcove opens cell 2
+  ok    D05 (the dungeon: cell 2 (its key)) at (392.6, 0.0, 26.1); 7 here, 148 in all
+  ok    D06 (the dungeon: cell 2 (its key)) at (392.1, 0.0, 27.9); 8 here, 149 in all
+  ok    the key in the east alcove opens cell 3
+  (could not reach (399.0, 0.0, 41.0) in 4 s, at (401.6, 0.0, 24.9))
+  ok    D07 (the dungeon: cell 3 (its key)) at (392.6, 0.0, 40.0); 10 here, 151 in all
+  ok    D08 (the dungeon: cell 3 (its key)) at (392.1, 0.0, 41.9); 11 here, 152 in all
+  (could not reach (400.0, 0.0, 2.5) in 4 s, at (399.9, 0.0, 8.8))
+  ok    the stair door at the corridor's south end leads back up to the courtyard ((-23.0, 0.1, 44.0))
+  ok    the necklace wakes at 152 shards in all (11 from the Medieval Kingdom; threshold 150) (NecklaceWakesMedieval, purple)
+  screenshot 240_necklace_wakes.png
+
+== Round 8, item 8: a clumsy knight's shield blocks a punch from the front; from behind it lands
+  ok    a punch from the front clangs off the shield (blocks 1, hits 0)
+  screenshot 215_knight_blocks.png
+  ok    from behind the punch lands (hits 1)
+
+== Round 8, item 7: the bard (the Violinist with his lute) teaches Dan the charged punch
+  ok    the Violinist plays a lute here (Lute, model violinist_medieval)
+  screenshot 220_bard.png
+  ok    he plays for Dan (ViolinistTeachesMedieval)
+  the lute: pose play; 
+  screenshot 221_bard_plays_lute.png
+  screenshot 222_dan_learns.png
+  ok    Dan learned the charged punch (saved)
+
+== Round 8, item 7: the charged punch breaks the store room's cracked wall (a plain punch doesn't)
+  ok    a plain punch only cracks it a little more
+  ok    held and let go, the charged punch breaks it (charged punches 1)
+  screenshot 223_wall_broken.png
+  ok    K01 (the store room behind the cracked wall (charged punch, learned here)) at (-25.4, 0.0, 55.1); 12 here, 153 in all
+  ok    K02 (the store room behind the cracked wall (charged punch, learned here)) at (-25.9, 0.0, 57.4); 13 here, 154 in all
+
+== Round 8, items 7-8: the charged punch knocks a knight's shield away
+  ok    the charged punch knocks the shield away (shield up False, big punches 2)
+  screenshot 232_shield_flies.png
+
+== Round 8, item 8: nervous archers on the walls loose slow, dodgeable arrows
+  ok    an archer on the south wall draws and shoots at Abi in the courtyard (2 arrows in the wait; 1 hit so far)
+  screenshot 225_archers.png
+  arrows that hit Abi while she ran about: 0
+
+== Round 8, item 4: the great hall (the rival at the feast, the gallery, the chandeliers to the east ledge)
+  ok    the rival shows off at the feast (lifts a barrel; shows 3)
+  screenshot 226_hall_rival.png
+  ok    G02 (the great hall) at (-6.9, 0.0, 76.4); 15 here, 156 in all
+  ok    G03 (the great hall: by the fireplace) at (7.8, 0.0, 69.5); 16 here, 157 in all
+  ok    up the stair onto the west gallery ((-11.8, 6.0, 67.2))
+  ok    G04 (the great hall: the west gallery (up the stair)) at (-12.9, 6.0, 72.4); 17 here, 158 in all
+  ok    G05 (the great hall: the north gallery) at (-0.6, 6.0, 81.9); 18 here, 159 in all
+  ok    a chandelier carries Abi across the hall ((-3.1, 6.0, 75.0), 5.5 m)
+  screenshot 227_chandelier.png
+  ok    G07 (the great hall: the east ledge (ride the chandeliers)) at (13.0, 6.0, 77.4); 20 here, 161 in all
+  ok    the east ledge's heart
+  ok    G01 (the great hall: on the feast table) at (0.6, 0.0, 73.1); 21 here, 162 in all
+
+== Round 8, items 4-6: the tournament field: the rival rings the bell, Dan can't; Kira lights the stands' braziers and burns the hay
+  ok    M03 (the moat's outer bank, south) at (19.4, 0.0, -24.0); 22 here, 163 in all
+  (could not reach (0.0, 0.0, -50.0) in 4 s, at (3.0, 0.0, -45.9))
+  (could not reach (40.0, 0.0, -80.0) in 4 s, at (22.1, 0.0, -66.2))
+  (could not reach (60.0, 1.0, -50.0) in 4 s, at (55.0, 0.0, -57.1))
+  ok    T01 (the tournament field: the way in) at (59.7, 0.0, -50.5); 23 here, 164 in all
+  ok    the rival strikes the pad: the puck flies, the bell rings, he flexes
+  screenshot 230_rival_rings_the_bell.png
+  ok    Dan hits the pad: the puck gets 35% of the way, no bell, and the rival laughs (mocks 6)
+  screenshot 231_dan_fails_rival_laughs.png
+  ok    even the charged punch only gets it 86% up (so close)
+  ok    Kira lights the three braziers on the stands; the prize chest opens (3 lit)
+  screenshot 233_stands_braziers.png
+  ok    T05 (the stands, the top tier) at (90.6, 3.0, -60.4); 24 here, 165 in all
+  ok    T04 (the stands, the first tier) at (80.6, 1.0, -63.1); 25 here, 166 in all
+  ok    T07 (the prize chest (light the three braziers on the stands: dragon Kira)) at (95.0, 0.0, -115.4); 26 here, 167 in all
+  ok    Kira's fire burns the hay heap away
+  ok    T06 (behind the hay bales (dragon Kira burns them)) at (122.0, 0.0, -109.4); 27 here, 168 in all
+  ok    T03 (the tournament field: by the tilt) at (112.3, 0.0, -95.5); 28 here, 169 in all
+  ok    T02 (the tournament field: the lists) at (100.5, 0.0, -72.2); 29 here, 170 in all
+
+== Round 8, item 6: the village: Kira burns the brambles; up the crates onto a stall's awning
+  ok    the brambles burn away
+  screenshot 235_brambles_burned.png
+  ok    V06 (behind the brambles (dragon Kira burns them)) at (-59.8, 0.0, -123.5); 30 here, 171 in all
+  ok    V01 (the village gate) at (-40.6, 0.0, -70.0); 31 here, 172 in all
+  ok    V02 (the village) at (-69.5, 0.0, -60.2); 32 here, 173 in all
+  ok    V03 (the market square) at (-84.7, 0.0, -84.5); 33 here, 174 in all
+  ok    V04 on a stall's awning, up the crates ((-95.1, 2.6, -90.2))
+  ok    V05 (a back street) at (-114.5, 0.0, -99.8); 35 here, 176 in all
+  (could not reach (-128.0, 1.0, -60.0) in 4 s, at (-123.8, 0.0, -79.2))
+  ok    V07 (the village's far end) at (-127.9, 0.0, -60.6); 36 here, 177 in all
+
+== Round 8, item 9: the courtyard, the walls, the arcade's roof (until the necklace wakes)
+  ok    C05 (the courtyard: the south-east corner) at (17.5, 0.0, 13.8); 37 here, 178 in all
+  ok    C03 (the courtyard: by the flower pots) at (12.1, 0.0, 43.4); 38 here, 179 in all
+  (could not reach (-20.0, 1.0, 50.0) in 4 s, at (-17.9, 0.0, 49.4))
+  ok    C04 (the courtyard: the north-west corner) at (-19.4, 0.0, 49.9); 39 here, 180 in all
+  (could not reach (27.0, 1.0, 30.0) in 4 s, at (10.0, 0.0, 37.3))
+  ok    C06 (under the arcade) at (26.5, 0.0, 30.2); 40 here, 181 in all
+  (could not reach (-28.8, 0.0, 12.4) in 4 s, at (-4.0, 0.0, 20.3))
+  ok    up the stair onto the west wall walk ((-28.8, 9.6, 29.8))
+  ok    W02 (the west wall walk) at (-31.5, 10.0, 35.4); 41 here, 182 in all
+  ok    W03 (the west wall walk) at (-31.5, 10.0, 41.4); 42 here, 183 in all
+  ok    W04 (the north-west tower's top) at (-31.4, 16.0, 60.8); 43 here, 184 in all
+  screenshot 238_nw_tower_top.png
+  ok    W01 (the west wall walk) at (-31.5, 10.0, 20.6); 44 here, 185 in all
+  ok    C08 (the arcade's roof (up its stair)) at (27.0, 6.6, 44.5); 45 here, 186 in all
+  ok    C07 (the arcade's roof (up its stair)) at (27.0, 6.6, 20.6); 46 here, 187 in all
+  ok    from the arcade's roof up the steps onto the east wall walk ((31.0, 10.0, 17.8))
+  ok    W05 (the east wall walk) at (31.5, 10.0, 29.4); 47 here, 188 in all
+  ok    W06 (the east wall walk) at (31.2, 10.0, 41.5); 48 here, 189 in all
+  ok    W07 (the north-east tower's top) at (31.4, 16.0, 60.7); 49 here, 190 in all
+  the Medieval Kingdom took the bot 5.2 min so far; 49 shards here, 190 in all; hits 5, respawns 0
+
+== Round 8, item 10: the stone: TheStone, Muscle Man swept along
+  ok    the necklace is awake (190 of 150)
+  screenshot 245_the_stone_awake.png
+  ok    Dan reaches the stone: TheStone plays
+  screenshot 250a_muscleman_brags.png
+  screenshot 250b_the_heave.png
+  screenshot 250c_flat_on_his_back.png
+  screenshot 250d_dan_steps_up.png
+  screenshot 250e_it_slides_out.png
+  screenshot 250f_master.png
+  screenshot 250g_the_vortex.png
+  ok    into the vortex with the purple shard (4 of 8)
+  ok    Muscle Man came too: he follows the party (model Model muscleman_medieval)
+  ok    the Pirate Seas path is open; Home says "Home 4 of 8 story shards"
+  ok    Muscle Man keeps up in the vortex (4.9 m behind; warps 0)
+  screenshot 251_vortex_with_muscleman.png
+
+== Round 8, items 7 and 11: in an earlier world (Bethlehem): Muscle Man rolls the cave's boulder away; Dan's charged punch breaks the courtyard's cracked wall
+  ok    Bethlehem, with Muscle Man along (Model muscleman_medieval)
+  ok    X by the cave's boulder: Muscle Man rolls it away (jobs 1)
+  screenshot 260_bethlehem_boulder_moved.png
+  ok    M01 in the shepherds' cave behind it
+  ok    Dan's charged punch breaks Bethlehem's cracked courtyard wall
+  screenshot 261_bethlehem_wall_broken.png
+  ok    C01 behind it
+
+== Round 8, item 11: Muscle Man's jobs in the Medieval Kingdom (the yard's boulder, the armory's portcullis, a boost)
+  ok    back in the Medieval Kingdom (no second arrival), Muscle Man along
+  ok    the rival is gone from his spots (he's with the party now)
+  ok    Muscle Man rolls the yard's boulder away
+  screenshot 265_yard_boulder.png
+  ok    B01 (the walled yard behind the boulder (Muscle Man)) at (-24.4, 0.0, 8.0); 50 here, 193 in all
+  ok    B02 (the walled yard behind the boulder (Muscle Man)) at (-26.7, 0.0, 5.4); 51 here, 194 in all
+  ok    Muscle Man heaves the armory's portcullis up
+  screenshot 266_portcullis.png
+  ok    A01 (the armory behind the portcullis (Muscle Man)) at (20.2, 0.0, 4.6); 52 here, 195 in all
+  ok    A02 (the armory behind the portcullis (Muscle Man)) at (23.5, 0.0, 4.1); 53 here, 196 in all
+  ok    Muscle Man boosts Dan up onto the stands' flag platform ((83.6, 5.6, -58.5))
+  screenshot 267_boost.png
+  sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 40454144 samples); master volume 0.00
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 40454144 samples); master volume 0.00

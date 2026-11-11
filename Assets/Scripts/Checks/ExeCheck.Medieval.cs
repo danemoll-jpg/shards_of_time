@@ -104,6 +104,7 @@ namespace ShardsOfTime
             yield return RivalCourtyard();
             yield return Glide();
             yield return Dungeon();
+            yield return NecklaceIfAwakeME(); yield return WaitFor(() => !Game.I.Busy && !Game.InCutscene, 15f);
             yield return KnightShield(false);
             yield return BardAndPunch();
             yield return KnightShield(true);
@@ -162,6 +163,7 @@ namespace ShardsOfTime
         IEnumerator Dungeon()
         {
             Head("Round 8, items 4, 6, 8: the dungeon (dark; dragon Kira's fire lights the braziers; keys open the cells; rats run from the fire)");
+            Health.Refill();
             yield return SwitchTo(2);
             yield return TpSettle(ME(-25.5f, 46), -90);
             yield return Go(ME(-29.6f, 46), .3f, 6f, 1f, () => Player.transform.position.x > 300);
@@ -186,8 +188,10 @@ namespace ShardsOfTime
                 yield return TpSettle(new Vector3(Medieval.Dungeon.x + 1.1f, .1f, z), 90);
                 yield return AttackToward(new Vector3(Medieval.Dungeon.x + 3f, 0, z));
             }
+            Health.Refill();
             Ok(group.Done, $"Kira lights the dungeon's three braziers ({group.targets.Count(t => t.Lit)} lit); the bars at the end open ({FireTarget.Burns} things burned so far)");
             yield return TurnView(Medieval.Dungeon + new Vector3(0, 1, 52)); yield return Shot("211_braziers_lit");
+            yield return GoF(Medieval.Dungeon + new Vector3(0, 0, 44f), .7f, 10f); yield return GoF(Medieval.Dungeon + new Vector3(0, 0, 51.5f), .6f, 8f);   // up the corridor, through the opened bars
             yield return MShard("D09"); yield return MShard("D10");
             yield return GoF(Medieval.Dungeon + new Vector3(0, 0, 55.2f), .5f, 6f); yield return Wait(.5f);
             Ok(SaveGame.Current.heartUpgrades.Contains("ME-H1"), $"the brazier room's heart (max hearts {SaveGame.Current.maxHearts})");
@@ -197,7 +201,7 @@ namespace ShardsOfTime
             {
                 var doorC = Object.FindObjectsByType<CellDoor>(FindObjectsInactive.Include, FindObjectsSortMode.None).First(d => d.id == "ME-cell-" + (i + 1));
                 float[] cz = { 9, 23, 37 };
-                var keyAt = new Vector3(Medieval.Dungeon.x + 8.5f, 0, i == 2 ? 4f : cz[i + 1] + 4f);
+                var keyAt = Medieval.KeyAt(i); keyAt.y = 0;
                 yield return TpSettle(new Vector3(Medieval.Dungeon.x, .1f, keyAt.z), 90);
                 yield return GoF(keyAt, .5f, 8f);
                 yield return WaitFor(() => doorC.Open, 2f);
@@ -205,6 +209,7 @@ namespace ShardsOfTime
                 if (i == 0) yield return Shot("212_key_cell_open");
                 yield return GoF(new Vector3(Medieval.Dungeon.x - 1, 0, cz[i] + 4f), .6f, 8f);
                 yield return MShard("D0" + (3 + i * 2)); yield return MShard("D0" + (4 + i * 2));
+                yield return GoF(new Vector3(Medieval.Dungeon.x - 2, 0, cz[i] + 4f), .6f, 8f); yield return GoF(new Vector3(Medieval.Dungeon.x, 0, cz[i] + 4f), .6f, 6f);   // out by the cell's door
             }
             yield return MShard("D02");
             yield return GoF(Medieval.Dungeon + new Vector3(0, 0, 2.5f), .6f, 15f);
@@ -251,8 +256,12 @@ namespace ShardsOfTime
             Ok(v && v.instrument == "Lute", $"the Violinist plays a lute here ({(v ? v.instrument + ", model " + v.ModelName : "none")})");
             yield return TpSettle(ME(Medieval.ViolinistAt.x + 5f, Medieval.ViolinistAt.z), -90);
             yield return TurnView(Medieval.ViolinistAt); yield return Shot("220_bard");
-            yield return Go(ME(Medieval.ViolinistAt.x + 1.6f, Medieval.ViolinistAt.z), .5f, 8f, 1f, () => Game.I.Busy);
-            yield return WaitFor(() => Cutscenes.Playing == "ViolinistTeachesMedieval", 5f);
+            for (int tries = 0; tries < 3 && Cutscenes.Playing != "ViolinistTeachesMedieval" && !SaveGame.Current.Has(Abilities.ChargedPunch); tries++)
+            {
+                yield return WaitFor(() => !Game.I.Busy && !Game.InCutscene, 15f);
+                yield return Go(ME(Medieval.ViolinistAt.x + 1.6f, Medieval.ViolinistAt.z), .5f, 8f, 1f, () => Game.I.Busy);
+                yield return WaitFor(() => Cutscenes.Playing == "ViolinistTeachesMedieval" || Game.InCutscene, 5f);
+            }
             Ok(Cutscenes.Playing == "ViolinistTeachesMedieval", "he plays for Dan (ViolinistTeachesMedieval)");
             yield return Wait(1.2f); Log($"  the lute: pose {v.InstrumentPose}; {v.ArmReport}"); yield return Shot("221_bard_plays_lute");
             yield return Wait(2f); yield return Shot("222_dan_learns");
@@ -283,7 +292,7 @@ namespace ShardsOfTime
             Ok(shots > 0, $"an archer on the south wall draws and shoots at Abi in the courtyard ({shots} arrows in the wait; {Arrow.Hits} hit so far)");
             yield return TurnView(new Vector3(0, 10, -1.5f)); yield return Shot("225_archers");
             // dodge: run sideways while they shoot
-            int hits0 = Arrow.Hits; Stick(StickFor(Vector3.right)); yield return Wait(4f); Stick(StickFor(Vector3.left)); yield return Wait(4f); Stick(Vector2.zero);
+            int hits0 = Arrow.Hits; yield return GoF(XZ(8, 12), .8f, 6f); yield return GoF(XZ(-8, 12), .8f, 6f); Stick(Vector2.zero);
             Log($"  arrows that hit Abi while she ran about: {Arrow.Hits - hits0}");
             Health.Refill();
         }
@@ -325,7 +334,7 @@ namespace ShardsOfTime
             yield return MShard("M03");
             yield return GoF(XZ(0, -50), 1f, 20f); yield return GoF(XZ(40, -80), 1.2f, 30f); yield return MShard("T01");
             int shows = RivalMuscleMan.TotalShows;
-            yield return GoF(XZ(66, -92), 1f, 25f);
+            yield return GoF(XZ(54, -76), 1f, 25f); yield return GoF(XZ(56, -92), 1f, 15f); yield return GoF(XZ(66, -95), 1f, 15f);   // round the west end of the lists' rail
             yield return WaitFor(() => RivalMuscleMan.TotalShows > shows, 5f);
             Ok(RivalMuscleMan.TotalShows > shows, "the rival strikes the pad: the puck flies, the bell rings, he flexes");
             yield return Wait(.6f); yield return TurnView(new Vector3(70, 3, -100)); yield return Shot("230_rival_rings_the_bell");
@@ -359,7 +368,7 @@ namespace ShardsOfTime
             yield return Wait(1.5f);
             Ok(SaveGame.Current.World(WorldData.Medieval).opened.Contains("ME-hay-field"), "Kira's fire burns the hay heap away");
             yield return MShard("T06");
-            yield return MShard("T03", .6f, 30f); yield return MShard("T02", .6f, 30f);
+            yield return MShard("T03", .6f, 30f); yield return GoF(XZ(116, -84), 1f, 15f); yield return GoF(XZ(112, -76), 1f, 15f); yield return MShard("T02", .6f, 30f);
         }
 
         IEnumerator VillageFire()
@@ -391,15 +400,22 @@ namespace ShardsOfTime
             yield return TpSettle(ME(0, 9), 0);
             foreach (var id in new[] { "C01", "C05", "C03", "C04", "C06" }) yield return MShard(id, .6f, 30f);
             // up the west wall's stair
-            yield return GoF(XZ(-28.8f, 7f), .6f, 20f); yield return GoF(new Vector3(-28.8f, 10f, 19.5f), .7f, 20f);
+            yield return GoF(XZ(-28.8f, 12.4f), .6f, 20f); yield return GoF(new Vector3(-28.8f, 10f, 30.5f), .7f, 25f);
             Ok(Player.transform.position.y > 9.5f, $"up the stair onto the west wall walk ({Fmt(Player.transform.position)})");
-            foreach (var id in new[] { "W01", "W02", "W03" }) yield return MShard(id, .6f, 25f);
-            yield return GoF(new Vector3(-30.8f, 16f, 54.5f), .8f, 20f); yield return MShard("W04", .8f, 15f);
+            yield return GoF(new Vector3(-31.6f, 10f, 31.5f), .6f, 8f);   // off the stair's top onto the walk
+            foreach (var id in new[] { "W02", "W03" }) yield return MShard(id, .6f, 25f);
+            yield return GoF(new Vector3(-30.8f, 10f, 45.6f), .6f, 10f); yield return GoF(new Vector3(-30.8f, 16f, 57.5f), .8f, 20f); yield return MShard("W04", .8f, 15f);
             yield return Shot("238_nw_tower_top");
-            // the arcade's stair, its roof
+            yield return GoF(new Vector3(-30.8f, 16f, 56.5f), .7f, 8f); yield return GoF(new Vector3(-30.8f, 10f, 45.5f), .8f, 20f); yield return GoF(new Vector3(-31.6f, 10f, 40f), .7f, 10f);
+            yield return MShard("W01", .6f, 30f);
+            // the arcade's stair, its roof, the steps on to the east walk and up the north-east tower
             yield return TpSettle(ME(26.5f, 61), 180);
             yield return GoF(new Vector3(26.5f, 6.6f, 51f), .8f, 20f);
             foreach (var id in new[] { "C08", "C07" }) yield return MShard(id, .6f, 25f);
+            yield return GoF(new Vector3(28.9f, 6.6f, 8.4f), .6f, 15f); yield return GoF(new Vector3(28.9f, 10f, 17.6f), .7f, 10f); yield return GoF(new Vector3(31.6f, 10f, 18f), .6f, 6f);
+            Ok(Player.transform.position.y > 9.5f, $"from the arcade's roof up the steps onto the east wall walk ({Fmt(Player.transform.position)})");
+            foreach (var id in new[] { "W05", "W06" }) yield return MShard(id, .6f, 25f);
+            yield return GoF(new Vector3(30.8f, 10f, 45.6f), .6f, 10f); yield return GoF(new Vector3(30.8f, 16f, 57.5f), .8f, 20f); yield return MShard("W07", .8f, 15f);
             yield return NecklaceIfAwakeME();
         }
 
@@ -419,10 +435,10 @@ namespace ShardsOfTime
                 yield return NecklaceIfAwakeME();
             }
             Ok(prog.necklaceAwake, $"the necklace is awake ({SaveGame.Current.Total} of {NeedME})");
-            yield return SwitchTo(0);
             yield return TpSettle(ME(0, 28), 0);
+            yield return SwitchTo(0);   // (after the move: there's room for Dan here)
             yield return Shot("245_the_stone_awake");
-            yield return Go(ME(0, 32.6f), .3f, 6f, .6f, () => Game.I.Busy);
+            yield return Go(ME(0, 32.8f), .3f, 6f, .6f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "TheStone", 6f);
             Ok(Cutscenes.Playing == "TheStone", "Dan reaches the stone: TheStone plays");
             foreach (var (t, n) in new[] { (1.0f, "250a_muscleman_brags"), (4.4f, "250b_the_heave"), (7.6f, "250c_flat_on_his_back"), (9.6f, "250d_dan_steps_up"), (12.6f, "250e_it_slides_out"), (14.8f, "250f_master"), (17.0f, "250g_the_vortex") })
@@ -490,13 +506,13 @@ namespace ShardsOfTime
             yield return Shot("266_portcullis");
             yield return MShard("A01"); yield return MShard("A02");
             var boost = Object.FindObjectsByType<BoostSpot>().First();
-            yield return TpSettle(new Vector3(85, .1f, -54.5f), 180); yield return Wait(1.2f);
-            Stick(StickFor(Vector3.back * .3f));
-            yield return Press(AttackBtn); yield return WaitFor(() => boost.Boosts > 0, 4f); Stick(StickFor(Vector3.back)); yield return Wait(.9f); Stick(Vector2.zero);
+            yield return TpSettle(new Vector3(83.6f, .1f, -54f), 180); yield return Wait(1.2f);
+            yield return Press(AttackBtn); yield return WaitFor(() => boost.Boosts > 0, 4f);
             yield return WaitFor(() => M.Grounded, 4f);
             Ok(boost.Boosts > 0 && Player.transform.position.y > 5f, $"Muscle Man boosts Dan up onto the stands' flag platform ({Fmt(Player.transform.position)})");
             yield return Shot("267_boost");
-            yield return MShard("X01", .6f, 6f);
+            yield return GoF(new Vector3(84.4f, 5.6f, -57.75f), .3f, 4f); yield return GoF(new Vector3(86.1f, 5.6f, -57.75f), .3f, 4f);   // round the flag post
+            yield return MShard("X01", .5f, 6f);
         }
 
         IEnumerator PerfMedieval()

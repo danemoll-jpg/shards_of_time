@@ -219,7 +219,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck; see rule 12). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12). Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -268,7 +268,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 7.2: `game-702`, previous `Builds/LauncherRelease-702`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 8: `game-800`, previous `Builds/LauncherRelease-800`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -277,6 +277,44 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 8 delivered: 0.8.0 (build 800), 2026-11-11.** The Medieval Kingdom, the fourth world: the hay-wagon arrival (the blast), the
+courtyard and the stone, the walls and towers, the great hall (chandeliers), the dungeon, the moat, the tournament field (the high
+striker), the village; dragon Kira (glide, fire puff); Dan's charged punch from the bard; knights, archers, rats; Muscle Man the rival,
+then `TheStone` and Muscle Man the companion (boulders in every world, portcullises, boosts). 60 shards / 150 wake the necklace.
+Published: `game-800`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 8:
+- Worlds: `Game.InMedieval`; `World/Medieval.cs` builds it (the castle island x -36..36, z -6..90: courtyard x -30..30, z 0..63, the
+  stone at (0, 34), the keep / great hall x -15..15, z 66..84; the moat ring out to x +-48, z -18..102, water top -1.2, its deep pit in
+  the NW corner; the field x 40..130, z -125..-40; the village x -140..-30, z -135..-40; the dungeon its own space at x 400). Its pieces
+  in `World/MedievalWorld.cs` (FireTarget / FireGroup, PunchTarget / HighStriker, RivalMuscleMan, CellDoor / CellKey, StoneHum).
+  Ground and props: `Tools/Blender/medieval_world.py` (-> `medieval_terrain.fbx`, `medieval_props.fbx`; prop fronts face -z; Torch
+  leans out to -z; Chandelier's origin is its hook, the ring 3 m below; Drawbridge hinges at its origin). `Medieval.asset` is made
+  once from `WorldData.MedievalDefaults()` (delete it to remake). `WorldData.StoryOrder` = Ice Age, Egypt, Bethlehem, Medieval.
+- Vortex: six paths 24 deg apart (Ice Age -60, Egypt -36, Bethlehem -12, Medieval 12, Pirate Seas 36 "to be continued" until the
+  purple shard, Home 60); checks read the angles from `Vortex.Paths` (`ExeCheck.Yaw`). The stone's shard plays `TheStone`
+  (`Game.StoneFinale`), adds `Abilities.MuscleMan` and the companion, then the vortex; `Medieval.Gate` by the stone is the way back.
+  Only Dan can take the stone's shard (`Pickup`).
+- Muscle Man: `Party.Companion` (a `Hero` "MuscleMan", not in `Heroes`, Follower slot 2; `Party.Everyone`); stats
+  `Data/Characters/MuscleMan.asset`; model `muscleman_medieval` in every world. His jobs: `World/MuscleJobs.cs` (`MuscleJob`: X near
+  one; `Boulder` (every world, ids `IA-boulder-grotto`, `IA-boulder-lake`, `EG-block-quarry`, `BE-boulder-cave`, `ME-boulder-yard`),
+  `Portcullis`, `BoostSpot` with `landAt` (`CharacterMotor.Throw` keeps its sideways speed); `OpenNow()` for checks). The rival before
+  he joins: `RivalMuscleMan` (spots courtyard / field / hall; `Boulder.Tried` makes him laugh).
+- Moves: `Abilities.Glide`, `FirePuff` (dragon Kira, `KiraForm.Dragon`), `ChargedPunch` (Dan; `Abilities.Learns` lists each hero's
+  learnable moves; `Party.ChargeTime` 0.55 s; `Hero.ChargedPunch`, `RockWall.Punch(by, charged)`). `CharacterMotor.Gliding`,
+  `GlideFall` 1.1 m/s, `GlideSpeed` 7.8.
+- Enemies `Combat/EnemyMedieval.cs`: Knight (shield up at the front, `HitCharged`), Archer (`Arrow`), Rat (`Scare`; runs off after a nip).
+- People clips added to `CreatureAnimator.PeopleClips`: `mm_*` (Muscle Man's own), block, draw, aim, shoot, nervous, dazed, limp; the
+  knight's own set as `knight_<clip>` (like the mummy's). `import_characters.py EXTRA_CLIPS` has Dan's Mixamo names.
+- The Violinist's lute: `instruments.py` "Lute" (the lyre's markers), held across his body by IK (`Violinist.LateUpdate`), the
+  lyre's clip; `violinist_medieval` is rigged without his cape (`Tools/Blender/split_cape.py`), the cape put back by
+  `Tools/Blender/attach_cape.py` (-> `rigged.fbx`).
+- Kira lock: the dragon's eyes are a deeper amber (the eye test takes r - g < 72 and 0.02% for that form).
+- Never stuck: `LowSpot.opens` also names a cracked wall or a Muscle Man job the check opens first; `TaughtSoFar` includes the
+  charged punch and Muscle Man. Cutscenes `MedievalArrival`, `TheStone`, `NecklaceWakesMedieval`, `ViolinistTeachesMedieval`;
+  `CutsceneAuthoring.Version` 18; `VortexRings(..., colors:)`.
+- `Follower`: the "not caught up" distance grows with the place in line (Muscle Man walks further back).
+
 **Fix 7.2 delivered: 0.7.2 (build 702), 2026-11-11.** Never stuck: Bethlehem's well has a rope out (and was rebuilt: it sat in a
 dry crater); every world's pits, pools and enclosed spots are listed and checked (rule 12); Pause > "Return to checkpoint" and a
 "Stuck?" hint. Published: `game-702`. Report and "For Dan to check": `TODO.md`.

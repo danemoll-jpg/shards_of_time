@@ -1,0 +1,517 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: Medieval
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: Medieval
+  displayName: The Medieval Kingdom
+  heightsAreHints: 1
+  areas:
+  - id: ME
+    name: The Medieval Kingdom
+    requirement: 150
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - Glide
+    - FirePuff
+    storyShard: {x: 0, y: 1.55, z: 34}
+    storyShardColor: {r: 0.62, g: 0.32, b: 1, a: 1}
+    spawn: {x: 0, y: 0.1, z: 8}
+    spawnYaw: 0
+    kiraForm: Dragon
+    outfit: medieval
+    box:
+      m_Center: {x: 130, y: 0, z: -10}
+      m_Extent: {x: 360, y: 300, z: 210}
+  shards:
+  - id: C01
+    area: ME
+    position: {x: 0, y: 0, z: 14}
+    requires: []
+    note: 'the courtyard: the arrival'
+  - id: C02
+    area: ME
+    position: {x: -12, y: 0, z: 22}
+    requires: []
+    note: 'the courtyard: by the benches'
+  - id: C03
+    area: ME
+    position: {x: 12, y: 0, z: 44}
+    requires: []
+    note: 'the courtyard: by the flower pots'
+  - id: C04
+    area: ME
+    position: {x: -20, y: 0, z: 50}
+    requires: []
+    note: 'the courtyard: the north-west corner'
+  - id: C05
+    area: ME
+    position: {x: 18, y: 0, z: 14}
+    requires: []
+    note: 'the courtyard: the south-east corner'
+  - id: C06
+    area: ME
+    position: {x: 27, y: 0, z: 30}
+    requires: []
+    note: under the arcade
+  - id: C07
+    area: ME
+    position: {x: 27, y: 6.6, z: 20}
+    requires: []
+    note: the arcade's roof (up its stair)
+  - id: C08
+    area: ME
+    position: {x: 27, y: 6.6, z: 44}
+    requires: []
+    note: the arcade's roof (up its stair)
+  - id: W01
+    area: ME
+    position: {x: -31.5, y: 10, z: 20}
+    requires: []
+    note: the west wall walk
+  - id: W02
+    area: ME
+    position: {x: -31.5, y: 10, z: 36}
+    requires: []
+    note: the west wall walk
+  - id: W03
+    area: ME
+    position: {x: -31.5, y: 10, z: 42}
+    requires: []
+    note: the west wall walk
+  - id: W04
+    area: ME
+    position: {x: -31.5, y: 16, z: 61.5}
+    requires: []
+    note: the north-west tower's top
+  - id: W05
+    area: ME
+    position: {x: 31.5, y: 10, z: 30}
+    requires: []
+    note: the east wall walk
+  - id: W06
+    area: ME
+    position: {x: 31.5, y: 10, z: 42}
+    requires: []
+    note: the east wall walk
+  - id: W07
+    area: ME
+    position: {x: 31.5, y: 16, z: 61.5}
+    requires: []
+    note: the north-east tower's top
+  - id: G01
+    area: ME
+    position: {x: 0, y: 0.95, z: 73}
+    requires: []
+    note: 'the great hall: on the feast table'
+  - id: G02
+    area: ME
+    position: {x: -7, y: 0, z: 77}
+    requires: []
+    note: the great hall
+  - id: G03
+    area: ME
+    position: {x: 8, y: 0, z: 69}
+    requires: []
+    note: 'the great hall: by the fireplace'
+  - id: G04
+    area: ME
+    position: {x: -13, y: 6, z: 73}
+    requires: []
+    note: 'the great hall: the west gallery (up the stair)'
+  - id: G05
+    area: ME
+    position: {x: 0, y: 6, z: 82}
+    requires: []
+    note: 'the great hall: the north gallery'
+  - id: G06
+    area: ME
+    position: {x: 13, y: 6, z: 72}
+    requires: []
+    note: 'the great hall: the east ledge (ride the chandeliers)'
+  - id: G07
+    area: ME
+    position: {x: 13, y: 6, z: 78}
+    requires: []
+    note: 'the great hall: the east ledge (ride the chandeliers)'
+  - id: D01
+    area: ME
+    position: {x: 400, y: 0, z: 6}
+    requires: []
+    note: 'the dungeon: the stair''s foot'
+  - id: D02
+    area: ME
+    position: {x: 400, y: 0, z: 31}
+    requires: []
+    note: 'the dungeon: the corridor'
+  - id: D03
+    area: ME
+    position: {x: 392, y: 0, z: 12}
+    requires: []
+    note: 'the dungeon: cell 1 (its key)'
+  - id: D04
+    area: ME
+    position: {x: 392, y: 0, z: 14.5}
+    requires: []
+    note: 'the dungeon: cell 1 (its key)'
+  - id: D05
+    area: ME
+    position: {x: 392, y: 0, z: 26}
+    requires: []
+    note: 'the dungeon: cell 2 (its key)'
+  - id: D06
+    area: ME
+    position: {x: 392, y: 0, z: 28.5}
+    requires: []
+    note: 'the dungeon: cell 2 (its key)'
+  - id: D07
+    area: ME
+    position: {x: 392, y: 0, z: 40}
+    requires: []
+    note: 'the dungeon: cell 3 (its key)'
+  - id: D08
+    area: ME
+    position: {x: 392, y: 0, z: 42.5}
+    requires: []
+    note: 'the dungeon: cell 3 (its key)'
+  - id: D09
+    area: ME
+    position: {x: 398, y: 0, z: 54}
+    requires:
+    - Kira
+    - FirePuff
+    note: 'the dungeon: the brazier room (dragon Kira lights the three braziers)'
+  - id: D10
+    area: ME
+    position: {x: 402, y: 0, z: 54}
+    requires:
+    - Kira
+    - FirePuff
+    note: 'the dungeon: the brazier room (dragon Kira lights the three braziers)'
+  - id: M01
+    area: ME
+    position: {x: -42, y: -5, z: 40}
+    requires: []
+    note: the moat's floor, west (dive)
+  - id: M02
+    area: ME
+    position: {x: 42, y: -5, z: 20}
+    requires: []
+    note: the moat's floor, east (dive)
+  - id: M03
+    area: ME
+    position: {x: 20, y: 0, z: -24}
+    requires: []
+    note: the moat's outer bank, south
+  - id: M04
+    area: ME
+    position: {x: -20, y: 0, z: 108}
+    requires: []
+    note: the moat's outer bank, north
+  - id: T01
+    area: ME
+    position: {x: 60, y: 0, z: -50}
+    requires: []
+    note: 'the tournament field: the way in'
+  - id: T02
+    area: ME
+    position: {x: 100, y: 0, z: -72}
+    requires: []
+    note: 'the tournament field: the lists'
+  - id: T03
+    area: ME
+    position: {x: 112, y: 0, z: -95}
+    requires: []
+    note: 'the tournament field: by the tilt'
+  - id: T04
+    area: ME
+    position: {x: 80, y: 1, z: -63.2}
+    requires: []
+    note: the stands, the first tier
+  - id: T05
+    area: ME
+    position: {x: 90, y: 3, z: -60.3}
+    requires: []
+    note: the stands, the top tier
+  - id: T06
+    area: ME
+    position: {x: 122, y: 0, z: -110}
+    requires:
+    - Kira
+    - FirePuff
+    note: behind the hay bales (dragon Kira burns them)
+  - id: T07
+    area: ME
+    position: {x: 95, y: -0.9, z: -116}
+    requires:
+    - Kira
+    - FirePuff
+    note: 'the prize chest (light the three braziers on the stands: dragon Kira)'
+  - id: V01
+    area: ME
+    position: {x: -40, y: 0, z: -70}
+    requires: []
+    note: the village gate
+  - id: V02
+    area: ME
+    position: {x: -70, y: 0, z: -60}
+    requires: []
+    note: the village
+  - id: V03
+    area: ME
+    position: {x: -85, y: 0, z: -85}
+    requires: []
+    note: the market square
+  - id: V04
+    area: ME
+    position: {x: -95, y: 2.6, z: -90}
+    requires: []
+    note: on a market stall's awning (up the crates)
+  - id: V05
+    area: ME
+    position: {x: -115, y: 0, z: -100}
+    requires: []
+    note: a back street
+  - id: V06
+    area: ME
+    position: {x: -60, y: 0, z: -124}
+    requires:
+    - Kira
+    - FirePuff
+    note: behind the brambles (dragon Kira burns them)
+  - id: V07
+    area: ME
+    position: {x: -128, y: 0, z: -60}
+    requires: []
+    note: the village's far end
+  - id: B01
+    area: ME
+    position: {x: -25, y: 0, z: 8}
+    requires:
+    - MuscleMan
+    note: the walled yard behind the boulder (Muscle Man)
+  - id: B02
+    area: ME
+    position: {x: -27, y: 0, z: 5}
+    requires:
+    - MuscleMan
+    note: the walled yard behind the boulder (Muscle Man)
+  - id: A01
+    area: ME
+    position: {x: 20, y: 0, z: 4}
+    requires:
+    - MuscleMan
+    note: the armory behind the portcullis (Muscle Man)
+  - id: A02
+    area: ME
+    position: {x: 24, y: 0, z: 4}
+    requires:
+    - MuscleMan
+    note: the armory behind the portcullis (Muscle Man)
+  - id: K01
+    area: ME
+    position: {x: -26, y: 0, z: 55}
+    requires:
+    - ChargedPunch
+    note: the store room behind the cracked wall (charged punch, learned here)
+  - id: K02
+    area: ME
+    position: {x: -26, y: 0, z: 58}
+    requires:
+    - ChargedPunch
+    note: the store room behind the cracked wall (charged punch, learned here)
+  - id: J01
+    area: ME
+    position: {x: -99, y: 9, z: -124}
+    requires:
+    - WallJump
+    note: the top of the chimney between two village houses (wall jump)
+  - id: X01
+    area: ME
+    position: {x: 86.3, y: 5.6, z: -58.5}
+    requires:
+    - DoubleJump
+    note: the stands' flag platform (double jump)
+  - id: DD1
+    area: ME
+    position: {x: -42, y: -16, z: 96}
+    requires:
+    - DeepDive
+    note: the moat's deep pit (deep dive)
+  - id: DD2
+    area: ME
+    position: {x: -40, y: -16, z: 98}
+    requires:
+    - DeepDive
+    note: the moat's deep pit (deep dive)
+  gates:
+  - id: ME-boulder-yard
+    kind: boulder
+    needs: MuscleMan
+    position: {x: -18.5, y: 0, z: 7.5}
+    opens:
+    - B01
+    - B02
+    note: 'the walled yard in the courtyard (Muscle Man: he joins at the stone)'
+  - id: ME-portcullis-armory
+    kind: portcullis
+    needs: MuscleMan
+    position: {x: 22, y: 0, z: 8}
+    opens:
+    - A01
+    - A02
+    note: the armory's portcullis (Muscle Man)
+  - id: ME-crack-store
+    kind: cracked wall
+    needs: ChargedPunch
+    position: {x: -22, y: 0, z: 56}
+    opens:
+    - K01
+    - K02
+    note: the store room's cracked wall (charged punch, learned here)
+  - id: ME-chimney-village
+    kind: wall-jump chimney
+    needs: WallJump
+    position: {x: -99, y: 0, z: -124}
+    opens:
+    - J01
+    note: a chimney between two village houses (wall jump, Steampunk)
+  - id: ME-ledge-stands
+    kind: double-jump ledge
+    needs: DoubleJump
+    position: {x: 85, y: 5.6, z: -58.5}
+    opens:
+    - X01
+    note: the stands' flag platform (double jump; or a boost from Muscle Man)
+  - id: ME-deep-moat
+    kind: deep water
+    needs: DeepDive
+    position: {x: -42, y: -10, z: 96}
+    opens:
+    - DD1
+    - DD2
+    note: the moat's deep pit (deep dive, Pirate Seas)
+  lowSpots:
+  - id: ME-moat-west
+    kind: water
+    drop: {x: -42, y: 0, z: 40}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -55, y: 0, z: 40}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the moat, west side (out onto the outer bank)
+  - id: ME-moat-north
+    kind: water
+    drop: {x: 0, y: 0, z: 96}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 0, y: 0, z: 109}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the moat, north side
+  - id: ME-moat-east
+    kind: water
+    drop: {x: 42, y: 0, z: 30}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 55, y: 0, z: 30}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the moat, east side
+  - id: ME-moat-south
+    kind: water
+    drop: {x: 24, y: 0, z: -12}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 24, y: 0, z: -25}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the moat, south side (by the drawbridge)
+  - id: ME-moat-deep
+    kind: water
+    drop: {x: -42, y: 0, z: 96}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -55, y: 0, z: 96}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: over the moat's deep pit (NW corner)
+  - id: ME-dungeon
+    kind: enclosed
+    drop: {x: 400, y: 0.3, z: 30}
+    via: {x: 400, y: 0, z: -1.4}
+    exit: {x: -27, y: 0, z: 44}
+    radius: 30
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the dungeon (its stair door back to the courtyard)
+  - id: ME-hall
+    kind: enclosed
+    drop: {x: 8, y: 0.3, z: 70}
+    via: {x: 0, y: 0, z: 64.5}
+    exit: {x: 0, y: 0, z: 56}
+    radius: 10
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the great hall (the door is south)
+  - id: ME-yard
+    kind: enclosed
+    drop: {x: -25, y: 0.3, z: 7}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -12, y: 0, z: 8}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: ME-boulder-yard
+    checkpoint: 
+    note: the walled yard behind the boulder
+  - id: ME-armory
+    kind: enclosed
+    drop: {x: 22, y: 0.3, z: 4}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 22, y: 0, z: 14}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: ME-portcullis-armory
+    checkpoint: 
+    note: the armory behind the portcullis
+  - id: ME-store
+    kind: enclosed
+    drop: {x: -26, y: 0.3, z: 56}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -16, y: 0, z: 56}
+    radius: 6
+    needs: ChargedPunch
+    heroes: 
+    opens: ME-crack-store
+    checkpoint: 
+    note: the store room behind the cracked wall
+  violinistInstrument: Lute
+  violinistPlayClip: violinist_lyre

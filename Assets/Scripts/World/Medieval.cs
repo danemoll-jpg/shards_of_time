@@ -60,7 +60,7 @@ namespace ShardsOfTime
                 if (!prog.shards.Contains(s.id)) Pickup.Make(Pickup.Kind.Shard, s.id, s.area, ShardPos(s.position), root, new Color(.85f, .7f, 1f));
             PlayLog.Line("Medieval shards placed: " + string.Join(" ", w.shards.Select(s => $"{s.id}{Fmt(ShardPos(s.position))}")));
             var a = w.Area("ME");
-            var story = Pickup.Make(Pickup.Kind.StoryShard, "story-" + w.worldId, a.id, StoneAt + Vector3.up * a.storyShard.y, root, a.storyShardColor);
+            var story = Pickup.Make(Pickup.Kind.StoryShard, "story-" + w.worldId, a.id, StoneAt + new Vector3(0, a.storyShard.y, -.35f), root, a.storyShardColor);
             story.gameObject.SetActive(prog.necklaceAwake && !prog.storyShard);
             Game.I.StoryShard = story;
             Game.I.StoryBeam = Box("Story beam", StoneAt + Vector3.up * 16f, new Vector3(.35f, 30f, .35f), new Color(.75f, .55f, 1f), "Glow", false).gameObject;
@@ -169,7 +169,7 @@ namespace ShardsOfTime
             foreach (var (x, z, open) in new[] { (-31.5f, -1.5f, false), (31.5f, -1.5f, false), (-31.5f, 61.5f, true), (31.5f, 61.5f, true) })
             {
                 Solid(new Vector3(x, wb, z), new Vector3(7.2f, 16f - wb, 7.2f)); Solid(new Vector3(x, wb, z), new Vector3(7.2f, 16f - wb, 7.2f), 45);
-                if (open) for (int i = 0; i < 8; i++) { float a = i * 45f * Mathf.Deg2Rad; Solid(new Vector3(x + Mathf.Cos(a) * 4.4f, 16, z + Mathf.Sin(a) * 4.4f), new Vector3(1.2f, 1.1f, 2.6f), -i * 45f); }
+                if (open) for (int i = 0; i < 8; i++) { if (i == 6) continue; /* the south side: the steps come up here */ float a = i * 45f * Mathf.Deg2Rad; Solid(new Vector3(x + Mathf.Cos(a) * 4.4f, 16, z + Mathf.Sin(a) * 4.4f), new Vector3(1.2f, 1.1f, 2.6f), -i * 45f); }
                 else Solid(new Vector3(x, 16, z), new Vector3(7.5f, 9f, 7.5f));   // the roof (no landing on its cone)
             }
             // the keep: 3 m walls, the hall inside, the upper floors solid above the hall's ceiling, the roof walk at 22; the spired tower
@@ -182,15 +182,15 @@ namespace ShardsOfTime
             for (float z = 8; z <= 52.1f; z += 4) Wall("Arcade pier", 24, 25, z - .5f, z + .5f, 6, 0);
             Wall("Arcade roof", 24, 30, 7.5f, 52.5f, 6.6f, 6);
             Stair("Arcade stair", new Vector3(26.5f, 0, 61.8f), Vector3.back, 2.6f, 6.6f, .33f, .5f);
-            Stair("East walk steps", new Vector3(28.4f, 6.6f, 9f), Vector3.forward, 1.6f, 10f, .34f, .7f);
-            Stair("West wall stair", new Vector3(-28.8f, 0, 8f), Vector3.forward, 2.4f, 10f, .33f, .6f);
+            Stair("East walk steps", new Vector3(28.9f, 6.6f, 9f), Vector3.forward, 2.2f, 10f, .3f, .7f);   // x 27.8..30, z 9..17
+            Stair("West wall stair", new Vector3(-28.8f, 0, 13f), Vector3.forward, 2.4f, 10f, .33f, .6f);   // z 13..31 (the walled yard ends at 12)
             // up the two north towers from the walks (steps on the walk's inner half)
-            Stair("NW tower steps", new Vector3(-30.8f, 10f, 44f), Vector3.forward, 1.4f, 16f, .33f, .6f);
-            Stair("NE tower steps", new Vector3(30.8f, 10f, 44f), Vector3.forward, 1.4f, 16f, .33f, .6f);
-            Hint(new Vector3(-27, 0, 10), 3f, () => "A stair up to the west wall walk. Watch out for archers on the far walls...");
+            Stair("NW tower steps", new Vector3(-30.8f, 10f, 46.2f), Vector3.forward, 1.4f, 16f, .33f, .6f);   // z 46.2..57: onto the tower's top
+            Stair("NE tower steps", new Vector3(30.8f, 10f, 46.2f), Vector3.forward, 1.4f, 16f, .33f, .6f);
+            Hint(new Vector3(-27, 0, 14), 3f, () => "A stair up to the west wall walk. Watch out for archers on the far walls...");
             // wall torches round the courtyard (eight with a light)
             // (the Torch prop leans out toward its -z: yaw -90 = out toward +x)
-            foreach (var (x, z, yaw, light) in new[] { (-29.6f, 16f, -90f, true), (-29.6f, 34f, -90f, true), (-29.6f, 52f, -90f, false), (23.6f, 18f, 90f, true), (23.6f, 42f, 90f, true),
+            foreach (var (x, z, yaw, light) in new[] { (-29.6f, 36f, -90f, true), (-29.6f, 42f, -90f, false), (-29.6f, 52f, -90f, true), (23.6f, 18f, 90f, true), (23.6f, 42f, 90f, true),
                                                        (-12f, .4f, 180f, true), (12f, .4f, 180f, false), (-6f, 62.6f, 0f, true), (6f, 62.6f, 0f, true) })
                 Torch(new Vector3(x, 3.2f, z), yaw, light);
             _ = prog;
@@ -275,7 +275,7 @@ namespace ShardsOfTime
         {
             Cp("ME-hall", 0, 68, 0);
             Hint(new Vector3(0, 0, 68), 5f, () => "The great hall. Up the stair to the gallery... and those chandeliers look sturdy enough to ride.");
-            Prop("FeastTable", 0, 73, 90, 1f, 0f); Solid(new Vector3(0, 0, 73), new Vector3(12f, .95f, 2.2f));
+            Prop("FeastTable", 0, 73, 0, 1f, 0f);   // 12 m along x Solid(new Vector3(0, 0, 73), new Vector3(12f, .95f, 2.2f));
             foreach (var z in new[] { 71.4f, 74.6f }) Solid(new Vector3(0, 0, z), new Vector3(11f, .45f, .5f));
             foreach (var x in new[] { -10f, 0f, 10f }) Prop("Banner", x, 83.4f, 0, 1f, 12.5f);   // origin at its rod, the cloth hangs 4 m, facing -z (into the hall)
             // the gallery (west and north, at 6), its stair along the south wall
@@ -322,19 +322,25 @@ namespace ShardsOfTime
             Water("Moat deep pit", -48, -36, 90, 102, -5.2f, -16.2f);
             var deep = Box("Deep water (deep dive)", new Vector3(-42, -11, 96), new Vector3(12, 10, 12), Color.clear, "Water", false); deep.GetComponent<Renderer>().enabled = false; deep.gameObject.layer = 2; deep.gameObject.AddComponent<DeepWater>();
             Hint(new Vector3(-44, 0, 108), 5f, () => "The moat goes much deeper in this corner... too deep to dive, for now.");
-            // stone steps out of the water onto the outer bank, at each side's middle (a leap at the surface works anywhere too)
-            foreach (var (x0, x1, z0, z1) in new[] { (-48f, -46.6f, 38f, 42f), (46.6f, 48f, 28f, 32f), (22f, 26f, -18f, -16.6f), (-2f, 2f, 100.6f, 102f) })
-                Slab("Moat steps", x0, x1, z0, z1, -.6f, -5.2f, "CastleStone");
+            // stone steps out of the water onto the outer bank at each side's middle: two 0.3 m steps (walkable), the water at -1.2
+            foreach (var (x0, x1, z0, z1, sx, sz) in new[] { (-48f, -46.6f, 38f, 42f, 1, 0), (46.6f, 48f, 28f, 32f, -1, 0), (22f, 26f, -18f, -16.6f, 0, 1), (-2f, 2f, 100.6f, 102f, 0, -1) })
+            {
+                Slab("Moat step", x0, x1, z0, z1, -.6f, -5.2f, "CastleStone");
+                // the upper step: the half of it next to the bank
+                float hx0 = sx > 0 ? x0 : sx < 0 ? (x0 + x1) / 2 : x0, hx1 = sx > 0 ? (x0 + x1) / 2 : x1, hz0 = sz > 0 ? z0 : sz < 0 ? (z0 + z1) / 2 : z0, hz1 = sz > 0 ? (z0 + z1) / 2 : z1;
+                Slab("Moat step (upper)", hx0, hx1, hz0, hz1, -.3f, -5.2f, "CastleStone");
+            }
             // the drawbridge (down) over the south moat, under the gatehouse
             Prop("Drawbridge", 0, -3, 0, 1f, 0f);   // hinged at the gate, its deck out to z -18 Slab("Drawbridge deck", -4, 4, -18.2f, -5.8f, 0f, -.4f, "Plank").GetComponent<Renderer>().enabled = WorldArt.File("medieval_props") == null;
             Hint(new Vector3(0, 0, -12), 4f, () => "The drawbridge. Outside: the tournament field (east) and the village (west).");
         }
 
+        public static Vector3 KeyAt(int cell) => new Vector3(Dungeon.x + 8.5f, 1f, cell == 0 ? 19f : cell == 1 ? 33f : 6f);
         // ---- the dungeon (x 400): a corridor, three cells with keys, braziers, rats
         static void DungeonSpace(WorldProgress prog)
         {
             float X = Dungeon.x;
-            Cp(DungeonCp, X, 2.5f, 0);
+            Cp(DungeonCp, X, 6f, 0, false);   // (well clear of the stair door at z 0; no flag: it stood in the corridor's way)
             Slab("Dungeon floor", X - 14, X + 14, -2, 60, 0, -1, "Stone");
             Slab("Dungeon ceiling", X - 14, X + 14, -2, 60, 5.6f, 4.6f, "Stone");
             Slab("Dungeon end S", X - 14, X + 14, -2, -1, 4.6f, 0, "Stone"); Slab("Dungeon end N", X - 14, X + 14, 59, 60, 4.6f, 0, "Stone");
@@ -353,8 +359,8 @@ namespace ShardsOfTime
                 var bars = Prop("CellBars", X - 4.25f, z0 + 4f, 90, 1f, 0f) ?? Placeholders.Prim(PrimitiveType.Cube, root, new Vector3(X - 4.25f, 1.6f, z0 + 4f), new Vector3(.15f, 3.2f, 3f), WorldArt.Mat("Iron"), false, "Cell bars");
                 var bc = bars.AddComponent<BoxCollider>(); bc.center = bars.transform.InverseTransformPoint(new Vector3(X - 4.25f, 1.6f, z0 + 4f)); bc.size = bars.transform.InverseTransformVector(new Vector3(.3f, 3.2f, 3f)); bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z));
                 var door = bars.AddComponent<CellDoor>(); door.id = "ME-cell-" + (i + 1);
-                // its key: in the east alcove opposite the next cell (the last one's by the stair)
-                var keyAt = new Vector3(X + 8.5f, 1f, i == 2 ? 4f : cz[i + 1] + 4f);
+                // its key: in the middle of an east alcove (cell 1's: z 12.5..26; cell 2's: z 26.5..40; cell 3's: by the stair, z -1..12)
+                var keyAt = KeyAt(i);
                 var key = Prop("Key", keyAt.x, keyAt.z, 0, 1.6f, keyAt.y) ?? Placeholders.Prim(PrimitiveType.Cube, root, keyAt, new Vector3(.12f, .45f, .08f), WorldArt.Mat("Iron"), false, "Key");
                 key.AddComponent<CellKey>().door = door;
                 PointLight("Key glint", keyAt + Vector3.up * .5f, 4, 1.2f, new Color(1f, .85f, .5f));
@@ -395,8 +401,8 @@ namespace ShardsOfTime
             Wall("Stands tier 1", 75, 95, -64, -62.5f, 1, 0); Wall("Stands tier 2", 75, 95, -62.5f, -61, 2, 0); Wall("Stands tier 3", 75, 95, -61, -59.5f, 3, 0);
             Slab("Flag platform", 83, 87, -59.5f, -57.5f, 5.6f, 5.3f, "Plank"); Slab("Flag post", 84.8f, 85.2f, -58.7f, -58.3f, 9f, 5.6f, "Wood");
             Prop("BannerPole", 85, -58.5f, 0, 1f, 5.6f);
-            var boost = new GameObject("Boost spot (stands)"); boost.transform.SetParent(root, false); boost.transform.SetPositionAndRotation(new Vector3(85, 0, -56.3f), Quaternion.Euler(0, 180, 0));
-            boost.AddComponent<BoostSpot>().height = 6.6f;
+            var boost = new GameObject("Boost spot (stands)"); boost.transform.SetParent(root, false); boost.transform.SetPositionAndRotation(new Vector3(83.6f, 0, -55.6f), Quaternion.Euler(0, 180, 0));
+            var bs = boost.AddComponent<BoostSpot>(); bs.height = 7.5f; bs.landAt = new Vector3(83.6f, 5.6f, -58.5f);   // beside the flag post
             Hint(new Vector3(85, 3, -60), 3f, () => SaveGame.Current.Has(Abilities.DoubleJump) ? "The flag platform: Abi's double jump reaches it." : "The flag platform's just out of reach... (Abi's double jump; or a boost from someone strong)");
             // three braziers on the top tier: light them all and the prize chest opens
             var group = new GameObject("Stands braziers").AddComponent<FireGroup>(); group.transform.SetParent(root, false); group.hint = "braziers on the stands lit...";
@@ -459,10 +465,10 @@ namespace ShardsOfTime
         static void Enemies()
         {
             Vector3 G(float x, float z, float from = 30f) => OnGround(x, z, from) + Vector3.up * .1f;
-            Enemy.Knight(root, G(-6, 44), G(10, 50)); Enemy.Knight(root, G(14, 22), G(14, 8));
+            Enemy.Knight(root, G(0, 50), G(12, 54)); Enemy.Knight(root, G(16, 38), G(16, 50));   // (away from the checkpoints and the dungeon door)
             Enemy.Knight(root, G(70, -70), G(100, -70)); Enemy.Knight(root, G(105, -95), G(80, -100)); Enemy.Knight(root, G(-80, -70), G(-100, -100));
             Enemy.Archer(root, new Vector3(-15, 10.05f, -1.5f), 0); Enemy.Archer(root, new Vector3(15, 10.05f, -1.5f), 0); Enemy.Archer(root, new Vector3(31.5f, 10.05f, 40), -90);
-            foreach (var (a, b) in new[] { (new Vector3(400, 0, 14), new Vector3(400, 0, 20)), (new Vector3(401, 0, 28), new Vector3(398, 0, 34)), (new Vector3(408, 0, 33), new Vector3(408, 0, 38)), (new Vector3(399, 0, 42), new Vector3(402, 0, 46)) })
+            foreach (var (a, b) in new[] { (new Vector3(408, 0, 15), new Vector3(408, 0, 22)), (new Vector3(408, 0, 33), new Vector3(408, 0, 38)), (new Vector3(399, 0, 42), new Vector3(402, 0, 46)) })
                 Enemy.Rat(root, G(a.x, a.z, 3f), G(b.x, b.z, 3f));
         }
     }

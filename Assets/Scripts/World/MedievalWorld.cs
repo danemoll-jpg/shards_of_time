@@ -103,7 +103,8 @@ namespace ShardsOfTime
         float busyUntil;
         public override void Punched(Hero by, bool charged)
         {
-            if (Time.time < busyUntil || !by.IsPlayer) return;
+            if (!by.IsPlayer || Time.time < busyUntil && !charged) return;
+            if (charged) StopAllCoroutines();   // the charged punch comes right after the plain one: it counts
             Tries++;
             float share = by.IsMuscleMan ? 1f : charged ? .86f : by.Stats.displayName == "Dan" ? .35f : by.Stats.displayName == "Abi" ? .3f : .12f;
             StartCoroutine(Shoot(share, by));
@@ -121,7 +122,7 @@ namespace ShardsOfTime
             {
                 PlayLog.Line($"the high striker: {by.Stats.displayName} {(share >= .8f ? "nearly" : "barely")} ({share:0.00})");
                 Hud.Message(share >= .8f ? "So close! The bell doesn't ring." : "The puck barely gets going.", 3f);
-                if (rival && rival.isActiveAndEnabled) rival.Mock(by);
+                if (rival && rival.isActiveAndEnabled) { yield return new WaitForSeconds(.2f); rival.Mock(by); }
             }
         }
     }
@@ -210,7 +211,7 @@ namespace ShardsOfTime
             Busy = false;
         }
 
-        public void Mock(Hero h) { if (!Busy && Time.time > mockAt + 6f && isActiveAndEnabled) StartCoroutine(MockAndFree(h)); }
+        public void Mock(Hero h) { if (!Busy && Time.time > mockAt + 2.5f && isActiveAndEnabled) StartCoroutine(MockAndFree(h)); }
         IEnumerator MockAndFree(Hero h) { Busy = true; yield return MockNow(h); Busy = false; }
         IEnumerator MockNow(Hero h)
         {
@@ -273,7 +274,8 @@ namespace ShardsOfTime
             if (d.magnitude < 4f && Time.time > at + 12f)
             {
                 at = Time.time; Hums++; Sfx.Play("necklace", .35f, .8f);
-                Hud.Message(prog.necklaceAwake ? "The necklace blazes. The purple shard is singing to it..." :
+                var who = Party.I.Player.Stats.displayName;
+                Hud.Message(prog.necklaceAwake ? (who == "Dan" ? "The necklace blazes. The purple shard is singing to it..." : $"It won't budge for {who}. The shard is singing to Dan's necklace: switch to Dan.") :
                     $"A purple shard stuck fast in a stone. Dan's necklace hums near it... but nothing happens. ({SaveGame.Current.Total} of {Game.World.areas[0].requirement} shards)", 4.5f);
             }
         }

@@ -90,12 +90,15 @@ namespace ShardsOfTime
         {
             Cc.enabled = false; transform.SetPositionAndRotation(pos, rot); Cc.enabled = true;
             Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false; Climbing = false; swimDeepest = 0; swimTime = 0;
-            aimT = 0; Pouncing = false; Gliding = false;
+            aimT = 0; Pouncing = false; Gliding = false; keepAir = 0;
             if (!Stats.swimmer) Breath = Stats.breathSeconds;
         }
 
         public void Knockback(Vector3 v) { Velocity = v; Grounded = false; rising = false; platform = null; coyote = 0; Pounding = false; aimT = 0; Pouncing = false; }
         // Round 7, item 6: lamb Kira's springy bounce (straight up to `height`, keeping her run)
+        // Round 8: a throw (Muscle Man's boost) keeps its sideways speed until it lands (no air drag), like the pounce
+        float keepAir;
+        public void Throw(Vector3 sideways, float height, float keepFor = 2f) { Velocity = new Vector3(sideways.x, 0, sideways.z); Launch(height); keepAir = keepFor; }
         public void Launch(float height)
         {
             var hv = new Vector3(Velocity.x, 0, Velocity.z);
@@ -139,6 +142,7 @@ namespace ShardsOfTime
                 hv = hl + f * hf + lane * dt;
             }
             else hv = Vector3.MoveTowards(hv, target, accel * dt);
+            if (keepAir > 0) { keepAir -= dt; if (!Grounded) hv = hv0; else keepAir = 0; }   // Round 8: a throw flies on
             float vy = Velocity.y;
 
             // Round 4: the ground pound (Dan): Dive in the air = a short hang, then straight down; landing makes the "pound" event
