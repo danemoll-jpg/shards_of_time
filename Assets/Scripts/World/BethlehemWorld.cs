@@ -218,8 +218,10 @@ namespace ShardsOfTime
                 }
                 c.camelAnims.Add(an);
                 // a plain cream blanket on its back (the film's Wise Men ride plainer camels than Egypt's)
-                Placeholders.Prim(PrimitiveType.Cube, camel, new Vector3(0, top - .25f, -.1f), new Vector3(1.15f, .7f, 1.0f), Placeholders.Mat(new Color(.9f, .85f, .72f)), name: "Blanket");
-                var rider = new GameObject("Wise Man " + Models[i]).transform; rider.SetParent(camel, false); rider.localPosition = new Vector3(0, top - .05f, -.15f);
+                // Fix 7.1: the real (sitting) Wise Men sit on the camel's own saddle blanket; the cream block only goes under the placeholders
+                bool real = CharacterModel.Exists(Models[i]) && Resources.LoadAll<AnimationClip>("Characters/Clips/sit").Length > 0;
+                if (!real) Placeholders.Prim(PrimitiveType.Cube, camel, new Vector3(0, top - .25f, -.1f), new Vector3(1.15f, .7f, 1.0f), Placeholders.Mat(new Color(.9f, .85f, .72f)), name: "Blanket");
+                var rider = new GameObject("Wise Man " + Models[i]).transform; rider.SetParent(camel, false); rider.localPosition = new Vector3(0, real ? top - .42f : top - .05f, -.15f);
                 c.riders.Add(rider); c.riderAnims.Add(Rider(rider, i));
                 var gift = WorldArt.Prop("bethlehem_props", Gifts[i], rider, rider.position + rider.forward * .45f + Vector3.up * .55f, 0, 1f);
                 if (gift) gift.transform.SetParent(rider, true);

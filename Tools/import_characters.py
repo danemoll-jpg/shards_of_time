@@ -42,8 +42,9 @@ PEOPLE_CLIPS = {
 }
 # Round 7: the Wise Men's clips (SourceArt/Mixamo/wisemen/) and the watchman's (SourceArt/Mixamo/watchman/), shared people clips by game name
 # (Clips/<game name>.fbx: Humanoid, any person can play them); also looked for in SourceArt/Mixamo/ itself
-EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing"), "map": ("wisemen", "Looking At Map"), "offer": ("wisemen", "Offering"),
-               "sad": ("wisemen", "Disappointed"), "yell": ("watchman", "Yelling"), "doze": ("watchman", "Sleeping Idle")}
+EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing|Standing Arguing"), "map": ("wisemen", "Looking At Map|Looking Down"),
+               "offer": ("wisemen", "Offering|Carrying"), "sad": ("wisemen", "Disappointed"), "yell": ("watchman", "Yelling|Yelling Out"),
+               "doze": ("watchman", "Sleeping Idle")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
 # Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
 # the people's clip of the same name (CreatureAnimator)
 MUMMY_CLIPS = {"idle": "Thriller Idle", "walk": "Zombie Walk", "run_slow": "Zombie Walk", "run": "Zombie Walk", "punch": "Zombie Attack",
@@ -94,7 +95,7 @@ def main():
     print(f"the mummy's clips: {len(got)} of {len(MUMMY_CLIPS)}")
     got = []
     for c, (folder, m) in EXTRA_CLIPS.items():
-        src = next((p for p in (MIX / folder / f"{m}.fbx", MIX / f"{m}.fbx") if p.exists()), None)
+        src = next((p for n in m.split("|") for p in (MIX / folder / f"{n}.fbx", MIX / f"{n}.fbx") if p.exists()), None)
         if src: shutil.copy2(src, OUT / "Clips" / f"{c}.fbx"); got.append(c)
     print(f"the Wise Men's and the watchman's clips: {len(got)} of {len(EXTRA_CLIPS)}" + (f" (missing {', '.join(c for c in EXTRA_CLIPS if c not in got)})" if len(got) < len(EXTRA_CLIPS) else ""))
     print("copied:", len(list(OUT.rglob("*.fbx"))), "fbx,", len(list(OUT.rglob("*.png"))), "png")

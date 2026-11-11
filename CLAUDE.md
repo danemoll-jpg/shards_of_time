@@ -254,7 +254,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 7: `game-700`, previous `Builds/LauncherRelease-700`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 7.1: `game-701`, previous `Builds/LauncherRelease-701`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -263,11 +263,21 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 7.1 delivered: 0.7.1 (build 701), 2026-11-10.** Bethlehem's people are Dan's Mixamo rigs (Dan, Abi, the Violinist in their
+Bethlehem models, the three Wise Men, the watchman) with his eight clips; a new side-profile guard dog (head -1 deg). Nothing waits
+on Dan for Bethlehem. Published: `game-701`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Fix 7.1:
+- `import_characters.py EXTRA_CLIPS` takes alternatives "a|b" (Dan's names: Carrying = offer, Looking Down = map, Standing Arguing
+  = argue, Yelling Out = yell).
+- Caravan riders: with a real model + the `sit` clip they sit on the camel's own saddle (no cream block); `CutsceneAuthoring.Version` 17.
+- Bethlehem frame rate with the real people: 108 fps (1080p), 146 (Steam Deck setting).
+
 **Round 7 delivered: 0.7.0 (build 700), 2026-11-10.** Bethlehem, the third world: the roof-crash arrival into the barn, the
 farmyard, the hills (camps, flocks, goats, the Violinist with his harp), the village (night watchmen with lanterns, guard dogs, the
 inn's "no room"), the Wise Men riding the road, lamb Kira (flock hide, springy hay), Kira's pounce (also Egypt's far roof), the
-golden shard in the manger and `WiseMenArrive`. 60 shards / 112 in all wake the necklace. Waiting on Dan: Mixamo files for the seven
-people and a side-profile guard dog. Published: `game-700`. Report and "For Dan to check": `TODO.md`.
+golden shard in the manger and `WiseMenArrive`. 60 shards / 112 in all wake the necklace. (Dan's Mixamo files and the new dog came
+in with Fix 7.1.) Published: `game-700`. Report and "For Dan to check": `TODO.md`.
 
 Standing facts from Round 7:
 - Worlds: `Game.InBethlehem`; `World/Bethlehem.cs` builds it (barn x -6..6, z 26..42, door south; the farmyard x -35..35, z -10..70;

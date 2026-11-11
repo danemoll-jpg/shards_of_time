@@ -22,7 +22,7 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 15;   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
+        public const int Version = 17;   // Fix 7.1: the Wise Men, Dan and Abi in their Bethlehem models   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
         static readonly (string name, System.Action build)[] All =
         {
             ("NecklaceWakes", NecklaceWakes), ("PortalOpens", PortalOpens), ("ActOne", ActOne), ("IceAgeArrival", IceAgeArrival),
@@ -857,7 +857,7 @@ namespace ShardsOfTime
                 {
                     var gi = Object.Instantiate(g.gameObject); gi.name = "Present"; WorldArt.Dress(gi);
                     var body = m.transform.Find("Body"); gi.transform.SetParent(body ? body : m.transform, false);
-                    gi.transform.localPosition = new Vector3(0, 1.05f, .42f); gi.transform.localRotation = g.localRotation; gi.transform.localScale = g.localScale;
+                    gi.transform.localPosition = CharacterModel.Exists(models[i]) ? new Vector3(0, .78f, .36f) : new Vector3(0, 1.05f, .42f);   // Fix 7.1: in the real men's hands, below their beards gi.transform.localRotation = g.localRotation; gi.transform.localScale = g.localScale;
                 }
                 // walk in (3 s), stand, look round at each other, turn and walk out
                 float stop = -3.6f - Mathf.Abs(i - 1) * .3f;

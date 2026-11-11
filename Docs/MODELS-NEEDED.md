@@ -1,6 +1,13 @@
 # Shards of Time — models needed
 
-## Round 7 (2026-11-10): Mixamo for Bethlehem — for Dan, now
+## Round 7 (2026-11-10): Mixamo for Bethlehem — DONE (Fix 7.1)
+
+**Fix 7.1:** all in. Dan's seven rigged people and eight clips are imported; "Carrying" plays as "offer", "Looking Down" as "map",
+"Standing Arguing" as "argue", "Yelling Out" as "yell" (`import_characters.py EXTRA_CLIPS` takes either name). The side-profile
+guard dog became a new Meshy model (head turn -1 deg, was +51; old image `guard_dog_v1.png`, old model `SourceArt/Meshy/guard_dog_v1`)
+rigged by `kira_rig.py`. Nothing else is waiting on Dan for Bethlehem.
+
+What was asked (kept for the record):
 
 All 12 Bethlehem images became Meshy models (previews `Data/screenshots/round7/models/`). Seven are people and go through
 Mixamo, the same steps as Egypt. The upload files are ready:
