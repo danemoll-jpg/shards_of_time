@@ -24,7 +24,49 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — none (Fix 8.1 delivered below; Round 9, the Pirate Seas, is drafted under "Next rounds")
+Current round — Round 9: the cutscene redo (target 0.9.0)
+Fix 8.1 is delivered (below). Pirate Seas is Round 10 (drafted under "Next rounds"). Report per item: done / not
+done / deferred, and why. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in
+front of Dan; cutscene videos rendered from the exe). Don't end your turn until 0.9.0 is published unless truly
+blocked (say so).
+
+**Inputs, all in (Dan, 2026-11-11):** his film clips in `SourceArt/Reference/Clips/` (the clip is canon for its scene),
+the planning chat's shot-by-shot notes in `Docs/CUTSCENE-FILM-NOTES.md`, and his longer Act I song `Music/act1.mp3`
+(60.0 s). Game style and game models; outfits from the concept sheets (not the clips); the game's added gags stay
+(e.g. the wagon hitting the wall and the singed driver).
+
+For each scene: extract the clip's frames, follow its shot order, camera angles, framing and timing, then render the
+MP4 from the exe and make a **side-by-side sheet** (film frames on top, game frames below, at matching moments) in
+`Data/screenshots/round9/<scene>.jpg`. Look at each sheet and fix what doesn't match before moving on.
+
+1. **`ActOne`** (~60 s, timed to `act1.mp3`): decorating the tree together, Kira swats, Dan fumbles the bauble, it
+   drops; the glow, the cracks and light beams, Kira sniffs, Abi scoops her up; the crystal-shard burst and the rainbow
+   spiral; sucked in holding hands; then the fall out of the blue vortex over the Ice Age's mountains and volcanoes.
+   The Ice Age theme starts on the landing.
+2. **`IceAgeArrival`**: Kira (still the normal cat) glows and **transforms into the sabertooth on screen** by a
+   campfire; high-angle shots on Dan and Abi, ground-level shots on Kira; the stalk, the pounce, Dan flat on his back,
+   Kira on his chest pawing the blue-glowing necklace. Keep Round 5's relief beat.
+3. **`EgyptArrival`**: the establishing shot (scaffolded pyramid, workers with stone sledges, the judgmental camel
+   crossing frame, the town); the red vortex over the dunes; the sand plume and the comic pause on the empty dune;
+   Dan and Abi pop out of the sand; they dig frantically for Kira; mummy Kira pops up, Abi hugs her.
+4. **`SphinxGag`**: from behind them, the Sphinx far off; slow push-in to Kira's stone face, held; their reaction; Dan
+   looks down at mummy Kira; her innocent close-ups; the long look between them. Comic timing over speed.
+5. **`BethlehemArrival`**: the Wise Men walking to the barn see the star grow into a golden spiral and flatten into
+   the ring over the barn; the top-down crash through the roof; the Wise Men's puzzled close-up; inside, Abi on the hay
+   bales with lamb Kira, Dan flat on the floor with the gold glow.
+6. **`WiseMenArrive`**: silhouettes walking to the barn, the doors pushed open, the three heroes at the glowing
+   manger, the Wise Men's disappointed close-up, they walk out and **the Santa-hat one tosses his present over his
+   shoulder**, the hug, the golden hay tornado.
+7. **`MedievalArrival`**: the purple vortex over the castle at night, the fall, the top-down drop into the hay
+   wagon, popping up, Kira's sneeze-fire, jumping out, the burning wagon careening off (then the wall crash and the
+   singed driver), **Kira flying** beside them as they walk on.
+8. **`TheStone`**: Muscle Man heaves and fails, points at the shard to challenge Dan; Dan lifts it out with no
+   effort; Muscle Man laughs, then gapes: **"My hero!"** (not "Master!": fix every line, sound and subtitle);
+   **the cobblestones swirl up into a whirlpool** that swallows everyone, Muscle Man too, into the vortex tunnel.
+9. **Check the hand-offs:** every scene still hands control back cleanly, is skippable, and the music cues line up
+   (Act I song, then the world themes; the vortex track only in the vortex space).
+10. Build, check, publish 0.9.0, update `TODO.md` / `CLAUDE.md`, clean up. In "For Dan to check", list the eight
+    sheets and the eight MP4s.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
@@ -181,7 +223,16 @@ the pause menu; the sweep covered each of them).
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Round 9: the Pirate Seas (draft by the planning chat, 2026-11-11; written in full after Fix 8.1 and once Dan's
+- **(Now the current round above.) Round 9: the cutscene redo (planned by the planning chat, 2026-11-11; next after Fix 8.1, before the Pirate
+  Seas, which becomes Round 10).** Dan's film clips are in `SourceArt/Reference/Clips/` and the planning chat's
+  shot-by-shot notes in `Docs/CUTSCENE-FILM-NOTES.md`. Rebuild the eight existing cutscenes (`ActOne`,
+  `IceAgeArrival`, `EgyptArrival`, `SphinxGag`, `BethlehemArrival`, `WiseMenArrive`, `MedievalArrival`,
+  `TheStone`) to follow each clip's shot order, angles, framing and timing, in the game's style with the game's
+  models; the "What the game should change" list in that doc is the checklist. Muscle Man says "My hero!".
+  `TheStone` ends in the cobblestone whirlpool. `ActOne` will be about a minute (the film's length): Dan's longer Act I
+  song is in (2026-11-11): `Music/act1.mp3`, 60.0 s, replacing the 22 s one; time the scene to it. For each: render the MP4 from the exe and a
+  side-by-side contact sheet (film frames above, game frames below, same times) for Dan to compare.
+- **Round 10: the Pirate Seas (draft by the planning chat, 2026-11-11; written in full after Fix 8.1 and once Dan's
   concept images are in).** Film references in `SourceArt/Reference/Worlds/05-PirateSeas/` and `Characters/*`
   (added 2026-11-11), including Dan's clip `shard-rolls-overboard.mp4`; image prompts P1–P9 in
   `Docs/MODELS-NEEDED.md`; music in `Docs/MUSIC.md`.
@@ -197,7 +248,7 @@ Next rounds (do not start yet)
     water, crossfading at the surface. One world for the vortex and the story shard; the shard drop (Muscle Man
     loses it overboard) is the doorway from the ship to the deep: before it, the water near the ship stays shallow;
     after it, the deep sea opens. Rule 2 and the per-world minimum count both areas together.
-  - **Arrival:** a green whirlpool vortex over a pirate ship at sunset; Dan, Abi and Kira land in separate barrels,
+  - **Arrival (from Dan's clip, `Docs/CUTSCENE-FILM-NOTES.md`):** the ship at **night** with lanterns; a green vortex swirls round it; Dan and otter Kira pop out of barrels, Muscle Man drops through the sails and crashes onto the deck, Abi laughs. Earlier draft text, superseded where it differs: a green whirlpool vortex over a pirate ship at sunset; Dan, Abi and Kira land in separate barrels,
     Muscle Man crashes into a crate; they pop out as pirates, Kira as a little gray otter.
   - **Look:** a red-brown wooden ship with turned rail balusters, pink sails, rope rigging, barrels; a pink-violet
     sunset sky over a deep blue sea; underwater: bright blue water with light shafts, cheerful cartoon fish,

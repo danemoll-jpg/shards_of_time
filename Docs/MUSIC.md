@@ -282,3 +282,22 @@ Oooh... aaah...
 
 Style tags: `dreamy, underwater, ambient, ethereal, floating, vibraphone, celesta, harp, kalimba, wordless choir, soft oohs, slow`.
 Exclude: `epic, orchestral, cinematic, dramatic, dark, scary, drums, solo vocalist, pop vocals, lyrics, whistling, flute`.
+
+## Act I cutscene — longer version (Suno, for Dan) — planning chat, 2026-11-11
+
+The redo of `ActOne` follows Dan's film clip, about **60 s** (the first song is 22 s). Same gentle Christmas mood,
+then magic. Beats: 0–20 decorating the tree, Kira swats, the ornament falls; 20–30 it glows and cracks; 30–48 the
+rainbow vortex pulls them in; 48–60 they fall out over the Ice Age (the Ice Age theme takes over on landing).
+Instrumental, about 60–75 s (trim to taste). Save as `Assets/Resources/Music/act1.mp3` (over the old one).
+
+Suno prompt (instrumental):
+
+> Gentle, cozy Christmas music for a heartwarming animated holiday film, slow and warm at first: a tender carol-like
+> melody on music box and celesta with soft sleigh bells, warm pizzicato and felt piano, like Christmas Eve by a
+> glowing tree. About a third of the way in, a soft magical shimmer as something sparkles and cracks open: twinkling
+> chimes and harp glissandos rising. Then the music swells into a whirling, wondrous, playful rush of bells, harp,
+> celesta and soft strings spinning faster and faster like being pulled into a rainbow time vortex, still light and
+> whimsical, never epic or scary, ending on a bright airy wash as if floating through the sky. No vocals, no drums.
+
+Style tags: `christmas, gentle, cozy, music box, celesta, sleigh bells, magical, whimsical, harp, swell, instrumental`.
+Exclude: `epic, orchestral, cinematic, dramatic, dark, drums, rock, vocals, whistling`.
