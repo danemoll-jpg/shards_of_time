@@ -24,8 +24,115 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none. Fix 7.2 is delivered (below). Round 8 (the Medieval Kingdom) is next; the planning chat
-writes it once Dan's film references / concept images are in.
+Current round — Round 8: the Medieval Kingdom (target 0.8.0)
+Fix 7.2's plan is in `TODO-ARCHIVE.md`. Report per item: done / not done /
+deferred, and why. DEFAULT = planning chat's choice, Dan can overrule after
+playing. Testing rules as always (`Tools/quiet.py`, muted with the level
+reported, never a window in front of Dan); rule 12 (never stuck) applies.
+
+**Inputs, all in (Dan, 2026-11-10/11):** the 10 concept sheets M1–M10 in
+`SourceArt/Concepts/` (`dan_medieval`, `abi_medieval`, `kira_dragon`,
+`muscleman_medieval`, `violinist_medieval`, `knight`, `archer`, `rat`, `horse`,
+`wagon_driver`; prompts and notes in `Docs/MODELS-NEEDED.md` and the draft
+below), film references in `SourceArt/Reference/Worlds/04-Medieval/` and
+`Characters/*`, Dan's song `Music/medieval.mp3` (2:59).
+
+**Muscle Man, as in the film (DECIDED, Dan 2026-11-11):** he joins only at the
+very end. Until then he's a rival who **mocks Dan**; he's won over only when
+Dan does a feat of strength he couldn't: pulling the shard from the stone.
+
+1. **Models. ORDER (Dan, 2026-11-11: he wants to do Mixamo first and go to
+   bed): do the Mixamo people FIRST, before anything else in the round:**
+   Meshy → clean-up → Mixamo upload files for the 7 people only (`dan_medieval`,
+   `abi_medieval`, `muscleman_medieval`, `violinist_medieval`, `knight`,
+   `archer`, `wagon_driver`), then **stop at once** and tell Dan exactly what to
+   upload and download (file, clip search names, settings, where to save).
+   Previews can follow later. Everything else (the other models, props, world)
+   comes after that stop; carry on with it without waiting for Dan.
+   Then: Meshy → clean-up → previews for the rest. Notes: Muscle Man grins
+   with teeth (check the mouth); dragon Kira is darker than her gray (match it,
+   Kira lock check); keep her thin wings as their own two-sided part (don't let
+   the closed-mesh rebuild swallow them); the archer's quiver is part of him.
+   Mixamo upload files and clip lists for `dan_medieval`, `abi_medieval`,
+   `muscleman_medieval`, `violinist_medieval`, `knight`, `archer`,
+   `wagon_driver`, reusing the shared clips; Muscle Man also needs his own:
+   flex / show off, laugh / point (mocking), heavy lift, push, failed heave,
+   fall flat on his back, cheer, and a "lift someone up" clip. **Stop and tell
+   Dan exactly what to download** as soon as those files are ready; keep
+   building with placeholders; import his clips in this same round. Horse and
+   rat: Code's rigs.
+2. **Props** (Blender / Meshy text-to-3D, from the film shots): the castle
+   (stone walls with crenellations, round towers with conical slate roofs, a
+   row of arches, the keep), the courtyard (cobblestones, wall torches,
+   wooden benches, flower pots, steps), the round stone pedestal with the
+   **purple story shard** stuck in it, the hay wagon, the lute (its own playing
+   clip like the lyre), knight's sword and shield, archer's bow, boulders,
+   portcullis, braziers.
+3. **`MedievalArrival`** (Dan's version, skippable, ~15–18 s): the purple vortex
+   opens over the courtyard; the party falls into a horse-drawn hay wagon (film:
+   `hay-wagon-landing.png`); they pop up in medieval clothes, Kira as a baby
+   dragon; she discovers her fire with a sneeze-puff and the hay catches; they
+   all leap out; the wagon, driver aboard and the pony galloping, careens into
+   the castle wall and explodes in a comic cartoon blast (`wagon-on-fire.png`);
+   the driver staggers out singed with his hat smoking, the pony is fine; the
+   party slinks away. Irreverent comedy is fine.
+4. **Layout** (DEFAULT), about 10–15 minutes first visit, a torch-lit night:
+   - **The courtyard and the stone:** the stone stands there from the start;
+     Dan's necklace hums near it but nothing happens until the end.
+   - **The walls and towers:** climb, archers on the battlements, tower tops.
+   - **The great hall:** a feast table, chandeliers to swing across, banners.
+   - **The dungeon:** dark (the necklace's light), rats, cells, keys.
+   - **The moat:** water round the castle (a deep-dive gate below).
+   - **The tournament field** outside the walls: a comic strength contest where
+     Muscle Man shows off (see item 5).
+   - **The village and market** below the castle.
+   - **Gates for later** as data, visible on the first visit: **Muscle Man's
+     boulders here too** (he isn't with you yet), the moat's depths (deep dive),
+     wall-jump chimneys. Rule 2 counts none of them for this world's threshold.
+5. **Muscle Man the rival (before he joins).** He appears 3–4 times around the
+   world (DEFAULT: the courtyard on arrival, the tournament field, the great
+   hall, the stone at the end), each a short comic moment, grunts and laughs
+   only: he lifts a boulder / a cart / a knight one-handed and flexes; he laughs
+   and points at Dan (especially when Dan tries the same thing and fails); at
+   the tournament he wins the strength contest Dan can't. He blocks nothing the
+   player needs and can't be fought.
+6. **Dragon Kira's abilities:** **glide** with her little wings (hold Jump in
+   the air: long gaps, slow fall) and **fire puffs** that light torches and
+   braziers, burn ropes, hay and brambles, and scare rats; never hurts people.
+7. **New move: Dan's charged punch** (hold attack to charge, release: breaks
+   cracked walls and knights' shields), taught by the Violinist as a bard with
+   his lute. It works everywhere, so the cracked walls in the Ice Age grotto,
+   Egypt and Bethlehem open too: check one in an earlier world.
+8. **Enemies:** clumsy knights (shield up from the front; the charged punch or
+   going round them), nervous archers on the walls (slow, dodgeable arrows),
+   dungeon rats. Light combat, no boss (DEFAULT).
+9. **Shards (universal rule):** about 60 small shards; the cumulative threshold
+   set by rule 2 (reachable on arrival with the moves you have, the charged
+   punch only after the Violinist, no Muscle Man). Two hearts. Report the numbers.
+10. **The finale (`TheStone`, skippable, the film's scene):** when the necklace
+    wakes it leads to the stone in the courtyard. Muscle Man is there first,
+    brags, heaves with everything he has, fails and falls flat on his back
+    (film: `muscleman-falls-at-stone.png`). Dan steps up, the shard answers his
+    necklace and slides out with no effort. Muscle Man stares, then kneels:
+    "Master!" The purple vortex opens and **sweeps Muscle Man along with the
+    party**, much to Dan's bewilderment → the vortex space (Home: 4 / 8).
+11. **Muscle Man the companion (after the stone).** He follows like the others
+    (warps in when left behind, never controlled), cheers at pickups, and does
+    his jobs at prompts: **moves boulders**, **lifts heavy things** (portcullis,
+    carts), **boosts Dan** to high ledges (the film's "lifts Dan to the clock").
+    Every boulder gate in every world (Ice Age, Egypt, Bethlehem, Medieval)
+    opens with him: check one in an earlier world and one in Medieval. He goes
+    through the vortex with the party.
+12. **Look:** from Dan's references: warm torch-lit sandstone castle under a
+    deep blue night sky, cobblestones, conical towers, arches, flower pots and
+    benches; stylized like the characters. Frame rate checked on both settings.
+13. **Music and sound:** `Music/medieval.mp3` in the world. ElevenLabs: hay
+    rustle, fire whoosh and the wagon blast, armor clank, arrow twang, rat
+    squeak, Muscle Man's grunts / laughs / "Master!", stone grind and the shard
+    sliding out, the lute tune.
+14. Build, check (a full run: … Bethlehem → vortex → Medieval → the stone →
+    vortex with Muscle Man; a boulder in an earlier world; a cracked wall in an
+    earlier world), publish 0.8.0, update `TODO.md` / `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
@@ -153,7 +260,7 @@ poking out of the wool at times; the rock pillars and the cave are plain stone b
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Round 8: the Medieval Kingdom (draft by the planning chat, 2026-11-10; written in full after Fix 7.2 and
+- **(Superseded by the Round 8 above; kept for reference.) Round 8: the Medieval Kingdom (draft by the planning chat, 2026-11-10; written in full after Fix 7.2 and
   once Dan's concept images are in).** Film references in `SourceArt/Reference/Worlds/04-Medieval/` and
   `Characters/*` (added 2026-11-10); image prompts M1–M10 in `Docs/MODELS-NEEDED.md`; music in `Docs/MUSIC.md`.
     **All in (Dan, 2026-11-11), checked by the planning chat:** the 10 concept sheets in
