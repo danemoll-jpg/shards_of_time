@@ -10,6 +10,8 @@ import bpy, math, os, sys
 from mathutils import Vector
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+# Round 8: the rat's nose is pink and the horse's dark mane is darker than its muzzle: their nose = the head's front-most tip
+NOSE_TIP = {'rat', 'horse'}
 
 
 def measure(name):
@@ -30,6 +32,7 @@ def measure(name):
         u, w = uv[l.index].uv; x = min(W - 1, int(u % 1 * W)); y = min(Hh - 1, int(w % 1 * Hh)); i = (y * W + x) * 4
         lum[vi] = sum(px[i:i + 3]) / 3
     dark = sorted(lum, key=lum.get)[:max(8, len(lum) // 60)]
+    if name in NOSE_TIP: dark = sorted(head, key=lambda i: co[i].y)[:max(8, len(head) // 100)]; lum.update({i: lum.get(i, 0) for i in dark})
     nose = sum((co[i] for i in dark), Vector()) / len(dark)
     back = sum((co[i] for i in head), Vector()) / len(head)   # the head's middle (ears and all)
     d = (nose - back).xy

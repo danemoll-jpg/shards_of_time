@@ -18,7 +18,7 @@ namespace ShardsOfTime
 
         public bool Has(string ability) => abilities != null && abilities.Contains(ability);
 
-        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb";
+        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb", Dragon = "Dragon";
 
         public static KiraForm Load(string id)
         {
@@ -42,6 +42,10 @@ namespace ShardsOfTime
                 case Lamb:   // Round 7
                     f.displayName = "Lamb Kira"; f.model = "kira_lamb"; f.abilities = new[] { Abilities.FlockHide, Abilities.WoolBounce };
                     f.note = "Bethlehem: a round gray woolly lamb with her own cat face (folded ears, amber eyes). In a flock nobody notices her; she bounces high off hay and wool.";
+                    break;
+                case Dragon:   // Round 8
+                    f.displayName = "Dragon Kira"; f.model = "kira_dragon"; f.abilities = new[] { Abilities.Glide, Abilities.FirePuff };
+                    f.note = "The Medieval Kingdom: a tiny gray baby dragon with her own cat face (folded ears, amber eyes), little wings and nub horns. She glides (hold Jump in the air) and puffs fire (her attack): torches, braziers, ropes, hay and brambles; rats run from it.";
                     break;
                 default:
                     f.displayName = "Kira"; f.model = "kira"; f.abilities = new string[0];

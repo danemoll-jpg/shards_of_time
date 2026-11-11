@@ -42,6 +42,14 @@ namespace ShardsOfTime
         public float LastPounceDistance { get; private set; }
         public const float PounceSpeed = 17f, PounceHeight = 1.8f, PounceAim = .28f;
         float aimT; Vector3 pounceDir, pounceFrom;
+        // Round 8, item 6: dragon Kira's glide. Holding Jump while falling: her little wings hold the fall to GlideFall m/s and she keeps
+        // (and steers) her run speed: about 7 m forward per metre down.
+        public bool CanGlide;
+        public bool Gliding { get; private set; }
+        public int Glides { get; private set; }
+        public float GlideDistance { get; private set; }   // the last glide's ground covered (checks)
+        public const float GlideFall = 1.1f, GlideSpeed = 7.8f;
+        Vector3 glideFrom;
         public bool Pounding { get; private set; }       // the ground pound: a short hang, then straight down
         public int Pounds { get; private set; }
         public const float PoundSpeed = 26f, PoundHang = .14f;
@@ -82,7 +90,7 @@ namespace ShardsOfTime
         {
             Cc.enabled = false; transform.SetPositionAndRotation(pos, rot); Cc.enabled = true;
             Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false; Climbing = false; swimDeepest = 0; swimTime = 0;
-            aimT = 0; Pouncing = false;
+            aimT = 0; Pouncing = false; Gliding = false;
             if (!Stats.swimmer) Breath = Stats.breathSeconds;
         }
 
@@ -181,7 +189,17 @@ namespace ShardsOfTime
             if (rising && !input.jumpHeld && vy > 0) { vy *= s.jumpCut; rising = false; }   // variable height: let go early, jump lower
             if (vy <= 0) rising = false;
 
+            // Round 8: the glide (dragon Kira): Jump held while falling
+            bool glide = CanGlide && !Grounded && input.jumpHeld && vy <= 0 && !Pounding && !Pouncing && !Updraft && coyote <= 0;
+            if (glide && !Gliding) { Gliding = true; Glides++; glideFrom = transform.position; Event?.Invoke("glide"); }
+            else if (!glide && Gliding) { Gliding = false; var gd = transform.position - glideFrom; gd.y = 0; GlideDistance = gd.magnitude; }
+            if (Gliding)
+            {
+                var want = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.z).normalized * GlideSpeed : hv.normalized * Mathf.Min(hv.magnitude, GlideSpeed);
+                hv = Vector3.MoveTowards(hv, want, 14f * dt);
+            }
             if (Pounding) { if (poundHang > 0) { poundHang -= dt; vy = 0; } else vy = -PoundSpeed; }
+            else if (Gliding) vy = Mathf.Max(vy - g * dt, -GlideFall);
             else if (Updraft) { vy = Mathf.MoveTowards(vy, Updraft.lift, Updraft.accel * dt); rising = false; }   // steam: up to its lift speed
             else vy -= g * dt;
             if (Updraft && Grounded) { vy = Mathf.Max(vy, 1f); Grounded = false; }   // steam lifts you off the ground
@@ -206,6 +224,7 @@ namespace ShardsOfTime
             if (!Grounded) { airTime += Time.deltaTime; apexY = Mathf.Max(apexY, transform.position.y); }
             if (Grounded && !wasGrounded)
             {
+                if (Gliding) { Gliding = false; var gd = transform.position - glideFrom; gd.y = 0; GlideDistance = gd.magnitude; }
                 LastJumpHeight = apexY - takeoffY; LastAirTime = airTime; JumpsThisAir = 0; LandSpeed = -vyBefore;
                 if (Pounding) { Pounding = false; Pounds++; Event?.Invoke("pound"); }
                 if (Pouncing) { Pouncing = false; var d = transform.position - pounceFrom; d.y = 0; LastPounceDistance = d.magnitude; }

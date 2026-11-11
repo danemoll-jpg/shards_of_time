@@ -104,18 +104,5 @@ namespace ShardsOfTime
         }
     }
 
-    // Round 1, item 9: a boulder that "needs Muscle Man" (the companion from the Medieval Kingdom). It doesn't move this round; it
-    // proves the gate (and stays reachable later: rule 2, nothing the story needs is behind it).
-    public sealed class Boulder : MonoBehaviour
-    {
-        float lastMessage = -10;
-        public int Touches { get; private set; }
-        public void Touched(CharacterMotor m)
-        {
-            if (!m.CompareTag("Player")) return;
-            if (SaveGame.Current.Has(Abilities.MuscleMan)) return;
-            Touches++;
-            if (Time.time - lastMessage > 4) { lastMessage = Time.time; Hud.Message("Way too heavy. Someone much stronger could move this... (needs Muscle Man)"); }
-        }
-    }
+    // Round 1: the boulder that "needs Muscle Man" moved to World/MuscleJobs.cs (Round 8: he moves it)
 }

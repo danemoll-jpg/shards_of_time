@@ -77,6 +77,24 @@ namespace ShardsOfTime
             ["Iron"] = (new Color(.25f, .25f, .27f), "Lit", .6f),
             ["Ember"] = (new Color(1f, .45f, .12f), "Glow", 0),
             ["Water"] = (new Color(.2f, .35f, .5f, .75f), "Water", .8f),
+            // Round 8: the Medieval Kingdom (Tools/Blender/medieval_world.py): torch-lit sandstone, cobbles, slate roofs, timber, banners,
+            // flowers, steel, the purple story shard
+            ["CastleStone"] = (new Color(.80f, .66f, .48f), "Lit", .12f),
+            ["Cobble"] = (new Color(.6f, .53f, .46f), "Lit", .25f),
+            ["Flagstone"] = (new Color(.86f, .77f, .62f), "Lit", .15f),
+            ["Slate"] = (new Color(.3f, .34f, .44f), "Lit", .35f),
+            ["Timber"] = (new Color(.28f, .18f, .12f), "Lit", .2f),
+            ["BannerRed"] = (new Color(.78f, .1f, .14f), "Lit", .2f),
+            ["BannerBlue"] = (new Color(.15f, .28f, .72f), "Lit", .2f),
+            ["BannerPurple"] = (new Color(.45f, .2f, .7f), "Lit", .2f),
+            ["Canvas"] = (new Color(.95f, .9f, .78f), "Lit", .1f),
+            ["FlowerPink"] = (new Color(.98f, .45f, .65f), "Lit", .2f),
+            ["FlowerYellow"] = (new Color(1f, .82f, .2f), "Lit", .2f),
+            ["FlowerViolet"] = (new Color(.55f, .35f, .9f), "Lit", .2f),
+            ["Leaf"] = (new Color(.22f, .48f, .2f), "Lit", .15f),
+            ["Steel"] = (new Color(.78f, .8f, .84f), "Lit", .8f),
+            ["Bramble"] = (new Color(.26f, .24f, .14f), "Lit", .1f),
+            ["PurpleShard"] = (new Color(.7f, .4f, 1f), "Glow", 0),
         };
 
         public static Material Mat(string name)

@@ -280,7 +280,7 @@ namespace ShardsOfTime
                 boulder.transform.localScale = Vector3.Scale(boulder.transform.localScale, new Vector3(2.3f, 1.6f, 2.7f));   // Blender axes: width, depth, height
             }
             else boulder = Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(-43.5f, 484) + Vector3.up * 2f, Vector3.one * 4.6f, WorldArt.Mat("Rock"), true, "Boulder (needs Muscle Man)");
-            boulder.AddComponent<Boulder>();
+            boulder.AddComponent<Boulder>().id = "IA-boulder-grotto";
             // the stone lintel (double jump)
             Slab("Lintel post W", -9.5f, -8.5f, 496.5f, 497.5f, 2.8f, -.5f, "Stone"); Slab("Lintel post E", -5.5f, -4.5f, 496.5f, 497.5f, 2.8f, -.5f, "Stone");
             Slab("Lintel", -10, -4, 496, 498, 3.3f, 2.8f, "Stone");
@@ -330,7 +330,7 @@ namespace ShardsOfTime
             Slab("Hollow wall W", -162, -160, 116, 132, 4f, -1); Slab("Hollow wall S", -162, -150, 116, 118, 4f, -1); Slab("Hollow wall N", -162, -150, 130, 132, 4f, -1);
             Slab("Hollow front S", -151, -150, 118, 121.5f, 4f, -1); Slab("Hollow front N", -151, -150, 126.5f, 130, 4f, -1); Slab("Hollow roof", -162, -150, 116, 132, 5f, 4f);
             var boulder = WorldArt.Prop("iceage_props", "Rock2", root, OnGround(-148, 124) + Vector3.down * .2f, 90, 1f, true);
-            if (boulder) { boulder.name = "Boulder (needs Muscle Man)"; boulder.transform.localScale = Vector3.Scale(boulder.transform.localScale, new Vector3(2.4f, 1.6f, 2.6f)); boulder.AddComponent<Boulder>(); }
+            if (boulder) { boulder.name = "Boulder (needs Muscle Man)"; boulder.transform.localScale = Vector3.Scale(boulder.transform.localScale, new Vector3(2.4f, 1.6f, 2.6f)); boulder.AddComponent<Boulder>().id = "IA-boulder-lake"; }
             foreach (var (x, z, s) in new[] { (-150f, 60f, 1.1f), (-90f, 200f, .9f), (-156f, 180f, 1.3f), (-96f, 50f, .8f) }) WorldArt.Prop("iceage_props", "IceCrystal", root, OnGround(x, z) + Vector3.down * .2f, x * 5, s);
             foreach (var (x, z, s) in new[] { (-152f, 44f, 1.2f), (-158f, 96f, 1.4f), (-150f, 206f, 1.1f), (-92f, 208f, 1.3f), (-90f, 44f, 1.0f) }) WorldArt.Prop("iceage_props", "Pine", root, OnGround(x, z) + Vector3.down * .2f, x * 3, s);
             foreach (var (x, z, s) in new[] { (-146f, 200f, 1.4f), (-158f, 70f, 1.1f), (-92f, 90f, .9f) }) Rock(x, z, s, x * 7, 2);

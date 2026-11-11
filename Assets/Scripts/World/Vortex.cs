@@ -20,12 +20,14 @@ namespace ShardsOfTime
         public sealed class PathInfo { public string id, label, world; public Color color; public float yaw; }
         public static readonly PathInfo[] Paths =
         {
+            // Round 8: six paths, 24 deg apart (the Medieval Kingdom is real; the Pirate Seas next, to be continued once its purple shard is found)
             new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -60f },
-            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -30f },
+            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -36f },
             // Round 6: Egypt is real; Round 7: Bethlehem is real (open once Egypt's red story shard is found); the Medieval Kingdom is next
             // (to be continued once Bethlehem's golden story shard is found)
-            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = WorldData.Bethlehem, color = new Color(.95f, .9f, .55f), yaw = 0f },
-            new PathInfo { id = "Medieval", label = "The Medieval Kingdom", world = "Medieval", color = new Color(.65f, .45f, .95f), yaw = 30f },
+            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = WorldData.Bethlehem, color = new Color(.95f, .9f, .55f), yaw = -12f },
+            new PathInfo { id = "Medieval", label = "The Medieval Kingdom", world = WorldData.Medieval, color = new Color(.65f, .45f, .95f), yaw = 12f },
+            new PathInfo { id = "PirateSeas", label = "The Pirate Seas", world = "PirateSeas", color = new Color(.25f, .8f, .55f), yaw = 36f },
             new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 60f },
         };
 
@@ -49,7 +51,7 @@ namespace ShardsOfTime
             for (int i = 0; i < 48; i++)
             {
                 float yaw = i * 7.5f;
-                if (Paths.Any(p => Mathf.Abs(Mathf.DeltaAngle(yaw, p.yaw)) < 11f)) continue;
+                if (Paths.Any(p => Mathf.Abs(Mathf.DeltaAngle(yaw, p.yaw)) < 9f)) continue;
                 var r = Placeholders.Prim(PrimitiveType.Cube, space, Quaternion.Euler(0, yaw, 0) * new Vector3(0, .3f, 7.8f), new Vector3(1.1f, .6f, .15f), rail, true, "Rail");
                 r.transform.localRotation = Quaternion.Euler(0, yaw, 0);
             }
@@ -76,7 +78,7 @@ namespace ShardsOfTime
                 tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = Color.Lerp(p.color, Color.white, .5f);
                 label.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
                 var d = door.AddComponent<VortexDoor>(); d.info = p; d.label = tm;
-                if (p.id == "Home" || p.id == "Bethlehem" || p.id == "Medieval")
+                if (p.id == "Home" || p.id == "Bethlehem" || p.id == "Medieval" || p.id == "PirateSeas")
                 {
                     var bar = Placeholders.Prim(PrimitiveType.Cube, door.transform, new Vector3(0, 2.4f, -.6f), new Vector3(4.6f, 4.6f, .2f), Placeholders.Mat(new Color(1f, .85f, .6f, .35f), "Water"), true, "Barrier");
                     d.barrier = bar;
@@ -150,13 +152,15 @@ namespace ShardsOfTime
         void OnDisable() => All.Remove(this);
         public bool Blocked => (info.id == "Home" && SaveGame.Current.StoryShards < Vortex.StoryShardsTotal) ||
                                (info.id == "Bethlehem" && !SaveGame.Current.World(WorldData.Egypt).storyShard) ||
-                               (info.id == "Medieval" && !SaveGame.Current.World(WorldData.Bethlehem).storyShard);
+                               (info.id == "Medieval" && !SaveGame.Current.World(WorldData.Bethlehem).storyShard) ||
+                               (info.id == "PirateSeas" && !SaveGame.Current.World(WorldData.Medieval).storyShard);
 
         void Update()
         {
             if (info.id == "Home" && label) label.text = Blocked ? $"Home\n{SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards" : "Home";
             if (info.id == "Bethlehem" && label) label.text = Blocked ? "Bethlehem\n(after Egypt's red shard)" : "Bethlehem";
             if (info.id == "Medieval" && label) label.text = Blocked ? "The Medieval Kingdom\n(after Bethlehem's golden shard)" : "The Medieval Kingdom";
+            if (info.id == "PirateSeas" && label) label.text = Blocked ? "The Pirate Seas\n(after the Medieval purple shard)" : "The Pirate Seas";   // Round 8
             if (barrier) barrier.SetActive(Blocked);
             cool -= Time.deltaTime;
             if (cool > 0 || !Game.Playing || !Party.I || Game.I.Busy) return;

@@ -21,7 +21,7 @@ namespace ShardsOfTime
         public static void Ensure()
         {
             Directory.CreateDirectory(Data + "/Characters"); Directory.CreateDirectory(Data + "/Worlds"); Directory.CreateDirectory(Mats + "/Tints");
-            foreach (var n in new[] { "Dan", "Abi", "Kira" })
+            foreach (var n in new[] { "Dan", "Abi", "Kira", "MuscleMan" })   // Round 8: Muscle Man (the companion)
             {
                 string path = $"{Data}/Characters/{n}.asset";
                 if (!File.Exists(path)) AssetDatabase.CreateAsset(CharacterStats.Defaults(n), path);
@@ -44,16 +44,23 @@ namespace ShardsOfTime
             if (kiraStats && string.IsNullOrEmpty(kiraStats.lockedAbility)) { kiraStats.lockedAbility = Abilities.Pounce; EditorUtility.SetDirty(kiraStats); }
             string be = Data + "/Worlds/" + WorldData.Bethlehem + ".asset";   // Round 7
             if (!File.Exists(be)) AssetDatabase.CreateAsset(WorldData.BethlehemDefaults(), be);
+            string me = Data + "/Worlds/" + WorldData.Medieval + ".asset";   // Round 8
+            if (!File.Exists(me)) AssetDatabase.CreateAsset(WorldData.MedievalDefaults(), me);
             // Fix 7.2: the never-stuck spots (new defaults added to an existing world asset by id)
-            foreach (var wp2 in new[] { ia, eg, be })
+            foreach (var wp2 in new[] { ia, eg, be, me })
             {
                 var wd = AssetDatabase.LoadAssetAtPath<WorldData>(wp2); if (!wd) continue;
                 int n = 0;
-                foreach (var ls in WorldData.LowSpotDefaults(wd.worldId)) if (!wd.lowSpots.Any(x => x.id == ls.id)) { wd.lowSpots.Add(ls); n++; }
+                foreach (var ls in WorldData.LowSpotDefaults(wd.worldId))
+                {
+                    var had = wd.lowSpots.FirstOrDefault(x => x.id == ls.id);
+                    if (had == null) { wd.lowSpots.Add(ls); n++; }
+                    else if (string.IsNullOrEmpty(had.opens) && !string.IsNullOrEmpty(ls.opens)) { had.opens = ls.opens; n++; }   // Round 8: the gate a spot opens behind
+                }
                 if (n > 0) { EditorUtility.SetDirty(wd); Debug.Log($"DataAssets: {wd.worldId}.asset: {n} never-stuck spot(s) added"); }
             }
             Directory.CreateDirectory(Data + "/KiraForms");
-            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb })
+            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb, KiraForm.Dragon })
             {
                 string path = $"{Data}/KiraForms/{f}.asset";
                 if (!File.Exists(path)) AssetDatabase.CreateAsset(KiraForm.Defaults(f), path);

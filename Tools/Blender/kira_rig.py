@@ -28,16 +28,27 @@ from mathutils.kdtree import KDTree
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
 COUNTER_TURN = {'kira', 'kira_mummy'}   # Round 6: mummy Kira's head measures 14 deg turned (home Kira 34)
-THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1}   # Round 6: mummy Kira's whiskers too
+THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1, 'kira_dragon': 1}   # Round 6: mummy Kira's whiskers too
 # Round 5, item 9: the Ice Age creatures get the same four-legged rig. Their real heights (metres): each is rigged at Kira's size
 # (0.5 m: every number here was tuned for her), then the armature is scaled back up for the export.
-CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7, 'goat': 1.05, 'sheep': .95, 'guard_dog': .85}   # Round 7: Bethlehem's animals   # Round 6: Egypt's camel and temple guardian
-TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000, 'goat': 12000, 'sheep': 8000, 'guard_dog': 12000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
+CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7, 'goat': 1.05, 'sheep': .95, 'guard_dog': .85, 'rat': .35, 'horse': 1.6}   # Round 8: the dungeon rat, the wagon pony   # Round 7: Bethlehem's animals   # Round 6: Egypt's camel and temple guardian
+TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000, 'goat': 12000, 'sheep': 8000, 'guard_dog': 12000, 'kira_dragon': 16000, 'rat': 8000, 'horse': 15000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
 FPS = 30
 # Round 6: mummy Kira's cream bandages pass the eye colour test; her amber eyes are much more saturated
 EYE_RB = {'kira_mummy': .33}
 TURN_MEASURED = {'kira_mummy': 14.0}   # mummy Kira's head, measured on Meshy's original texture (7 eye points); her amber recolour hides them
 LEGS = ('FL', 'FR', 'BL', 'BR')
+# Round 8: dragon Kira's bat wings are thin sheets the voxel rebuild would swallow: the faces in this box (at Kira's size: |x| above
+# x, y between y, z above z; below `top` only faces standing up (|normal z| < .6), so the back's own skin stays) leave Meshy's mesh
+# before the solid is made, come back as a welded, decimated sheet with a reversed twin (two-sided), share the baked maps, and
+# follow a wing bone each (WingL / WingR on the Chest; no ear bones)
+WINGS = {'kira_dragon': dict(x=.022, y=(-.125, .26), z=.28, top=.32, tris=3000)}
+# Round 8: a stronger opening on the head only (box at Kira's size, voxels): dragon Kira's whisker roots lie along her cheeks and brows
+THIN_HEAD = {'kira_dragon': (((-.3, -.6, .25), (.3, -.2, .6)), 2)}
+
+
+def wing_face(rule, c, n):
+    return abs(c.x) > rule['x'] and rule['y'][0] < c.y < rule['y'][1] and c.z > rule['z'] and (abs(n.z) < .6 or c.z > rule['top'])
 
 
 def log(*a): print('KIRA', *a, flush=True)
@@ -46,6 +57,12 @@ def log(*a): print('KIRA', *a, flush=True)
 # ---------------------------------------------------------------------------------------------------------------- landmarks
 def landmarks(ob, name):
     me = ob.data; co = [ob.matrix_world @ v.co for v in me.vertices]
+    allco = co
+    if name in WINGS:   # Round 8: the wings are no part of the back, hips, head or tail
+        mw = ob.matrix_world; wv = set()
+        for p in me.polygons:
+            if wing_face(WINGS[name], mw @ p.center, mw.to_3x3() @ p.normal): wv.update(p.vertices)
+        co = [c for i, c in enumerate(co) if i not in wv]
     H = max(c.z for c in co)
     low = [c for c in co if c.z < .035]
     ymid = sum(c.y for c in low) / len(low)
@@ -86,8 +103,8 @@ def landmarks(ob, name):
             if vi in seen: continue
             u, w = uv[l.index].uv; x = min(W - 1, int(u % 1 * W)); y = min(Hh - 1, int(w % 1 * Hh)); i = (y * W + x) * 4
             r, g, b = px[i:i + 3]
-            if r > .7 and g > .55 and r - b > EYE_RB.get(name, .15) and g - b > .1 and r - g < .2 and co[vi].z > H * .62:   # pale gold, upper head (not the fangs)
-                seen.add(vi); eyes.append(co[vi])
+            if r > .7 and g > .55 and r - b > EYE_RB.get(name, .15) and g - b > .1 and r - g < .2 and allco[vi].z > H * .62:   # pale gold, upper head (not the fangs)
+                seen.add(vi); eyes.append(allco[vi])
     face = Vector((0, -1, 0)); turn = 0.0
     if len(eyes) >= 6:
         # two eyes: split along their longest horizontal spread
@@ -115,7 +132,99 @@ def landmarks(ob, name):
     log(f'{name}: height {H:.3f}, front paws y {yf:.3f}, back paws y {yb:.3f}, hips z {hips.z:.3f}, chest z {chest.z:.3f}, '
         f'head ({head_c.x:.3f},{head_c.y:.3f},{head_c.z:.3f}), {len(eyes)} eye points, head turned {math.degrees(turn):.0f} deg, '
         f'tail {len(tail)} points, tip z {tip.z:.3f}')
-    return L, co
+    return L, allco
+
+
+# ---------------------------------------------------------------------------------------------------------------- wings (Round 8)
+def split_wings(ob, rule):
+    """(body copy without the wings: the solid's source, the wings as their own two-sided sheet). `ob` keeps everything (the bake's
+    source)."""
+    import mesh_fix
+
+    def part(keep_wing, nm):
+        c = ob.copy(); c.data = ob.data.copy(); c.name = nm; bpy.context.scene.collection.objects.link(c)
+        bm = bmesh.new(); bm.from_mesh(c.data); mw = c.matrix_world
+        bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=.0004)   # Meshy's triangle soup welded: one surface, wings grown out of the back
+        if not keep_wing:   # loose whisker strands (their own pieces once welded) out of the solid's source
+            seen = set(); pieces = []
+            for f in bm.faces:
+                if f in seen: continue
+                st = [f]; seen.add(f); pc = []
+                while st:
+                    g = st.pop(); pc.append(g)
+                    for e in g.edges:
+                        for h in e.link_faces:
+                            if h not in seen: seen.add(h); st.append(h)
+                pieces.append(pc)
+            pieces.sort(key=len, reverse=True)
+            bmesh.ops.delete(bm, geom=[f for pc in pieces[1:] for f in pc], context='FACES')
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if wing_face(rule, mw @ f.calc_center_median(), mw.to_3x3() @ f.normal) != keep_wing], context='FACES')
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+        if not keep_wing:   # the wing roots leave holes in the back: capped, so the solid's flood fill stays outside
+            caps = bmesh.ops.holes_fill(bm, edges=bm.edges[:], sides=0)['faces']; log(f'wings: {len(caps)} holes capped in the body')
+            # each cap corner takes the UV of the rim face beside it (the fur round the wing root): the caps alone are a second bake
+            # source, so the closed body under the wing roots (no Meshy skin there) isn't left black
+            lay = bm.loops.layers.uv.active; capset = set(caps)
+            for f in caps:
+                for l in f.loops:
+                    rim = next((k for k in l.vert.link_loops if k.face not in capset), None)
+                    if rim is not None: l[lay].uv = rim[lay].uv.copy()
+            bm.faces.index_update(); keep = {f.index for f in caps}
+            b2 = bm.copy(); b2.faces.ensure_lookup_table()
+            bmesh.ops.delete(b2, geom=[f for f in b2.faces if f.index not in keep], context='FACES')
+            me2 = c.data.copy(); b2.to_mesh(me2); b2.free()
+            cobj = bpy.data.objects.new(ob.name + '_caps', me2); cobj.matrix_world = c.matrix_world
+            bpy.context.scene.collection.objects.link(cobj); extra_src.append(cobj)
+        else:   # the wing: Meshy's soup has faces flipped at random (light / dark triangles); one way round, lightly smoothed
+            bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+            inner = [v for v in bm.verts if not v.is_boundary]
+            for _ in range(2): bmesh.ops.smooth_vert(bm, verts=inner, factor=.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+        bm.to_mesh(c.data); bm.free()
+        return c
+    extra_src = []
+    body = part(False, ob.name + '_nowings'); wing = part(True, ob.name + '_wings')
+    have = sum(len(p.vertices) - 2 for p in wing.data.polygons)
+    if have > rule['tris']:
+        bpy.ops.object.select_all(action='DESELECT'); wing.select_set(True); bpy.context.view_layer.objects.active = wing
+        d = wing.modifiers.new('dec', 'DECIMATE'); d.decimate_type = 'COLLAPSE'; d.ratio = rule['tris'] / have; d.use_collapse_triangulate = True
+        bpy.ops.object.modifier_apply(modifier='dec')
+    for p in wing.data.polygons: p.use_smooth = True
+    made, total = mesh_fix.double_sheets(wing, log=log)
+    g = wing.vertex_groups.new(name='WingSheet'); g.add(list(range(len(wing.data.vertices))), 1.0, 'REPLACE')
+    log(f'wings: {have} Meshy triangles -> {total} in the sheet, {made} with a reversed twin (two-sided); body solid from {len(body.data.polygons)} faces')
+    return body, wing, extra_src
+
+
+def wing_marks(ob, L):
+    """after the rebuild: the wing sheet's vertices (its group, then the group goes), each side's root and tip for the bones"""
+    g = ob.vertex_groups.get('WingSheet')
+    if g is None: return
+    idx = [v.index for v in ob.data.vertices if any(e.group == g.index for e in v.groups)]
+    ob.vertex_groups.remove(g)
+    mw = ob.matrix_world; L['wing_idx'] = set(idx); L['wings'] = {}
+    for side, sgn in (('L', 1), ('R', -1)):
+        pts = [mw @ ob.data.vertices[i].co for i in idx if ob.data.vertices[i].co.x * sgn > 0]
+        zlo = min(p.z for p in pts)
+        base = [p for p in pts if p.z < zlo + .02]; root = sum(base, Vector()) / len(base); root.x = sgn * max(.012, abs(root.x) * .7)
+        far = sorted(pts, key=lambda p: (p - root).length)[-max(5, len(pts) // 20):]; tip = sum(far, Vector()) / len(far)
+        L['wings'][side] = (root, tip)
+        log(f'wing {side}: {len(pts)} vertices, root ({root.x:.3f},{root.y:.3f},{root.z:.3f}), tip ({tip.x:.3f},{tip.y:.3f},{tip.z:.3f})')
+
+
+def wing_weights(ob, L):
+    """wing vertices: the side's wing bone, blended into the Chest over the first 3 cm from the root; nothing else takes wing bones"""
+    mw = ob.matrix_world; names = [g.name for g in ob.vertex_groups]
+    for v in ob.data.vertices:
+        if v.index in L['wing_idx']:
+            p = mw @ v.co; side = 'L' if p.x > 0 else 'R'; root, tip = L['wings'][side]
+            ax = (tip - root).normalized(); w = max(0., min(1., ((p - root).dot(ax) - .004) / .03))
+            for n in names: ob.vertex_groups[n].remove([v.index])
+            ob.vertex_groups['Wing' + side].add([v.index], w, 'REPLACE')
+            if w < 1: ob.vertex_groups['Chest'].add([v.index], 1 - w, 'REPLACE')
+        else:
+            for n in ('WingL', 'WingR'):
+                if n in ob.vertex_groups: ob.vertex_groups[n].remove([v.index])
+    log(f'wings: {len(L["wing_idx"])} vertices follow WingL / WingR (blended into the Chest at the root)')
 
 
 # ---------------------------------------------------------------------------------------------------------------- skeleton
@@ -166,6 +275,8 @@ def build(L):
         bone(f'{k}_Upper', top, knee, par)
         bone(f'{k}_Lower', knee, ankle, f'{k}_Upper', True)
         bone(f'{k}_Paw', ankle, toe, f'{k}_Lower', True)
+    for side, (root, tip) in L.get('wings', {}).items():   # Round 8: dragon Kira's wings
+        bone('Wing' + side, root, tip, 'Chest')
     bpy.ops.object.mode_set(mode='OBJECT')
     return arm
 
@@ -218,6 +329,9 @@ def heat(ob, arm, L):
     arm.data.bones['Root'].use_deform = False
     proxy = ob.copy(); proxy.data = ob.data.copy(); proxy.vertex_groups.clear(); proxy.modifiers.clear()
     bpy.context.scene.collection.objects.link(proxy)
+    if L.get('wing_idx'):   # Round 8: the wing sheets (twins on top of each other) make bone heat fail; they get their own weights
+        bm = bmesh.new(); bm.from_mesh(proxy.data); bm.verts.ensure_lookup_table()
+        bmesh.ops.delete(bm, geom=[bm.verts[i] for i in L['wing_idx']], context='VERTS'); bm.to_mesh(proxy.data); bm.free()
     r = proxy.modifiers.new('remesh', 'REMESH'); r.mode = 'VOXEL'; r.voxel_size = L['H'] * .012
     bpy.ops.object.select_all(action='DESELECT'); bpy.context.view_layer.objects.active = proxy; proxy.select_set(True)
     bpy.ops.object.modifier_apply(modifier='remesh')
@@ -294,12 +408,21 @@ def clips(arm, L):
     base = base_pose(L); acts = {}
     sc = bpy.context.scene; sc.render.fps = FPS
 
+    has_wings = 'WingL' in arm.data.bones
+    Y = (0, 1, 0)
+    # Round 8: the wings' spread (deg, + = out from the back) per clip: a gentle breath, tucked swimming, spread for jumps and glides
+    spread = {'idle': lambda t: 3 * s(t), 'walk': lambda t: 3 * s(t, .25), 'run': lambda t: 6 + 8 * s(t), 'jump': lambda t: 35 * min(1, t / .5),
+              'fall': lambda t: 40 + 15 * s(t), 'land': lambda t: 20 * math.sin(math.pi * t), 'swim': lambda t: -6,
+              'attack': lambda t: 30 * math.sin(math.pi * t), 'hurt': lambda t: 22 * math.sin(math.pi * t), 'stunned': lambda t: 12 + 4 * s(t)}
+
     def make(name, frames, fn, loop=True):
         act = bpy.data.actions.new(name); act.use_fake_user = True
         arm.animation_data_create(); arm.animation_data.action = act
         for f in range(frames + 1):
             t = f / frames
             pose, hz, hy = fn(t)
+            if has_wings:
+                a = spread.get(name, lambda t: 0)(t); pose = merge(pose, {'WingL': [(Y, a)], 'WingR': [(Y, -a)]})
             key(arm, f, merge(base, pose), hz, hy)
         acts[name] = (act, frames)
     s = lambda t, ph=0: math.sin(2 * math.pi * (t + ph))
@@ -407,7 +530,13 @@ def render(arm, L, name, acts):
         l.rotation_euler = [math.radians(a) for a in rot]; sc.collection.objects.link(l)
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
     cam.data.type = 'ORTHO'; cam.data.ortho_scale = .85
+    lod0 = next((o for o in bpy.data.objects if o.name.endswith('_LOD0')), None)
+    if lod0:   # Round 8: long bodies (dragon Kira's tail, the rat's tail) in frame
+        ws = [lod0.matrix_world @ v.co for v in lod0.data.vertices]; ys = [w.y for w in ws]
+        cam.data.ortho_scale = max(.85, (max(ys) - min(ys)) * 1.15)
     a = math.radians(55); cam.location = (2 * math.sin(a), -2 * math.cos(a), .22 + .5); cam.rotation_euler = (math.radians(75), 0, a)
+    if lod0 and cam.data.ortho_scale > .85:   # Round 8: aimed at the middle of a long body
+        cy = (max(ys) + min(ys)) / 2; cam.location = (2 * math.sin(a), cy - 2 * math.cos(a), .22 + .5)
     for o in bpy.data.objects:
         if o.name.endswith(('_LOD1', '_LOD2')): o.hide_render = True
     os.makedirs(SHOTS, exist_ok=True)
@@ -453,13 +582,20 @@ def run(name):
     # Round 6, item 3: tusks / fangs / claws out of the fur first (clean pieces, a plain material), joined back after the rebuild
     hard, hinfo = hard_parts.split(ob, name, L, log=log)
     if os.path.exists(os.path.join(out, 'hard.txt')) and not hard: os.remove(os.path.join(out, 'hard.txt'))
-    ob = closed_mesh.rebuild(ob, L['H'] * .005, TRIS.get(name, 20000), out, thin=THIN.get(name, 0), log=log)   # 20k: fewer and the thin parts fold through themselves
+    body = wing = None; caps = []
+    if name in WINGS: body, wing, caps = split_wings(ob, WINGS[name])
+    ob = closed_mesh.rebuild(ob, L['H'] * .005, TRIS.get(name, 20000), out, thin=THIN.get(name, 0), solid_src=body, extra=wing,
+                             bake_also=caps, reach=.1 if name in WINGS else 0.0, thin_box=(*THIN_HEAD[name][0], THIN_HEAD[name][1]) if name in THIN_HEAD else None, log=log)
+    for o in [body] + caps:
+        if o is not None: bpy.data.objects.remove(o)
+    wing_marks(ob, L)   # 20k: fewer and the thin parts fold through themselves
     first = None
     if hard: first = hard_parts.join(ob, hard_parts.close(hard, hinfo, L, out, name, log=log))
     co = [ob.matrix_world @ v.co for v in ob.data.vertices]
-    L['tail'] = [c for c in co if c.y > L['yb'] and c.z > L['hi_b'] + .015]
+    L['tail'] = [c for i, c in enumerate(co) if c.y > L['yb'] and c.z > L['hi_b'] + .015 and i not in L.get('wing_idx', ())]
     arm = build(L)
     skin(ob, arm, L, co)
+    if L.get('wings'): wing_weights(ob, L)
     if first is not None: hard_parts.rigid(ob, first, hinfo, L, log=log)
     acts = clips(arm, L)
     # Round 4, item 1: fur tufts and whiskers are single sheets; the ones seen from behind get a reversed twin (Tools/Blender/mesh_fix.py)

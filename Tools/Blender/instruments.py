@@ -18,9 +18,9 @@ from mathutils import Vector
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'Assets', 'Resources', 'World')
-SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'instruments')
+SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'instruments')
 COL = {'Bone': (.93, .88, .76), 'Ebony': (.12, .09, .08), 'Gut': (.95, .92, .8), 'Wood': (.45, .28, .16), 'Gold': (.95, .72, .25),
-       'Lapis': (.12, .25, .7), 'Bark': (.42, .28, .18), 'Hair': (.97, .96, .92)}
+       'Lapis': (.12, .25, .7), 'Bark': (.42, .28, .18), 'Hair': (.97, .96, .92), 'Plank': (.55, .36, .2), 'Dark': (.15, .12, .1)}
 
 
 def mat(name):
@@ -176,10 +176,31 @@ def harp():
     return e
 
 
+def lute():
+    """Round 8, item 2: the Medieval bard's lute (0.8 m), held across his body (World/Violinist.cs: the lyre's markers, its own hold): a
+    pear-shaped bowl back, a flat soundboard with a carved rose, a fretted neck and the pegbox bent back. Its front (the strings) is -Y,
+    the neck up +Z from the body's bottom."""
+    e = empty('Lute')
+    ball('Bowl__Wood', (0, .1, .17), .17, e, (1.0, .55, 1.25))
+    ball('Board__Plank', (0, -.005, .17), .165, e, (1.0, .06, 1.12))
+    ball('Rose__Dark', (0, -.02, .2), .045, e, (1.0, .15, 1.0))
+    box('Bridge__Ebony', (0, -.022, .08), (.12, .012, .015), e)
+    box('Neck__Ebony', (0, -.0, .47), (.055, .03, .3), e)
+    for i in range(6): box('Fret__Gold', (0, -.017, .36 + i * .05), (.058, .004, .004), e)
+    box('Pegbox__Wood', (0, .03, .66), (.05, .03, .1), e, (math.radians(-35), 0, 0))
+    for i in range(4): cyl('Peg__Gold', (-.04, .04 + i * .01, .63 + i * .025), (.04, .04 + i * .01, .63 + i * .025), .006, .006, e, 6)
+    for i in range(6):
+        x = -.02 + i * .008
+        cyl('String__Gut', (x * 1.6, -.024, .08), (x, -.018, .62), .0011, .0011, e, 4)
+    empty('M_Base', e, (0, 0, 0)); empty('M_Top', e, (0, 0, .7)); empty('M_Front', e, (0, -.2, .2))
+    empty('M_Hold', e, (0, .0, .5)); empty('M_Pluck', e, (0, -.03, .17))
+    return e
+
+
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    roots = [fiddle(), bow(), lyre(), harp()]
-    roots[1].location = (.3, 0, 0); roots[2].location = (.75, 0, 0); roots[3].location = (1.2, 0, 0)
+    roots = [fiddle(), bow(), lyre(), harp(), lute()]
+    roots[1].location = (.3, 0, 0); roots[2].location = (.75, 0, 0); roots[3].location = (1.2, 0, 0); roots[4].location = (1.65, 0, 0)
     bpy.context.view_layer.update()
     for o in bpy.context.scene.objects:   # bake the bevels
         if o.type == 'MESH' and o.modifiers:
@@ -190,7 +211,7 @@ def main():
     sc = bpy.context.scene; sc.render.engine = 'BLENDER_WORKBENCH'; sc.display.shading.color_type = 'MATERIAL'
     sc.display.shading.light = 'STUDIO'; sc.render.resolution_x = 1400; sc.render.resolution_y = 700
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
-    cam.location = (.65, -1.75, 1.15); cam.rotation_euler = (math.radians(58), 0, 0); cam.data.lens = 40
+    cam.location = (.9, -2.3, 1.3); cam.rotation_euler = (math.radians(62), 0, 0); cam.data.lens = 35
     sc.render.filepath = os.path.join(SHOTS, 'instruments.png'); bpy.ops.render.render(write_still=True)
     for r in roots: r.location = (0, 0, 0)
     bpy.context.view_layer.update()

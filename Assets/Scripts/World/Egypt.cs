@@ -225,7 +225,7 @@ namespace ShardsOfTime
             Hint(new Vector3(60, 0, 132), 6f, () => "Quicksand! Ride the stone across.");
             Cp("EG-quicksand", 60, 172, 0);
             // the huge block in the quarry (Muscle Man) and the quarry's stones
-            var huge = Box("Huge block (needs Muscle Man)", new Vector3(86, 2.5f, 61), new Vector3(3f, 5f, 12f), "Sandstone"); huge.gameObject.AddComponent<Boulder>();
+            var huge = Box("Huge block (needs Muscle Man)", new Vector3(86, 2.5f, 61), new Vector3(3f, 5f, 12f), "Sandstone"); huge.gameObject.AddComponent<Boulder>().id = "EG-block-quarry";
             Slab("Quarry wall N", 84, 100, 72, 74, 6, 0); Slab("Quarry wall S", 84, 100, 48, 50, 6, 0); Slab("Quarry wall E", 98, 100, 50, 72, 6, 0);
             foreach (var (x, z, yaw) in new[] { (70f, 40f, 10f), (74f, 44f, 80f), (80f, 90f, 30f), (44f, 128f, 0f), (76f, 128f, 60f) }) Prop("Block", x, z, yaw, 1f, true);
             Prop("Cart", 66, 100, 20, 1f, true);

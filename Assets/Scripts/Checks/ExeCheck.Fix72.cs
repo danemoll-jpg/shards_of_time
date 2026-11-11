@@ -11,7 +11,7 @@ namespace ShardsOfTime
     public sealed partial class ExeCheck
     {
         // moves the story teaches by Bethlehem (a spot that needs one to get in is tested with it); anything else is a later move
-        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce };
+        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan };   // Round 8: the charged punch, Muscle Man
 
         IEnumerator Fix72()
         {
@@ -26,7 +26,10 @@ namespace ShardsOfTime
             yield return StuckWorld(WorldData.IceAge, null);
             yield return StuckWorld(WorldData.Egypt, Egypt.Start);
             yield return StuckWorld(WorldData.Bethlehem, Bethlehem.Start);
+            yield return StuckWorld(WorldData.Medieval, Medieval.Start);   // Round 8
         }
+
+        IEnumerator StuckMedieval() { yield return EnsurePlaying(false); yield return StuckWorld(WorldData.Medieval, Medieval.Start); }   // Round 8
 
         IEnumerator WellOnly()
         {
@@ -39,7 +42,7 @@ namespace ShardsOfTime
         IEnumerator ToWorld(string world, string cp)
         {
             if (Game.World.worldId == world) yield break;
-            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : null;
+            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : null;
             if (flag != null && !SaveGame.Current.World(world).opened.Contains(flag)) SaveGame.Current.World(world).opened.Add(flag);
             SaveGame.Current.checkpoint = cp; yield return StartWorld(world); yield return WaitFor(() => !Game.I.Busy, 10f);
             yield return Wait(1f);
@@ -71,6 +74,9 @@ namespace ShardsOfTime
                 }
                 if (!string.IsNullOrEmpty(s.needs) && TaughtSoFar.Contains(s.needs) && !SaveGame.Current.abilities.Contains(s.needs)) SaveGame.Current.abilities.Add(s.needs);
                 if (!string.IsNullOrEmpty(s.opens)) { var cap = CrackedFloor.All.FirstOrDefault(c => c.id == s.opens); if (cap) cap.Pound(Player); }
+                // Round 8: a cracked wall, a boulder or a portcullis in front of it: opened first (as the charged punch / Muscle Man would)
+                if (!string.IsNullOrEmpty(s.opens)) { var rw = RockWall.All.FirstOrDefault(r => r.id == s.opens); if (rw) rw.Punch(P.Heroes[0], true); }
+                if (!string.IsNullOrEmpty(s.opens)) { var mj = MuscleJob.All.FirstOrDefault(j => j.id == s.opens); if (mj) mj.OpenNow(); }
                 for (int i = 0; i < P.Heroes.Count; i++)
                 {
                     string who = P.Heroes[i].Stats.displayName;

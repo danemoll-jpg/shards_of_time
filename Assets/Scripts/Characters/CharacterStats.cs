@@ -57,6 +57,11 @@ namespace ShardsOfTime
                     s.attackName = "Claws"; s.attackDamage = 1; s.attackRange = .7f; s.attackRadius = .6f; s.attackCooldown = .25f;
                     s.lockedAbility = Abilities.Pounce;   // Round 7: taught by Bethlehem's Violinist
                     break;
+                case "MuscleMan":   // Round 8: the companion (a follower, never controlled): big, strong, a little slower
+                    s.color = new Color(.25f, .3f, .45f); s.height = 2.0f; s.radius = .42f; s.runSpeed = 7.2f; s.acceleration = 40f; s.airControl = .5f;
+                    s.jumpHeight = 1.5f; s.swimSpeed = 3.6f; s.swimmer = true; s.breathSeconds = 0f;
+                    s.attackName = "Punch"; s.attackDamage = 3; s.attackRange = 1.1f; s.attackRadius = .8f; s.attackCooldown = .6f; s.canPushHeavy = true;
+                    break;
             }
             return s;
         }
@@ -78,5 +83,13 @@ namespace ShardsOfTime
         // Round 7: Bethlehem
         public const string FlockHide = "FlockHide";         // lamb Kira: in a flock of sheep, watchmen, dogs and goats don't see her
         public const string WoolBounce = "WoolBounce";       // lamb Kira: a high springy bounce off hay bales and wool piles
+        // Round 8: the Medieval Kingdom
+        public const string Glide = "Glide";                 // dragon Kira: hold Jump in the air, her little wings slow the fall (long gaps)
+        public const string FirePuff = "FirePuff";           // dragon Kira: her attack is a puff of fire (lights torches and braziers, burns ropes, hay, brambles; scares rats; never hurts people)
+        // the charged punch (Dan, Medieval: hold attack, release) is ChargedPunch above; MuscleMan = he has joined (after the stone)
+
+        // Round 8: every move a hero can learn from the Violinist (Dan learns two)
+        public static bool Learns(string hero, string id) =>
+            hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump : hero == "Kira" && id == Pounce;
     }
 }

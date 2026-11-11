@@ -25,7 +25,7 @@ def open_edges(ob):
     return n, nm
 
 
-def solid(src, voxel, seal=2, thin=0, core=0, log=print):
+def solid(src, voxel, seal=2, thin=0, core=0, thin_box=None, log=print):
     """A solid copy of an open mesh: its surface drawn into a voxel grid, thickened by `seal` voxels (closes gaps up to about
     2 x seal voxels), the outside flood-filled from the grid's border, everything not reached = solid, eroded back by `seal`
     (a morphological closing). Returns a new mesh object: the solid's voxel faces (closed), for a voxel remesh to smooth."""
@@ -66,6 +66,11 @@ def solid(src, voxel, seal=2, thin=0, core=0, log=print):
         out_b, _ = outside(grow(wall, core))
         clos = ~grow(out_b, core)
         sol |= grow(~grow(~clos, core), core)
+    if thin_box:   # Round 8: a stronger opening inside a box only (lo, hi, k): dragon Kira's whisker roots lie along her cheeks
+        blo, bhi, k = thin_box
+        a = np.clip(np.floor((np.array(blo) - lo) / voxel).astype(int), 0, dims - 1); b = np.clip(np.ceil((np.array(bhi) - lo) / voxel).astype(int), 0, dims - 1)
+        op = grow(~grow(~sol, k), k); box = (slice(a[0], b[0] + 1), slice(a[1], b[1] + 1), slice(a[2], b[2] + 1))
+        sol = sol.copy(); sol[box] = op[box]
     if thin:   # an opening: strands thinner than ~2 x `thin` voxels go (home Kira's whiskers), the rest comes back to size
         sol = grow(~grow(~sol, thin), thin)
     log(f'solid: grid {tuple(dims)}, {int(wall.sum())} surface voxels, outside filled in {it} steps, {int(sol.sum())} solid voxels '
@@ -120,9 +125,12 @@ def _select_only(*obs, active=None):
     bpy.context.view_layer.objects.active = active or obs[-1]
 
 
-def rebuild(src, voxel, tris, out_dir, res=2048, thin=0, seal=2, core=0, reach=0.0, keep_src=False, log=print):
+def rebuild(src, voxel, tris, out_dir, res=2048, thin=0, seal=2, core=0, reach=0.0, keep_src=False, solid_src=None, extra=None, bake_also=(), thin_box=None, log=print):
+    """Round 8: solid_src = the mesh the solid is made from (default src; dragon Kira's body without her wings), extra = an object
+    joined in before the UVs and the bake (her wings as a thin two-sided sheet), so it shares the baked maps; bake_also = more bake
+    sources (the caps over her wing roots)."""
     name = src.name
-    new = solid(src, voxel, seal=seal, thin=thin, core=core, log=log); new.name = name + '_closed'
+    new = solid(solid_src or src, voxel, seal=seal, thin=thin, core=core, thin_box=thin_box, log=log); new.name = name + '_closed'
     _select_only(new)
     r = new.modifiers.new('remesh', 'REMESH'); r.mode = 'VOXEL'; r.voxel_size = voxel; r.adaptivity = 0
     bpy.ops.object.modifier_apply(modifier='remesh')
@@ -143,6 +151,11 @@ def rebuild(src, voxel, tris, out_dir, res=2048, thin=0, seal=2, core=0, reach=0
     bm.free()
     log(f'closed mesh {name}: {sum(len(p.vertices) - 2 for p in new.data.polygons)} triangles, {oe} open edges, {nm} edges with 3+ faces, '
         f'{len(cross)} faces crossing another')
+    if extra is not None:   # Round 8: joined after the closed body's checks (a sheet is open by design)
+        extra.data.materials.clear(); ename = extra.name
+        _select_only(extra, new, active=new); bpy.ops.object.join()
+        for p in new.data.polygons: p.material_index = 0
+        log(f'closed mesh {name}: joined {ename} -> {sum(len(p.vertices) - 2 for p in new.data.polygons)} triangles')
     # UVs
     while new.data.uv_layers: new.data.uv_layers.remove(new.data.uv_layers[0])
     new.data.uv_layers.new(name='UVMap')
@@ -172,7 +185,7 @@ def rebuild(src, voxel, tris, out_dir, res=2048, thin=0, seal=2, core=0, reach=0
         img, node = imgs[kind]
         for n in nt.nodes: n.select = False
         node.select = True; nt.nodes.active = node
-        _select_only(src, new, active=new)
+        _select_only(src, *bake_also, new, active=new)
         if kind == 'base_color': bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'})
         else: bpy.ops.object.bake(type='NORMAL', normal_space='TANGENT')
         img.filepath_raw = os.path.join(out_dir, kind + '.png'); img.file_format = 'PNG'; img.save()

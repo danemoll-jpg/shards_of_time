@@ -36,16 +36,20 @@ namespace ShardsOfTime
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
 
-        public void Punch(Hero by)
+        public void Punch(Hero by, bool charged)
         {
-            if (!by.HasAbility(Abilities.ChargedPunch))
+            if (!charged)
             {
-                if (Time.time > hintAt + 3f) { hintAt = Time.time; Hud.Message("Cracked rock, warm to the touch. A much stronger punch could break it... (later)", 4f); }
+                if (Time.time > hintAt + 3f)
+                {
+                    hintAt = Time.time;
+                    Hud.Message(by.HasAbility(Abilities.ChargedPunch) ? $"Cracked! Hold {Controls.Btn(Controls.Act.Attack)} to charge Dan's punch, then let go." : "Cracked rock. A much stronger punch could break it... (later)", 4f);
+                }
                 return;
             }
             var prog = SaveGame.Current.World(Game.World.worldId);
             if (!prog.opened.Contains(id)) prog.opened.Add(id);
-            Placeholders.Puff(transform.position, new Color(.55f, .45f, .4f));
+            Placeholders.Puff(transform.position, new Color(.55f, .45f, .4f)); Sfx.Play("wall_break", .7f);
             PlayLog.Line($"rock wall {id} broken by {by.Stats.displayName}");
             gameObject.SetActive(false);
             SaveGame.Save("rock wall");

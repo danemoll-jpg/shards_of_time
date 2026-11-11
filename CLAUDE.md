@@ -152,6 +152,11 @@ Same launcher as Chastain Rush / Hostile Horizon, renamed:
   Version `0.<round>.<fix>`. A follow-up fix is published too.
 
 ## Process (Dan's standing rules)
+- **Don't end your turn mid-round (Dan, 2026-11-11).** A stop for Dan (Mixamo, an image) is a
+  message, then keep working in the same turn on everything that doesn't need him. Never write
+  "I'll carry on" and then end the turn: Dan goes to bed trusting it. End your turn only when the
+  round is published, or when nothing at all can continue without him (say so plainly). When his
+  files arrive, import them and keep going to the end of the round without stopping again.
 - **Commit before starting a round** (safety checkpoint); commit + push at the end.
 - **Planning chat writes the round** into `TODO.md` / `CLAUDE.md`; Code builds it.
 - **Code updates `TODO.md` and `CLAUDE.md` at the end of every round:** per-item

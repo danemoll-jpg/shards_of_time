@@ -23,11 +23,12 @@ namespace ShardsOfTime
         public static bool TestArea => World && World.worldId == WorldData.Playground;
         public static bool InEgypt => World && World.worldId == WorldData.Egypt;   // Round 6
         public static bool InBethlehem => World && World.worldId == WorldData.Bethlehem;   // Round 7
+        public static bool InMedieval => World && World.worldId == WorldData.Medieval;     // Round 8
         // the open world's vortex gate and ground (Round 6: two worlds; Round 7: three)
-        public static Portal Gate => InBethlehem ? Bethlehem.Gate : InEgypt ? Egypt.Gate : IceAge.Gate;
-        public static Vector3 OnGround(float x, float z) => InBethlehem ? Bethlehem.OnGround(x, z) : InEgypt ? Egypt.OnGround(x, z) : IceAge.OnGround(x, z);
+        public static Portal Gate => InMedieval ? Medieval.Gate : InBethlehem ? Bethlehem.Gate : InEgypt ? Egypt.Gate : IceAge.Gate;
+        public static Vector3 OnGround(float x, float z) => InMedieval ? Medieval.OnGround(x, z, x > 300 ? 3f : 30f) : InBethlehem ? Bethlehem.OnGround(x, z) : InEgypt ? Egypt.OnGround(x, z) : IceAge.OnGround(x, z);
         // the save's world (the playground aside): Round 7, three of them
-        static string SavedWorld => SaveGame.Current.currentWorld == WorldData.Egypt || SaveGame.Current.currentWorld == WorldData.Bethlehem ? SaveGame.Current.currentWorld : WorldData.IceAge;
+        static string SavedWorld => SaveGame.Current.currentWorld == WorldData.Egypt || SaveGame.Current.currentWorld == WorldData.Bethlehem || SaveGame.Current.currentWorld == WorldData.Medieval ? SaveGame.Current.currentWorld : WorldData.IceAge;
         public static readonly Vector3 HomeAnchor = new Vector3(0, 400f, -3000f);   // the living room of Act I (inside its cutscene)
 
         public Pickup StoryShard; public GameObject StoryBeam; public Portal PortalA;
@@ -70,7 +71,7 @@ namespace ShardsOfTime
             Look.ApplyWorld(World.worldId);
             NecklaceModel.Tint = TestArea ? new Color(.25f, .55f, 1f) : World.areas[0].storyShardColor;   // Round 6, item 6: the shard's colour per world
             if (TestArea) worldRoot = Playground.Build(World);
-            else { worldRoot = InBethlehem ? Bethlehem.Build(World) : InEgypt ? Egypt.Build(World) : IceAge.Build(World); Vortex.Build(worldRoot); }
+            else { worldRoot = InMedieval ? Medieval.Build(World) : InBethlehem ? Bethlehem.Build(World) : InEgypt ? Egypt.Build(World) : IceAge.Build(World); Vortex.Build(worldRoot); }
             var a = World.areas[0];
             Party.Create(a.spawn, Quaternion.Euler(0, a.spawnYaw, 0));
             Health.Refill();
@@ -139,6 +140,7 @@ namespace ShardsOfTime
             if (prog.storyShard && Gate && !SaveGame.Current.portals.Contains(Gate.id)) SaveGame.Current.portals.Add(Gate.id);
             if (InEgypt && !prog.opened.Contains("EG-arrived")) StartCoroutine(ArriveInEgypt());   // stopped before the arrival ended
             if (InBethlehem && !prog.opened.Contains("BE-arrived")) StartCoroutine(ArriveInBethlehem());
+            if (InMedieval && !prog.opened.Contains("ME-arrived")) StartCoroutine(ArriveInMedieval());
         }
 
         // Item 3: a new game plays the film's opening, then play starts at the landing spot
@@ -261,6 +263,13 @@ namespace ShardsOfTime
                     titleCam.transform.position = c + Quaternion.Euler(0, 200f + Mathf.Sin(titleSpin * .05f) * 25f, 0) * new Vector3(0, 9f, 26f);
                     titleCam.transform.rotation = Quaternion.LookRotation(c - titleCam.transform.position);
                 }
+                else if (InMedieval)
+                {
+                    // Round 8: from the drawbridge into the torch-lit courtyard, the keep and its spire behind
+                    float s = Mathf.Sin(titleSpin * .04f);
+                    titleCam.transform.position = new Vector3(-6f + s * 6f, 6f, -26f);
+                    titleCam.transform.rotation = Quaternion.LookRotation(new Vector3(0f + s * 4f, 14f, 60f) - titleCam.transform.position);
+                }
                 else if (InBethlehem)
                 {
                     // Round 7: over the farmyard toward the barn under the star, the hills behind
@@ -286,12 +295,14 @@ namespace ShardsOfTime
             MusicFor();
             if (Party.I && (State == Mode.Playing))
             {
-                var area = Area; var prog = SaveGame.Current.World(World.worldId);
+                var area = Area;
+                if (Party.I.Companion && !Party.I.Companion.gameObject.activeSelf) Party.I.Companion.gameObject.SetActive(true); var prog = SaveGame.Current.World(World.worldId);
                 Necklace.Tick(area != null ? area.id : "", area != null && area.requirement > 0 && prog.necklaceAwake && !prog.storyShard);
                 // Fix 6.1: the necklace wakes when the universal total reaches this world's threshold (also on arriving with enough already)
                 if (area != null && area.requirement > 0 && !prog.necklaceAwake && !prog.storyShard && !Busy && !InCutscene && SaveGame.Current.Total >= area.requirement)
                     StartCoroutine(WakeNecklace(area));
                 if (area != null) { ApplyKiraForm(area); ApplyOutfits(area); }
+                if (Party.I.Companion && area != null) Party.I.Companion.SetOutfit(string.IsNullOrEmpty(area.outfit) ? Outfits.Home : area.outfit);
                 WatchStuck();
                 bool dark = DarkVolume.At(Party.I.Player.Motor.Center) && !InCutscene;
                 Look.InVortex(Vortex.Inside(Party.I.Player.transform.position) && !InCutscene);
@@ -319,8 +330,10 @@ namespace ShardsOfTime
             if (Cutscenes.Playing == "EgyptArrival") { Music.Play("egypt", .8f); return; }   // Round 6: Dan's Egypt song (silence if missing)
             if (Cutscenes.Playing == "BethlehemArrival") { Music.Play("bethlehem", .8f); return; }   // Round 7: Dan's Bethlehem song
             if (Cutscenes.Playing == "WiseMenArrive") { Music.Play(null, 1.2f); return; }   // the finale: the choir sting is the cutscene's own sound
+            if (Cutscenes.Playing == "MedievalArrival") { Music.Play("medieval", .8f); return; }   // Round 8: Dan's Medieval song
+            if (Cutscenes.Playing == "TheStone") { Music.Play(null, 1.2f); return; }
             if (State != Mode.Playing || !Party.I) return;   // paused: keep what plays
-            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : InBethlehem ? "bethlehem" : InEgypt ? "egypt" : "iceage");
+            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : InMedieval ? "medieval" : InBethlehem ? "bethlehem" : InEgypt ? "egypt" : "iceage");
         }
 
         // ---- progression
@@ -329,7 +342,8 @@ namespace ShardsOfTime
             var prog = SaveGame.Current.World(World.worldId);
             if (p.kind == Pickup.Kind.StoryShard) foreach (var h in Party.I.Heroes) h.Cheer();   // Round 3: everyone cheers the story shard
             else if (p.kind == Pickup.Kind.Shard) Party.I.Player.Cheer();
-            if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : InBethlehem ? WiseMenFinale() : OpenVortex());
+            if (Party.I.Companion && p.kind != Pickup.Kind.Heal) Party.I.Companion.Cheer();   // Round 8: Muscle Man cheers every pickup
+            if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : InMedieval ? StoneFinale() : InBethlehem ? WiseMenFinale() : OpenVortex());
         }
 
         IEnumerator WakeNecklace(AreaData area)
@@ -345,9 +359,10 @@ namespace ShardsOfTime
             var at = player.position;
             if (Physics.Raycast(at + Vector3.up * .5f, Vector3.down, out var ground, 30f, ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << 4) | (1 << 2)), QueryTriggerInteraction.Ignore)) at = ground.point;   // on the ground, even mid-jump
             Sfx.Play("necklace", .7f);
-            yield return Cutscenes.Play(InBethlehem ? "NecklaceWakesBethlehem" : InEgypt ? "NecklaceWakesEgypt" : "NecklaceWakes", at, Quaternion.LookRotation(to.sqrMagnitude > .01f ? to : player.forward));
+            yield return Cutscenes.Play(InMedieval ? "NecklaceWakesMedieval" : InBethlehem ? "NecklaceWakesBethlehem" : InEgypt ? "NecklaceWakesEgypt" : "NecklaceWakes", at, Quaternion.LookRotation(to.sqrMagnitude > .01f ? to : player.forward));
             StoryShard.gameObject.SetActive(true); StoryBeam.SetActive(true);
-            Hud.Message(InBethlehem ? "The necklace is awake! Follow it... back to the barn? Something is glowing in the manger." : "The necklace is awake! Follow it to the story shard.", 5f);
+            if (InMedieval && Medieval.StuckShard) Medieval.StuckShard.SetActive(false);   // the pickup takes its place in the stone
+            Hud.Message(InMedieval ? "The necklace is awake! It pulls toward the courtyard... toward the stone." : InBethlehem ? "The necklace is awake! Follow it... back to the barn? Something is glowing in the manger." : "The necklace is awake! Follow it to the story shard.", 5f);
             SaveGame.Save("necklace awake");
             Busy = false;
         }
@@ -409,6 +424,37 @@ namespace ShardsOfTime
             Busy = false;
         }
 
+        // Round 8, item 10: the purple shard in the stone. TheStone (skippable, the film's scene): Muscle Man is there first, brags, heaves with
+        // everything he has, fails and falls flat on his back; Dan steps up, the shard answers his necklace and slides out with no effort;
+        // Muscle Man stares, then kneels: "Master!"; the purple vortex opens and sweeps him along with the party -> the vortex space. From then
+        // on he follows the party (Abilities.MuscleMan: the boulders, portcullises and boosts in every world).
+        IEnumerator StoneFinale()
+        {
+            Busy = true; Finales++;
+            var prog = SaveGame.Current.World(World.worldId); prog.storyShard = true;
+            StoryBeam.SetActive(false);
+            if (!SaveGame.Current.portals.Contains(Medieval.Gate.id)) SaveGame.Current.portals.Add(Medieval.Gate.id);
+            if (!SaveGame.Current.abilities.Contains(Abilities.MuscleMan)) SaveGame.Current.abilities.Add(Abilities.MuscleMan);
+            SaveGame.Save("story shard");
+            yield return new WaitForSeconds(.3f);
+            var at = Medieval.OnGround(Medieval.StoneAt.x, Medieval.StoneAt.z - 3f);
+            Party.I.PlaceAll(at, Quaternion.identity); CameraRig.I.SnapBehind();
+            foreach (var r in RivalMuscleMan.All.ToArray()) r.gameObject.SetActive(false);
+            yield return Cutscenes.Play("TheStone", new Vector3(Medieval.StoneAt.x, at.y, Medieval.StoneAt.z), Quaternion.identity);
+            Medieval.Gate.gameObject.SetActive(true);
+            Party.I.AddCompanion(at + Vector3.back * 2f, Quaternion.identity);
+            PlayLog.Line("the stone's finale: Muscle Man joins; into the vortex");
+            for (float t = 0; t < 1f; t += Time.deltaTime / .5f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(1f);
+            SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
+            SaveGame.Save("vortex");
+            yield return null;
+            for (float t = 1; t > 0; t -= Time.deltaTime / .6f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f);
+            Hud.Message($"The purple shard! {SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards... and Muscle Man came too. He moves boulders, lifts portcullises and boosts you up: press {Controls.Btn(Controls.Act.Attack)} near one.", 8f);
+            Busy = false;
+        }
+
         // the vortex gate -> the vortex space
         public void EnterVortex(Portal from)
         {
@@ -425,9 +471,9 @@ namespace ShardsOfTime
         public void TakeVortexPath(Vortex.PathInfo path, VortexDoor door)
         {
             PlayLog.Line($"vortex path {path.id}{(door.Blocked ? " (blocked)" : "")}");
-            if (door.Blocked && (path.id == "Bethlehem" || path.id == "Medieval"))
+            if (door.Blocked && (path.id == "Bethlehem" || path.id == "Medieval" || path.id == "PirateSeas"))
             {
-                Hud.Message(path.id == "Bethlehem" ? "The way to Bethlehem is still closed. Egypt's red story shard opens it." : "The way to the Medieval Kingdom is still closed. Bethlehem's golden story shard opens it.", 5f);
+                Hud.Message(path.id == "Bethlehem" ? "The way to Bethlehem is still closed. Egypt's red story shard opens it." : path.id == "Medieval" ? "The way to the Medieval Kingdom is still closed. Bethlehem's golden story shard opens it." : "The way to the Pirate Seas is still closed. The Medieval Kingdom's purple story shard opens it.", 5f);
                 Sfx.Play("hurt", .3f, .6f);
                 var back2 = (Party.I.Player.transform.position - door.transform.position); back2.y = 0;
                 Party.I.Player.Motor.Knockback(back2.normalized * 6f + Vector3.up * 4f);
@@ -442,12 +488,13 @@ namespace ShardsOfTime
                 Party.I.Player.Motor.Knockback(back.normalized * 6f + Vector3.up * 4f);
                 return;
             }
-            if (path.id == "IceAge" || path.id == "Egypt" || path.id == "Bethlehem")
+            if (path.id == "IceAge" || path.id == "Egypt" || path.id == "Bethlehem" || path.id == "Medieval")
             {
                 string world = path.world;
-                string arrivedFlag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : null;
+                string arrivedFlag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : null;
                 bool first = arrivedFlag != null && !SaveGame.Current.World(world).opened.Contains(arrivedFlag);
-                string cp = world == WorldData.Egypt ? (first ? Egypt.Start : Egypt.VortexCp) : world == WorldData.Bethlehem ? (first ? Bethlehem.Start : Bethlehem.VortexCp) : "IA-vortex";
+                string cp = world == WorldData.Egypt ? (first ? Egypt.Start : Egypt.VortexCp) : world == WorldData.Bethlehem ? (first ? Bethlehem.Start : Bethlehem.VortexCp)
+                    : world == WorldData.Medieval ? (first ? Medieval.Start : Medieval.VortexCp) : "IA-vortex";
                 if (!SaveGame.Current.worldsReached.Contains(world)) SaveGame.Current.worldsReached.Add(world);
                 StartCoroutine(GoToWorld(world, cp, first));
                 return;
@@ -471,7 +518,7 @@ namespace ShardsOfTime
             PlayLog.Line($"the vortex: to {world} (checkpoint {checkpoint})");
             yield return null;
             Hud.SetFade(0f); Party.I.Frozen = false; Busy = false;
-            if (arrival) yield return world == WorldData.Bethlehem ? ArriveInBethlehem() : ArriveInEgypt();
+            if (arrival) yield return world == WorldData.Medieval ? ArriveInMedieval() : world == WorldData.Bethlehem ? ArriveInBethlehem() : ArriveInEgypt();
             else OnAreaChanged();
         }
 
@@ -487,6 +534,25 @@ namespace ShardsOfTime
             var prog = SaveGame.Current.World(WorldData.Bethlehem); if (!prog.opened.Contains("BE-arrived")) prog.opened.Add("BE-arrived");
             SaveGame.Current.checkpoint = Bethlehem.Start; SaveGame.Save("arrived in Bethlehem");
             Hud.Message($"Bethlehem! Kira is a little lamb. At {a.requirement} shards in all, the golden shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 6f);
+            Busy = false;
+        }
+
+        // Round 8, item 3: the Medieval Kingdom's arrival (MedievalArrival, skippable): into the hay wagon, Kira's sneeze, the wagon's blast;
+        // then play starts in the courtyard
+        IEnumerator ArriveInMedieval()
+        {
+            Busy = true;
+            var a = World.areas[0]; var face = Quaternion.Euler(0, a.spawnYaw, 0);
+            var at = Medieval.ArriveAt;
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            bool rival = Medieval.CourtRival && Medieval.CourtRival.gameObject.activeSelf;
+            if (Medieval.WreckSite) Medieval.WreckSite.SetActive(false); if (rival) Medieval.CourtRival.gameObject.SetActive(false);
+            yield return Cutscenes.Play("MedievalArrival", new Vector3(0, at.y, 14f), Quaternion.identity);
+            if (Medieval.WreckSite) Medieval.WreckSite.SetActive(true); if (rival) Medieval.CourtRival.gameObject.SetActive(true);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            var prog = SaveGame.Current.World(WorldData.Medieval); if (!prog.opened.Contains("ME-arrived")) prog.opened.Add("ME-arrived");
+            SaveGame.Current.checkpoint = Medieval.Start; SaveGame.Save("arrived in the Medieval Kingdom");
+            Hud.Message($"The Medieval Kingdom! Kira is a baby dragon: hold {Controls.Btn(Controls.Act.Jump)} in the air to glide, {Controls.Btn(Controls.Act.Attack)} puffs fire. At {a.requirement} shards in all, the purple shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 8f);
             Busy = false;
         }
 
@@ -562,7 +628,8 @@ namespace ShardsOfTime
             Menu.I.Close(); titleCam.Priority = -10; State = Mode.Playing;
             bool egypt = name == "EgyptArrival" || name == "SphinxGag" || name.EndsWith("Egypt");   // Round 6: Egypt's cutscenes in Egypt
             bool beth = name == "BethlehemArrival" || name == "WiseMenArrive" || name.EndsWith("Bethlehem");   // Round 7
-            string want = beth ? WorldData.Bethlehem : egypt ? WorldData.Egypt : WorldData.IceAge;
+            bool med = name == "MedievalArrival" || name == "TheStone" || name.EndsWith("Medieval");   // Round 8
+            string want = med ? WorldData.Medieval : beth ? WorldData.Bethlehem : egypt ? WorldData.Egypt : WorldData.IceAge;
             if (World.worldId != want) { World = WorldData.Load(want); BuildWorld(); yield return null; }
             var a = World.areas[0];
             Vector3 at; Quaternion facing;
@@ -575,7 +642,10 @@ namespace ShardsOfTime
             else if (name == "BethlehemArrival") { at = new Vector3(0, Bethlehem.ArriveAt.y, 34f); facing = Quaternion.identity; }
             else if (name == "WiseMenArrive") { at = new Vector3(0, Bethlehem.Ground(0, 33f, 2f), 33f); facing = Quaternion.identity; }
             else if (name == "NecklaceWakesBethlehem") { at = Bethlehem.OnGround(60, 120); facing = Quaternion.Euler(0, 240, 0); }
-            else if (name == "ViolinistTeachesBethlehem") { var v = Violinist.I; at = v.transform.position; facing = v.transform.rotation; }
+            else if (name == "ViolinistTeachesBethlehem" || name == "ViolinistTeachesMedieval") { var v = Violinist.I; at = v.transform.position; facing = v.transform.rotation; }
+            else if (name == "MedievalArrival") { at = new Vector3(0, Medieval.ArriveAt.y, 14f); facing = Quaternion.identity; }
+            else if (name == "TheStone") { at = new Vector3(Medieval.StoneAt.x, Medieval.Ground(0, 31f, 3f), Medieval.StoneAt.z); facing = Quaternion.identity; }
+            else if (name == "NecklaceWakesMedieval") { at = Medieval.OnGround(-6, 18); facing = Quaternion.Euler(0, 20, 0); }
             else { at = OnGround(a.spawn.x, a.spawn.z); facing = Quaternion.Euler(0, a.spawnYaw, 0); }
             Party.I.PlaceAll(at, facing); CameraRig.I.SnapBehind();
             yield return new WaitForSeconds(.5f);

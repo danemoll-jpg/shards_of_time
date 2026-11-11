@@ -36,3 +36,26 @@ one: generate it again (`--only <name> --force`) or drop your own file with the 
 | `door_knock.mp3` | 1 s | sfx | a muffled voice behind the inn door (no room) | A wooden inn door being knocked on twice, then a muffled grumpy hmph from inside, comic, no clear words, no music. |
 | `harp_tune.mp3` | 6 s | sfx | the Violinist plays his shepherd's harp (Bethlehem: he teaches Kira the pounce) | A short mysterious gentle melody plucked on a small wooden shepherd's harp, a few slow bright rising notes, warm and magical, solo instrument, music cue. |
 | `choir_hallelujah.mp3` | 6 s | sfx | the choir swells as the Wise Men walk in (the finale; a short sting, not a level song) | A short heavenly choir swell singing a big joyful hallelujah chord, bright and grand, over-the-top and a little comic, rising then holding, music sting. |
+| `fire_puff.mp3` | 1 s | sfx | baby dragon Kira's small fire puff | A baby dragon breathing one small comic puff of fire, a soft whoosh with a tiny crackle of flame, cute, family game, no music. |
+| `hay_fire.mp3` | 2 s | sfx | dry hay catches fire | A pile of dry hay catching fire, a soft whoomp of flame igniting and then crackling straw burning, close, no music. |
+| `wagon_blast.mp3` | 2.5 s | sfx | the burning hay wagon hits the castle wall | A comic cartoon explosion of a wooden hay wagon crashing into a stone castle wall: a crash, a big boom, wood splinters flying and a silly springy sproing at the end, no music. |
+| `armor_clank.mp3` | 1 s | sfx | a clumsy knight's armor clanks as he walks / turns | A clumsy knight in loose plate armor clanking and rattling as he takes a step and turns, tinny metal clatter, comic, close, no music. |
+| `shield_block.mp3` | 0.6 s | sfx | a hit glances off a knight's shield | A sword glancing off a metal shield, a sharp metallic clang with a short ring, close, no music. |
+| `shield_break.mp3` | 1.2 s | sfx | a knight's shield is knocked away | A metal shield knocked out of a hand and clattering and bouncing on stone cobbles, comic, no music. |
+| `arrow_twang.mp3` | 0.8 s | sfx | an archer shoots | A wooden bow string twanging and an arrow whooshing past, quick and crisp, no music. |
+| `rat_squeak.mp3` | 0.7 s | sfx | a castle rat squeaks (scared) | A cartoon rat giving a quick frightened squeak, high and comic, close, no music. |
+| `mm_grunt.mp3` | 1 s | sfx | Muscle Man lifts / throws something heavy | A huge strongman man giving one deep comic effort grunt while lifting something heavy, close, no words, no music. |
+| `mm_laugh.mp3` | 2 s | sfx | Muscle Man's mocking laugh | A huge strongman man laughing a big booming mocking belly laugh, ha ha ha, deep voice, comic, close, no music. |
+| `mm_master.mp3` | 1.2 s | sfx | Muscle Man calls the hero "Master!" in awe | A huge strongman man with a deep voice shouting the single spoken word "Master!" in awe, clear male voice exclamation, comic, close, no music. |
+| `boulder_roll.mp3` | 2 s | sfx | a boulder rolls on cobbles / heavy stone grinds (Medieval; Egypt keeps stone_grind) | A heavy stone boulder rolling and grinding over cobblestones, a deep rumbling scrape, slow, no music. |
+| `shard_slide.mp3` | 2 s | sfx | the story shard slides out of the stone | A crystal sliding slowly out of a stone with a scraping hiss and a magical rising ringing shimmer, fairytale, no music. |
+| `punch_charge.mp3` | 1 s | sfx | a punch charges up | A rising energy hum building up quickly as a magical punch charges, a swelling whirr, video game power up, no music. |
+| `punch_big.mp3` | 0.8 s | sfx | the charged punch lands | A huge cartoon punch impact with a fast whoosh and a deep heavy thump, punchy, no music. |
+| `wall_break.mp3` | 1.5 s | sfx | a stone wall crumbles | An old stone wall breaking and crumbling into rubble, stones tumbling and dust, close, no music. |
+| `wings_flap.mp3` | 1 s | sfx | baby dragon Kira flaps and glides | Small leathery wings flapping a few times quickly and then a short soft gliding whoosh, cute, no music. |
+| `crowd_cheer.mp3` | 3 s | sfx | the tournament crowd cheers | A small medieval tournament crowd cheering and clapping outdoors, happy shouts, no clear words, no music. |
+| `bell_ring.mp3` | 1.5 s | sfx | the strongman high-striker's bell | A strongman high striker at a fair: a puck shooting up and hitting a bright brass bell with a loud ding that rings out, no music. |
+| `horse_neigh.mp3` | 1.5 s | sfx | a goofy pony whinnies | A goofy little pony giving a silly whinny and a snort, comic, close, no music. |
+| `footstep_cobble.mp3` | 0.5 s | sfx | a step on cobblestones (Medieval, per step while running) | A single footstep on stone cobblestones, a short hard tap with a tiny scuff, close, no reverb, no music. |
+| `portcullis.mp3` | 2 s | sfx | the portcullis is heaved up | A heavy iron portcullis being heaved up, chains rattling over a winch and the iron gate creaking and clanking, no music. |
+| `lute_tune.mp3` | 6 s | sfx | the Violinist plays his lute as a bard (Medieval: he teaches a move) | A short mysterious gentle playful melody plucked on a medieval lute, a few slow bright rising notes, warm and magical, solo instrument, music cue. |

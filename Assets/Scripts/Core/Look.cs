@@ -51,6 +51,12 @@ namespace ShardsOfTime
                 Sun.color = new Color(.62f, .7f, 1f); sunIntensity = .42f; Sun.transform.rotation = Quaternion.Euler(42f, 150f, 0);
                 ambSky = new Color(.2f, .26f, .48f); ambEq = new Color(.16f, .17f, .3f); ambGround = new Color(.1f, .09f, .1f);
             }
+            else if (world == WorldData.Medieval)   // Round 8, item 12: a torch-lit night: deep blue sky, cool moonlight, the torches' warm light does the rest
+            {
+                Sky = new Color(.05f, .09f, .26f); FogColor = new Color(.07f, .1f, .24f); FogStart = 80f; FogEnd = 700f; FarClip = 1300f;
+                Sun.color = new Color(.6f, .68f, 1f); sunIntensity = .5f; Sun.transform.rotation = Quaternion.Euler(40f, 160f, 0);
+                ambSky = new Color(.24f, .28f, .5f); ambEq = new Color(.22f, .19f, .26f); ambGround = new Color(.16f, .12f, .1f);
+            }
             else   // the Ice Age (Dan's reference: a wide snowy valley, soft blue-white light, warm rock, fog for depth)
             {
                 Sky = new Color(.66f, .79f, .94f); FogColor = new Color(.8f, .87f, .95f); FogStart = 45f; FogEnd = 1700f; FarClip = 2200f;

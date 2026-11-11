@@ -142,3 +142,15 @@ files), bump `CutsceneAuthoring.Version` so the next build remakes them with the
 clips `laugh` and `hold_up` are in `Resources/Characters/Clips/` (Dan's Mixamo list, Round 6); until then it is as in Round 5.
 
 Render: `python Tools/render_cutscene.py EgyptArrival SphinxGag` (Round 5's way: the built exe, muted, off-screen).
+
+## Round 8: the Medieval Kingdom
+
+| Name | Root | Length | What happens |
+|---|---|---|---|
+| `MedievalArrival` | the courtyard at world (0, floor, 14), +z north | 17 s | the purple vortex opens over the courtyard; the party drops into a horse-drawn hay wagon and pops up in medieval clothes, Kira a baby dragon; her sneeze is a puff of fire and the hay catches; they leap out; the pony bolts, the wagon (its sleepy driver aboard) careens into the west wall: a cartoon blast; the driver staggers out singed, hat smoking; the pony trots off fine; the party slinks away. The world's wreck, driver and pony (`Medieval.WreckSite`) stay hidden until it ends |
+| `TheStone` | the stone at world (0, floor, 34), +z north (the keep) | 19 s | Muscle Man is there first: flexes, laughs at Dan, grips the shard and heaves (his "Pull Heavy Object"), falls flat on his back; Dan steps up, the shard answers his necklace and slides out; Muscle Man kneels ("Master!"); the purple vortex pulls all four in |
+| `NecklaceWakesMedieval` | where the player stands | 6.5 s | as `NecklaceWakes`, the Medieval cast, purple |
+| `ViolinistTeachesMedieval` | the Violinist (the courtyard, by the benches) | 6.5 s | Dan learns the charged punch (he plays his lute) |
+
+`VortexRings(..., colors:)` takes a colour set (`PurpleRings`). Muscle Man's actor plays his own Mixamo clips (`mm_*`).
+Render: `python Tools/render_cutscene.py MedievalArrival TheStone`.

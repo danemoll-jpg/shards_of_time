@@ -58,7 +58,7 @@ namespace ShardsOfTime
         // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage), his own clips (Clips/violinist_play, _bow, _nod)
         // and the shared idle / walk replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
         public const string Model = "violinist_iceage";   // the Ice Age's; Round 6: each world's own when it exists (ModelName)
-        public string ModelName => instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
+        public string ModelName => instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
         PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
         string loop = "idle", oneShot; float oneShotEnd;
         public string ClipNow => oneShot ?? loop;
@@ -182,7 +182,24 @@ namespace ShardsOfTime
             {
                 Transform bas = M(inst, "M_Base"), top = M(inst, "M_Top"), front = M(inst, "M_Front"), hold = M(inst, "M_Hold"), pluck = M(inst, "M_Pluck");
                 if (!bas || !top || !front || !hold || !pluck) return;
-                if (pose == "play")
+                if (pose == "play" && instrument == "Lute")
+                {
+                    // Round 8: the lute across his body: its bowl at his belly (a little to his right), the neck out to his left and up, the
+                    // strings to the front; left hand on the neck, right hand strumming over the rose
+                    var bu = (neck.position - hips.position).normalized;
+                    var br = Vector3.ProjectOnPlane(ru.position - lu.position, bu).normalized; var bf = Vector3.Cross(br, bu); var bl = -br;
+                    Align(inst, bas, top, front, hips.position + bf * .2f + br * .14f + bu * .12f, (bl * .82f + bu * .5f + bf * .1f).normalized, (bf * .95f + bu * .1f).normalized);
+                    var luUp = (top.position - bas.position).normalized; var luFront = Vector3.ProjectOnPlane(front.position - bas.position, luUp).normalized;
+                    var lt = hold.position - luFront * .02f;
+                    Reach(lu, ll, lh, lt, lu.position - bu * .45f + bl * .2f - bf * .1f);
+                    Palm(lh, ll, true, (-luFront * .3f + luUp * .2f + bf * .2f - bu * .6f).normalized, luUp);
+                    float k = Mathf.Sin(Time.time * 5.2f);
+                    var rt = pluck.position + luFront * .05f + luUp * (k * .035f);
+                    Reach(ru, rl, rh, rt, ru.position + br * .4f - bu * .3f - bf * .15f);
+                    Palm(rh, rl, false, (-luFront * .3f - bu * .7f).normalized, -luFront);
+                    ArmReport = Arms(lt, rt, pluck.position, luFront, lh, rh, ll, rl, hips, neck);
+                }
+                else if (pose == "play")
                 {
                     // Fix 6.1, item 2: a frame on his body that sways with his lyre clip (hips -> neck up, shoulder to shoulder across)
                     var bu = (neck.position - hips.position).normalized;
@@ -310,10 +327,10 @@ namespace ShardsOfTime
         {
             Game.I.SetBusy(true); Playing = true;
             PlayLog.Line($"the Violinist plays for {hero.Stats.displayName}");
-            Sfx.Play(instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
+            Sfx.Play(instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
             var face = Quaternion.LookRotation(Vector3.ProjectOnPlane(hero.transform.position - transform.position, Vector3.up).normalized);
             transform.rotation = face;
-            yield return Cutscenes.Play(Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
+            yield return Cutscenes.Play(Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
             Playing = false;
             OneShot("bow"); Game.I.StartCoroutine(NodLater());
             if (!SaveGame.Current.abilities.Contains(ability)) SaveGame.Current.abilities.Add(ability);
@@ -321,6 +338,8 @@ namespace ShardsOfTime
             Sfx.Play("story", .6f, 1.2f);
             Hud.Message(ability == Abilities.DoubleJump
                 ? $"{hero.Stats.displayName} learned the {moveName}! Press {Controls.Btn(Controls.Act.Jump)} again in the air. High ledges everywhere are in reach now (the Ice Age's too)."
+                : ability == Abilities.ChargedPunch   // Round 8
+                ? $"{hero.Stats.displayName} learned the {moveName}! Hold {Controls.Btn(Controls.Act.Attack)}, let go when his fist glows. It breaks cracked walls (in every world: the Ice Age's grotto, Egypt's tomb, Bethlehem's courtyard) and knocks knights' shields away."
                 : ability == Abilities.Pounce   // Round 7
                 ? $"{hero.Stats.displayName} learned the {moveName}! On the ground, press {Controls.Btn(Controls.Act.Dive)}: she crouches, aims with the stick, and leaps far. Wide gaps everywhere are in reach now (Egypt's rooftops too)."
                 : $"{hero.Stats.displayName} learned the {moveName}! Jump, then press {Controls.Btn(Controls.Act.Dive)}. It breaks cracked ice and stuns enemies.", 7f);

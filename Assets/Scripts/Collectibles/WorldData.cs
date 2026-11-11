@@ -82,7 +82,7 @@ namespace ShardsOfTime
         public string violinistPlayClip = "violinist_play";
 
         // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
-        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem };
+        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval };
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -130,9 +130,9 @@ namespace ShardsOfTime
                 L("IA-lake-deep", "water", new Vector3(-118, 1, 133), new Vector3(-110, 0, 133), 4.5f, "the hole over the lake's deep part");
                 L("IA-lake-far", "water", new Vector3(-101, 1, 160), new Vector3(-101, 0, 167), 4.5f, "the frozen lake's far hole");
                 L("IA-crawl", "crawl space", new Vector3(-52, .3f, 320), new Vector3(-34, 0, 320), 8, "Kira's crawl chamber in the cave", heroes: "Kira");
-                L("IA-grotto", "enclosed", new Vector3(71, .3f, 460), new Vector3(54, 0, 464), 8, "the hot-spring grotto (behind the cracked rock)", Abilities.ChargedPunch);
-                L("IA-grotto-boulder", "enclosed", new Vector3(-49, .3f, 484), new Vector3(-40, 0, 484), 6, "the grotto behind the boulder", Abilities.MuscleMan);
-                L("IA-lake-hollow", "enclosed", new Vector3(-154, .3f, 124), new Vector3(-144, 0, 124), 6, "the ice hollow behind the boulder", Abilities.MuscleMan);
+                L("IA-grotto", "enclosed", new Vector3(71, .3f, 460), new Vector3(54, 0, 464), 8, "the hot-spring grotto (behind the cracked rock)", Abilities.ChargedPunch, opens: "IA-rock-hotspring");
+                L("IA-grotto-boulder", "enclosed", new Vector3(-49, .3f, 484), new Vector3(-40, 0, 484), 6, "the grotto behind the boulder", Abilities.MuscleMan, opens: "IA-boulder-grotto");
+                L("IA-lake-hollow", "enclosed", new Vector3(-154, .3f, 124), new Vector3(-144, 0, 124), 6, "the ice hollow behind the boulder", Abilities.MuscleMan, opens: "IA-boulder-lake");
             }
             else if (world == Egypt)
             {
@@ -141,20 +141,33 @@ namespace ShardsOfTime
                 L("EG-quicksand", "pit", new Vector3(50, 1, 150), new Vector3(60, 0, 172), 6, "the quicksand pit (sinking sand sends you back)", cp: "EG-quicksand");
                 L("EG-tomb-sand", "pit", new Vector3(506, 61, 52), new Vector3(500, 60, 43), 3, "the tomb's sand-pit hall (sinking sand)", cp: "EG-tomb-sand");
                 L("EG-tomb-pit", "pit", new Vector3(506, 52.5f, 96), new Vector3(500, 60, 87), 3, "the turning room's pit (falls send you back)", cp: "EG-tomb-turn");
-                L("EG-quarry", "enclosed", new Vector3(92, .3f, 61), new Vector3(80, 0, 61), 6, "the quarry behind the huge block", Abilities.MuscleMan);
-                L("EG-secret-room", "enclosed", new Vector3(516, 60.3f, 122), new Vector3(505, 60, 122), 6, "the secret room behind the cracked wall", Abilities.ChargedPunch);
+                L("EG-quarry", "enclosed", new Vector3(92, .3f, 61), new Vector3(80, 0, 61), 6, "the quarry behind the huge block", Abilities.MuscleMan, opens: "EG-block-quarry");
+                L("EG-secret-room", "enclosed", new Vector3(516, 60.3f, 122), new Vector3(505, 60, 122), 6, "the secret room behind the cracked wall", Abilities.ChargedPunch, opens: "EG-crack-tomb");
             }
             else if (world == Bethlehem)
             {
                 L("BE-well", "water", new Vector3(108, 2, 72), new Vector3(108, 0, 77), 3.5f, "the well (the rope climbs out)");
                 L("BE-barn", "enclosed", new Vector3(0, .3f, 34), new Vector3(0, 0, 20), 8, "inside the barn (the door is south)");
-                L("BE-cave", "enclosed", new Vector3(190, .3f, 60), new Vector3(178, 0, 60), 6, "the shepherds' cave behind the boulder", Abilities.MuscleMan);
+                L("BE-cave", "enclosed", new Vector3(190, .3f, 60), new Vector3(178, 0, 60), 6, "the shepherds' cave behind the boulder", Abilities.MuscleMan, opens: "BE-boulder-cave");
+            }
+            else if (world == Medieval)   // Round 8
+            {
+                L("ME-moat-west", "water", new Vector3(-42, 0, 40), new Vector3(-55, 0, 40), 8, "the moat, west side (out onto the outer bank)");
+                L("ME-moat-north", "water", new Vector3(0, 0, 96), new Vector3(0, 0, 109), 8, "the moat, north side");
+                L("ME-moat-east", "water", new Vector3(42, 0, 30), new Vector3(55, 0, 30), 8, "the moat, east side");
+                L("ME-moat-south", "water", new Vector3(24, 0, -12), new Vector3(24, 0, -25), 8, "the moat, south side (by the drawbridge)");
+                L("ME-moat-deep", "water", new Vector3(-42, 0, 96), new Vector3(-55, 0, 96), 8, "over the moat's deep pit (NW corner)");
+                L("ME-dungeon", "enclosed", new Vector3(400, .3f, 30), new Vector3(-27, 0, 44), 30, "the dungeon (its stair door back to the courtyard)", via: new Vector3(400, 0, 1.2f));
+                L("ME-hall", "enclosed", new Vector3(8, .3f, 70), new Vector3(0, 0, 56), 10, "the great hall (the door is south)", via: new Vector3(0, 0, 64.5f));
+                L("ME-yard", "enclosed", new Vector3(-25, .3f, 7), new Vector3(-12, 0, 8), 6, "the walled yard behind the boulder", Abilities.MuscleMan, opens: "ME-boulder-yard");
+                L("ME-armory", "enclosed", new Vector3(22, .3f, 4), new Vector3(22, 0, 14), 6, "the armory behind the portcullis", Abilities.MuscleMan, opens: "ME-portcullis-armory");
+                L("ME-store", "enclosed", new Vector3(-26, .3f, 56), new Vector3(-16, 0, 56), 6, "the store room behind the cracked wall", Abilities.ChargedPunch, opens: "ME-crack-store");
             }
             return l;
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : Defaults());
-        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem";
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval";
 
         // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
@@ -342,6 +355,67 @@ namespace ShardsOfTime
             G("BE-gap-houses", "wall-jump gap", Abilities.WallJump, new Vector3(-90, 0, 133), "the narrow gap between two houses (wall jump, Steampunk)", "J01");
             G("BE-ledge-rock", "double-jump ledge", Abilities.DoubleJump, new Vector3(90.5f, 6.5f, 114), "the high rock over the outcrop", "D01");
             G("BE-ledge-inn", "double-jump ledge", Abilities.DoubleJump, new Vector3(-150, 10.1f, 97), "the inn's roof terrace", "D02");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
+            return w;
+        }
+
+        // Round 8: the Medieval Kingdom (World/Medieval.cs builds it; the ground and the castle in Tools/Blender/medieval_world.py, the same
+        // numbers). One area, "ME". 60 small shards. Fix 6.1's rule: the threshold is on the universal total, about 60-65 % of every shard up
+        // to here (4 x 60 = 240): 150. Rule 2: the first visit has the three heroes and dragon Kira (glide, fire puff); not the ground pound,
+        // the double jump or the pounce (a player may skip those Violinists), not the charged punch (Dan learns it here), not Muscle Man (he
+        // joins only at the stone, the end), not the later moves. The dungeon is a space of its own at x 400 (its numbers are world numbers).
+        public static WorldData MedievalDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Medieval; w.worldId = Medieval; w.displayName = "The Medieval Kingdom"; w.heightsAreHints = true;
+            w.violinistInstrument = "Lute"; w.violinistPlayClip = "violinist_lyre";   // item 7: a bard with his lute (held across his body by IK, played with the lyre's clip, as the harp)
+            w.areas.Add(new AreaData { id = "ME", name = "The Medieval Kingdom", requirement = 150, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.Glide, Abilities.FirePuff },
+                storyShard = new Vector3(0, 1.55f, 34f), storyShardColor = new Color(.62f, .32f, 1f), spawn = new Vector3(0, .1f, 8f), spawnYaw = 0,
+                kiraForm = KiraForm.Dragon, outfit = Outfits.Medieval, box = new Bounds(new Vector3(130, 0, -10), new Vector3(720, 600, 420)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "ME", position = new Vector3(x, y, z), requires = req, note = note });
+            // the courtyard (x -30..30, z 0..63): the arrival, benches, flower pots, the arcade along the east wall (its roof deck at 6.6)
+            S("C01", 0, 0, 14, "the courtyard: the arrival"); S("C02", -12, 0, 22, "the courtyard: by the benches"); S("C03", 12, 0, 44, "the courtyard: by the flower pots");
+            S("C04", -20, 0, 50, "the courtyard: the north-west corner"); S("C05", 18, 0, 14, "the courtyard: the south-east corner"); S("C06", 27, 0, 30, "under the arcade");
+            S("C07", 27, 6.6f, 20, "the arcade's roof (up its stair)"); S("C08", 27, 6.6f, 44, "the arcade's roof (up its stair)");
+            // the walls and towers: the west wall walk (stair from the courtyard), the north-west tower top; the east walk (from the arcade's roof)
+            S("W01", -31.5f, 10, 20, "the west wall walk"); S("W02", -31.5f, 10, 36, "the west wall walk"); S("W03", -31.5f, 10, 50, "the west wall walk");
+            S("W04", -31.5f, 16, 61.5f, "the north-west tower's top"); S("W05", 31.5f, 10, 30, "the east wall walk"); S("W06", 31.5f, 10, 48, "the east wall walk");
+            S("W07", 31.5f, 16, 61.5f, "the north-east tower's top");
+            // the great hall (the keep: floor 0, the gallery at 6, chandeliers to swing across to the east ledge)
+            S("G01", 0, .95f, 73, "the great hall: on the feast table"); S("G02", -7, 0, 77, "the great hall"); S("G03", 8, 0, 69, "the great hall: by the fireplace");
+            S("G04", -13, 6, 73, "the great hall: the west gallery (up the stair)"); S("G05", 0, 6, 82, "the great hall: the north gallery");
+            S("G06", 13, 6, 72, "the great hall: the east ledge (ride the chandeliers)"); S("G07", 13, 6, 78, "the great hall: the east ledge (ride the chandeliers)");
+            // the dungeon (its own space at x 400: corridor x 396..404, z 0..56; three locked cells west, their keys about; the brazier room at the end)
+            S("D01", 400, 0, 6, "the dungeon: the stair's foot"); S("D02", 400, 0, 31, "the dungeon: the corridor");
+            S("D03", 392, 0, 12, "the dungeon: cell 1 (its key)"); S("D04", 392, 0, 14.5f, "the dungeon: cell 1 (its key)");
+            S("D05", 392, 0, 26, "the dungeon: cell 2 (its key)"); S("D06", 392, 0, 28.5f, "the dungeon: cell 2 (its key)");
+            S("D07", 392, 0, 40, "the dungeon: cell 3 (its key)"); S("D08", 392, 0, 42.5f, "the dungeon: cell 3 (its key)");
+            S("D09", 398, 0, 54, "the dungeon: the brazier room (dragon Kira lights the three braziers)", "Kira", Abilities.FirePuff);
+            S("D10", 402, 0, 54, "the dungeon: the brazier room (dragon Kira lights the three braziers)", "Kira", Abilities.FirePuff);
+            // the moat (water at -1.2, its floor at -5) and its banks
+            S("M01", -42, -5, 40, "the moat's floor, west (dive)"); S("M02", 42, -5, 20, "the moat's floor, east (dive)"); S("M03", 20, 0, -24, "the moat's outer bank, south"); S("M04", -20, 0, 108, "the moat's outer bank, north");
+            // the tournament field (south-east): the lists, the stands, tents, the test of strength
+            S("T01", 60, 0, -50, "the tournament field: the way in"); S("T02", 100, 0, -72, "the tournament field: the lists"); S("T03", 112, 0, -95, "the tournament field: by the tilt");
+            S("T04", 80, 1, -63.2f, "the stands, the first tier"); S("T05", 90, 3, -60.3f, "the stands, the top tier");
+            S("T06", 122, 0, -110, "behind the hay bales (dragon Kira burns them)", "Kira", Abilities.FirePuff);
+            S("T07", 95, 0, -116, "the prize chest (light the three braziers on the stands: dragon Kira)", "Kira", Abilities.FirePuff);
+            // the village and market (south-west)
+            S("V01", -40, 0, -70, "the village gate"); S("V02", -70, 0, -60, "the village"); S("V03", -85, 0, -85, "the market square");
+            S("V04", -95, 2.6f, -88, "on a market stall's awning (up the crates)"); S("V05", -115, 0, -100, "a back street"); S("V06", -60, 0, -124, "behind the brambles (dragon Kira burns them)", "Kira", Abilities.FirePuff);
+            S("V07", -128, 0, -60, "the village's far end");
+            // the places later moves open (visible now)
+            S("B01", -25, 0, 8, "the walled yard behind the boulder (Muscle Man)", Abilities.MuscleMan); S("B02", -27, 0, 5, "the walled yard behind the boulder (Muscle Man)", Abilities.MuscleMan);
+            S("A01", 20, 0, 4, "the armory behind the portcullis (Muscle Man)", Abilities.MuscleMan); S("A02", 24, 0, 4, "the armory behind the portcullis (Muscle Man)", Abilities.MuscleMan);
+            S("K01", -26, 0, 55, "the store room behind the cracked wall (charged punch, learned here)", Abilities.ChargedPunch); S("K02", -26, 0, 58, "the store room behind the cracked wall (charged punch, learned here)", Abilities.ChargedPunch);
+            S("J01", -99, 9, -124, "the top of the chimney between two village houses (wall jump)", Abilities.WallJump);
+            S("X01", 85, 5.6f, -58.5f, "the stands' flag platform (double jump)", Abilities.DoubleJump);
+            S("DD1", -42, -16, 96, "the moat's deep pit (deep dive)", Abilities.DeepDive); S("DD2", -40, -16, 98, "the moat's deep pit (deep dive)", Abilities.DeepDive);
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("ME-boulder-yard", "boulder", Abilities.MuscleMan, new Vector3(-18.5f, 0, 7.5f), "the walled yard in the courtyard (Muscle Man: he joins at the stone)", "B01", "B02");
+            G("ME-portcullis-armory", "portcullis", Abilities.MuscleMan, new Vector3(22, 0, 8), "the armory's portcullis (Muscle Man)", "A01", "A02");
+            G("ME-crack-store", "cracked wall", Abilities.ChargedPunch, new Vector3(-22, 0, 56), "the store room's cracked wall (charged punch, learned here)", "K01", "K02");
+            G("ME-chimney-village", "wall-jump chimney", Abilities.WallJump, new Vector3(-99, 0, -124), "a chimney between two village houses (wall jump, Steampunk)", "J01");
+            G("ME-ledge-stands", "double-jump ledge", Abilities.DoubleJump, new Vector3(85, 5.6f, -58.5f), "the stands' flag platform (double jump; or a boost from Muscle Man)", "X01");
+            G("ME-deep-moat", "deep water", Abilities.DeepDive, new Vector3(-42, -10, 96), "the moat's deep pit (deep dive, Pirate Seas)", "DD1", "DD2");
             w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
         }

@@ -18,10 +18,15 @@ namespace ShardsOfTime
         public static readonly string[] PeopleClips = { "idle", "walk", "run_slow", "run", "jump", "fall", "land", "land_hard", "swim", "tread", "push", "punch", "kick", "hurt", "cheer",
             // Round 7 (Dan's Mixamo downloads; missing = skipped): the Wise Men (sit on the camel, argue, read the map, hold out a gift, disappointed),
             // the watchman (yell "Halt!", doze), everyone's surprise
-            "sit", "argue", "map", "offer", "sad", "yell", "doze", "surprised" };
-        static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer", "yell", "surprised" };
+            "sit", "argue", "map", "offer", "sad", "yell", "doze", "surprised",
+            // Round 8 (Dan's Mixamo downloads): Muscle Man's own (show off, mock, lift, push, heave, fall flat, cheer, boost, kneel), the knight's
+            // block, the archer's draw / aim / shoot / nervous look, the wagon driver's daze and limp
+            "mm_flex", "mm_taunt", "mm_lift", "mm_push", "mm_heave", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel",
+            "block", "draw", "aim", "shoot", "nervous", "dazed", "limp" };
+        static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer", "yell", "surprised",
+            "mm_flex", "mm_taunt", "mm_lift", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel", "draw", "shoot" };   // Round 8
         static readonly HashSet<string> UpperBody = new HashSet<string> { "punch", "cheer", "hurt" };
-        static readonly HashSet<string> CancelOnMove = new HashSet<string> { "land", "land_hard", "cheer" };
+        static readonly HashSet<string> CancelOnMove = new HashSet<string> { "land", "land_hard", "cheer", "mm_lift", "mm_boost", "mm_flex", "mm_taunt", "mm_cheer" };   // Round 8: Muscle Man stops a show-off to follow
         static readonly Dictionary<string, float> Rate = new Dictionary<string, float> { ["punch"] = 1.4f, ["kick"] = 1.5f };
         const float Fade = .12f;
         // Mixamo clips: stance-foot speed in m/s at the clip skeleton's hips height (measured in Blender, Round 3: 1.41 / 2.49 / 4.84),

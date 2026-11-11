@@ -31,6 +31,7 @@ namespace ShardsOfTime
             ("ViolinistTeachesEgypt", ViolinistTeachesEgypt),
             ("BethlehemArrival", BethlehemArrival), ("WiseMenArrive", WiseMenArrive), ("NecklaceWakesBethlehem", NecklaceWakesBethlehem),
             ("ViolinistTeachesBethlehem", ViolinistTeachesBethlehem),
+            ("MedievalArrival", MedievalArrival), ("TheStone", TheStone), ("NecklaceWakesMedieval", NecklaceWakesMedieval), ("ViolinistTeachesMedieval", ViolinistTeachesMedieval),   // Round 8
         };
 
         // Round 6: who plays in a world's story cutscenes (a model not in yet falls back: Dan's / Abi's home models, home Kira) and the
@@ -313,10 +314,10 @@ namespace ShardsOfTime
         }
 
         // a few glowing rings that grow and turn: the vortex (a saved tint per ring, prefab-safe)
-        static GameObject VortexRings(Kit k, string name, Vector3 at, Quaternion facing, float t0, float t1, float size, float tEnd, bool golden = false)
+        static GameObject VortexRings(Kit k, string name, Vector3 at, Quaternion facing, float t0, float t1, float size, float tEnd, bool golden = false, Color[] colors = null)
         {
             var h = k.Holder(name, at, 0); h.transform.localRotation = facing;
-            Color[] cols = golden ? new[] { new Color(1f, .75f, .25f), new Color(1f, .88f, .5f), new Color(1f, .97f, .8f), new Color(1f, .65f, .2f) }   // Round 7: Bethlehem's golden vortex
+            Color[] cols = colors != null ? colors : golden ? new[] { new Color(1f, .75f, .25f), new Color(1f, .88f, .5f), new Color(1f, .97f, .8f), new Color(1f, .65f, .2f) }   // Round 7: Bethlehem's golden vortex
                 : new[] { new Color(.25f, .45f, 1f), new Color(.55f, .4f, 1f), new Color(.75f, .92f, 1f), new Color(.3f, .7f, 1f) };
             for (int i = 0; i < cols.Length; i++)
             {
@@ -941,6 +942,242 @@ namespace ShardsOfTime
                 k.Key(h, "Bit" + i, "m_LocalScale", t0, Vector3.one * .1f); k.Key(h, "Bit" + i, "m_LocalScale", t0 + .25f, Vector3.one * size * .6f); k.Key(h, "Bit" + i, "m_LocalScale", t0 + .8f, Vector3.one * .02f);
             }
             k.Show(h, t0, t0 + .8f);
+        }
+
+        // ================================================================================================ Round 8: the Medieval Kingdom
+        static Cast MedievalCast => new Cast { dan = Have("dan_medieval", Have("dan_bethlehem", "dan_home")), abi = Have("abi_medieval", Have("abi_bethlehem", "abi_home")), kira = Have("kira_dragon", "kira"), shard = new Color(.62f, .32f, 1f) };
+        static readonly Color[] PurpleRings = { new Color(.55f, .3f, 1f), new Color(.75f, .5f, 1f), new Color(.92f, .82f, 1f), new Color(.45f, .2f, .85f) };
+        public static void NecklaceWakesMedieval() => NecklaceWakesIn("NecklaceWakesMedieval", MedievalCast);
+        public static void ViolinistTeachesMedieval() => ViolinistTeachesIn("ViolinistTeachesMedieval", "Dan", MedievalCast.dan, MedievalCast);   // Round 8: Dan's charged punch
+
+        static GameObject MedProp(string prop, Transform parent, Vector3 localPos, float yaw)
+        {
+            var file = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/World/medieval_props.fbx");
+            var src = file ? file.transform.Find(prop) : null;
+            if (!src) return null;
+            var go = Object.Instantiate(src.gameObject); go.name = prop; WorldArt.Dress(go);
+            go.transform.SetParent(parent, false); go.transform.localPosition = localPos; go.transform.localRotation = Quaternion.Euler(0, yaw, 0) * src.localRotation; go.transform.localScale = src.localScale;
+            return go;
+        }
+
+        // fire: a few glowing tongues under `parent` that grow from t0 to t1 (and flicker)
+        static void Flames(Kit k, GameObject holder, string path, Vector3 at, float t0, float t1, float size, float tEnd)
+        {
+            var parent = path == "" ? holder.transform : holder.transform.Find(path);
+            var f = new GameObject("Fire"); f.transform.SetParent(parent, false); f.transform.localPosition = at;
+            string fp = (path == "" ? "" : path + "/") + "Fire";
+            for (int i = 0; i < 6; i++)
+            {
+                var c = Placeholders.Prim(PrimitiveType.Sphere, f.transform, new Vector3(Mathf.Cos(i * 1.7f) * .5f, .1f * (i % 3), Mathf.Sin(i * 1.7f) * .9f), Vector3.one * .01f, Placeholders.Mat(i % 2 == 0 ? new Color(1f, .5f, .12f) : new Color(1f, .82f, .3f), "Glow"), name: "Tongue" + i);
+                for (float t = t0; t <= tEnd + .01f; t += .35f)
+                {
+                    float grow = Mathf.Clamp01((t - t0) / Mathf.Max(.01f, t1 - t0)), flick = 1f + .25f * Mathf.Sin(t * 9f + i);
+                    k.Key(holder, fp + "/Tongue" + i, "m_LocalScale", t, new Vector3(.6f, 1.1f + .3f * (i % 2), .6f) * size * Mathf.Max(.02f, grow) * flick);
+                }
+            }
+        }
+
+        // a big cartoon blast at `at`: orange and yellow balls swell and fade, a white flash
+        static void Blast(Kit k, Vector3 at, float t0, float size)
+        {
+            var h = k.Holder("Blast", at, 0);
+            Color[] cols = { new Color(1f, .55f, .15f), new Color(1f, .85f, .35f), new Color(1f, .97f, .85f), new Color(.35f, .3f, .28f) };
+            for (int i = 0; i < 9; i++)
+            {
+                Placeholders.Prim(PrimitiveType.Sphere, h.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(cols[i % 4], i % 4 == 3 ? "Lit" : "Glow"), name: "Ball" + i);
+                var dir = Quaternion.Euler(Random.Range(-10f, 60f), i * 40f, 0) * Vector3.forward * size * (.4f + .1f * (i % 3));
+                k.Key(h, "Ball" + i, "m_LocalPosition", t0, Vector3.zero); k.Key(h, "Ball" + i, "m_LocalPosition", t0 + .5f, dir); k.Key(h, "Ball" + i, "m_LocalPosition", t0 + 1.6f, dir * 1.4f + Vector3.up * size * .5f);
+                k.Key(h, "Ball" + i, "m_LocalScale", t0, Vector3.one * .1f); k.Key(h, "Ball" + i, "m_LocalScale", t0 + .3f, Vector3.one * size * (.8f + .15f * (i % 3))); k.Key(h, "Ball" + i, "m_LocalScale", t0 + 1.8f, Vector3.one * .05f);
+            }
+            k.Show(h, t0, t0 + 1.9f);
+        }
+
+        // Item 3 (Dan's version of the film: hay-wagon-landing.png, wagon-on-fire.png): the purple vortex opens over the courtyard; the party
+        // drops into a horse-drawn hay wagon; they pop up in medieval clothes, Kira a baby dragon; she sneezes a puff of fire and the hay catches;
+        // they all leap out; the pony bolts, the wagon (driver aboard) careens across the courtyard into the west wall: a cartoon blast. The
+        // driver staggers out singed, his hat smoking; the pony trots out fine; the party slinks off. The root is in the courtyard at world
+        // (0, floor, 14), +z north: the wagon at (2, 0, 10) facing west, the west wall at x -30 (the wreck stays at world (-25.5, 0, 24)).
+        public const float MedievalArrivalLength = 17f;
+        public static void MedievalArrival()
+        {
+            DataAssets.Ensure();
+            var c = MedievalCast; NecklaceModel.Tint = c.shard;
+            var k = new Kit("MedievalArrival", MedievalArrivalLength);
+            var hay = new Vector3(2f, 1.55f, 10f);
+            var dan = k.Actor("Dan", c.dan, new Vector3(3.6f, 0, 6.6f), 160);
+            var abi = k.Actor("Abi", c.abi, new Vector3(.8f, 0, 6.8f), 200);
+            var kira = k.Actor("Kira", c.kira, new Vector3(2.4f, 0, 6.2f), 180);
+            // the wagon: a holder at its start, facing west (the prop's front is its -z); the cart, its fire, then the run
+            var wagon = k.Holder("Wagon", new Vector3(2, 0, 10), 90);
+            var cart = new GameObject("Cart"); cart.transform.SetParent(wagon.transform, false);
+            if (!MedProp("HayWagon", cart.transform, Vector3.zero, 0))
+            {
+                Placeholders.Prim(PrimitiveType.Cube, cart.transform, new Vector3(0, .8f, 0), new Vector3(2f, .6f, 4f), WorldArt.Mat("Wood"), name: "Bed");
+                Placeholders.Prim(PrimitiveType.Sphere, cart.transform, new Vector3(0, 1.5f, 0), new Vector3(2f, 1f, 3.6f), WorldArt.Mat("Hay"), name: "Hay");
+            }
+            Flames(k, wagon, "Cart", new Vector3(0, 1.6f, .3f), 6.4f, 8.6f, .9f, 12.1f);
+            k.Key(wagon, "Cart", "m_LocalPosition", 0f, Vector3.zero); k.Key(wagon, "Cart", "m_LocalPosition", 8.9f, Vector3.zero);
+            k.Key(wagon, "Cart", "m_LocalPosition", 10.4f, new Vector3(0, 0, -8f)); k.Key(wagon, "Cart", "m_LocalPosition", 12.0f, new Vector3(0, 0, -27.3f));
+            k.Show(wagon, 0f, 12.05f);
+            // the pony pulls it (the shafts' end: the cart's -z, 3.6 m), bolts with it and swerves off just before the wall
+            var pony = k.Actor("Pony", Have("horse", ""), new Vector3(2 - 3.6f, 0, 10), -90);
+            k.Key(pony, "Body", "m_LocalPosition", 0f, Vector3.zero); k.Key(pony, "Body", "m_LocalPosition", 8.9f, Vector3.zero);
+            k.Key(pony, "Body", "m_LocalPosition", 10.4f, new Vector3(0, 0, 8f)); k.Key(pony, "Body", "m_LocalPosition", 11.5f, new Vector3(-2f, 0, 19f));
+            k.Key(pony, "Body", "m_LocalPosition", 12.6f, new Vector3(-6.5f, 0, 21f)); k.Key(pony, "Body", "m_LocalPosition", 14.5f, new Vector3(-9f, 0, 19.5f)); k.Key(pony, "Body", "m_LocalPosition", MedievalArrivalLength, new Vector3(-9.5f, 0, 19f));
+            k.KeyYaw(pony, "Body", 11.2f, 0); k.KeyYaw(pony, "Body", 12.4f, -70f); k.KeyYaw(pony, "Body", 14.5f, -120f);
+            k.Clips(pony, (KiraClip("idle", "horse"), 0f), (KiraClip("run", "horse"), 8.6f), (KiraClip("walk", "horse"), 12.8f), (KiraClip("idle", "horse"), 14.6f));
+            // the driver, asleep on the seat (sitting), carried off with the wagon; then out of the smoke, singed (a new actor by the wreck)
+            var driver = k.Actor("Driver", Have("wagon_driver", ""), new Vector3(2 - 1.6f, 1.05f, 10), -90);
+            k.Key(driver, "Body", "m_LocalPosition", 0f, Vector3.zero); k.Key(driver, "Body", "m_LocalPosition", 8.9f, Vector3.zero);
+            k.Key(driver, "Body", "m_LocalPosition", 10.4f, new Vector3(0, 0, 8f)); k.Key(driver, "Body", "m_LocalPosition", 12.0f, new Vector3(0, 0, 27.3f));
+            k.Clips(driver, (PeopleClip("sit") ?? PeopleClip("idle"), 0f), (PeopleClip("surprised") ?? PeopleClip("idle"), 8.7f), (PeopleClip("sit") ?? PeopleClip("idle"), 9.8f));
+            k.Show(driver, 0f, 12.05f);
+            var singed = k.Actor("Driver singed", Have("wagon_driver", ""), new Vector3(-23f, 0, 9.5f), 120);
+            k.Key(singed, "Body", "m_LocalPosition", 12.6f, Vector3.zero); k.Key(singed, "Body", "m_LocalPosition", 15.5f, new Vector3(0, 0, 1.6f)); k.Key(singed, "Body", "m_LocalPosition", MedievalArrivalLength, new Vector3(0, 0, 1.6f));
+            k.Clips(singed, (PeopleClip("limp") ?? PeopleClip("walk"), 12.6f), (PeopleClip("dazed") ?? PeopleClip("idle"), 15.5f));
+            k.Show(singed, 12.6f, MedievalArrivalLength);
+            for (int i = 0; i < 4; i++)   // his hat smokes
+            {
+                var sm = k.Holder("Hat smoke " + i, new Vector3(-23f, 1.9f, 9.5f), 0);
+                Placeholders.Prim(PrimitiveType.Sphere, sm.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(new Color(.35f, .33f, .32f)), name: "Puff");
+                float t0 = 13f + i * .9f;
+                k.Key(sm, "Puff", "m_LocalPosition", t0, Vector3.zero); k.Key(sm, "Puff", "m_LocalPosition", t0 + 1.4f, new Vector3(.2f, 1.2f, .5f));
+                k.Key(sm, "Puff", "m_LocalScale", t0, Vector3.one * .08f); k.Key(sm, "Puff", "m_LocalScale", t0 + .6f, Vector3.one * .3f); k.Key(sm, "Puff", "m_LocalScale", t0 + 1.4f, Vector3.one * .02f);
+                k.Show(sm, t0, Mathf.Min(MedievalArrivalLength, t0 + 1.4f));
+            }
+            // the wreck appears with the blast (the world keeps its own after)
+            var wreck = k.Holder("Wreck", new Vector3(-25.5f, 0, 10f), 80);
+            if (!MedProp("WagonWreck", wreck.transform, Vector3.zero, 0)) Placeholders.Prim(PrimitiveType.Cube, wreck.transform, new Vector3(0, .4f, 0), new Vector3(2.4f, .8f, 4f), WorldArt.Mat("Dark"), name: "Wreck");
+            Flames(k, wreck, "", new Vector3(0, .5f, 0), 12.1f, 12.4f, .7f, 14.5f);
+            k.Show(wreck, 12.05f, MedievalArrivalLength);
+            Blast(k, new Vector3(-26f, 1.6f, 10f), 12.0f, 4.5f);
+            Tint(k, (0f, 0f), (11.95f, 0f), (12.05f, .55f), (12.5f, 0f), (MedievalArrivalLength, 0f));
+            // the purple vortex over the courtyard; the party drops out of it into the hay
+            VortexRings(k, "Purple vortex", hay + new Vector3(0, 12f, 0), Quaternion.Euler(90, 0, 0), 0f, 1.2f, 5.5f, 3.4f, colors: PurpleRings);
+            var inHay = new[] { (dan, new Vector3(-.5f, -.15f, .3f)), (abi, new Vector3(.6f, -.15f, -.3f)), (kira, new Vector3(.15f, .1f, .5f)) };
+            for (int j = 0; j < inHay.Length; j++)
+            {
+                var (actor, off) = inHay[j]; var home = actor.transform.localPosition; var spot = hay + off - home;
+                float d = j * .12f;
+                k.Key(actor, "Body", "m_LocalPosition", 0f, spot + new Vector3(0, 14f, 0)); k.Key(actor, "Body", "m_LocalPosition", 1.5f + d, spot + new Vector3(0, 11f, 0));
+                k.Key(actor, "Body", "m_LocalPosition", 2.9f + d, spot + new Vector3(0, -.7f, 0));   // into the hay, out of sight
+                k.Key(actor, "Body", "m_LocalPosition", 3.6f + d * 2, spot + new Vector3(0, -.7f, 0)); k.Key(actor, "Body", "m_LocalPosition", 4.0f + d * 2, spot);   // pop up
+                k.Key(actor, "Body", "m_LocalPosition", 7.6f + d, spot); k.Key(actor, "Body", "m_LocalPosition", 8.0f + d, Vector3.Lerp(spot, Vector3.zero, .5f) + Vector3.up * 1.2f);
+                k.Key(actor, "Body", "m_LocalPosition", 8.4f + d, Vector3.zero); k.Key(actor, "Body", "m_LocalPosition", 14.4f, Vector3.zero);
+                k.Key(actor, "Body", "m_LocalPosition", MedievalArrivalLength, new Vector3(0, 0, -2.4f));   // and they slink off
+            }
+            HayPuff(k, hay + new Vector3(0, .3f, 0), 2.95f, 2.2f, new Color(.95f, .8f, .38f));
+            HayPuff(k, hay + new Vector3(0, .4f, 0), 3.7f, 1.4f, new Color(.95f, .82f, .4f));
+            // Kira's sneeze: a little puff of fire into the hay (6.2 s)
+            var sneeze = k.Holder("Sneeze", hay + new Vector3(.15f, .5f, .2f), 0);
+            for (int i = 0; i < 4; i++)
+            {
+                Placeholders.Prim(PrimitiveType.Sphere, sneeze.transform, Vector3.zero, Vector3.one * .05f, Placeholders.Mat(i % 2 == 0 ? new Color(1f, .55f, .15f) : new Color(1f, .9f, .4f), "Glow"), name: "Bit" + i);
+                var dir = new Vector3((i - 1.5f) * .12f, -.15f - i * .05f, -.5f - i * .12f);
+                k.Key(sneeze, "Bit" + i, "m_LocalPosition", 6.2f, Vector3.zero); k.Key(sneeze, "Bit" + i, "m_LocalPosition", 6.6f, dir);
+                k.Key(sneeze, "Bit" + i, "m_LocalScale", 6.2f, Vector3.one * .05f); k.Key(sneeze, "Bit" + i, "m_LocalScale", 6.35f, Vector3.one * .25f); k.Key(sneeze, "Bit" + i, "m_LocalScale", 6.8f, Vector3.one * .03f);
+            }
+            k.Show(sneeze, 6.2f, 6.8f);
+            AnimationClip Surprise() => PeopleClip("surprised") ?? PeopleClip("look");
+            k.Clips(dan, (PeopleClip("fall"), 0f), (PeopleClip("idle"), 3.0f), (PeopleClip("look"), 4.2f), (Surprise(), 6.6f), (PeopleClip("jump"), 7.6f), (PeopleClip("land"), 8.3f), (Surprise(), 12.0f), (PeopleClip("idle"), 13.6f), (PeopleClip("walk"), 14.4f));
+            k.Clips(abi, (PeopleClip("fall"), 0f), (PeopleClip("idle"), 3.0f), (PeopleClip("laugh") ?? PeopleClip("idle"), 4.6f), (Surprise(), 6.5f), (PeopleClip("jump"), 7.7f), (PeopleClip("land"), 8.4f), (Surprise(), 12.0f), (PeopleClip("idle"), 13.4f), (PeopleClip("walk"), 14.4f));
+            k.Clips(kira, (KiraClip("fall", c.kira), 0f), (KiraClip("idle", c.kira), 3.2f), (KiraClip("attack", c.kira), 6.1f), (KiraClip("idle", c.kira), 6.8f), (KiraClip("jump", c.kira), 7.8f), (KiraClip("land", c.kira), 8.5f), (KiraClip("idle", c.kira), 9.0f), (KiraClip("walk", c.kira), 14.4f));
+            // they look round at each other in the hay, then at Kira; at the blast they spin to look; then slink off south, glancing back
+            k.KeyYaw(dan, "Body", 0f, 0); k.KeyYaw(dan, "Body", 4.4f, 40f); k.KeyYaw(dan, "Body", 5.6f, -30f); k.KeyYaw(dan, "Body", 11.9f, -30f); k.KeyYaw(dan, "Body", 12.3f, 80f); k.KeyYaw(dan, "Body", 14.3f, 80f); k.KeyYaw(dan, "Body", 14.8f, 20f);
+            k.KeyYaw(abi, "Body", 0f, 0); k.KeyYaw(abi, "Body", 4.4f, -40f); k.KeyYaw(abi, "Body", 11.9f, -40f); k.KeyYaw(abi, "Body", 12.3f, -110f); k.KeyYaw(abi, "Body", 14.3f, -110f); k.KeyYaw(abi, "Body", 14.8f, -20f);
+            k.KeyYaw(kira, "Body", 0f, 0); k.KeyYaw(kira, "Body", 9.0f, 0); k.KeyYaw(kira, "Body", 11.9f, 0); k.KeyYaw(kira, "Body", 12.3f, -90f); k.KeyYaw(kira, "Body", 14.3f, -90f); k.KeyYaw(kira, "Body", 14.8f, 0f);
+            if (k.Necklaces.TryGetValue(dan, out var neck))
+            {
+                float[] ts = { 0f, 15.6f, 16.0f, 16.4f, 16.8f, MedievalArrivalLength }; float[] ss = { 1f, 1f, 2.2f, 1.5f, 2.0f, 1.7f };
+                for (int i = 0; i < ts.Length; i++) k.Key(neck.gameObject, "Shard", "m_LocalScale", ts[i], Vector3.one * ss[i]);
+            }
+            k.Shot("The vortex opens", 0f, 1.8f, new Vector3(9f, 1.4f, -2f), hay + new Vector3(0, 8f, 0), 52f, new Vector3(8f, 1.6f, 0f));
+            k.Shot("Into the hay", 1.8f, 3.4f, new Vector3(6.5f, 4.2f, 4.5f), hay + new Vector3(0, .5f, 0), 46f);
+            k.Shot("They pop up", 3.4f, 5.8f, new Vector3(4.6f, 2.3f, 7.0f), hay + new Vector3(0, .5f, 0), 42f, new Vector3(4.3f, 2.2f, 7.4f));
+            k.Shot("Achoo!", 5.8f, 7.3f, hay + new Vector3(1.4f, .9f, -1.2f), hay + new Vector3(.15f, .55f, .4f), 38f);
+            k.Shot("Fire! Jump!", 7.3f, 9.2f, new Vector3(9f, 3.2f, 3f), hay + new Vector3(-.5f, .4f, -1f), 50f);
+            k.Shot("Runaway wagon", 9.2f, 11.9f, new Vector3(-6f, 2.4f, 2f), new Vector3(-6f, 1.4f, 10f), 52f, new Vector3(-14f, 2.6f, 3.5f));
+            k.Shot("Kaboom", 11.9f, 14.2f, new Vector3(-14f, 3.4f, 1.5f), new Vector3(-25f, 2f, 10f), 50f);
+            k.Shot("Slink away", 14.2f, MedievalArrivalLength, new Vector3(3.4f, 1.7f, 1.6f), new Vector3(2.6f, 1.1f, 6.2f), 46f, new Vector3(3.2f, 1.6f, 2.4f));
+            k.Sound("hay_rustle", 2.95f, .7f); k.Sound("fire_puff", 6.2f, .7f); k.Sound("hay_fire", 6.5f, .6f); k.Sound("horse_neigh", 8.7f, .6f);
+            k.Sound("wagon_blast", 12.0f, .85f);
+            k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
+        }
+
+        // Item 10 (the film's scene, muscleman-falls-at-stone.png): the necklace has led them to the stone in the courtyard. Muscle Man is there
+        // first: he brags (flexes, laughs at Dan), grips the shard and heaves with everything he has, fails and falls flat on his back. Dan steps
+        // up; the shard answers his necklace and slides out with no effort. Muscle Man stares, then kneels: "Master!" The purple vortex opens
+        // and sweeps all four in (Dan bewildered). The root is the stone (world (0, floor, 34)), +z north (the keep): the party south of it.
+        public const float TheStoneLength = 19f;
+        public static void TheStone()
+        {
+            DataAssets.Ensure();
+            var c = MedievalCast; NecklaceModel.Tint = c.shard;
+            var k = new Kit("TheStone", TheStoneLength);
+            var dan = k.Actor("Dan", c.dan, new Vector3(-.7f, 0, -3.6f), 0);
+            var abi = k.Actor("Abi", c.abi, new Vector3(-2.0f, 0, -4.0f), 10);
+            var kira = k.Actor("Kira", c.kira, new Vector3(.7f, 0, -3.3f), -10);
+            var mm = k.Actor("Muscle Man", Have("muscleman_medieval", ""), new Vector3(1.6f, 0, -1.4f), -130);
+            if (!k.Models.ContainsKey(mm)) { var b = mm.transform.Find("Body") ?? mm.transform; Placeholders.Prim(PrimitiveType.Capsule, mm.transform, new Vector3(0, 1f, 0), new Vector3(1f, 1f, .7f), Placeholders.Mat(new Color(.2f, .25f, .4f)), name: "Body"); _ = b; }
+            // the shard in the stone (the world's own is hidden while this plays)
+            var shard = k.Holder("Purple shard", new Vector3(0, 1.1f, 0), 15);
+            Placeholders.CrystalObject("Crystal", c.shard, .9f).transform.SetParent(shard.transform, false);
+            k.Key(shard, "Crystal", "m_LocalPosition", 0f, new Vector3(0, .45f, 0)); k.Key(shard, "Crystal", "m_LocalPosition", 11.2f, new Vector3(0, .45f, 0));
+            k.Key(shard, "Crystal", "m_LocalPosition", 12.6f, new Vector3(0, 1.3f, -.15f)); k.Key(shard, "Crystal", "m_LocalPosition", 13.4f, new Vector3(-.15f, 1.45f, -.6f));
+            k.Key(shard, "Crystal", "m_LocalPosition", 15.6f, new Vector3(-.15f, 1.45f, -.6f));
+            k.Show(shard, 0f, 15.8f);
+            var aura = k.Holder("Shard aura", new Vector3(0, 1.55f, 0), 0);
+            Placeholders.Prim(PrimitiveType.Sphere, aura.transform, Vector3.zero, Vector3.one * .1f, Placeholders.Mat(Glow(c, .5f), "Glow"), name: "Glow");
+            float[] at = { 9.6f, 10.2f, 10.8f, 11.4f, 12.0f }; float[] asz = { .05f, .9f, .6f, 1.3f, .05f };
+            for (int i = 0; i < at.Length; i++) k.Key(aura, "Glow", "m_LocalScale", at[i], Vector3.one * asz[i]);
+            k.Show(aura, 9.6f, 12.0f);
+            // Muscle Man: brags at the party, turns to the stone, heaves, falls flat; lies there; then (cut) kneels to Dan
+            k.Key(mm, "Body", "m_LocalPosition", 0f, Vector3.zero); k.Key(mm, "Body", "m_LocalPosition", 2.4f, Vector3.zero);
+            var grip = Quaternion.Inverse(Quaternion.Euler(0, -130, 0)) * (new Vector3(0, 0, -.95f) - new Vector3(1.6f, 0, -1.4f));
+            k.Key(mm, "Body", "m_LocalPosition", 3.0f, grip); k.Key(mm, "Body", "m_LocalPosition", 6.6f, grip);
+            k.Key(mm, "Body", "m_LocalPosition", 7.6f, grip + Quaternion.Inverse(Quaternion.Euler(0, -130, 0)) * new Vector3(0, 0, -1.3f));
+            k.Key(mm, "Body", "m_LocalPosition", 13.6f, grip + Quaternion.Inverse(Quaternion.Euler(0, -130, 0)) * new Vector3(0, 0, -1.3f));
+            var kneelAt = Quaternion.Inverse(Quaternion.Euler(0, -130, 0)) * (new Vector3(1.1f, 0, -2.0f) - new Vector3(1.6f, 0, -1.4f));
+            k.Key(mm, "Body", "m_LocalPosition", 13.7f, kneelAt); k.Key(mm, "Body", "m_LocalPosition", 16.0f, kneelAt);
+            k.KeyYaw(mm, "Body", 0f, 0); k.KeyYaw(mm, "Body", 2.4f, 0); k.KeyYaw(mm, "Body", 3.0f, 130f); k.KeyYaw(mm, "Body", 13.6f, 130f); k.KeyYaw(mm, "Body", 13.7f, 30f); k.KeyYaw(mm, "Body", 16f, 30f);
+            AnimationClip MM(string n, string f) => PeopleClip(n) ?? PeopleClip(f);
+            k.Clips(mm, (MM("mm_flex", "cheer"), 0f), (MM("mm_taunt", "laugh"), 1.6f), (PeopleClip("walk"), 2.4f), (MM("mm_heave", "push"), 3.0f), (MM("mm_fall", "fall_back"), 6.6f),
+                (MM("surprised", "idle"), 12.4f), (MM("mm_kneel", "idle"), 13.7f), (PeopleClip("fall"), 16.2f));
+            // Dan steps up (8.6 -> 10.4), the shard answers his necklace, it slides out, he holds it up; then bewildered
+            var danUp = new Vector3(.7f, 0, 2.75f);   // to the stone's south side (local to his holder)
+            k.Key(dan, "Body", "m_LocalPosition", 0f, Vector3.zero); k.Key(dan, "Body", "m_LocalPosition", 8.6f, Vector3.zero); k.Key(dan, "Body", "m_LocalPosition", 10.4f, danUp); k.Key(dan, "Body", "m_LocalPosition", 16.0f, danUp);
+            k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("look"), 2.0f), (PeopleClip("laugh") ?? PeopleClip("idle"), 7.4f), (PeopleClip("walk"), 8.6f), (PeopleClip("idle"), 10.4f),
+                (PeopleClip("hold_up") ?? PeopleClip("cheer"), 11.6f), (PeopleClip("surprised") ?? PeopleClip("look"), 15.0f), (PeopleClip("fall"), 16.2f));
+            k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("look"), 3.4f), (PeopleClip("laugh") ?? PeopleClip("idle"), 7.2f), (PeopleClip("idle"), 9.0f), (PeopleClip("cheer"), 13.0f), (PeopleClip("surprised") ?? PeopleClip("look"), 15.0f), (PeopleClip("fall"), 16.2f));
+            k.Clips(kira, (KiraClip("idle", c.kira), 0f), (KiraClip("jump", c.kira), 7.0f), (KiraClip("idle", c.kira), 7.7f), (KiraClip("jump", c.kira), 13.1f), (KiraClip("idle", c.kira), 13.8f), (KiraClip("fall", c.kira), 16.2f));
+            if (k.Necklaces.TryGetValue(dan, out var neck))
+            {
+                float[] ts = { 0f, 9.4f, 9.8f, 10.4f, 11.0f, 11.6f, 13f, TheStoneLength }; float[] ss = { 1.5f, 1.5f, 2.4f, 1.8f, 2.6f, 2f, 1.6f, 1.6f };
+                for (int i = 0; i < ts.Length; i++) k.Key(neck.gameObject, "Shard", "m_LocalScale", ts[i], Vector3.one * ss[i]);
+            }
+            // the purple vortex opens over the stone and pulls all four in
+            var vort = new Vector3(0, 3.2f, 1.2f);
+            VortexRings(k, "Purple vortex", vort, Quaternion.Euler(0, 180, 0), 15.6f, 16.4f, 4.4f, TheStoneLength, colors: PurpleRings);
+            foreach (var (a, h) in new[] { (dan, 1.1f), (abi, 1.0f), (kira, .3f), (mm, 1.2f) })
+            {
+                var home = a.transform.localPosition; var inv = Quaternion.Inverse(a.transform.localRotation);
+                var to = inv * (vort - home - new Vector3(0, h, 0));
+                k.Key(a, "Body", "m_LocalScale", 16.4f, Vector3.one); k.Key(a, "Body", "m_LocalScale", 17.6f, Vector3.one * .05f); k.Key(a, "Body", "m_LocalScale", TheStoneLength, Vector3.one * .05f);
+                k.Key(a, "Body", "m_LocalPosition", 17.6f, to); k.Key(a, "Body", "m_LocalPosition", TheStoneLength, to);
+            }
+            Tint(k, (0f, 0f), (17.6f, 0f), (18.4f, 1f), (TheStoneLength, 1f));
+            k.Shot("He's here first", 0f, 2.4f, new Vector3(-1.6f, 1.6f, -6.4f), new Vector3(1.4f, 1.4f, -1.2f), 44f, new Vector3(-1.2f, 1.6f, -5.8f));
+            k.Shot("The heave", 2.4f, 6.6f, new Vector3(3.2f, 1.6f, 1.4f), new Vector3(0, 1.1f, -.6f), 44f, new Vector3(2.8f, 1.4f, .9f));
+            k.Shot("Flat on his back", 6.6f, 8.6f, new Vector3(.4f, 3.6f, -4.0f), new Vector3(.6f, .3f, -1.8f), 46f);
+            k.Shot("Dan steps up", 8.6f, 11.2f, new Vector3(-2.6f, 1.5f, 1.6f), new Vector3(-.2f, 1.2f, -.6f), 44f);
+            k.Shot("It slides out", 11.2f, 13.6f, new Vector3(-.2f, 1.6f, 1.6f), new Vector3(0, 1.7f, -.3f), 38f, new Vector3(-.15f, 1.75f, 1.3f));
+            k.Shot("Master!", 13.6f, 15.6f, new Vector3(-1.6f, 1.5f, -3.4f), new Vector3(.5f, 1.0f, -1.6f), 42f);
+            k.Shot("The vortex", 15.6f, TheStoneLength, new Vector3(.4f, 2.4f, -7.4f), new Vector3(0, 2.2f, 0), 54f, new Vector3(.3f, 2.6f, -6.4f));
+            k.Sound("mm_laugh", 1.6f, .7f); k.Sound("mm_grunt", 3.2f, .7f); k.Sound("mm_grunt", 4.6f, .8f); k.Sound("mm_grunt", 5.8f, .9f); k.Sound("boulder_roll", 6.9f, .4f);
+            k.Sound("necklace", 9.6f, .6f); k.Sound("shard_slide", 11.2f, .8f); k.Sound("mm_master", 14.3f, .9f); k.Sound("portal", 15.6f, .6f);
+            k.Save();
+            NecklaceModel.Tint = IceAgeCast.shard;
         }
 
         // The story shard opens the portal (the test area). The root is the portal (its +z faces the heroes).

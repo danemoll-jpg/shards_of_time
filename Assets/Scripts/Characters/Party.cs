@@ -16,6 +16,14 @@ namespace ShardsOfTime
         public bool InputEnabled = true;
         public bool Frozen;                          // cutscenes: nobody moves
         public readonly List<Vector3> Trail = new List<Vector3>();   // the player's path, newest first, a point every 0.3 m
+        // Round 8, item 11: Muscle Man, the companion after the stone (a follower, never controlled, not switchable: not in Heroes)
+        public Hero Companion { get; private set; }
+        // Round 8, item 7: Dan's charged punch: hold the attack (a normal punch first), the fist glows after ChargeTime, release = the big one
+        public const float ChargeTime = .55f;
+        public float Charge { get; private set; }
+        public bool Charged => Charge >= ChargeTime;
+        public int ChargedPunches { get; private set; }
+        bool charging, chargeSound;
 
         public static Party Create(Vector3 start, Quaternion facing)
         {
@@ -32,8 +40,22 @@ namespace ShardsOfTime
             }
             p.SetPlayer(0);
             p.ApplyAbilities();
+            if (SaveGame.Current.Has(Abilities.MuscleMan)) p.AddCompanion(start - facing * Vector3.forward * 4.5f, facing);
             return p;
         }
+
+        // Round 8: Muscle Man joins (after the stone; and on every load after that)
+        public Hero AddCompanion(Vector3 at, Quaternion facing)
+        {
+            if (Companion) return Companion;
+            var stats = Resources.Load<CharacterStats>("Data/Characters/MuscleMan") ?? CharacterStats.Defaults("MuscleMan");
+            var h = Hero.Create(stats, at); h.transform.rotation = facing; h.transform.SetParent(transform, true);
+            h.SetPlayer(false); h.Follower.Slot = 2;
+            Companion = h;
+            PlayLog.Line($"Muscle Man follows the party (model {(h.Model ? h.Model.name : "graybox")})");
+            return h;
+        }
+        public IEnumerable<Hero> Everyone { get { foreach (var h in Heroes) yield return h; if (Companion) yield return Companion; } }
 
         public void ApplyAbilities()
         {
@@ -43,6 +65,7 @@ namespace ShardsOfTime
                 h.Motor.CanGroundPound = h.Stats.lockedAbility == Abilities.GroundPound && SaveGame.Current.Has(Abilities.GroundPound);   // Round 4
                 h.Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive);   // Round 5 (everyone)
                 h.Motor.CanPounce = h.Stats.displayName == "Kira" && SaveGame.Current.Has(Abilities.Pounce);   // Round 7 (Kira, Bethlehem's Violinist)
+                h.Motor.CanGlide = h.HasAbility(Abilities.Glide);   // Round 8 (dragon Kira's wings; set again when her form changes)
             }
         }
 
@@ -91,9 +114,27 @@ namespace ShardsOfTime
                 input.jumpHeld = Controls.Jump.IsPressed();
                 input.diveHeld = Controls.Dive.IsPressed();
                 input.divePressed = Controls.Dive.WasPressedThisFrame();
-                if (Controls.Attack.WasPressedThisFrame()) Player.TryAttack();
+                if (Controls.Attack.WasPressedThisFrame())
+                {
+                    // Round 8: a Muscle Man job in reach (a boulder, a portcullis, a boost) takes the button; else the attack (Dan: and charging)
+                    if (!MuscleJob.TryStart(Player)) { Player.TryAttack(); charging = Player.HasAbility(Abilities.ChargedPunch); Charge = 0; chargeSound = false; }
+                }
+                if (charging)
+                {
+                    if (Controls.Attack.IsPressed())
+                    {
+                        Charge += Time.deltaTime;
+                        if (Charged && !chargeSound) { chargeSound = true; Sfx.Play("punch_charge", .6f); Player.ChargeGlow(true); }
+                    }
+                    else
+                    {
+                        if (Charged) { Player.ChargedPunch(); ChargedPunches++; }
+                        charging = false; Charge = 0; Player.ChargeGlow(false);
+                    }
+                }
                 if (Controls.SwitchNext.WasPressedThisFrame()) Switch((Index + 1) % 3);
                 else if (Controls.SwitchPrev.WasPressedThisFrame()) Switch((Index + 2) % 3);
+                if (charging && Player.Stats.displayName != "Dan") { charging = false; Charge = 0; }
                 else if (Controls.PickDan.WasPressedThisFrame()) Switch(0);
                 else if (Controls.PickAbi.WasPressedThisFrame()) Switch(1);
                 else if (Controls.PickKira.WasPressedThisFrame()) Switch(2);
@@ -137,8 +178,9 @@ namespace ShardsOfTime
             Trail.Clear();
             int k = 1;
             foreach (var h in Heroes) if (h != Player) { var p = pos + rot * new Vector3(k == 1 ? -1.3f : 1.3f, 0, -1.2f); k++; h.Motor.Teleport(Fits(h, p) ? p : pos, rot); h.Follower.ResetTimers(); }
+            if (Companion) { var p = pos + rot * new Vector3(0, 0, -2.6f); Companion.Motor.Teleport(Fits(Companion, p) ? p : pos, rot); Companion.Follower.ResetTimers(); }
         }
 
-        public void SetVisible(bool v) { foreach (var h in Heroes) h.Body.gameObject.SetActive(v); }
+        public void SetVisible(bool v) { foreach (var h in Everyone) h.Body.gameObject.SetActive(v); }
     }
 }

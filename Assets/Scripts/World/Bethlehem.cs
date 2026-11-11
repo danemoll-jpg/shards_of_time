@@ -246,7 +246,7 @@ namespace ShardsOfTime
             Slab("Cave wall N", 184, 198, 66, 68, cg + 5, cg - 2, "Stone"); Slab("Cave wall S", 184, 198, 52, 54, cg + 5, cg - 2, "Stone"); Slab("Cave wall E", 196, 198, 54, 66, cg + 5, cg - 2, "Stone");
             Slab("Cave wall W N", 184, 186, 62, 66, cg + 5, cg - 2, "Stone"); Slab("Cave wall W S", 184, 186, 54, 58, cg + 5, cg - 2, "Stone"); Slab("Cave roof", 184, 198, 52, 68, cg + 6, cg + 5, "Stone");
             Slab("Cave floor", 186, 196, 54, 66, cg + .05f, cg - 1, "Dirt");
-            var boulder = Box("Boulder (needs Muscle Man)", new Vector3(184.5f, cg + 1.9f, 60), new Vector3(3.2f, 3.8f, 4.6f), "Stone"); boulder.gameObject.AddComponent<Boulder>();
+            var boulder = Box("Boulder (needs Muscle Man)", new Vector3(184.5f, cg + 1.9f, 60), new Vector3(3.2f, 3.8f, 4.6f), "Stone"); boulder.gameObject.AddComponent<Boulder>().id = "BE-boulder-cave";
             Hint(new Vector3(180, cg, 60), 4f, () => "A shepherds' cave, blocked by a huge boulder. Someone very strong could roll it away... (later)");
             // the two rock pillars, 10.5 m apart: steps up the near one; only Kira's pounce reaches the far one (its shard and a heart)
             float pg = Mathf.Max(Terrain(160, 140), Terrain(177.5f, 140)); PillarTop = pg + 5f;

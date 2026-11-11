@@ -22,7 +22,7 @@ namespace ShardsOfTime
         static bool Ours(string path) => path.Replace('\\', '/').StartsWith(Dir + "/");
         static bool IsKira(string path) => IsGeneric(path);
         // Round 5: Kira's forms and the Ice Age creatures share Code's four-legged Blender rig (Generic, clips as takes)
-        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian", "goat", "sheep", "guard_dog" };   // Round 6: Egypt's camel and temple guardian; Round 7: Bethlehem's animals
+        public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian", "goat", "sheep", "guard_dog", "rat", "horse" };   // Round 6: Egypt's camel and temple guardian; Round 7: Bethlehem's animals; Round 8: the dungeon rat, the wagon pony
         static bool IsGeneric(string path) { string n = Path.GetFileNameWithoutExtension(path); return n.StartsWith("kira") || System.Array.IndexOf(Creatures, n) >= 0; }
         public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy" || name.StartsWith("wiseman_") || name == "watchman"
             || name.StartsWith("muscleman_") || name == "knight" || name == "archer" || name == "wagon_driver";   // Round 8: the Medieval people (Mixamo)   // Round 7: the Wise Men and the watchman (Mixamo)   // Round 6: the Egypt Violinist and the mummy (Mixamo)
@@ -59,9 +59,10 @@ namespace ShardsOfTime
             ["mm_flex"] = new ClipSpec(), ["mm_taunt"] = new ClipSpec(), ["mm_lift"] = new ClipSpec(), ["mm_push"] = new ClipSpec { loop = true, bakeXZ = false },
             ["mm_heave"] = new ClipSpec { loop = true, bakeXZ = false }, ["mm_fall"] = new ClipSpec(), ["mm_cheer"] = new ClipSpec(), ["mm_boost"] = new ClipSpec(),
             ["mm_kneel"] = new ClipSpec(),
-            ["kn_idle"] = new ClipSpec { loop = true }, ["kn_walk"] = new ClipSpec { loop = true }, ["kn_attack"] = new ClipSpec(), ["kn_block"] = new ClipSpec { loop = true },
-            ["ar_draw"] = new ClipSpec(), ["ar_aim"] = new ClipSpec { loop = true }, ["ar_shoot"] = new ClipSpec(), ["ar_nervous"] = new ClipSpec { loop = true },
-            ["drv_dazed"] = new ClipSpec { loop = true }, ["drv_walk"] = new ClipSpec { loop = true },
+            ["knight_idle"] = new ClipSpec { loop = true }, ["knight_walk"] = new ClipSpec { loop = true }, ["knight_run_slow"] = new ClipSpec { loop = true },
+            ["knight_run"] = new ClipSpec { loop = true }, ["knight_punch"] = new ClipSpec(), ["block"] = new ClipSpec { loop = true },
+            ["draw"] = new ClipSpec(), ["aim"] = new ClipSpec { loop = true }, ["shoot"] = new ClipSpec(), ["nervous"] = new ClipSpec { loop = true },
+            ["dazed"] = new ClipSpec { loop = true }, ["limp"] = new ClipSpec { loop = true },
         };
 
         void OnPreprocessModel()
@@ -215,20 +216,22 @@ namespace ShardsOfTime
                 var ears = model.GetComponentsInChildren<Transform>(true).Where(t => t.name.ToLowerInvariant().Contains("ear")).Select(t => t.name).ToList();
                 var img = new Texture2D(2, 2); img.LoadImage(File.ReadAllBytes(tex));
                 var px = img.GetPixels32(); int n = 0, grey = 0, white = 0, amber = 0;
+                bool deep = f.id == KiraForm.Dragon;   // Round 8: dragon Kira's eyes are a deeper golden amber (~240,176,64) and small on her atlas
                 for (int i = 0; i < px.Length; i += 7)
                 {
                     var c = px[i]; n++;
                     Color.RGBToHSV(c, out _, out float s, out float v);
                     if (s < .18f && v > .25f && v < .85f) grey++;
                     if (s < .12f && v > .9f) white++;
-                    if (c.r > 178 && c.g > 140 && c.r - c.b > 38 && c.g - c.b > 25 && c.r - c.g < 51) amber++;
+                    if (c.r > 178 && c.g > 140 && c.r - c.b > 38 && c.g - c.b > 25 && c.r - c.g < (deep ? 72 : 51)) amber++;
                 }
                 Object.DestroyImmediate(img);
                 float pg = 100f * grey / n, pw = 100f * white / n, pa = 100f * amber / n;
                 float needGrey = f.id == KiraForm.Mummy ? 20f : 35f;   // Round 6: mummy Kira's bandages cover most of her; grey wherever fur shows
-                bool ok = ears.Count == 0 && pg > needGrey && pw < 1.5f && pa > .05f;
+                float needAmber = deep ? .02f : .05f;
+                bool ok = ears.Count == 0 && pg > needGrey && pw < 1.5f && pa > needAmber;
                 lines.Add($"KIRA LOCK {f.id} ({f.model}): {(ok ? "OK" : "FAILED")}: ear bones {ears.Count}{(ears.Count > 0 ? " (" + string.Join(", ", ears) + ")" : "")}; " +
-                          $"grey fur {pg:0}% of the texture (need > {needGrey:0}%); white {pw:0.0}% (need < 1.5%); golden-amber eyes {pa:0.00}% (need > 0.05%)");
+                          $"grey fur {pg:0}% of the texture (need > {needGrey:0}%); white {pw:0.0}% (need < 1.5%); golden-amber eyes {pa:0.00}% (need > {needAmber:0.00}%)");
             }
             Directory.CreateDirectory("Assets/Resources/Data");
             File.WriteAllLines("Assets/Resources/Data/KiraLock.txt", lines);

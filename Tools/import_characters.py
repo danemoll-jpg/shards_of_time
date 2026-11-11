@@ -54,11 +54,13 @@ EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing
                "mm_heave": ("muscleman_medieval", "Pull Heavy Object|Pulling A Rope|Pulling|Tug Of War"), "mm_fall": ("muscleman_medieval", "Falling Back Death|Fall Flat"),
                "mm_cheer": ("muscleman_medieval", "Victory|Victory Idle"), "mm_boost": ("muscleman_medieval", "Toss|Throwing|Throw"),
                "mm_kneel": ("muscleman_medieval", "Kneeling|Kneel|Kneeling Down"),
-               "kn_idle": ("knight", "Sword And Shield Idle"), "kn_walk": ("knight", "Sword And Shield Walk"),
-               "kn_attack": ("knight", "Sword And Shield Slash"), "kn_block": ("knight", "Sword And Shield Block"),
-               "ar_draw": ("archer", "Standing Draw Arrow"), "ar_aim": ("archer", "Standing Aim Overdraw|Standing Aim Idle 01|Standing Aim Idle"),
-               "ar_shoot": ("archer", "Standing Aim Recoil"), "ar_nervous": ("archer", "Nervously Look Around|Looking Around"),
-               "drv_dazed": ("wagon_driver", "Drunk Idle|Dizzy Idle|Stunned"), "drv_walk": ("wagon_driver", "Injured Walk|Drunk Walk")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
+               # the knight's own set replaces the shared clip of the same name on him (Clips/knight_<clip>, like the mummy's)
+               "knight_idle": ("knight", "Sword And Shield Idle"), "knight_walk": ("knight", "Sword And Shield Walk"),
+               "knight_run_slow": ("knight", "Sword And Shield Walk"), "knight_run": ("knight", "Sword And Shield Walk"),
+               "knight_punch": ("knight", "Sword And Shield Slash"), "block": ("knight", "Sword And Shield Block"),
+               "draw": ("archer", "Standing Draw Arrow"), "aim": ("archer", "Standing Aim Overdraw|Standing Aim Idle 01|Standing Aim Idle"),
+               "shoot": ("archer", "Standing Aim Recoil"), "nervous": ("archer", "Nervously Look Around|Looking Around"),
+               "dazed": ("wagon_driver", "Drunk Idle|Dizzy Idle|Stunned"), "limp": ("wagon_driver", "Injured Walk|Drunk Walk")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
 # Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
 # the people's clip of the same name (CreatureAnimator)
 MUMMY_CLIPS = {"idle": "Thriller Idle", "walk": "Zombie Walk", "run_slow": "Zombie Walk", "run": "Zombie Walk", "punch": "Zombie Attack",

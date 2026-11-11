@@ -57,8 +57,9 @@ namespace ShardsOfTime
         void OnDestroy() => Health.Hurt -= OnHurt;
         void OnHurt() { if (IsPlayer && Anim) Anim.Trigger("hurt"); }
 
-        public bool HasAbility(string id) => (Form && Form.Has(id)) || (Stats.lockedAbility == id && SaveGame.Current.Has(id));   // a form's, or this hero's learned move (Round 5)
-        public void Cheer() { if (Anim) Anim.Trigger("cheer"); }
+        public bool HasAbility(string id) => (Form && Form.Has(id)) || ((Stats.lockedAbility == id || Abilities.Learns(Stats.displayName, id)) && SaveGame.Current.Has(id));   // a form's, or this hero's learned move (Round 5; Round 8: Dan learns two)
+        public bool IsMuscleMan => Stats.displayName == "MuscleMan";   // Round 8: the companion
+        public void Cheer() { if (Anim) Anim.Trigger(IsMuscleMan && Anim.Has("mm_cheer") ? "mm_cheer" : "cheer"); }
 
         // Dan's / Abi's outfit (Round 3): swaps the model (Resources/Characters/<name>_<outfit>.fbx), the same way Kira's form does; Dan's
         // necklace moves onto the new model's chest. Missing model: the graybox capsule (and its necklace) stays.
@@ -68,6 +69,8 @@ namespace ShardsOfTime
             string model = Stats.displayName.ToLowerInvariant() + "_" + outfit;
             // Round 7: Bethlehem's clothes until their models are in: Egypt's (simple robes), not the home pyjamas
             if (!CharacterModel.Exists(model) && outfit == Outfits.Bethlehem) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Egypt;
+            if (!CharacterModel.Exists(model) && IsMuscleMan) model = "muscleman_medieval";   // Round 8: Muscle Man has one outfit, every world
+            if (Model && Model.name == "Model " + model) { Outfit = outfit; return; }
             if (!CharacterModel.Exists(model)) { if (Outfit == null) PlayLog.Line($"{Stats.displayName}: no model {model}, graybox"); Outfit = outfit; return; }
             Outfit = outfit;
             if (Model) { Model.SetActive(false); Destroy(Model); Model = null; Anim = null; }
@@ -93,6 +96,7 @@ namespace ShardsOfTime
             Model = CharacterModel.Build(f.model, Body, Motor);
             Anim = Model ? Model.GetComponent<CreatureAnimator>() : null;
             Graybox.gameObject.SetActive(!Model);
+            if (Motor) Motor.CanGlide = HasAbility(Abilities.Glide);   // Round 8: dragon Kira's wings
             PlayLog.Line($"Kira's form: {f.displayName} ({(Model ? "model " + f.model : "graybox: no model")}, abilities [{string.Join(", ", f.abilities)}])");
         }
 
@@ -108,6 +112,7 @@ namespace ShardsOfTime
         {
             if (e == "land") { squash = .18f; if (Anim && Motor.LandSpeed > 4f) Anim.Trigger(Motor.LandSpeed > HardLanding ? "land_hard" : "land"); }
             if (e == "jump" || e == "leap") { squash = -.12f; if (IsPlayer) Sfx.Play("jump", .5f); if (Anim) Anim.Trigger("jump"); }
+            if (e == "glide" && IsPlayer) Sfx.Play("wings_flap", .45f);
             if (e == "doublejump") { squash = -.18f; if (IsPlayer) Sfx.Play("jump", .6f, 1.3f); Placeholders.Puff(transform.position, Stats.color); }
             if (e == "splash" && IsPlayer) Sfx.Play("splash", .5f);
             if (e == "outofbreath" && IsPlayer) Health.Damage(1, Vector3.zero, "out of breath");
@@ -136,6 +141,57 @@ namespace ShardsOfTime
             PlayLog.Line($"{Stats.displayName}: ground pound at {transform.position}{(crack ? ", cracked ice " + crack.id : "")}");
         }
 
+        // Round 8, item 7: Dan's charged punch (Party: hold the attack, release): a big lunge-punch that breaks cracked walls (every world)
+        // and knocks knights' shields away; it hits harder and reaches further. The fist glows while it's charged.
+        public int BigPunches { get; private set; }
+        Transform glow;
+        public void ChargeGlow(bool on)
+        {
+            if (on && !glow)
+            {
+                var anim = Model ? Model.GetComponentInChildren<Animator>() : null;
+                var hand = anim && anim.isHuman ? anim.GetBoneTransform(HumanBodyBones.RightHand) : null;
+                glow = Placeholders.Prim(PrimitiveType.Sphere, hand ? hand : transform, hand ? Vector3.zero : new Vector3(.3f, 1.1f, .4f), Vector3.one * (hand ? .22f : .3f) / (hand ? Mathf.Max(.01f, hand.lossyScale.x) : 1f), Placeholders.Mat(new Color(1f, .75f, .3f), "Glow"), name: "Charge glow").transform;
+            }
+            if (glow) glow.gameObject.SetActive(on);
+        }
+        public void ChargedPunch()
+        {
+            BigPunches++; attackTimer = Stats.attackCooldown;
+            if (Anim) Anim.Trigger("attack");
+            Sfx.Play("punch_big", .8f);
+            Motor.Knockback(transform.forward * 7f + Vector3.up * 1.5f);   // a short lunge forward
+            var c = transform.position + Vector3.up * Stats.height * .5f + transform.forward * (Stats.attackRange + .5f);
+            Placeholders.Puff(c, new Color(1f, .8f, .4f));
+            var seen = new System.Collections.Generic.HashSet<Object>();
+            foreach (var col in Physics.OverlapSphere(c, Stats.attackRadius + .7f, ~0, QueryTriggerInteraction.Collide))
+            {
+                var e = col.GetComponentInParent<Enemy>();
+                if (e && seen.Add(e)) e.HitCharged(transform.forward, this);
+                var rock = col.GetComponentInParent<RockWall>();
+                if (rock && seen.Add(rock)) rock.Punch(this, true);
+                var tgt = col.GetComponentInParent<PunchTarget>();
+                if (tgt && seen.Add(tgt)) tgt.Punched(this, true);
+            }
+            PlayLog.Line($"{Stats.displayName}: charged punch at {transform.position}");
+        }
+
+        // Round 8, item 6: dragon Kira's fire puff (her attack while a dragon): a little flame forward that lights / burns what it reaches
+        // (FireTarget: torches, braziers, ropes, hay, brambles) and scares rats; it never hurts people (knights, archers, the party)
+        public int FirePuffs { get; private set; }
+        void FirePuff()
+        {
+            FirePuffs++;
+            Sfx.Play("fire_puff", .6f, Random.Range(.95f, 1.1f));
+            var from = transform.position + Vector3.up * Stats.height * .55f + transform.forward * .4f;
+            for (int i = 0; i < 4; i++) Placeholders.Puff(from + transform.forward * (.5f + i * .7f), Color.Lerp(new Color(1f, .85f, .3f), new Color(1f, .35f, .1f), i / 3f));
+            foreach (var col in Physics.OverlapCapsule(from, from + transform.forward * 3.2f, .9f, ~0, QueryTriggerInteraction.Collide))
+            {
+                var f = col.GetComponentInParent<FireTarget>(); if (f) f.Burn(this);
+                var e = col.GetComponentInParent<Enemy>(); if (e) e.Scare(transform.position);
+            }
+        }
+
         // Each hero's basic attack: a short sweep in front that hits enemies (Punch, Kick, Claws).
         public bool TryAttack()
         {
@@ -143,6 +199,7 @@ namespace ShardsOfTime
             attackTimer = Stats.attackCooldown; Attacks++;
             swipeTimer = .15f; swipe.gameObject.SetActive(true);
             if (Anim) Anim.Trigger("attack");
+            if (HasAbility(Abilities.FirePuff)) { FirePuff(); return true; }   // Round 8: dragon Kira breathes a puff instead of clawing
             Sfx.Play("attack", .4f, Stats.displayName == "Kira" ? 1.4f : Stats.displayName == "Abi" ? 1.15f : .9f);
             var c = transform.position + Vector3.up * Stats.height * .5f + transform.forward * Stats.attackRange;
             foreach (var col in Physics.OverlapSphere(c, Stats.attackRadius, ~0, QueryTriggerInteraction.Collide))
@@ -152,7 +209,9 @@ namespace ShardsOfTime
                 var ice = col.GetComponentInParent<IceWall>();
                 if (ice) { PlayLog.Line($"{Stats.displayName}'s {Stats.attackName} reaches ice wall {ice.id}"); ice.Claw(this); }
                 var rock = col.GetComponentInParent<RockWall>();
-                if (rock) rock.Punch(this);   // Round 5: only the charged punch (later) breaks it
+                if (rock) rock.Punch(this, false);   // Round 5: only the charged punch breaks it (Round 8)
+                var tgt = col.GetComponentInParent<PunchTarget>();
+                if (tgt) tgt.Punched(this, false);
             }
             return true;
         }
@@ -168,7 +227,7 @@ namespace ShardsOfTime
                 if (hv.magnitude > 1.5f && (stepTimer -= Time.deltaTime) <= 0)
                 {
                     stepTimer = Mathf.Lerp(.42f, .27f, hv.magnitude / Stats.runSpeed);
-                    Sfx.Play(Game.InEgypt ? "footstep_sand" : Game.InBethlehem ? "footstep_grass" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
+                    Sfx.Play(Game.InMedieval ? "footstep_cobble" : Game.InEgypt ? "footstep_sand" : Game.InBethlehem ? "footstep_grass" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
                 }
             }
             if (swipeTimer > 0) { swipeTimer -= Time.deltaTime; if (swipeTimer <= 0) swipe.gameObject.SetActive(false); }
@@ -193,5 +252,5 @@ namespace ShardsOfTime
     }
 
     // Dan's and Abi's outfits (Round 3): AreaData.outfit names one per area
-    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem"; }
+    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval"; }
 }
