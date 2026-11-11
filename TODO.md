@@ -24,8 +24,60 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — none (Round 9 is delivered, below)
-Round 10, the Pirate Seas, is drafted under "Next rounds"; the planning chat starts it.
+Current round — Round 10: the Pirate Seas (target 0.10.0)
+Round 9 is delivered (below). Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice,
+Dan can overrule after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a
+window in front of Dan); rule 12 (never stuck) and the Fix 8.1 floor / platform / reach checks apply. Don't end your
+turn until 0.10.0 is published unless truly blocked (say so).
+
+**Inputs, all in (Dan, 2026-11-11):** the 9 concept sheets P1–P9 in `SourceArt/Concepts/` (`dan_pirate`,
+`abi_pirate`, `kira_otter`, `muscleman_pirate`, `violinist_pirate`, `pirate`, `crab`, `pufferfish`, `fish`),
+references in `SourceArt/Reference/Worlds/05-PirateSeas/` and `Characters/*`, his clips (`Clips/04-Medieval_TheStone_05-Pirate_Arrival.mp4`
+from ~70 s, `Worlds/05-PirateSeas/shard-rolls-overboard.mp4`) with notes in `Docs/CUTSCENE-FILM-NOTES.md`, and two
+songs: `Music/pirate.mp3` (the ship, 2:59) and `Music/underwater.mp3` (under the sea, 3:00). Notes: otter Kira is a
+browner gray (match her gray, Kira lock); Muscle Man grins with teeth (fine).
+
+1. **Mixamo first (Dan wants it early):** Meshy → clean-up → Mixamo upload files for `dan_pirate`, `abi_pirate`,
+   `muscleman_pirate`, `violinist_pirate`, `pirate`, then **stop at once and tell Dan exactly what to upload and
+   download** (shared clips reused; add swim / tread-water clips if any hero lacks them; Muscle Man's struggling swim).
+   Then carry on with everything else in the same turn; import Dan's clips when they arrive.
+2. **The other models:** otter Kira (Code's rig; swim, dive, belly-slide), crab, pufferfish (puff up / deflate), the
+   tropical fish (schools, simple swim cycle). Props: the pirate ship (red-brown hull, turned rail balusters, pink
+   sails, rigging, crow's nest, cannons, lanterns, barrels, crates, the hold), the island and cove, corals, the
+   shipwreck, the green story shard, the fiddle (its own playing clip).
+3. **Two areas, almost two levels (Dan, 2026-11-11):** **the ship** (deck, rigging, crow's nest, the hold, plus the
+   tropical island and cove) and **under the sea** (the reef, the shipwreck, underwater caves, the sea floor). Each
+   with its own look, enemies, about 30 shards and **its own song** (`pirate.mp3` above water, `underwater.mp3`
+   below, crossfading at the surface). One world for the vortex and the story shard.
+4. **`PirateArrival`** (from Dan's clip): the ship at **night** with lanterns; a green vortex swirls round it; Dan and
+   otter Kira pop out of barrels (Abi too), Muscle Man drops from the sky **through the sails** and crashes flat onto the
+   deck, lies there, sits up grinning; Abi laughs; Dan's necklace glows green. Side-by-side sheet against the clip as in
+   Round 9. (Gameplay can move on to sunset / day: DEFAULT the ship section at sunset, as the film's deck shots.)
+5. **`ShardOverboard`** (from Dan's clip `shard-rolls-overboard.mp4`, the doorway between the two areas): when the
+   ship part's necklace moment comes, Muscle Man grabs the green shard, holds it up laughing with joy, it slips from his
+   hand, bounces and rolls across the deck, under the rail and over the side; he leaps in after it, Dan and Abi follow,
+   otter Kira dives. Before this the water round the ship stays shallow; after it the deep sea opens.
+6. **Otter Kira:** fast swimming, deep diving and no breath limit, squeezes through narrow underwater gaps; on land a
+   belly-slide across wet decks.
+7. **Muscle Man the companion** (his first world as one): lifts cannons, crates and the anchor, boosts Dan up the
+   rigging; underwater he swims slowly and struggles to keep up (comic, never blocks the player).
+8. **New move: everyone's deep dive** (longer breath, swim deeper), taught by the Violinist as a ship's fiddler. Opens
+   the earlier worlds' deep-water gates (the Ice Age lake, Egypt's Nile, Bethlehem's well, Medieval's moat): check one.
+9. **Enemies:** goofy pirate deckhands (above), crabs (beach and deck), pufferfish (underwater: puff up and bump). Light
+   combat, no boss (DEFAULT). Friendly fish schools everywhere under the sea.
+10. **Shards (Fix 8.1 rule):** about 60 (30 + 30); threshold at about 75% of all shards so far **and** at least 20 from
+    this world, reachable on arrival with the moves held (the deep dive only after the Violinist). Two hearts. Report
+    the numbers.
+11. **The finale:** the necklace leads to the green shard on the sea floor among corals (film:
+    `green-shard-sea-floor.png`); collecting it opens a swirling underwater vortex that pulls everyone in, Muscle Man
+    included → the vortex space (Home: 5 / 8).
+12. **Look:** above, a pink-violet sunset over a deep blue sea, red-brown ship, pink sails; below, bright blue water,
+    light shafts, colorful corals, cheerful fish. Frame rate checked on both settings (water and fish schools are the
+    risk).
+13. **Sound:** ElevenLabs: waves, creaking wood, barrel thuds, the splash, bubbles, cannon, crab clicks, pufferfish
+    puff, Muscle Man's laughs and "My hero!", the fiddle tune.
+14. Build, check (a full run: … Medieval → vortex → Pirate Seas → ship → overboard → under the sea → green shard →
+    vortex; plus a deep-water gate in an earlier world), publish 0.10.0, update `TODO.md` / `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
@@ -209,7 +261,7 @@ Next rounds (do not start yet)
   `TheStone` ends in the cobblestone whirlpool. `ActOne` will be about a minute (the film's length): Dan's longer Act I
   song is in (2026-11-11): `Music/act1.mp3`, 60.0 s, replacing the 22 s one; time the scene to it. For each: render the MP4 from the exe and a
   side-by-side contact sheet (film frames above, game frames below, same times) for Dan to compare.
-- **Round 10: the Pirate Seas (draft by the planning chat, 2026-11-11; written in full after Fix 8.1 and once Dan's
+- **(Superseded by the Round 10 above; kept for reference.) Round 10: the Pirate Seas (draft by the planning chat, 2026-11-11; written in full after Fix 8.1 and once Dan's
   concept images are in).** Film references in `SourceArt/Reference/Worlds/05-PirateSeas/` and `Characters/*`
   (added 2026-11-11), including Dan's clip `shard-rolls-overboard.mp4`; image prompts P1–P9 in
   `Docs/MODELS-NEEDED.md`; music in `Docs/MUSIC.md`.
