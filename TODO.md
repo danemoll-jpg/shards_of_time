@@ -24,8 +24,46 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none yet (the planning chat writes Round 9: the Pirate Seas)
-Round 8's plan is in `TODO-ARCHIVE.md`; its report is below.
+Current round — Fix 8.1: Medieval fixes + shard thresholds (target 0.8.1)
+Round 8 is delivered (below). Dan played 0.8.0 (2026-11-11). Report per item:
+done / not done / deferred, and why. Testing rules as always; rule 12 applies.
+For each of items 1–4: find the cause, fix it at the source, and check it in
+the built exe from the player's view (screenshot + numbers).
+
+1. **"In the room where you first meet Muscle Man the ground is high, like you
+   are wading through water."** The heroes sink into the floor there: the
+   floor's collider sits above its visible mesh (or the visible floor is lower
+   than the collider / a water or fog volume overlaps it). Feet must sit on the
+   visible floor. Then audit **every** walkable surface in the Medieval world
+   (and spot-check the other worlds) for feet sunk into or floating above the
+   floor: a probe that compares the hero's foot height with the visible
+   surface under it, reported per area.
+2. **The drawbridge isn't solid: Dan fell right through it.** Give it a real
+   collider that moves with it (lowered and raised), and check every moving or
+   animated platform in all worlds the same way (walk across each one, every
+   hero).
+3. **A shard behind the village can't be reached: an invisible wall.** Find
+   the invisible collider (probably the world-boundary wall or a leftover
+   blocker) and move it outside the shard, or move the shard. Then add to the
+   never-stuck / reachability check: **every shard in every world is reachable
+   by the bot with the moves it should need** (none behind invisible walls),
+   and report any that aren't.
+4. **The needed shard count is far too low ("I only needed like 3")** when you
+   have collected well in the earlier worlds. The universal total stays (extra
+   shards still help, Dan 2026-11-10), but each world must still ask for real
+   collecting there. New rule (DEFAULT, Dan can tune): a world's necklace wakes
+   when **both** are true:
+   - the universal total reaches the world's cumulative threshold, raised to
+     about **75%** of all shards in the worlds so far (Ice Age 45, Egypt 90,
+     Bethlehem 135, Medieval 180), and
+   - **at least 20 shards from this world** have been collected.
+   So a player who hunted everything earlier still needs 20 here, and one who
+   skipped a lot needs more. HUD: "Next: 180 (this world: 12 / 20)". Rule 2
+   (reachable on arrival with the moves held) must still pass with the new
+   numbers in every world: report them. Existing saves: no world that's already
+   awake relocks. Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md`.
+5. Build, check, publish 0.8.1, update `TODO.md` / `CLAUDE.md`, clean up. Don't
+   end your turn until 0.8.1 is published (unless truly blocked: say so).
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
