@@ -13,6 +13,18 @@ CLIPS = {'run': ('Fast Run.fbx', .3), 'cheer': ('Cheering.fbx', .5), 'kick': ('M
 VIOLINIST = {'play': ('violinist_iceage/Playing The Violin.fbx', .4), 'bow': ('violinist_iceage/Quick Informal Bow.fbx', .5),
              'nod': ('violinist_iceage/Head Nod Yes.fbx', .5), 'walk': ('Walking.fbx', .3)}
 if 'clips=violinist' in sys.argv: OUT = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'violinist'); CLIPS = VIOLINIST
+# Round 8: each Medieval model on the shared clips plus its own (clips=medieval; Dan saved them all in SourceArt/Mixamo/)
+SHARED = {'walk': ('Walking.fbx', .3), 'run': ('Fast Run.fbx', .3), 'cheer': ('Cheering (1).fbx', .5), 'punch': ('Punching.fbx', .45)}
+MEDIEVAL = {'muscleman_medieval': {'flex': ('Mutant Flexing Muscles.fbx', .5), 'point': ('Pointing.fbx', .5), 'lift': ('Lifting Object.fbx', .6),
+                                   'push': ('Pushing.fbx', .5), 'heave': ('Pull Heavy Object.fbx', .5), 'rope': ('Pulling A Rope.fbx', .5),
+                                   'fallback': ('Falling Back Death.fbx', .95), 'victory': ('Victory.fbx', .5), 'throw': ('Throw.fbx', .5),
+                                   'kneel': ('Kneeling.fbx', .9)},
+            'knight': {'ssidle': ('Sword And Shield Idle.fbx', .5), 'ssidle1': ('Sword And Shield Idle (1).fbx', .5),
+                       'sswalk': ('Sword And Shield Walk.fbx', .3), 'ssblock': ('Sword And Shield Block.fbx', .5), 'slash': ('Sword And Shield Slash.fbx', .45)},
+            'archer': {'draw': ('Standing Draw Arrow.fbx', .6), 'aim': ('Standing Aim Idle 01.fbx', .5), 'recoil': ('Standing Aim Recoil.fbx', .3),
+                       'nervous': ('Nervously Look Around.fbx', .5)},
+            'wagon_driver': {'sit': ('Sitting Idle.fbx', .5), 'dazed': ('Drunk Idle.fbx', .5), 'limp': ('Injured Walk.fbx', .3)}}
+if 'clips=medieval' in sys.argv: OUT = os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'mixamo')
 
 
 def load_action(path):
@@ -59,7 +71,7 @@ def check(model, fbx):
     os.makedirs(OUT, exist_ok=True)
     shot(cam, h, 0, os.path.join(OUT, f'{model}_tpose.png'))
     shot(cam, h, 180, os.path.join(OUT, f'{model}_tposeback.png'))
-    for tag, (clip, t) in CLIPS.items():
+    for tag, (clip, t) in ({**SHARED, **MEDIEVAL.get(model, {})} if 'clips=medieval' in sys.argv else CLIPS).items():
         p = os.path.join(ROOT, 'SourceArt', 'Mixamo', clip)
         if not os.path.exists(p): continue
         act = load_action(p)
@@ -68,5 +80,5 @@ def check(model, fbx):
         shot(cam, h, 35, os.path.join(OUT, f'{model}_{tag}.png'))
 
 
-for a in [x for x in sys.argv[sys.argv.index('--') + 1:] if x != 'clips=violinist']:
+for a in [x for x in sys.argv[sys.argv.index('--') + 1:] if not x.startswith('clips=')]:
     m, f = a.split('=', 1); check(m, f)

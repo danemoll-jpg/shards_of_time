@@ -1,6 +1,15 @@
 # Shards of Time — models needed
 
-## Round 8 (2026-11-11): Mixamo for the Medieval Kingdom — for Dan, now
+## Round 8 (2026-11-11): Mixamo for the Medieval Kingdom — DONE (same night)
+
+**In:** all seven rigs and every clip (Dan's picks: "Mutant Flexing Muscles" = flex, "Pointing" = taunt, "Lifting Object" = lift,
+"Pull Heavy Object" = the stone heave ("Pulling A Rope" spare), "Throw" = boost, "Standing Aim Idle 01" = aim, "Drunk Idle" = the
+driver dazed; "Sword And Shield Idle (1)" is a second idle, unused). The Violinist rigged without his cape; `attach_cape.py` put it
+back (`rigged.fbx`). Abi's mesh closed (`close_person.py`, 0 open edges). All seven valid Humanoid avatars in Unity; clip renders in
+`Data/screenshots/round8/mixamo/`. Skeletons differ in fingers (65 / 49 / 41 / 33 bones): fine, the Violinist has the index and middle
+fingers his lute hold uses.
+
+What was asked (kept for the record):
 
 All 10 Medieval images are Meshy models (fronts: `Data/screenshots/round8/models/`). The seven people go through Mixamo:
 

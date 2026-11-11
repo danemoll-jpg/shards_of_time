@@ -24,7 +24,8 @@ namespace ShardsOfTime
         // Round 5: Kira's forms and the Ice Age creatures share Code's four-legged Blender rig (Generic, clips as takes)
         public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian", "goat", "sheep", "guard_dog" };   // Round 6: Egypt's camel and temple guardian; Round 7: Bethlehem's animals
         static bool IsGeneric(string path) { string n = Path.GetFileNameWithoutExtension(path); return n.StartsWith("kira") || System.Array.IndexOf(Creatures, n) >= 0; }
-        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy" || name.StartsWith("wiseman_") || name == "watchman";   // Round 7: the Wise Men and the watchman (Mixamo)   // Round 6: the Egypt Violinist and the mummy (Mixamo)
+        public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy" || name.StartsWith("wiseman_") || name == "watchman"
+            || name.StartsWith("muscleman_") || name == "knight" || name == "archer" || name == "wagon_driver";   // Round 8: the Medieval people (Mixamo)   // Round 7: the Wise Men and the watchman (Mixamo)   // Round 6: the Egypt Violinist and the mummy (Mixamo)
         static bool IsClip(string path) => path.Replace('\\', '/').StartsWith(Dir + "/Clips/");
 
         // The people's clips (Round 3; frames as Blender / Mixamo number them, 30 fps; 0 = the whole take). loop; the vertical
@@ -53,6 +54,14 @@ namespace ShardsOfTime
             // Round 7: the Wise Men's and the watchman's (Dan's Mixamo downloads), everyone's surprise
             ["sit"] = new ClipSpec { loop = true }, ["argue"] = new ClipSpec { loop = true }, ["map"] = new ClipSpec { loop = true }, ["offer"] = new ClipSpec { loop = true },
             ["sad"] = new ClipSpec { loop = true }, ["doze"] = new ClipSpec { loop = true }, ["yell"] = new ClipSpec(), ["surprised"] = new ClipSpec(),
+            // Round 8: Muscle Man's own (show off, mock, lift, push, heave at the stone, fall flat, cheer, boost, kneel), the knight's,
+            // the archer's, the wagon driver's (Dan's Mixamo downloads; names in Tools/import_characters.py EXTRA_CLIPS)
+            ["mm_flex"] = new ClipSpec(), ["mm_taunt"] = new ClipSpec(), ["mm_lift"] = new ClipSpec(), ["mm_push"] = new ClipSpec { loop = true, bakeXZ = false },
+            ["mm_heave"] = new ClipSpec { loop = true, bakeXZ = false }, ["mm_fall"] = new ClipSpec(), ["mm_cheer"] = new ClipSpec(), ["mm_boost"] = new ClipSpec(),
+            ["mm_kneel"] = new ClipSpec(),
+            ["kn_idle"] = new ClipSpec { loop = true }, ["kn_walk"] = new ClipSpec { loop = true }, ["kn_attack"] = new ClipSpec(), ["kn_block"] = new ClipSpec { loop = true },
+            ["ar_draw"] = new ClipSpec(), ["ar_aim"] = new ClipSpec { loop = true }, ["ar_shoot"] = new ClipSpec(), ["ar_nervous"] = new ClipSpec { loop = true },
+            ["drv_dazed"] = new ClipSpec { loop = true }, ["drv_walk"] = new ClipSpec { loop = true },
         };
 
         void OnPreprocessModel()

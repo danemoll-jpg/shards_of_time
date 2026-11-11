@@ -48,6 +48,7 @@ def attach(model, rig, out, tag):
     arm = [o for o in bpy.context.scene.objects if o.type == 'ARMATURE'][0]
     body = [o for o in bpy.context.scene.objects if o.type == 'MESH'][0]
     if arm.animation_data: arm.animation_data_clear()
+    pose0 = {pb.name: pb.matrix_basis.copy() for pb in arm.pose.bones}   # Mixamo's T-pose: the file keeps it (Unity's avatar reads it)
     arm.data.pose_position = 'REST'; bpy.context.view_layer.update()   # the mesh is stored in its A-pose: work there
     # the split body and cape (cleaned Meshy space, metres)
     with bpy.data.libraries.load(os.path.join(ROOT, 'SourceArt', 'Meshy', model, model + '_split.blend')) as (src, dst):
@@ -101,6 +102,7 @@ def attach(model, rig, out, tag):
     for m in body.data.materials: cape.data.materials.append(m)
     bpy.ops.object.select_all(action='DESELECT'); cape.select_set(True); body.select_set(True)
     bpy.context.view_layer.objects.active = body; bpy.ops.object.join()
+    for pb in arm.pose.bones: pb.matrix_basis = pose0[pb.name]   # the check clips' last pose must not reach the file
     arm.data.pose_position = 'POSE'; bpy.context.view_layer.update()
     bpy.ops.object.select_all(action='DESELECT'); arm.select_set(True); body.select_set(True); bpy.context.view_layer.objects.active = arm
     os.makedirs(os.path.dirname(out), exist_ok=True)

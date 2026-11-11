@@ -49,16 +49,16 @@ EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing
                "offer": ("wisemen", "Offering|Carrying"), "sad": ("wisemen", "Disappointed"), "yell": ("watchman", "Yelling|Yelling Out"),
                "doze": ("watchman", "Sleeping Idle"),
                # Round 8: Muscle Man's own clips (SourceArt/Mixamo/muscleman_medieval/), the knight's, the archer's, the wagon driver's
-               "mm_flex": ("muscleman_medieval", "Flexing|Flex"), "mm_taunt": ("muscleman_medieval", "Taunt|Pointing"),
-               "mm_lift": ("muscleman_medieval", "Lifting|Lifting Heavy|Picking Up"), "mm_push": ("muscleman_medieval", "Pushing"),
-               "mm_heave": ("muscleman_medieval", "Pulling|Tug Of War|Pulling Rope"), "mm_fall": ("muscleman_medieval", "Falling Back Death|Fall Flat"),
+               "mm_flex": ("muscleman_medieval", "Mutant Flexing Muscles|Flexing|Flex"), "mm_taunt": ("muscleman_medieval", "Taunt|Pointing"),
+               "mm_lift": ("muscleman_medieval", "Lifting Object|Lifting|Lifting Heavy|Picking Up"), "mm_push": ("muscleman_medieval", "Pushing"),
+               "mm_heave": ("muscleman_medieval", "Pull Heavy Object|Pulling A Rope|Pulling|Tug Of War"), "mm_fall": ("muscleman_medieval", "Falling Back Death|Fall Flat"),
                "mm_cheer": ("muscleman_medieval", "Victory|Victory Idle"), "mm_boost": ("muscleman_medieval", "Toss|Throwing|Throw"),
                "mm_kneel": ("muscleman_medieval", "Kneeling|Kneel|Kneeling Down"),
                "kn_idle": ("knight", "Sword And Shield Idle"), "kn_walk": ("knight", "Sword And Shield Walk"),
                "kn_attack": ("knight", "Sword And Shield Slash"), "kn_block": ("knight", "Sword And Shield Block"),
-               "ar_draw": ("archer", "Standing Draw Arrow"), "ar_aim": ("archer", "Standing Aim Overdraw|Standing Aim Idle"),
+               "ar_draw": ("archer", "Standing Draw Arrow"), "ar_aim": ("archer", "Standing Aim Overdraw|Standing Aim Idle 01|Standing Aim Idle"),
                "ar_shoot": ("archer", "Standing Aim Recoil"), "ar_nervous": ("archer", "Nervously Look Around|Looking Around"),
-               "drv_dazed": ("wagon_driver", "Dizzy Idle|Drunk Idle|Stunned"), "drv_walk": ("wagon_driver", "Injured Walk|Drunk Walk")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
+               "drv_dazed": ("wagon_driver", "Drunk Idle|Dizzy Idle|Stunned"), "drv_walk": ("wagon_driver", "Injured Walk|Drunk Walk")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
 # Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
 # the people's clip of the same name (CreatureAnimator)
 MUMMY_CLIPS = {"idle": "Thriller Idle", "walk": "Zombie Walk", "run_slow": "Zombie Walk", "run": "Zombie Walk", "punch": "Zombie Attack",
