@@ -318,7 +318,7 @@ namespace ShardsOfTime
 
         // Round 5, item 4: Dan's tracks by place. The title screen: "title"; Act I: "act1", faded out over the white-out; the
         // arrival and the valley: "iceage"; the vortex space: "vortex" (crossfades both ways); the test area: silence.
-        public const float ActOneMusicFadeAt = 16.6f;
+        public const float ActOneMusicFadeAt = 58.4f;   // Round 9: Act I is 60 s, timed to Dan's 60 s act1.mp3
         bool actOneFaded;
         void MusicFor()
         {
@@ -431,7 +431,7 @@ namespace ShardsOfTime
 
         // Round 8, item 10: the purple shard in the stone. TheStone (skippable, the film's scene): Muscle Man is there first, brags, heaves with
         // everything he has, fails and falls flat on his back; Dan steps up, the shard answers his necklace and slides out with no effort;
-        // Muscle Man stares, then kneels: "Master!"; the purple vortex opens and sweeps him along with the party -> the vortex space. From then
+        // Muscle Man laughs, then gapes: "My hero!" (Round 9); the cobblestones swirl into a whirlpool that takes him along with the party -> the vortex space. From then
         // on he follows the party (Abilities.MuscleMan: the boulders, portcullises and boosts in every world).
         IEnumerator StoneFinale()
         {
@@ -653,6 +653,7 @@ namespace ShardsOfTime
             else if (name == "NecklaceWakesMedieval") { at = Medieval.OnGround(-6, 18); facing = Quaternion.Euler(0, 20, 0); }
             else { at = OnGround(a.spawn.x, a.spawn.z); facing = Quaternion.Euler(0, a.spawnYaw, 0); }
             Party.I.PlaceAll(at, facing); CameraRig.I.SnapBehind();
+            if (name == "TheStone" && Medieval.StuckShard) Medieval.StuckShard.SetActive(false);   // Round 9: as in the game, the necklace has taken it by then
             yield return new WaitForSeconds(.5f);
             yield return Cutscenes.Play(name, at, facing);
         }

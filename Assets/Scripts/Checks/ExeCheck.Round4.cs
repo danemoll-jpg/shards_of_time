@@ -78,20 +78,20 @@ namespace ShardsOfTime
             Head("Item 3: Act I (the living room) and the Ice Age arrival");
             yield return WaitFor(() => Cutscenes.Playing == "ActOne", 4f);
             Ok(Cutscenes.Playing == "ActOne" && SaveGame.Exists, "New game starts Act I (save written)");
-            foreach (var (t, n) in new[] { (2f, "02a_act1_evening"), (4.8f, "02b_act1_kira"), (7.1f, "02c_act1_swipe"), (9.1f, "02d_act1_shatter"), (12.5f, "02e_act1_vortex"), (16.2f, "02f_act1_pulled_in") })
-            { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 25f); yield return Shot(n); if (t == 2f) MusicCheck("Act I", "act1"); }
-            // Act I's music fades over the white-out: the fade starts at Game.ActOneMusicFadeAt (2.2 s), the track is gone after it
+            foreach (var (t, n) in new[] { (2f, "02a_act1_decorating"), (10.3f, "02b_act1_kira_swats"), (13.2f, "02c_act1_it_drops"), (22.5f, "02d_act1_it_glows"), (30.5f, "02e_act1_light_bursts"), (36f, "02f_act1_rainbow_spiral"), (44f, "02g_act1_tunnel"), (51f, "02h_act1_mammoth_vortex"), (57.5f, "02i_act1_falling") })
+            { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 70f); yield return Shot(n); if (t == 2f) MusicCheck("Act I", "act1"); }
+            // Act I's music fades over the white-out: the fade starts at Game.ActOneMusicFadeAt (Round 9: near the end of the 60 s Act I), the track is gone after it
             yield return WaitFor(() => Music.Track == null || !Cutscenes.Director, 25f);
             double fadeAt = Cutscenes.Director ? Cutscenes.Director.time : -1;
             yield return new WaitForSeconds(2.6f);   // game time: the fade runs in game time (a busy frame-capped run lags real time)
             var act1 = Game.I.GetComponents<AudioSource>().Where(x => x.isPlaying && x.clip && x.clip.name == "act1").ToList();
-            Ok(fadeAt >= Game.ActOneMusicFadeAt - .1f && fadeAt < 18.3f && act1.All(x => x.volume < .02f),
-               $"Act I's music fades out over the white-out (fade from {fadeAt:0.00} s of 19; act1 {(act1.Count > 0 ? $"volume {act1.Max(x => x.volume):0.00}" : "stopped")} 2.6 s later)");
+            Ok(fadeAt >= Game.ActOneMusicFadeAt - .1f && fadeAt < 59.8f && act1.All(x => x.volume < .02f),
+               $"Act I's music fades out over the white-out (fade from {fadeAt:0.00} s of 60; act1 {(act1.Count > 0 ? $"volume {act1.Max(x => x.volume):0.00}" : "stopped")} 2.6 s later)");
             yield return WaitFor(() => Cutscenes.Playing == "IceAgeArrival", 8f);
-            Ok(!Cutscenes.LastSkipped && Cutscenes.LastDuration > 18f, $"Act I played to the end ({Cutscenes.LastDuration:0.0} s)");
+            Ok(!Cutscenes.LastSkipped && Cutscenes.LastDuration > 58f, $"Act I played to the end ({Cutscenes.LastDuration:0.0} s)");
             Ok(Cutscenes.Playing == "IceAgeArrival", "then the Ice Age arrival");
-            foreach (var (t, n) in new[] { (.6f, "03a_arrival_landing"), (3.2f, "03b_arrival_dan_gets_up"), (4.9f, "03c_arrival_silhouette"), (6.9f, "03d_arrival_fall"),
-                                            (9.2f, "03e_arrival_its_kira"), (12.0f, "03f_arrival_necklace"), (13.4f, "03g_arrival_abi_laughs") })
+            foreach (var (t, n) in new[] { (.6f, "03a_arrival_landing"), (1.5f, "03b_arrival_kira_transforms"), (3.5f, "03c_arrival_stunned"), (6.5f, "03d_arrival_snarl"),
+                                            (9f, "03e_arrival_stalks"), (12.8f, "03f_arrival_leap"), (15.5f, "03g_arrival_necklace") })
             { yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t, 15f); yield return Shot(n); if (n.StartsWith("03a")) MusicCheck("the arrival", "iceage"); }
             yield return Hold(GamepadButton.South, 1.3f);
             yield return WaitFor(() => !Game.InCutscene && !Game.I.Busy, 5f);

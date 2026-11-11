@@ -82,9 +82,9 @@ namespace ShardsOfTime
             yield return Go(VPath(yaw, 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "MedievalArrival", 8f);
             Ok(Game.InMedieval && Cutscenes.Playing == "MedievalArrival", $"the path loads the Medieval Kingdom and plays its arrival (world {Game.World.worldId}, cutscene {Cutscenes.Playing ?? "none"})");
-            foreach (var (t, n) in new[] { (1.0f, "200a_vortex_over_courtyard"), (2.6f, "200b_into_the_hay"), (4.6f, "200c_pop_up"), (6.4f, "200d_achoo"), (8.2f, "200e_fire_jump"), (10.8f, "200f_runaway_wagon"), (12.3f, "200g_kaboom"), (13.6f, "200h_wreck"), (15.6f, "200i_slink_away") })
+            foreach (var (t, n) in new[] { (2f, "200a_castle_vortex"), (6f, "200b_they_fall"), (10f, "200c_top_down_hay"), (14f, "200d_hay_heaves"), (17.5f, "200e_pop_up"), (23f, "200f_achoo"), (26.3f, "200g_out"), (29f, "200h_runaway_wagon"), (31.6f, "200i_kaboom"), (34.5f, "200j_singed"), (38.5f, "200k_kira_flies") })
             {
-                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 20f);
+                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 30f);
                 yield return Shot(n);
             }
             yield return WaitFor(() => !Game.InCutscene && !Game.I.Busy, 15f);
@@ -445,9 +445,9 @@ namespace ShardsOfTime
             yield return Go(ME(0, 32.8f), .3f, 6f, .6f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "TheStone", 6f);
             Ok(Cutscenes.Playing == "TheStone", "Dan reaches the stone: TheStone plays");
-            foreach (var (t, n) in new[] { (1.0f, "250a_muscleman_brags"), (4.4f, "250b_the_heave"), (7.6f, "250c_flat_on_his_back"), (9.6f, "250d_dan_steps_up"), (12.6f, "250e_it_slides_out"), (14.8f, "250f_master"), (17.0f, "250g_the_vortex") })
+            foreach (var (t, n) in new[] { (2.5f, "250a_the_heave"), (6f, "250b_flat"), (8.5f, "250c_smug"), (12f, "250d_your_turn"), (18f, "250e_dan_steps_up"), (28.8f, "250f_out_it_comes"), (31f, "250g_he_laughs"), (35f, "250h_my_hero"), (42f, "250i_stones_swirl"), (49f, "250j_whirlpool"), (54f, "250k_muscle_man_too"), (58f, "250l_tunnel") })
             {
-                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 22f);
+                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 30f);
                 yield return Shot(n);
             }
             yield return WaitFor(() => !Game.I.Busy && !Game.InCutscene, 20f);

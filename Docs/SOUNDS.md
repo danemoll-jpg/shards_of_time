@@ -46,7 +46,8 @@ one: generate it again (`--only <name> --force`) or drop your own file with the 
 | `rat_squeak.mp3` | 0.7 s | sfx | a castle rat squeaks (scared) | A cartoon rat giving a quick frightened squeak, high and comic, close, no music. |
 | `mm_grunt.mp3` | 1 s | sfx | Muscle Man lifts / throws something heavy | A huge strongman man giving one deep comic effort grunt while lifting something heavy, close, no words, no music. |
 | `mm_laugh.mp3` | 2 s | sfx | Muscle Man's mocking laugh | A huge strongman man laughing a big booming mocking belly laugh, ha ha ha, deep voice, comic, close, no music. |
-| `mm_master.mp3` | 1.2 s | sfx | Muscle Man calls the hero "Master!" in awe | A huge strongman man with a deep voice shouting the single spoken word "Master!" in awe, clear male voice exclamation, comic, close, no music. |
+| `mm_my_hero.mp3` | 1.4 s | sfx | Muscle Man calls Dan "My hero!" in awe (Round 9: was "Master!") | A huge strongman man with a deep voice gasping the two spoken words "My hero!" in awe and adoration, clear male voice exclamation, comic, close, no music. |
+| `stone_whirl.mp3` | 4 s | sfx | the cobblestones swirl up into a whirlpool (TheStone, Round 9) | Many cobblestones grinding and rattling as they swirl round in a rising magical whirlpool, a deep rumbling swirling rush with a sparkling shimmer, fairytale, no music. |
 | `boulder_roll.mp3` | 2 s | sfx | a boulder rolls on cobbles / heavy stone grinds (Medieval; Egypt keeps stone_grind) | A heavy stone boulder rolling and grinding over cobblestones, a deep rumbling scrape, slow, no music. |
 | `shard_slide.mp3` | 2 s | sfx | the story shard slides out of the stone | A crystal sliding slowly out of a stone with a scraping hiss and a magical rising ringing shimmer, fairytale, no music. |
 | `punch_charge.mp3` | 1 s | sfx | a punch charges up | A rising energy hum building up quickly as a magical punch charges, a swelling whirr, video game power up, no music. |

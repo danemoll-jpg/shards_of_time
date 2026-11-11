@@ -154,3 +154,32 @@ Render: `python Tools/render_cutscene.py EgyptArrival SphinxGag` (Round 5's way:
 
 `VortexRings(..., colors:)` takes a colour set (`PurpleRings`). Muscle Man's actor plays his own Mixamo clips (`mm_*`).
 Render: `python Tools/render_cutscene.py MedievalArrival TheStone`.
+
+## Round 9: the film scenes follow Dan's clips
+
+Dan's clips are in `SourceArt/Reference/Clips/` and are canon for their scene (shot order, angles, framing, timing); the game keeps its
+own style, models and outfits. The eight scenes are written in `Assets/Editor/CutsceneAuthoring.Film.cs` (`CutsceneAuthoring.Version` 20).
+
+| Name | Length | Follows |
+|---|---|---|
+| `ActOne` | 60 s (Dan's 60 s `act1.mp3`) | decorating, Kira swats, the fumble, the glow and beams, Abi scoops Kira, the crystal burst, the rainbow spiral, holding hands, the rainbow tunnel, the blue vortex over a mammoth, the fall over the Ice Age |
+| `IceAgeArrival` | 22 s | Kira transforms by the campfire, high shots on the people, ground-level on her, the stalk, the leap, Kira on Dan's chest (blue), Round 5's relief beat |
+| `EgyptArrival` | 33 s | the building site and the camel, the red vortex over the dune, the plume and the empty dune, they pop up, dig, mummy Kira, the hug |
+| `SphinxGag` | 17.6 s | from behind, the push-in to Kira's stone face, the reaction, mummy Kira's innocent close-ups, the look |
+| `BethlehemArrival` | 21 s | the Wise Men see the star become a spiral, the ring over the barn, the flash, top-down crash, puzzled Wise Men, inside |
+| `WiseMenArrive` | 17 s | silhouettes, the doors, the manger, disappointment, the tossed present, the hug, the hay tornado |
+| `MedievalArrival` | 41 s | the castle under the purple vortex, the fall, top-down into the wagon, the heaving hay, pop up, the sneeze fire, out, the runaway wagon (+ the game's blast and singed driver), Kira flying beside them |
+| `TheStone` | 60 s | Muscle Man heaves and fails, points; Dan lifts it out; "My hero!"; the cobblestone column and whirlpool take all four; the blue-white tunnel |
+
+New pieces of the authoring kit (all reusable for films):
+- **Sets** (`Kit.Set(name, x, z, yaw, up)` + `CutscenePlace`): a group that stands on the world's ground at a world spot whatever the
+  cutscene's anchor is (Act I's sky over the Ice Age, Egypt's dune, the Wise Men in the field). Set `k.under = set` and everything made
+  next goes into it.
+- `Path(k, actor, (t, position, heading)...)`: actors are made at their set's origin and walked through waypoints.
+- `Spiral` (a turning spiral vortex of glowing blobs), `Funnel` (a helix of bits: the hay tornado, the stone column and whirlpool),
+  `Tumble` (figures falling down a tunnel), `Burst` (sand, hay, dust), `TintC` (a coloured flash), `Lamp` (a light shown for a while).
+- `CutsceneMoodSwitch`: changes from the cutscene's own light to the world's in the middle (Act I's room to the Ice Age sky).
+
+**Side-by-side sheets:** `python Tools/film_sheet.py sheet <Name>` puts film frames over the game's (from `Recordings/<Name>.mp4`) at
+the matching moments listed in the script's `MATCH` -> `Data/screenshots/round9/<Name>.jpg`. `python Tools/film_sheet.py frames <clip>`
+makes a contact sheet of a clip for studying it. Both run ffmpeg through `Tools/quiet.py` and play nothing.

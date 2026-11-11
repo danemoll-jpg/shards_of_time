@@ -61,9 +61,9 @@ namespace ShardsOfTime
             yield return Go(VPath(by, 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "BethlehemArrival", 8f);
             Ok(Game.InBethlehem && Cutscenes.Playing == "BethlehemArrival", $"the Bethlehem path loads Bethlehem and plays its arrival (world {Game.World.worldId}, cutscene {Cutscenes.Playing ?? "none"})");
-            foreach (var (t, n) in new[] { (1.0f, "120a_star_opens"), (2.3f, "120b_onto_the_roof"), (3.9f, "120c_crash"), (6.0f, "120d_dan_on_the_floor"), (7.9f, "120e_a_lamb"), (9.8f, "120f_they_stare"), (12.2f, "120g_empty_manger"), (14.0f, "120h_golden_shard") })
+            foreach (var (t, n) in new[] { (1.0f, "120a_the_star"), (4.5f, "120b_golden_spiral"), (10f, "120c_ring_over_barn"), (15f, "120d_crash_top_down"), (16.6f, "120e_wise_men_puzzled"), (19.5f, "120f_inside") })
             {
-                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 18f);
+                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 30f);
                 yield return Shot(n);
             }
             yield return WaitFor(() => !Game.InCutscene && !Game.I.Busy, 15f);
@@ -375,9 +375,9 @@ namespace ShardsOfTime
             yield return Go(new Vector3(0, 0, 36.6f), .3f, 5f, .5f, () => Game.I.Busy);
             yield return WaitFor(() => Cutscenes.Playing == "WiseMenArrive", 6f);
             Ok(Cutscenes.Playing == "WiseMenArrive", "the golden shard in the manger plays WiseMenArrive");
-            foreach (var (t, n) in new[] { (1.8f, "142a_they_come_in"), (4.5f, "142b_gifts"), (7.2f, "142c_what_they_find"), (9.6f, "142d_look_at_each_other"), (12.0f, "142e_they_leave"), (13.8f, "142f_hay_bursts"), (15.2f, "142g_pulled_in") })
+            foreach (var (t, n) in new[] { (2f, "142a_silhouettes"), (4.4f, "142b_doors"), (7f, "142c_at_the_manger"), (10.4f, "142d_disappointed"), (12.6f, "142e_present_tossed"), (13.8f, "142f_hug"), (15.5f, "142g_hay_tornado") })
             {
-                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 20f);
+                yield return WaitFor(() => Cutscenes.Director && Cutscenes.Director.time >= t || Cutscenes.Playing == null, 30f);
                 yield return Shot(n);
             }
             yield return WaitFor(() => !Game.I.Busy, 15f); yield return Wait(.6f);

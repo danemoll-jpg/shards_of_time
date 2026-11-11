@@ -226,7 +226,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -275,7 +275,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 8.1: `game-801`, previous `Builds/LauncherRelease-801`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 9: `game-900`, previous `Builds/LauncherRelease-900`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -284,6 +284,23 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 9 delivered: 0.9.0 (build 900), 2026-11-11.** The eight film scenes redone from Dan's clips (shot order, angles, framing,
+timing): `ActOne` 60 s on Dan's 60 s song, `IceAgeArrival` (the on-screen transformation), `EgyptArrival`, `SphinxGag`,
+`BethlehemArrival`, `WiseMenArrive` (the tossed present), `MedievalArrival` (Kira flying), `TheStone` ("My hero!", the cobblestone
+whirlpool). Published: `game-900`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 9:
+- The eight scenes are `Assets/Editor/CutsceneAuthoring.Film.cs` (`CutsceneAuthoring.Version` 25; the class is partial). Kit additions:
+  `Kit.Set(name, x, z, yaw, up)` + `k.under` (a group placed on the world's ground at a world spot: `CutscenePlace`), `Path` (actors made
+  at their set's origin, keyed through (t, position, heading)), `Spiral`, `Halo`, `Funnel`, `Tumble`, `Burst`, `TintC`, `Lamp`, `Appear`
+  (late actors hidden by scale, not activation), `Kit.Shot(..., dollyTo, lookTo)`; `CutsceneMoodSwitch` (a cutscene's own light to the
+  world's mid-scene). The people's "fall" clip sinks under a Timeline: `Kit.Clips` splits long falls into 0.6 s pieces.
+- Mixamo "look" turns the whole body (don't use it for a face-the-camera beat); `mm_kneel` holds a one-knee kneel (used by Dan and Abi too).
+- Side-by-side sheets: `python Tools/film_sheet.py sheet <Scene>` (matching moments in its `MATCH`) -> `Data/screenshots/round9/`;
+  `python Tools/film_sheet.py frames <clip>` = a clip's contact sheet. Film mode logs `[Film]` positions of late actors every 1.5 s.
+- `Game.ActOneMusicFadeAt` 58.4 (Act I 60 s). Muscle Man's line is `mm_my_hero.mp3` ("My hero!"; `mm_master` is gone). `stone_whirl.mp3`.
+- Exe check mode `r9` (~5 min): Act I from New game to its end, then each film scene through the game's own path, skipped, hand-off checked.
+
 **Fix 8.1 delivered: 0.8.1 (build 801), 2026-11-11.** The great hall's floor is where it's drawn (the keep's plinth was a solid
 block over the hall: the wading), the drawbridge is solid and moves with its collider, no invisible walls by the village (or
 anywhere in the Medieval), every shard in every world reached by the bot, and the necklace's new rule (75 % of all shards so far AND

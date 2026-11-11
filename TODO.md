@@ -24,52 +24,65 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 9: the cutscene redo (target 0.9.0)
-Fix 8.1 is delivered (below). Pirate Seas is Round 10 (drafted under "Next rounds"). Report per item: done / not
-done / deferred, and why. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in
-front of Dan; cutscene videos rendered from the exe). Don't end your turn until 0.9.0 is published unless truly
-blocked (say so).
-
-**Inputs, all in (Dan, 2026-11-11):** his film clips in `SourceArt/Reference/Clips/` (the clip is canon for its scene),
-the planning chat's shot-by-shot notes in `Docs/CUTSCENE-FILM-NOTES.md`, and his longer Act I song `Music/act1.mp3`
-(60.0 s). Game style and game models; outfits from the concept sheets (not the clips); the game's added gags stay
-(e.g. the wagon hitting the wall and the singed driver).
-
-For each scene: extract the clip's frames, follow its shot order, camera angles, framing and timing, then render the
-MP4 from the exe and make a **side-by-side sheet** (film frames on top, game frames below, at matching moments) in
-`Data/screenshots/round9/<scene>.jpg`. Look at each sheet and fix what doesn't match before moving on.
-
-1. **`ActOne`** (~60 s, timed to `act1.mp3`): decorating the tree together, Kira swats, Dan fumbles the bauble, it
-   drops; the glow, the cracks and light beams, Kira sniffs, Abi scoops her up; the crystal-shard burst and the rainbow
-   spiral; sucked in holding hands; then the fall out of the blue vortex over the Ice Age's mountains and volcanoes.
-   The Ice Age theme starts on the landing.
-2. **`IceAgeArrival`**: Kira (still the normal cat) glows and **transforms into the sabertooth on screen** by a
-   campfire; high-angle shots on Dan and Abi, ground-level shots on Kira; the stalk, the pounce, Dan flat on his back,
-   Kira on his chest pawing the blue-glowing necklace. Keep Round 5's relief beat.
-3. **`EgyptArrival`**: the establishing shot (scaffolded pyramid, workers with stone sledges, the judgmental camel
-   crossing frame, the town); the red vortex over the dunes; the sand plume and the comic pause on the empty dune;
-   Dan and Abi pop out of the sand; they dig frantically for Kira; mummy Kira pops up, Abi hugs her.
-4. **`SphinxGag`**: from behind them, the Sphinx far off; slow push-in to Kira's stone face, held; their reaction; Dan
-   looks down at mummy Kira; her innocent close-ups; the long look between them. Comic timing over speed.
-5. **`BethlehemArrival`**: the Wise Men walking to the barn see the star grow into a golden spiral and flatten into
-   the ring over the barn; the top-down crash through the roof; the Wise Men's puzzled close-up; inside, Abi on the hay
-   bales with lamb Kira, Dan flat on the floor with the gold glow.
-6. **`WiseMenArrive`**: silhouettes walking to the barn, the doors pushed open, the three heroes at the glowing
-   manger, the Wise Men's disappointed close-up, they walk out and **the Santa-hat one tosses his present over his
-   shoulder**, the hug, the golden hay tornado.
-7. **`MedievalArrival`**: the purple vortex over the castle at night, the fall, the top-down drop into the hay
-   wagon, popping up, Kira's sneeze-fire, jumping out, the burning wagon careening off (then the wall crash and the
-   singed driver), **Kira flying** beside them as they walk on.
-8. **`TheStone`**: Muscle Man heaves and fails, points at the shard to challenge Dan; Dan lifts it out with no
-   effort; Muscle Man laughs, then gapes: **"My hero!"** (not "Master!": fix every line, sound and subtitle);
-   **the cobblestones swirl up into a whirlpool** that swallows everyone, Muscle Man too, into the vortex tunnel.
-9. **Check the hand-offs:** every scene still hands control back cleanly, is skippable, and the music cues line up
-   (Act I song, then the world themes; the vortex track only in the vortex space).
-10. Build, check, publish 0.9.0, update `TODO.md` / `CLAUDE.md`, clean up. In "For Dan to check", list the eight
-    sheets and the eight MP4s.
+Current round — none (Round 9 is delivered, below)
+Round 10, the Pirate Seas, is drafted under "Next rounds"; the planning chat starts it.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 9: the cutscene redo (0.9.0, build 900, 2026-11-11)
+Every scene was built from Dan's clip (contact sheets of each clip, `python Tools/film_sheet.py frames <clip>`), rendered from the exe
+and compared on a side-by-side sheet (film on top, game below, matching moments: `python Tools/film_sheet.py sheet <Scene>`), four
+passes of fixes. Code: `Assets/Editor/CutsceneAuthoring.Film.cs` (`CutsceneAuthoring.Version` 25). Check `local/round9/r9` (new mode
+`r9`, ~5 min: New game -> Act I to its end -> each scene through the game's own path, each skipped with a held A): RESULT all passed (49
+ok). Audio 0.000 RMS in the check, the builds and all 8 renders x 4 passes; window watcher: no window, never in the foreground (one
+build's watcher listed a visible "Task Manager" window by a reused process id: not started by Code, never in the foreground).
+1. `ActOne` (60 s, Dan's 60 s `act1.mp3`): **done.** Decorating (Abi left, Dan right of the tree, Kira under it), Kira leaps at the bauble
+   in Dan's hand, his fumble, the lunge and gasp, the close-up on the floor, the gold glow, Kira sniffs, Abi scoops her up, light beams
+   and blue crystal shards, the rainbow spiral between them, holding hands, the rainbow tunnel, then the Ice Age sky (the room's light
+   switches to the world's): a mammoth under the blue vortex, the vortex in the clouds, the three falling past the mountains. Act I's
+   song plays to its end; the Ice Age theme starts on the landing (`Game.ActOneMusicFadeAt` 58.4).
+2. `IceAgeArrival` (22 s): **done.** Landing white-out; by a campfire the gray house cat glows and is the sabertooth when it fades;
+   high shots on Dan and Abi, ground-level on her (snarl, stalk toward the camera), the leap, Dan on his back, Abi kneeling, Kira on his
+   chest pawing the blue necklace; Round 5's relief beat (laugh, the shard in his hand) kept.
+3. `EgyptArrival` (33 s; the film's 44 s with a shorter empty-dune pause and dig): **done.** The building site (scaffolded pyramid, sledge
+   teams, the camel crossing close), the red vortex over a dune north of town, the sand plume, the empty dune, they pop out, look round,
+   kneel and dig, mummy Kira pops up, Abi holds her, the necklace red. Play then starts on the plaza as before.
+4. `SphinxGag` (17.6 s): **done.** From behind them (Abi left), the push-in to Kira's stone face, held; they turn, react; Dan looks down;
+   mummy Kira's innocent close-ups; the long look, red necklace. (The old 16.5 m / 21 m face position was inside its chin: measured anew.)
+5. `BethlehemArrival` (21 s): **done.** The Wise Men in the field east of the barn see the star grow into a golden spiral; the golden ring
+   over the barn with its beam; a golden flash; top-down crash through the roof; the Wise Men puzzled; inside (warm light): Abi sitting
+   on the hay with lamb Kira, Dan flat on the floor in a gold glow.
+6. `WiseMenArrive` (17 s): **done.** Silhouettes at the barn, they push the doors open (cutscene doors), Dan and Abi face each other over
+   the glowing manger with lamb Kira, the Wise Men stare then sag (Santa hat on the left), turn and leave, **the Santa-hat one tosses his
+   present over his shoulder**, the hug, the golden hay tornado takes them.
+7. `MedievalArrival` (41 s): **done.** The castle under the purple vortex, the three fall out of it, top-down the pony pulls the wagon
+   in and they drop into the hay, it heaves, they pop up (Kira, Dan, Abi), Kira's sneeze sets it alight, out, the runaway wagon from
+   behind them, the wall blast and the singed driver (kept), then they walk on with **Kira flying** beside them.
+8. `TheStone` (60 s): **done.** Muscle Man heaves, falls back, embarrassed then smug close-ups, points: your turn; Dan steps up (necklace
+   glowing), reaches, lifts it out with no effort into his palm; Muscle Man laughs, then **"My hero!"** (new `mm_my_hero.mp3`; `mm_master`
+   deleted; no "Master" left in code, sounds or messages); the cobblestones twist up into a column and **a whirlpool** that takes Dan,
+   Abi with Kira, and Muscle Man; the blue-white tunnel with all four tumbling. New `stone_whirl.mp3`.
+9. Hand-offs: **done** (`r9` above): each scene plays from the game's own path, its music is right (Act I's song, then the world themes;
+   no theme under WiseMenArrive / TheStone; the vortex track after them), a held A skips it, control comes back and the stick moves.
+10. Build / check / publish: **done.** 0.9.0 published as `game-900`; the Round 1 starter install in `local/sc` updated itself from
+    GitHub to build 900 and started (ready signal). Disk: 10.7 GB -> 10.2 GB.
+
+Also found and fixed on the way: the people's Mixamo "fall" carries a downward root motion that a Timeline adds up (a long fall sank
+metres; `Kit.Clips` now plays a long fall as restarting 0.6 s pieces); a shot can pan as it moves (`Kit.Shot(..., lookTo)`); film mode
+hides the stone's own shard for `TheStone` as the game does.
+Decisions Code made (Dan can overrule): lengths as above (Egypt shorter than the clip, Medieval longer for the game's blast and driver);
+Egypt's dune and the Wise Men's field are sets out in the world (`Kit.Set`), so the scenes stand where the film's do; outfits from the
+concept sheets; Dan's 60 s Act I song was in Downloads ("Shards of Time - Act I cutscene (1).mp3", 59.9 s), not yet in
+`Music/act1.mp3` (still the 22 s one): Code copied it there.
+Known, not changed: no facial animation (laughing, gaping and smug read through the body clips only); Egypt's workers are the graybox
+figures; the Sphinx is the game's own (with its headdress); the vortexes are blob spirals, not painted swirls; the scenes are night where
+the world is night (Bethlehem, Medieval) and keep the game's colours rather than the film's warm grade.
+
+**For Dan to check:** the eight sheets `Data/screenshots/round9/{ActOne,IceAgeArrival,EgyptArrival,SphinxGag,BethlehemArrival,
+WiseMenArrive,MedievalArrival,TheStone}.jpg` and the eight videos `Recordings/<same names>.mp4` (no sound in the videos); Act I with
+your song from New game (does it land on your beats?); listen to `Assets/Resources/Sounds/mm_my_hero.mp3` and `stone_whirl.mp3`
+(Code doesn't play sound on your PC).
+
 ### Fix 8.1: Medieval fixes + shard thresholds (0.8.1, build 801, 2026-11-11)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): new modes `fix81` (all four worlds, ~45 min), `fix81med`,
 `floors`, `platforms`, `reach`, `rule81` (`Checks/ExeCheck.Fix81.cs`: a probe collider is made from every visible mesh and compared
@@ -183,42 +196,6 @@ it; rats run off after a nip (the bot kept losing all three hearts to them); the
 --force` if it isn't a clear word); dragon Kira's glide and fire; the charged punch's feel (0.55 s hold); the rival's bits (funny?
 too often?); the knights / archers / rats (fair?); the chandeliers; the night look. Known: dragon Kira's wings look a little faceted when
 spread (Meshy's thin sheet); the pony's gallop is the generic quadruped run.
-
-### Fix 7.2: never stuck (the well) + Return to checkpoint (0.7.2, build 702, 2026-11-11)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix72/final` (`--only fix72`: New game -> the
-never-stuck sweep of the Ice Age, Egypt and Bethlehem -> the well -> the reset): RESULT all passed (76 ok). Audio 0.000 RMS in every
-run; window watcher: no window, never in the foreground. The Round 1 starter install in `local/sc` updated itself to 0.7.2 and
-started. Evidence: `Data/screenshots/fix72/`.
-1. The well: **done.** Two level bugs made it a trap, not just the missing way out: the well's height was taken from a point inside
-   the terrain's wide hole (the rim sat ~5 m down in a dry crater), and its stone ring only went 1.75 m down, so a swimmer drifted
-   sideways out of the water onto the crater's floor 10 m down. Now: the well stands on the flat ground with a stone apron over the
-   hole, the ring is solid to the bottom, the water fills the shaft to the bottom, and a rope hangs from the beam to a bucket on the
-   water. In the well, Jump (pressed or held, any depth) or swimming into the wall climbs the rope up and over the rim
-   (`WellExit`, `CharacterMotor.ClimbOut(.., straightUp)`), with a hint "In the well! Grab the rope: A climbs out." Checked from the
-   player's view for Dan, Abi and Kira, from a jump and from a fall, Jump and wall both: out in about 3 s. Only Abi can jump over
-   the 1.8 m rim from the ground (Dan 1.6 m, Kira 1.4 m), so for them the "jump in" test drops them in instead.
-2. Never stuck everywhere: **done.** Rule 12 in `CLAUDE.md`. Each world's data lists its low / enclosed spots (`WorldData.lowSpots`:
-   Ice Age 12, Egypt 7, Bethlehem 3). The exe check `stuck` drops each hero into each one (with only the moves held, plus what it
-   takes to get in) and a pad bot must get out within 20 s; it also fails any water volume that isn't on the list (all 7 are).
-   Results: pond, river (up the ramp), the cave pit, the frozen well, the lake's four holes, Kira's crawl chamber, the Nile and its
-   deep pool, both quicksands, the tomb's pit, the barn, Bethlehem's well: all out, 0.3-14 s. Closed until a later move (reported,
-   not enterable yet): the hot-spring grotto, the grotto and the lake hollow behind boulders, Egypt's quarry and secret room, the
-   shepherds' cave. **Found and fixed on the way:** the Ice Age cave's floor was a thin slab over a 4 m hollow; little Kira walked
-   off the pit's steps underneath it (now solid to the pit's floor). And Bethlehem's well (item 1).
-3. Return to checkpoint: **done.** Pause menu row 4 "Return to checkpoint": a short fade, the party at the last checkpoint, no heart
-   lost, shards kept (checked in Bethlehem and in the vortex). The safety net: pushing the stick for 15 s without getting 4 m
-   anywhere shows "Stuck? Pause (Menu) > Return to checkpoint" (checked against the barn's wall; it also showed for the bot in the
-   old dry well).
-4. Build / check / publish: **done.** 0.7.2 published as `game-702`. Disk: 7.4 GB -> 7.1 GB.
-
-Decisions Code made (Dan can overrule): the rope works from any depth (Jump) and on touching the wall (not once the deep dive is
-learned, so divers can explore the bottom later); the well's stone apron is plain grey stone (placeholder look); the stuck hint
-counts only time spent pushing the stick (standing still never triggers it).
-
-**For Dan to check:** fall into Bethlehem's well and get out with A or by swimming to the wall (does the climb feel right?); the
-stone apron round the well (fine, or should it look like ground?); Pause > Return to checkpoint anywhere; the "Stuck?" hint
-(15 s too long / too short?). Not re-run this fix: the long Bethlehem / Egypt routes (the changes are the well, the cave floor and
-the pause menu; the sweep covered each of them).
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

@@ -11,6 +11,7 @@ namespace ShardsOfTime
     // The HUD shows nothing during a film (no skip prompt) but keeps the cutscene's white-outs. ffmpeg makes the MP4 afterwards.
     public sealed partial class ExeCheck
     {
+        static Transform FindDeep(Transform t, string n) { foreach (Transform c in t) { if (c.name == n) return c; var f = FindDeep(c, n); if (f) return f; } return null; }
         public const int FilmFps = 30;
 
         IEnumerator Film()
@@ -30,6 +31,13 @@ namespace ShardsOfTime
             {
                 yield return new WaitForEndOfFrame();
                 TestRun.SaveView(CameraRig.I.Cam, Path.Combine(frames, $"{n:00000}.png"));
+                if (n % 45 == 0 && Cutscenes.Director)   // Round 9: where the late actors really are (a diagnosis line every 1.5 s)
+                    foreach (var nm in new[] { "Dan falling", "Dan tumbling" })
+                        if (Cutscenes.Director.transform.Find(nm) is Transform h || (h = FindDeep(Cutscenes.Director.transform, nm)))
+                        {
+                            var body = h.Find("Body"); var model = body && body.childCount > 0 ? body.GetChild(0) : null;
+                            Debug.Log($"[Film] t {Cutscenes.Director.time:0.0}: {nm} holder {h.position} body {(body ? body.position.ToString() : "-")} model {(model ? model.position.ToString() : "-")} active {h.gameObject.activeInHierarchy}; camera {CameraRig.I.Cam.transform.position}");
+                        }
                 n++;
                 yield return null;
             }

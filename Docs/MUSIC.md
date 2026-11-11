@@ -39,7 +39,7 @@ Under the music: the wind ambience (`Assets/Resources/Sounds/wind_loop.mp3`, Ele
 | File | Plays | Notes |
 |---|---|---|
 | `title.mp3` (3:00) | the title screen | crossfades to Act I on New game |
-| `act1.mp3` (22.4 s) | `ActOne` from its start | fades out over 2.2 s from 16.6 s, silent by the full white-out (18.8 s) |
+| `act1.mp3` (59.9 s, Round 9) | `ActOne` (60 s) from its start | fades out over 2.2 s from 58.4 s, over the white-out into the Ice Age arrival (the Ice Age theme starts on the landing) |
 | `iceage.mp3` (3:00) | from the arrival, then the valley (loops) | the wind ambience under it |
 | `vortex.mp3` (3:00) | inside the vortex space (loops) | crossfades in when the party enters, back to the Ice Age when it leaves |
 
@@ -288,7 +288,7 @@ Exclude: `epic, orchestral, cinematic, dramatic, dark, scary, drums, solo vocali
 The redo of `ActOne` follows Dan's film clip, about **60 s** (the first song is 22 s). Same gentle Christmas mood,
 then magic. Beats: 0–20 decorating the tree, Kira swats, the ornament falls; 20–30 it glows and cracks; 30–48 the
 rainbow vortex pulls them in; 48–60 they fall out over the Ice Age (the Ice Age theme takes over on landing).
-Instrumental, about 60–75 s (trim to taste). Save as `Assets/Resources/Music/act1.mp3` (over the old one).
+Instrumental, about 60–75 s (trim to taste). Save as `Assets/Resources/Music/act1.mp3` (over the old one). **In (Round 9): Dan's 59.9 s take.**
 
 Suno prompt (instrumental):
 
