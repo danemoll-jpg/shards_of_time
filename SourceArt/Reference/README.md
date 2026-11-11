@@ -20,3 +20,11 @@ name helps (e.g. `dan-caveman-front.png`, `ice-valley-wide.png`).
 | `Shards/` | Each colored story shard |
 
 If a picture shows several characters, put it in `Worlds/` for that era.
+
+## Film clips (added 2026-11-11)
+
+`Clips/`: short video clips from the film (MP4), one per scene, named after the cutscene they belong to, e.g.
+`Clips/03-Bethlehem_WiseMenArrive.mp4`. **They are the staging reference for the game's cutscenes:** shot order,
+camera angles, timing, who does what. Code pulls frames from them (ffmpeg) and matches the staging, in the game's own
+style and with the game's characters. Clips placed in a world folder (e.g. `Worlds/05-PirateSeas/shard-rolls-overboard.mp4`)
+count the same.

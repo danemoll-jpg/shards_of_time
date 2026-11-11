@@ -1,0 +1,137 @@
+Shards of Time exe check 2026-11-11 13:30, version 0.8.1; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 75776 samples); master volume 0.00
+  (probe: 1240 visible meshes as probe colliders in The Medieval Kingdom; 0 not readable, skipped)
+
+== Fix 8.1, item 1: feet vs the visible floor in The Medieval Kingdom (every walkable collider top compared with the visible surface at it)
+  ok    The Medieval Kingdom / courtyard: 16647 floor points, feet sunk > 10 cm at 7 (worst 85 cm; patches of 4+: 0); floating > 10 cm at 57 (worst 99 cm), nothing visible under 273 (listed, not failed); a prop's look over its collider at 163 (not a floor: not failed)
+      (floating (20.0, 2.0, 6.0): 62 points, average -100 cm; collider 'SmallPortcullis', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, 0.0): 40 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-3.5, 14.0, 0.0): 35 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, 0.0): 25 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, 0.0): 20 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-27.0, 1.2, 24.0): 17 points, average -55 cm; collider 'Solid', visible 'Bed__Dark')
+      (floating (-20.0, 3.1, 7.0): 15 points, average -16 cm; collider 'Boulder', visible 'Rock__Stone')
+      (floating (-29.5, 17.1, 58.0): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-27.5, 17.1, 60.5): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (26.5, 17.1, 60.5): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (27.5, 17.1, 58.5): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-27.0, 1.2, 23.0): 9 points, average -67 cm; collider 'Solid', visible 'Bed__Dark')
+      (floating (-26.5, 11.2, 62.5): 6 points, average -100 cm; collider 'North parapet W', visible '(nothing visible within 1 m below)')
+      (floating (-23.5, 11.2, 62.5): 6 points, average -100 cm; collider 'North parapet W', visible '(nothing visible within 1 m below)')
+      (floating (19.5, 11.2, 62.5): 6 points, average -100 cm; collider 'North parapet E', visible '(nothing visible within 1 m below)')
+  ok    The Medieval Kingdom / walls and towers: 1417 floor points, feet sunk > 10 cm at 2 (worst 11 cm; patches of 4+: 0); floating > 10 cm at 8 (worst 87 cm), nothing visible under 209 (listed, not failed); a prop's look over its collider at 135 (not a floor: not failed)
+      (floating (30.0, 25.0, -5.0): 25 points, average -98 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, -6.0): 24 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-34.0, 25.0, -5.0): 20 points, average -97 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 14.0, -6.0): 18 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, -5.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (30.0, 25.0, 0.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-34.0, 25.0, 0.0): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, 0.0): 12 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, -5.0): 10 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, 0.0): 9 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 14.0, 0.0): 9 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, 0.0): 6 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+  ok    The Medieval Kingdom / great hall: 6174 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 23 (worst 75 cm), nothing visible under 28 (listed, not failed); a prop's look over its collider at 118 (not a floor: not failed)
+      (floating (-2.5, 6.0, 74.0): 20 points, average -74 cm; collider 'Deck', visible 'Ring__Iron')
+      (floating (1.0, 6.0, 74.0): 20 points, average -74 cm; collider 'Deck', visible '(nothing visible within 1 m below)')
+      (floating (13.5, 1.0, 74.0): 11 points, average -45 cm; collider 'Solid', visible 'Hearth__Stone')
+  ok    The Medieval Kingdom / moat and banks: 14288 floor points, feet sunk > 10 cm at 27 (worst 85 cm; patches of 4+: 0); floating > 10 cm at 30 (worst 95 cm), nothing visible under 340 (listed, not failed); a prop's look over its collider at 226 (not a floor: not failed)
+      (floating (30.0, 25.0, -5.0): 30 points, average -98 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-35.0, 25.0, -5.0): 25 points, average -98 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, -6.0): 24 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 0.0, -12.0): 18 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 14.0, -6.0): 18 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (1.0, 0.0, -12.0): 18 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (30.0, 25.0, 0.0): 18 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-35.0, 25.0, 0.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, -5.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 0.0, -17.0): 15 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (1.0, 0.0, -17.0): 15 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (20.0, 2.0, 6.0): 15 points, average -100 cm; collider 'SmallPortcullis', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, 0.0): 12 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, -5.0): 10 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, 0.0): 9 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+  ok    The Medieval Kingdom / tournament field: 9702 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 39 (worst 40 cm), nothing visible under 52 (listed, not failed); a prop's look over its collider at 81 (not a floor: not failed)
+      (floating (48.0, 3.2, -111.0): 10 points, average -39 cm; collider 'Solid', visible 'Roof__BannerRed')
+      (floating (66.0, 1.3, -82.0): 7 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (78.0, 1.3, -82.0): 7 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (96.0, 1.3, -82.0): 7 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (116.0, 3.2, -51.0): 7 points, average -41 cm; collider 'Solid', visible 'Roof__BannerRed')
+      (floating (90.0, 1.3, -82.0): 6 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (60.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (72.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (84.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (102.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (123.0, 3.2, -81.0): 5 points, average -31 cm; collider 'Solid', visible 'Roof__Canvas')
+      (floating (126.0, 3.2, -82.0): 4 points, average -34 cm; collider 'Solid', visible 'Roof__Canvas')
+  ok    The Medieval Kingdom / village: 12850 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 468 (worst 100 cm), nothing visible under 3 (listed, not failed); a prop's look over its collider at 238 (not a floor: not failed)
+      (floating (-78.0, 7.0, -113.0): 24 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-138.0, 7.0, -78.0): 23 points, average -92 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-90.0, 7.0, -114.0): 23 points, average -92 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-137.0, 7.0, -96.0): 20 points, average -92 cm; collider 'Solid', visible 'Upper__Plaster.001')
+      (floating (-125.0, 7.0, -113.0): 20 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-113.0, 7.0, -113.0): 20 points, average -92 cm; collider 'Solid', visible 'Frame__Timber.002')
+      (floating (-53.0, 7.0, -95.0): 20 points, average -92 cm; collider 'Solid', visible 'Roof__Slate.001')
+      (floating (-118.0, 7.0, -54.0): 17 points, average -89 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-70.0, 7.0, -54.0): 17 points, average -89 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-106.0, 7.0, -53.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-82.0, 7.0, -53.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber.002')
+      (floating (-58.0, 7.0, -113.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber.002')
+      (floating (-58.0, 7.0, -53.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-114.0, 7.0, -54.0): 12 points, average -85 cm; collider 'Solid', visible 'Upper__Cream')
+      (floating (-102.0, 7.0, -53.0): 12 points, average -92 cm; collider 'Solid', visible 'Upper__Plaster')
+  ok    The Medieval Kingdom / dungeon: 12644 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 1 (worst 89 cm), nothing visible under 0 (listed, not failed); a prop's look over its collider at 3 (not a floor: not failed)
+  (The Medieval Kingdom: 0 patch(es) in all)
+
+== Fix 8.1, item 3: invisible walls in The Medieval Kingdom (every solid collider's open sides: is anything visible there?)
+  ok    The Medieval Kingdom: 145 hidden solid colliders scanned, 0 with nothing visible on them (world-edge walls listed apart: 1)
+      (world edge) 'Gate arch' at (0.0, 10.5, -2.0) size (8.0, 7.0, 8.0): 2 of 64 open side points have anything visible within 45 cm [a block inside a big sculpture / over the gate passage: out of reach]
+
+== Fix 8.1, item 1: the heroes' feet where Muscle Man is first met (built exe, player's view)
+  ok    Dan at the courtyard by Muscle Man (first meeting): feet 0.03, visible floor 0.02 (+1 cm), grounded True
+  screenshot 81_feet_courtyard_Dan.png
+  ok    Dan at the keep's steps: feet 0.33, visible floor 0.30 (+3 cm), grounded True
+  screenshot 81_feet_keep's_Dan.png
+  ok    Dan at the great hall by Muscle Man: feet 0.03, visible floor 0.03 (+0 cm), grounded True
+  screenshot 81_feet_great_Dan.png
+  ok    Dan at the walled yard's gate: feet 0.03, visible floor 0.07 (-4 cm), grounded True
+  screenshot 81_feet_walled_Dan.png
+  ok    Abi at the courtyard by Muscle Man (first meeting): feet 0.03, visible floor 0.02 (+1 cm), grounded True
+  ok    Abi at the keep's steps: feet 0.33, visible floor 0.30 (+3 cm), grounded True
+  ok    Abi at the great hall by Muscle Man: feet 0.03, visible floor 0.03 (+0 cm), grounded True
+  ok    Abi at the walled yard's gate: feet 0.03, visible floor 0.07 (-4 cm), grounded True
+  ok    Kira at the courtyard by Muscle Man (first meeting): feet 0.02, visible floor 0.02 (+0 cm), grounded True
+  ok    Kira at the keep's steps: feet 0.32, visible floor 0.30 (+2 cm), grounded True
+  ok    Kira at the great hall by Muscle Man: feet 0.02, visible floor 0.03 (-1 cm), grounded True
+  ok    Kira at the walled yard's gate: feet 0.02, visible floor 0.07 (-5 cm), grounded True
+
+== Fix 8.1, item 2: walk across every moving platform in The Medieval Kingdom (3), every hero
+  ok    Drawbridge at (0.0, 0.0, -3.0) has a solid collider (1)
+  ok    Drawbridge: Dan walked across (feet at most 0 cm under its top; started on it True; at (0.0, 0.0, -3.9))
+  ok    Drawbridge: Abi walked across (feet at most 0 cm under its top; started on it True; at (0.0, 0.0, -3.9))
+  ok    Drawbridge: Kira walked across (feet at most 0 cm under its top; started on it True; at (0.0, 0.0, -3.9))
+  screenshot 81_drawbridge_view.png
+  ok    the drawbridge's planks are seen at 0.03 over the moat, its collider's top at 0.00 (the gate and the bank at 0)
+  ok    the drawbridge's deck collider moves with it: raised its top is at 15.0 (lowered 0.0), lowered again 0.0
+  ok    Chandelier 2 at (7.3, 5.8, 75.0) has a solid collider (1)
+  ok    Chandelier 2: Dan walked across (feet at most 0 cm under its top; started on it True; at (8.4, 6.0, 75.3))
+  ok    Chandelier 2: Abi walked across (feet at most 0 cm under its top; started on it True; at (8.5, 6.0, 75.3))
+  ok    Chandelier 2: Kira walked across (feet at most 0 cm under its top; started on it True; at (8.4, 6.0, 75.3))
+  ok    Chandelier 1 at (-8.5, 5.8, 75.0) has a solid collider (1)
+  ok    Chandelier 1: Dan walked across (feet at most 0 cm under its top; started on it True; at (-8.4, 6.0, 75.3))
+  ok    Chandelier 1: Abi walked across (feet at most 0 cm under its top; started on it True; at (-8.5, 6.0, 75.3))
+  ok    Chandelier 1: Kira walked across (feet at most 0 cm under its top; started on it True; at (-8.5, 6.0, 75.3))
+
+== Fix 8.1, item 3: the bot walks to every shard in The Medieval Kingdom from its open sides (with the moves taught so far; gates opened as their move would)
+  ok    The Medieval Kingdom: 53 shards walked to, 0 not reached, 0 reached from some sides only; 7 not walked (listed)
+      not walked: M01 (the moat's floor, west (dive)): in water (swum to: the never-stuck water checks)
+      not walked: M02 (the moat's floor, east (dive)): in water (swum to: the never-stuck water checks)
+      not walked: V04 (on a market stall's awning (up the crates)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: J01 (the top of the chimney between two village houses (wall jump)): needs WallJump, a later move
+      not walked: X01 (the stands' flag platform (double jump)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: DD1 (the moat's deep pit (deep dive)): needs DeepDive, a later move
+      not walked: DD2 (the moat's deep pit (deep dive)): needs DeepDive, a later move
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 17719296 samples); master volume 0.00

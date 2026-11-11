@@ -1,0 +1,310 @@
+Shards of Time exe check 2026-11-11 12:56, version 0.8.1; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 69632 samples); master volume 0.00
+  (probe: 1097 visible meshes as probe colliders in The Ice Age; 0 not readable, skipped)
+
+== Fix 8.1, item 1: feet vs the visible floor in The Ice Age (every walkable collider top compared with the visible surface at it)
+  ok    The Ice Age / The Ice Age: 47332 floor points, feet sunk > 10 cm at 11 (worst 144 cm; patches of 4+: 0); floating > 10 cm at 3 (worst 86 cm), nothing visible under 62 (listed, not failed); a prop's look over its collider at 138 (not a floor: not failed)
+  (The Ice Age: 0 patch(es) in all)
+
+== Fix 8.1, item 3: invisible walls in The Ice Age (every solid collider's open sides: is anything visible there?)
+  ok    The Ice Age: 10 hidden solid colliders scanned, 0 with nothing visible on them (world-edge walls listed apart: 0)
+
+== Fix 8.1, item 2: walk across every moving platform in The Ice Age (2), every hero
+  ok    Mammoth at (46.0, 0.1, 122.2) has a solid collider (1)
+  ok    Mammoth: Dan walked across (feet at most 0 cm under its top; started on it True; at (46.0, 4.1, 125.5))
+  ok    Mammoth: Abi walked across (feet at most 0 cm under its top; started on it True; at (46.0, 4.1, 127.7))
+  ok    Mammoth: Kira walked across (feet at most 0 cm under its top; started on it True; at (46.0, 4.1, 130.1))
+  ok    Mammoth at (34.0, 0.1, 197.7) has a solid collider (1)
+  ok    Mammoth: Dan walked across (feet at most 0 cm under its top; started on it True; at (34.0, 4.1, 196.5))
+  ok    Mammoth: Abi walked across (feet at most 0 cm under its top; started on it True; at (34.0, 4.1, 194.3))
+  ok    Mammoth: Kira walked across (feet at most 0 cm under its top; started on it True; at (34.0, 4.1, 192.2))
+
+== Fix 8.1, item 3: the bot walks to every shard in The Ice Age from its open sides (with the moves taught so far; gates opened as their move would)
+  note  The Ice Age G03 (glacier: ledge 14): reached by Dan from 1 of 2 sides; blocked from (142.0, 18.2, 278.0) got within 3.9 m, stopped at (141.9, 18.2, 278.0)
+  ok    The Ice Age: 49 shards walked to, 0 not reached, 1 reached from some sides only; 11 not walked (listed)
+      not walked: S07 (pond bottom (dive)): in water (swum to: the never-stuck water checks)
+      not walked: S08 (pond bottom (dive)): in water (swum to: the never-stuck water checks)
+      not walked: V05 (river bottom under the bridge (dive)): in water (swum to: the never-stuck water checks)
+      not walked: C06 (the pit under the cracked ice (ground pound)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: C07 (the pit under the cracked ice (ground pound)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: H05 (ice shelf over terrace 3): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: L05 (frozen lake: under the ice (dive in at the near hole)): in water (swum to: the never-stuck water checks)
+      not walked: L06 (frozen lake: the deep part (deep dive)): needs DeepDive, a later move
+      not walked: L07 (frozen lake: the deep part (deep dive)): needs DeepDive, a later move
+      not walked: G06 (glacier: top of the near chimney (wall jump)): needs WallJump, a later move
+      not walked: G07 (glacier: top of the far chimney (wall jump)): needs WallJump, a later move
+  (probe: 1538 visible meshes as probe colliders in Ancient Egypt; 0 not readable, skipped)
+
+== Fix 8.1, item 1: feet vs the visible floor in Ancient Egypt (every walkable collider top compared with the visible surface at it)
+  FAIL  Ancient Egypt / Ancient Egypt: 37303 floor points, feet sunk > 10 cm at 45 (worst 100 cm; patches of 4+: 1); floating > 10 cm at 31 (worst 100 cm), nothing visible under 183 (listed, not failed); a prop's look over its collider at 556 (not a floor: not failed)
+      sunk (52.0, 3.1, 348.0): 4 of 8 points, average 47 cm, worst 65 cm (collider 'Terrain__Sand', visible 'Pyramid1__Sandstone')
+      (floating (-78.0, 13.0, 210.0): 9 points, average -100 cm; collider 'Sphinx body', visible '(nothing visible within 1 m below)')
+      (floating (-78.0, 13.0, 216.0): 9 points, average -100 cm; collider 'Sphinx body', visible '(nothing visible within 1 m below)')
+      (floating (-72.0, 13.0, 210.0): 8 points, average -86 cm; collider 'Sphinx body', visible '(nothing visible within 1 m below)')
+      (floating (-72.0, 13.0, 216.0): 8 points, average -93 cm; collider 'Sphinx body', visible '(nothing visible within 1 m below)')
+      (floating (-60.0, 13.0, 218.0): 6 points, average -94 cm; collider 'Sphinx body', visible '(nothing visible within 1 m below)')
+      (floating (-48.0, 22.0, 216.0): 6 points, average -90 cm; collider 'Sphinx head', visible '(nothing visible within 1 m below)')
+      (floating (-42.0, 22.0, 210.0): 6 points, average -100 cm; collider 'Sphinx head', visible '(nothing visible within 1 m below)')
+      (floating (-42.0, 22.0, 216.0): 6 points, average -100 cm; collider 'Sphinx head', visible '(nothing visible within 1 m below)')
+      (floating (-36.0, 4.0, 206.0): 6 points, average -100 cm; collider 'Sphinx paw R', visible '(nothing visible within 1 m below)')
+      (floating (-36.0, 4.0, 222.0): 6 points, average -100 cm; collider 'Sphinx paw L', visible '(nothing visible within 1 m below)')
+      (floating (-60.0, 13.0, 210.0): 5 points, average -71 cm; collider 'Sphinx body', visible '(nothing visible within 1 m below)')
+      (floating (-48.0, 22.0, 210.0): 5 points, average -73 cm; collider 'Sphinx head', visible 'Model sphinx_kira')
+      (floating (-66.0, 13.0, 210.0): 4 points, average -24 cm; collider 'Sphinx body', visible 'Model sphinx_kira')
+      (floating (-66.0, 13.0, 218.0): 4 points, average -54 cm; collider 'Sphinx body', visible 'Model sphinx_kira')
+      (floating (-52.0, 22.0, 210.0): 4 points, average -100 cm; collider 'Sphinx head', visible '(nothing visible within 1 m below)')
+  (Ancient Egypt: 1 patch(es) in all)
+
+== Fix 8.1, item 3: invisible walls in Ancient Egypt (every solid collider's open sides: is anything visible there?)
+  ok    Ancient Egypt: 37 hidden solid colliders scanned, 0 with nothing visible on them (world-edge walls listed apart: 3)
+      (world edge) 'Sphinx head' at (-46.0, 19.0, 215.0) size (12.0, 6.0, 10.0): 33 of 173 open side points have anything visible within 45 cm [a block inside a big sculpture / over the gate passage: out of reach]
+      (world edge) 'Sphinx neck' at (-48.0, 13.5, 215.0) size (12.0, 5.0, 12.0): 59 of 160 open side points have anything visible within 45 cm [a block inside a big sculpture / over the gate passage: out of reach]
+      (world edge) 'Sphinx body' at (-66.0, 7.5, 215.0) size (28.0, 11.0, 16.0): 42 of 103 open side points have anything visible within 45 cm [a block inside a big sculpture / over the gate passage: out of reach]
+
+== Fix 8.1, item 2: walk across every moving platform in Ancient Egypt (13), every hero
+  ok    Boat deck at (-113.4, -0.1, 40.0) has a solid collider (1)
+  ok    Boat deck: Dan walked across (feet at most 0 cm under its top; started on it True; at (-107.4, 0.1, 40.0))
+  ok    Boat deck: Abi walked across (feet at most 0 cm under its top; started on it True; at (-106.7, 0.1, 40.0))
+  ok    Boat deck: Kira walked across (feet at most 0 cm under its top; started on it True; at (-107.0, 0.1, 40.0))
+  ok    Sliding block at (497.5, 61.5, 68.0) has a solid collider (1)
+  ok    Sliding block: Dan walked across (feet at most 0 cm under its top; started on it True; at (500.8, 65.0, 68.0))
+  ok    Sliding block: Abi walked across (feet at most 0 cm under its top; started on it True; at (500.7, 65.0, 68.0))
+  ok    Sliding block: Kira walked across (feet at most 0 cm under its top; started on it True; at (498.3, 63.2, 68.0))
+  (Camel: the camel is ridden, not stood on: its riding is checked by `camel`)
+  ok    Stone cart at (79.8, 24.6, 202.0) has a solid collider (1)
+  ok    Stone cart: Kira walked across (feet at most 0 cm under its top; started on it True; at (60.2, 25.1, 202.0))
+  ok    Stone cart: Abi walked across (feet at most 0 cm under its top; started on it True; at (60.4, 25.1, 202.0))
+  ok    Stone cart: Kira walked across (feet at most 0 cm under its top; started on it True; at (61.1, 25.1, 202.0))
+  ok    Hauled stone at (70.0, 0.9, 51.9) has a solid collider (1)
+  ok    Hauled stone: Dan walked across (feet at most 0 cm under its top; started on it True; at (70.4, 1.7, 111.9))
+  ok    Hauled stone: Abi walked across (feet at most 0 cm under its top; started on it True; at (70.4, 1.7, 110.7))
+  ok    Hauled stone: Kira walked across (feet at most 0 cm under its top; started on it True; at (70.4, 1.7, 111.9))
+  ok    Lift at (480.0, 60.1, 96.0) has a solid collider (1)
+  ok    Lift: Dan walked across (feet at most 0 cm under its top; started on it True; at (480.6, 60.3, 96.0))
+  ok    Lift: Abi walked across (feet at most 0 cm under its top; started on it True; at (480.6, 60.3, 96.0))
+  ok    Lift: Kira walked across (feet at most 0 cm under its top; started on it True; at (480.6, 60.3, 96.0))
+  ok    Shuttle stone at (60.0, 0.6, 165.4) has a solid collider (1)
+  ok    Shuttle stone: Dan walked across (feet at most 0 cm under its top; started on it True; at (60.6, 1.3, 135.1))
+  ok    Shuttle stone: Abi walked across (feet at most 0 cm under its top; started on it True; at (60.6, 1.3, 135.0))
+  ok    Shuttle stone: Kira walked across (feet at most 0 cm under its top; started on it True; at (60.6, 1.3, 135.0))
+  ok    Stone cart at (76.6, 8.6, 202.0) has a solid collider (1)
+  ok    Stone cart: Dan walked across (feet at most 0 cm under its top; started on it True; at (60.2, 9.1, 202.0))
+  ok    Stone cart: Abi walked across (feet at most 0 cm under its top; started on it True; at (60.6, 9.1, 202.0))
+  ok    Stone cart: Kira walked across (feet at most 0 cm under its top; started on it True; at (60.2, 9.1, 202.0))
+  ok    Sliding block at (496.2, 61.5, 80.0) has a solid collider (1)
+  ok    Sliding block: Dan stood on it, didn't reach the far end (it slid away / into its wall) (feet at most 0 cm under its top; started on it True; at (12.4, 0.0, 12.7))
+  ok    Sliding block: Abi walked across (feet at most 0 cm under its top; started on it True; at (499.0, 65.0, 80.0))
+  ok    Sliding block: Kira walked across (feet at most 0 cm under its top; started on it True; at (498.2, 63.2, 80.0))
+  ok    Hauled stone at (50.0, 0.9, 111.1) has a solid collider (1)
+  ok    Hauled stone: Kira walked across (feet at most 0 cm under its top; started on it True; at (50.4, 1.7, 50.1))
+  ok    Hauled stone: Abi walked across (feet at most 0 cm under its top; started on it True; at (50.4, 1.7, 51.2))
+  ok    Hauled stone: Kira walked across (feet at most 0 cm under its top; started on it True; at (50.4, 1.7, 50.1))
+  ok    Boat deck at (-139.8, -0.1, 110.0) has a solid collider (1)
+  ok    Boat deck: Dan walked across (feet at most 0 cm under its top; started on it True; at (-106.4, 0.1, 110.0))
+  ok    Boat deck: Abi walked across (feet at most 0 cm under its top; started on it True; at (-106.0, 0.1, 110.0))
+  ok    Boat deck: Kira walked across (feet at most 0 cm under its top; started on it True; at (-106.2, 0.1, 110.0))
+  ok    Sliding block at (503.0, 61.5, 74.0) has a solid collider (1)
+  ok    Sliding block: Dan walked across (feet at most 0 cm under its top; started on it True; at (504.3, 65.0, 74.0))
+  ok    Sliding block: Abi walked across (feet at most 0 cm under its top; started on it True; at (504.4, 65.0, 74.0))
+  ok    Sliding block: Kira walked across (feet at most 0 cm under its top; started on it True; at (504.2, 63.0, 74.0))
+  ok    Turning bridge at (500.0, 59.9, 96.0) has a solid collider (1)
+  ok    Turning bridge: Kira walked across (feet at most 0 cm under its top; started on it True; at (505.2, 60.1, 89.8))
+  ok    Turning bridge: Abi walked across (feet at most 0 cm under its top; started on it True; at (500.0, 60.1, 87.9))
+  ok    Turning bridge: Kira walked across (feet at most 0 cm under its top; started on it True; at (491.9, 60.1, 96.0))
+
+== Fix 8.1, item 3: the bot walks to every shard in Ancient Egypt from its open sides (with the moves taught so far; gates opened as their move would)
+  note  Ancient Egypt E08 (market, behind the stalls): reached by Dan from 2 of 3 sides; blocked from (-26.0, 0.0, 86.0) got within 99.0 m, stopped at (492.0, 53.1, 89.9)
+  note  Ancient Egypt E09 (market, behind the stalls): reached by Dan from 2 of 3 sides; blocked from (26.0, 0.0, 58.0) got within 3.7 m, stopped at (500.0, 60.1, 90.0)
+  note  Ancient Egypt E41 (the pyramid's unfinished top): reached by Dan from 2 of 3 sides; blocked from (70.0, 36.0, 236.0) got within 2.4 m, stopped at (71.6, 36.0, 236.0)
+  note  Ancient Egypt E54 (tomb: across the turning bridge): reached by Dan from 2 of 3 sides; blocked from (503.0, 60.1, 96.0) got within 4.4 m, stopped at (500.3, 61.5, 48.1)
+  ok    Ancient Egypt: 49 shards walked to, 0 not reached, 4 reached from some sides only; 11 not walked (listed)
+      not walked: E10 (west rooftop (the plank across)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E11 (west rooftop (up the outside stair)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E13 (north-west rooftop (up the outside stair)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E15 (the far roof (Kira's pounce)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E16 (the obelisk's golden ledge (double jump)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E22 (past the quicksand (ride the stone)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E42 (the high plank over the scaffolding (double jump)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: E47 (the riverbed (dive)): in water (swum to: the never-stuck water checks)
+      not walked: E48 (the deep pool (deep dive)): needs DeepDive, a later move
+      not walked: E49 (the deep pool (deep dive)): needs DeepDive, a later move
+      not walked: E60 (tomb: the top of the narrow shaft (wall jump)): needs WallJump, a later move
+  (probe: 1949 visible meshes as probe colliders in Bethlehem; 3 not readable, skipped)
+
+== Fix 8.1, item 1: feet vs the visible floor in Bethlehem (every walkable collider top compared with the visible surface at it)
+  ok    Bethlehem / Bethlehem: 34983 floor points, feet sunk > 10 cm at 3 (worst 71 cm; patches of 4+: 0); floating > 10 cm at 72 (worst 95 cm), nothing visible under 18 (listed, not failed); a prop's look over its collider at 30 (not a floor: not failed)
+      (floating (90.0, 3.8, 110.0): 4 points, average -71 cm; collider 'Outcrop', visible 'Rock__Stone.003')
+  (Bethlehem: 0 patch(es) in all)
+
+== Fix 8.1, item 3: invisible walls in Bethlehem (every solid collider's open sides: is anything visible there?)
+  ok    Bethlehem: 127 hidden solid colliders scanned, 0 with nothing visible on them (world-edge walls listed apart: 0)
+
+== Fix 8.1, item 2: walk across every moving platform in Bethlehem (0), every hero
+  (Bethlehem has no moving platforms)
+
+== Fix 8.1, item 3: the bot walks to every shard in Bethlehem from its open sides (with the moves taught so far; gates opened as their move would)
+  note  Bethlehem V03 (the market): reached by Dan from 2 of 3 sides; blocked from (-115.0, 0.0, 54.0) got within 1.7 m, stopped at (-5.5, 0.0, 30.7)
+  note  Bethlehem R02 (the Wise Men's road): reached by Dan from 2 of 3 sides; blocked from (100.0, 0.0, 189.0) got within 3.9 m, stopped at (100.0, 0.0, 188.9)
+  ok    Bethlehem: 51 shards walked to, 0 not reached, 2 reached from some sides only; 9 not walked (listed)
+      not walked: F06 (the hay loft (up the bales)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F07 (on the bale tower): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F08 (on the barn's ridge (lamb Kira bounces up)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F09 (on top of the big hay stack (lamb Kira bounces up)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: W01 (the bottom of the well, 13 m down (deep dive)): needs DeepDive, a later move
+      not walked: W02 (the bottom of the well, 13 m down (deep dive)): needs DeepDive, a later move
+      not walked: J01 (the top of the narrow gap between two houses (wall jump)): needs WallJump, a later move
+      not walked: D01 (the high rock over the outcrop (double jump)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: D02 (the inn's roof terrace (double jump)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+  (probe: 1240 visible meshes as probe colliders in The Medieval Kingdom; 0 not readable, skipped)
+
+== Fix 8.1, item 1: feet vs the visible floor in The Medieval Kingdom (every walkable collider top compared with the visible surface at it)
+  ok    The Medieval Kingdom / courtyard: 16733 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 57 (worst 99 cm), nothing visible under 299 (listed, not failed); a prop's look over its collider at 219 (not a floor: not failed)
+      (floating (20.0, 2.0, 6.0): 62 points, average -100 cm; collider 'SmallPortcullis', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, 0.0): 40 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-3.5, 14.0, 0.0): 35 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, 0.0): 25 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, 0.0): 20 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-27.0, 1.2, 24.0): 17 points, average -55 cm; collider 'Solid', visible 'Bed__Dark')
+      (floating (-20.0, 3.1, 7.0): 15 points, average -16 cm; collider 'Boulder', visible 'Rock__Stone')
+      (floating (-29.5, 17.1, 58.0): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-27.5, 17.1, 60.5): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (26.5, 17.1, 60.5): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (27.5, 17.1, 58.5): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-27.0, 1.2, 23.0): 9 points, average -67 cm; collider 'Solid', visible 'Bed__Dark')
+      (floating (-26.0, 16.0, 60.5): 9 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (25.0, 16.0, 61.5): 9 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-28.0, 16.0, 57.0): 6 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+  ok    The Medieval Kingdom / walls and towers: 1545 floor points, feet sunk > 10 cm at 2 (worst 11 cm; patches of 4+: 0); floating > 10 cm at 10 (worst 87 cm), nothing visible under 223 (listed, not failed); a prop's look over its collider at 193 (not a floor: not failed)
+      (floating (30.0, 25.0, -5.0): 25 points, average -98 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, -6.0): 24 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-34.0, 25.0, -5.0): 20 points, average -97 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 14.0, -6.0): 18 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, -5.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (30.0, 25.0, 0.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-34.0, 25.0, 0.0): 12 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, 0.0): 12 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, -5.0): 10 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, 0.0): 9 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 14.0, 0.0): 9 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, 0.0): 6 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+  ok    The Medieval Kingdom / great hall: 6174 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 23 (worst 75 cm), nothing visible under 28 (listed, not failed); a prop's look over its collider at 118 (not a floor: not failed)
+      (floating (-2.5, 6.0, 74.0): 20 points, average -74 cm; collider 'Deck', visible 'Ring__Iron')
+      (floating (1.0, 6.0, 74.0): 20 points, average -74 cm; collider 'Deck', visible '(nothing visible within 1 m below)')
+      (floating (13.5, 1.0, 74.0): 11 points, average -45 cm; collider 'Solid', visible 'Hearth__Stone')
+  ok    The Medieval Kingdom / moat and banks: 14415 floor points, feet sunk > 10 cm at 2 (worst 11 cm; patches of 4+: 0); floating > 10 cm at 32 (worst 95 cm), nothing visible under 384 (listed, not failed); a prop's look over its collider at 312 (not a floor: not failed)
+      (floating (30.0, 25.0, -5.0): 30 points, average -98 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-35.0, 25.0, -5.0): 25 points, average -98 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, -6.0): 24 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 0.0, -12.0): 18 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 14.0, -6.0): 18 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (1.0, 0.0, -12.0): 18 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (30.0, 25.0, 0.0): 18 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-35.0, 25.0, 0.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, -5.0): 15 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-3.0, 0.0, -17.0): 15 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (1.0, 0.0, -17.0): 15 points, average -100 cm; collider 'Drawbridge deck', visible '(nothing visible within 1 m below)')
+      (floating (20.0, 2.0, 6.0): 15 points, average -100 cm; collider 'SmallPortcullis', visible '(nothing visible within 1 m below)')
+      (floating (0.0, 14.0, 0.0): 12 points, average -100 cm; collider 'Gate arch', visible '(nothing visible within 1 m below)')
+      (floating (28.0, 25.0, -5.0): 10 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (-30.0, 25.0, 0.0): 9 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+  ok    The Medieval Kingdom / tournament field: 9702 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 39 (worst 40 cm), nothing visible under 52 (listed, not failed); a prop's look over its collider at 81 (not a floor: not failed)
+      (floating (48.0, 3.2, -111.0): 10 points, average -39 cm; collider 'Solid', visible 'Roof__BannerRed')
+      (floating (66.0, 1.3, -82.0): 7 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (78.0, 1.3, -82.0): 7 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (96.0, 1.3, -82.0): 7 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (116.0, 3.2, -51.0): 7 points, average -41 cm; collider 'Solid', visible 'Roof__BannerRed')
+      (floating (90.0, 1.3, -82.0): 6 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (60.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (72.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (84.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (102.0, 1.3, -82.0): 5 points, average -100 cm; collider 'Solid', visible '(nothing visible within 1 m below)')
+      (floating (123.0, 3.2, -81.0): 5 points, average -31 cm; collider 'Solid', visible 'Roof__Canvas')
+      (floating (126.0, 3.2, -82.0): 4 points, average -34 cm; collider 'Solid', visible 'Roof__Canvas')
+  ok    The Medieval Kingdom / village: 12850 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 468 (worst 100 cm), nothing visible under 3 (listed, not failed); a prop's look over its collider at 238 (not a floor: not failed)
+      (floating (-78.0, 7.0, -113.0): 24 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-138.0, 7.0, -78.0): 23 points, average -92 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-90.0, 7.0, -114.0): 23 points, average -92 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-137.0, 7.0, -96.0): 20 points, average -92 cm; collider 'Solid', visible 'Upper__Plaster.001')
+      (floating (-125.0, 7.0, -113.0): 20 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-113.0, 7.0, -113.0): 20 points, average -92 cm; collider 'Solid', visible 'Frame__Timber.002')
+      (floating (-53.0, 7.0, -95.0): 20 points, average -92 cm; collider 'Solid', visible 'Roof__Slate.001')
+      (floating (-118.0, 7.0, -54.0): 17 points, average -89 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-70.0, 7.0, -54.0): 17 points, average -89 cm; collider 'Solid', visible 'Roof__Terracotta')
+      (floating (-106.0, 7.0, -53.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-82.0, 7.0, -53.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber.002')
+      (floating (-58.0, 7.0, -113.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber.002')
+      (floating (-58.0, 7.0, -53.0): 16 points, average -92 cm; collider 'Solid', visible 'Frame__Timber')
+      (floating (-114.0, 7.0, -54.0): 12 points, average -85 cm; collider 'Solid', visible 'Upper__Cream')
+      (floating (-102.0, 7.0, -53.0): 12 points, average -92 cm; collider 'Solid', visible 'Upper__Plaster')
+  ok    The Medieval Kingdom / dungeon: 12644 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 1 (worst 89 cm), nothing visible under 0 (listed, not failed); a prop's look over its collider at 3 (not a floor: not failed)
+  (The Medieval Kingdom: 0 patch(es) in all)
+
+== Fix 8.1, item 3: invisible walls in The Medieval Kingdom (every solid collider's open sides: is anything visible there?)
+  FAIL  The Medieval Kingdom: 149 hidden solid colliders scanned, 4 with nothing visible on them (world-edge walls listed apart: 1)
+      'Solid' at (-31.5, 5.5, 61.5) size (13.6, 21.0, 13.6): 0 of 4 open side points have anything visible within 45 cm
+      'Solid' at (-31.5, 5.5, -1.5) size (13.6, 21.0, 13.6): 0 of 8 open side points have anything visible within 45 cm
+      'Solid' at (31.5, 5.5, 61.5) size (13.6, 21.0, 13.6): 0 of 4 open side points have anything visible within 45 cm
+      'Solid' at (31.5, 5.5, -1.5) size (13.6, 21.0, 13.6): 0 of 8 open side points have anything visible within 45 cm
+      (world edge) 'Gate arch' at (0.0, 10.5, -2.0) size (8.0, 7.0, 8.0): 2 of 64 open side points have anything visible within 45 cm [a block inside a big sculpture / over the gate passage: out of reach]
+
+== Fix 8.1, item 1: the heroes' feet where Muscle Man is first met (built exe, player's view)
+  ok    Dan at the courtyard by Muscle Man (first meeting): feet 0.03, visible floor 0.02 (+1 cm), grounded True
+  screenshot 81_feet_courtyard_Dan.png
+  ok    Dan at the keep's steps: feet 0.33, visible floor 0.30 (+3 cm), grounded True
+  screenshot 81_feet_keep's_Dan.png
+  ok    Dan at the great hall by Muscle Man: feet 0.03, visible floor 0.03 (+0 cm), grounded True
+  screenshot 81_feet_great_Dan.png
+  ok    Dan at the walled yard's gate: feet 0.03, visible floor 0.07 (-4 cm), grounded True
+  screenshot 81_feet_walled_Dan.png
+  ok    Abi at the courtyard by Muscle Man (first meeting): feet 0.03, visible floor 0.02 (+1 cm), grounded True
+  ok    Abi at the keep's steps: feet 0.33, visible floor 0.30 (+3 cm), grounded True
+  ok    Abi at the great hall by Muscle Man: feet 0.03, visible floor 0.03 (+0 cm), grounded True
+  ok    Abi at the walled yard's gate: feet 0.03, visible floor 0.07 (-4 cm), grounded True
+  ok    Kira at the courtyard by Muscle Man (first meeting): feet 0.02, visible floor 0.02 (+0 cm), grounded True
+  ok    Kira at the keep's steps: feet 0.32, visible floor 0.30 (+2 cm), grounded True
+  ok    Kira at the great hall by Muscle Man: feet 0.02, visible floor 0.03 (-1 cm), grounded True
+  ok    Kira at the walled yard's gate: feet 0.02, visible floor 0.07 (-5 cm), grounded True
+
+== Fix 8.1, item 2: walk across every moving platform in The Medieval Kingdom (3), every hero
+  ok    Drawbridge at (0.0, 0.0, -3.0) has a solid collider (1)
+  ok    Drawbridge: Dan walked across (feet at most 0 cm under its top; started on it True; at (0.0, 0.0, -3.9))
+  ok    Drawbridge: Abi walked across (feet at most 0 cm under its top; started on it True; at (0.0, 0.0, -3.9))
+  ok    Drawbridge: Kira walked across (feet at most 0 cm under its top; started on it True; at (0.0, 0.0, -3.9))
+  screenshot 81_drawbridge_view.png
+  ok    the drawbridge's planks are seen at 0.03 over the moat, its collider's top at 0.00 (the gate and the bank at 0)
+  ok    the drawbridge's deck collider moves with it: raised its top is at 15.0 (lowered 0.0), lowered again 0.0
+  ok    Chandelier 1 at (-7.2, 5.8, 75.0) has a solid collider (1)
+  ok    Chandelier 1: Dan walked across (feet at most 0 cm under its top; started on it True; at (-8.4, 6.0, 75.3))
+  ok    Chandelier 1: Abi walked across (feet at most 0 cm under its top; started on it True; at (-8.5, 6.0, 75.3))
+  ok    Chandelier 1: Kira walked across (feet at most 0 cm under its top; started on it True; at (-8.4, 6.0, 75.3))
+  ok    Chandelier 2 at (8.5, 5.8, 75.0) has a solid collider (1)
+  ok    Chandelier 2: Dan walked across (feet at most 0 cm under its top; started on it True; at (8.4, 6.0, 75.3))
+  ok    Chandelier 2: Abi walked across (feet at most 0 cm under its top; started on it True; at (8.5, 6.0, 75.3))
+  ok    Chandelier 2: Kira walked across (feet at most 0 cm under its top; started on it True; at (8.5, 6.0, 75.3))
+
+== Fix 8.1, item 3: the bot walks to every shard in The Medieval Kingdom from its open sides (with the moves taught so far; gates opened as their move would)
+  note  The Medieval Kingdom G07 (the great hall: the east ledge (ride the chandeliers)): reached by Dan from 1 of 2 sides; blocked from (13.0, 6.0, 82.0) got within 2.5 m, stopped at (13.0, 6.0, 80.5)
+  note  The Medieval Kingdom M04 (the moat's outer bank, north): reached by Dan from 2 of 3 sides; blocked from (-20.0, 0.0, 112.0) got within 3.9 m, stopped at (-20.0, 0.0, 111.9)
+  ok    The Medieval Kingdom: 53 shards walked to, 0 not reached, 2 reached from some sides only; 7 not walked (listed)
+      not walked: M01 (the moat's floor, west (dive)): in water (swum to: the never-stuck water checks)
+      not walked: M02 (the moat's floor, east (dive)): in water (swum to: the never-stuck water checks)
+      not walked: V04 (on a market stall's awning (up the crates)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: J01 (the top of the chimney between two village houses (wall jump)): needs WallJump, a later move
+      not walked: X01 (the stands' flag platform (double jump)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: DD1 (the moat's deep pit (deep dive)): needs DeepDive, a later move
+      not walked: DD2 (the moat's deep pit (deep dive)): needs DeepDive, a later move
+
+== Fix 8.1, item 4: a world's necklace wakes at its total threshold AND 20 shards from the world itself
+  ok    rule 2: area V (The Ice Age): available on arrival The Ice Age 43 of 60 = 43 with [Dan, Abi, Kira, ClawIce], threshold 40 (the universal total) and 20 from here (43 reachable here); locked here: R08 needs DoubleJump, C06 needs GroundPound, C07 needs GroundPound, H05 needs DoubleJump, T03 needs MuscleMan, T04 needs GroundPound, T05 needs DoubleJump, L06 needs DeepDive, L07 needs DeepDive, L08 needs MuscleMan, G06 needs WallJump, G07 needs WallJump, G08 needs DoubleJump, P01 needs ChargedPunch, P02 needs ChargedPunch, P03 needs ChargedPunch, P04 needs ChargedPunch
+  ok    rule 2: area E (Ancient Egypt): available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 = 93 with [Dan, Abi, Kira, MummyHush], threshold 90 (the universal total) and 20 from here (50 reachable here); locked here: E14 needs Pounce, E15 needs Pounce, E16 needs DoubleJump, E24 needs MuscleMan, E25 needs MuscleMan, E42 needs DoubleJump, E48 needs DeepDive, E49 needs DeepDive, E59 needs ChargedPunch, E60 needs WallJump
+  ok    rule 2: area BE (Bethlehem): available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 + Bethlehem 48 of 60 = 141 with [Dan, Abi, Kira, FlockHide, WoolBounce], threshold 135 (the universal total) and 20 from here (48 reachable here); locked here: P01 needs Pounce, P03 needs Pounce, P04 needs Pounce, W01 needs DeepDive, W02 needs DeepDive, M01 needs MuscleMan, M02 needs MuscleMan, C01 needs ChargedPunch, C02 needs ChargedPunch, J01 needs WallJump, D01 needs DoubleJump, D02 needs DoubleJump
+  ok    rule 2: area ME (The Medieval Kingdom): available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 + Bethlehem 48 of 60 + The Medieval Kingdom 50 of 60 = 191 with [Dan, Abi, Kira, Glide, FirePuff], threshold 180 (the universal total) and 20 from here (50 reachable here); locked here: B01 needs MuscleMan, B02 needs MuscleMan, A01 needs MuscleMan, A02 needs MuscleMan, K01 needs ChargedPunch, K02 needs ChargedPunch, J01 needs WallJump, X01 needs DoubleJump, DD1 needs DeepDive, DD2 needs DeepDive
+  ok    170 in all (25 from here): asleep; the HUD under the total: "Next: 180 (this world: 20 / 20)"
+  ok    210 in all, 12 from here: still asleep; HUD "Next: 180 (this world: 12 / 20)"
+  screenshot 81_hud_next_this_world.png
+  ok    210 in all, 20 from here: the necklace wakes
+  ok    after waking: HUD "Follow the necklace"
+  ok    an awake world with 5 from here and 140 in all stays awake (HUD "Follow the necklace")
+
+RESULT: 2 check(s) failed: Ancient Egypt / Ancient Egypt: 37303 floor points, feet sunk > 10 cm at 45 (worst 100 cm; patches of 4+: 1); floating > 10 cm at 31 (worst 100 cm), nothing visible under 183 (listed, not failed); a prop's look over its collider at 556 (not a floor: not failed) | The Medieval Kingdom: 149 hidden solid colliders scanned, 4 with nothing visible on them (world-edge walls listed apart: 1)
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 128190464 samples); master volume 0.00

@@ -195,3 +195,90 @@ Suno prompt (instrumental):
 
 Style tags: `cartoon, zany, silly, comedic, bouncy, kazoo, tuba, bassoon, xylophone, pizzicato, lute, playful, instrumental`.
 Exclude: `epic, orchestral, cinematic, dramatic, serious, heroic, fanfare, choir, whistling, slide whistle, flute, vocals`.
+
+## Pirate Seas — ship theme (Suno, for Dan) — planning chat, 2026-11-11 (revised: crew shouts allowed)
+
+The ship and island song. Whimsical and cartoony, its own instruments, no whistling. **Vocals as instruments are
+welcome (Dan, 2026-11-11):** a rowdy crew shouting "Ahoy!", "Yo-ho!", "Heave-ho!", "Arrr!" between the tunes, like
+Bethlehem's hallelujahs: no lead singer, no real lyrics. 2–3 minutes. Save Dan's pick as
+`Assets/Resources/Music/pirate.mp3`.
+
+Suno: **Instrumental OFF**, the lyrics below in the Lyrics box.
+
+Style:
+> Rollicking, silly cartoon sea-shanty music for a goofy animated pirate comedy with a rowdy ship and rolling barrels.
+> Light and playful, never serious: a bouncy squeezebox accordion melody, a cheeky fiddle jig, a stomping oom-pah tuba
+> bass, plucky banjo, steel drum sparkles, handclaps and wooden thumps on the offbeat, a swaying 6/8 hornpipe rhythm,
+> with a rowdy pirate crew only shouting short calls like "Ahoy!", "Yo-ho!", "Heave-ho!" and a big comic "Arrr!" between
+> the phrases, like a Saturday-morning cartoon on the high seas. No lead singer, no whistling, no flute. Steady energy
+> from start to end so it loops.
+
+Lyrics:
+```
+[Intro]
+[instrumental]
+
+[Crew shout]
+Ahoy!
+
+[instrumental]
+
+[Crew shout]
+Yo-ho! Yo-ho!
+
+[instrumental]
+
+[Crew shout]
+Heave... ho! Heave... ho!
+
+[instrumental]
+
+[Crew shout, big and comic]
+Arrrrr!
+
+[instrumental]
+```
+
+Style tags: `cartoon, sea shanty, hornpipe, accordion, fiddle, tuba, banjo, crew shouts, gang vocals, silly, playful, 6/8`.
+Exclude: `epic, orchestral, cinematic, dramatic, serious, dark, solo vocalist, pop vocals, whistling, slide whistle, flute`.
+
+## Pirate Seas — underwater theme (Suno, for Dan) — planning chat, 2026-11-11 (revised: as dreamy as possible, soft oohs)
+
+The Pirate Seas are two areas (Dan, 2026-11-11): **the ship** (`pirate.mp3`) and **under the sea** (this one). Plays
+whenever the party is underwater; crossfades with the ship theme at the surface. **As dreamy as possible (Dan)**, with
+soft wordless "oohs" and "aahs" as texture, no lyrics, no whistling. 2–3 minutes. Save Dan's pick as
+`Assets/Resources/Music/underwater.mp3`.
+
+Suno: **Instrumental OFF**, the lyrics below in the Lyrics box.
+
+Style:
+> Dreamy, floating, magical underwater music for a gentle animated adventure through a glowing coral reef, sunbeams
+> rippling down through blue water and friendly fish drifting by. Slow and weightless, about 75 bpm: soft shimmering
+> vibraphone and celesta, slow plucked harp ripples, warm hazy synth pads, a gentle wobbly upright bass, kalimba and
+> glockenspiel sparkles like rising bubbles, with a soft airy wordless choir floating in and out singing only "oohs" and
+> "aahs", distant and echoing like voices under water. Peaceful, wondrous, a little playful, never dark or scary. No lead
+> singer, no drums, no whistling, no flute. Steady from start to end so it loops.
+
+Lyrics:
+```
+[Intro]
+[instrumental]
+
+[Soft choir, distant]
+Oooh... oooh...
+
+[instrumental]
+
+[Soft choir, floating]
+Aaah... aaah...
+
+[instrumental]
+
+[Soft choir, distant]
+Oooh... aaah...
+
+[instrumental]
+```
+
+Style tags: `dreamy, underwater, ambient, ethereal, floating, vibraphone, celesta, harp, kalimba, wordless choir, soft oohs, slow`.
+Exclude: `epic, orchestral, cinematic, dramatic, dark, scary, drums, solo vocalist, pop vocals, lyrics, whistling, flute`.

@@ -102,7 +102,7 @@ namespace ShardsOfTime
             // Fix 6.1: the big number is the universal total; under it this world's threshold until its necklace wakes (the per-world
             // counts are in the pause menu)
             var area = g.Area; var wp = s.World(Game.World.worldId);
-            areaText.text = area == null || area.requirement <= 0 ? "" : wp.storyShard ? "" : wp.necklaceAwake ? "Follow the necklace" : $"Next: {area.requirement}";
+            areaText.text = area == null || area.requirement <= 0 ? "" : wp.storyShard ? "" : wp.necklaceAwake ? "Follow the necklace" : area.fromHere > 0 ? $"Next: {area.requirement} (this world: {Mathf.Min(g.AreaShards(area.id), area.fromHere)} / {area.fromHere})" : $"Next: {area.requirement}";   // Fix 8.1
             // necklace
             float pulse = Necklace.Pulse;
             necklace.color = new Color(.35f, .85f, 1f, pulse * .55f);

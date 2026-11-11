@@ -5,6 +5,11 @@ Dan's Abi & Dan Story Bible (series canon; the relevant parts are below).
 In the repo these live in `Docs/Design/`; the planning chat keeps a copy in
 the claude.ai project.
 
+**The finished film beats the synopsis (Dan, 2026-11-11):** the film as Dan actually made it deviates from the
+written synopsis in places. Where Dan's clips (`SourceArt/Reference/Clips/`) show a scene, the clip is canon for that
+scene. Known so far: Muscle Man drops the green shard by holding it up in joy (it slips and rolls overboard), not by
+lifting a chest; Muscle Man shouts **"My hero!"** (not "Master!").
+
 **Faithfulness (Dan, 2026-11-09):** the game does not have to be 100% faithful
 to the film. The film is the backbone (its worlds, story shards, Kira forms,
 key beats and ending), and the game expands freely around it. When the
@@ -23,10 +28,16 @@ changed for gameplay.
   "NO, KIRA, NO!")
 - **Shards:** each world has many small shards plus one colored story shard.
   **The small shards are universal (Dan, 2026-11-10):** one total across all
-  worlds, never spent. Each world has a cumulative threshold on that total
-  (DEFAULT Ice Age 35, Egypt 75); reaching it wakes the necklace there, which
-  leads to the story shard, and the story shard opens the vortex. Extra shards
-  anywhere count toward later worlds, which is what makes them worth hunting.
+  worlds, never spent. **A world's necklace wakes when both are true (Dan,
+  2026-11-11, Fix 8.1):** the total reaches the world's cumulative threshold
+  (about 75% of all shards in the worlds so far: DEFAULT Ice Age 40, Egypt 90,
+  Bethlehem 135, Medieval 180; the Ice Age is 40, not 45, because only 43 of
+  its 60 are reachable on arrival), **and at least 20 shards come from this
+  world.** So someone who hunted everything earlier still collects 20 here, and
+  someone who skipped a lot needs more. HUD: "Next: 180 (this world: 12 / 20)".
+  A world that is already awake never relocks. The awake necklace leads to the
+  story shard, and the story shard opens the vortex. Extra shards anywhere
+  count toward later worlds, which is what makes them worth hunting.
   (Framing: the shards charge Dan's necklace; at the threshold it wakes up and
   leads to the story shard.)
 - **All cutscenes are remade in-engine.** Film clips are not reused (Grok

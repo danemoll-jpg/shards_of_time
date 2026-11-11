@@ -56,6 +56,7 @@ namespace ShardsOfTime
         public string id;
         public string name;
         public int requirement;                    // Fix 6.1: the universal shard total (all worlds) that wakes the necklace here; 0 = no story shard here
+        [Tooltip("Fix 8.1: and at least this many shards from this world (both must be true)")] public int fromHere = 20;
         public string[] firstVisit = new string[0];// heroes and abilities the party has the first time it can get here
         public Vector3 storyShard;
         public Color storyShardColor = new Color(.3f, .6f, 1f);
@@ -81,6 +82,8 @@ namespace ShardsOfTime
         [Tooltip("Fix 6.1: the clip his playing loop uses (Resources/Characters/Clips/<name>): violinist_play (the fiddle), violinist_lyre")]
         public string violinistPlayClip = "violinist_play";
 
+        // Fix 8.1: thresholds about 75 % of every shard up to a world (Ice Age 40: only 43 of its 60 are reachable on arrival, rule 2),
+        // plus 20 from the world itself (AreaData.fromHere).
         // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
         public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval };
 
@@ -108,8 +111,9 @@ namespace ShardsOfTime
             }
             int avail = earlier + ok.Count;
             parts.Add($"{a.name} {ok.Count} of {inArea.Count}");
-            return (avail, a.requirement, avail >= a.requirement,
-                $"area {a.id} ({a.name}): available on arrival {string.Join(" + ", parts)} = {avail} with [{string.Join(", ", a.firstVisit)}], threshold {a.requirement} (the universal total)" + (locked.Any() ? $"; locked here: {string.Join(", ", locked)}" : "") +
+            // Fix 8.1: both parts of the rule: the total, and at least `fromHere` from this world
+            return (avail, a.requirement, avail >= a.requirement && ok.Count >= a.fromHere,
+                $"area {a.id} ({a.name}): available on arrival {string.Join(" + ", parts)} = {avail} with [{string.Join(", ", a.firstVisit)}], threshold {a.requirement} (the universal total) and {a.fromHere} from here ({ok.Count} reachable here)" + (locked.Any() ? $"; locked here: {string.Join(", ", locked)}" : "") +
                 (gates.Count > 0 ? $"; gates: {string.Join(", ", gates.Select(g => $"{g.id} ({g.kind}, needs {g.needs}: {string.Join(" ", g.opens)})"))}" : ""));
         }
 
@@ -178,7 +182,7 @@ namespace ShardsOfTime
         public static WorldData IceAgeDefaults()
         {
             var w = CreateInstance<WorldData>(); w.name = IceAge; w.worldId = IceAge; w.displayName = "The Ice Age"; w.heightsAreHints = true;
-            w.areas.Add(new AreaData { id = "V", name = "The Ice Age", requirement = 35, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce },
+            w.areas.Add(new AreaData { id = "V", name = "The Ice Age", requirement = 40, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce },
                 storyShard = new Vector3(0, 1.0f, 490f), storyShardColor = new Color(.25f, .55f, 1f), spawn = new Vector3(0, .3f, 12f), spawnYaw = 0,
                 kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(0, 0, 265), new Vector3(400, 300, 720)) });   // Round 5: requirement 25 -> 35 (60 shards)
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "V", position = new Vector3(x, y, z), requires = req, note = note });
@@ -251,7 +255,7 @@ namespace ShardsOfTime
             var w = CreateInstance<WorldData>(); w.name = Egypt; w.worldId = Egypt; w.displayName = "Ancient Egypt"; w.heightsAreHints = true;
             w.violinistInstrument = "Lyre"; w.violinistPlayClip = "violinist_lyre";   // Fix 6.1: his own lyre clip
             // Fix 6.1: 75 = the universal total (Ice Age + Egypt; 120 exist, 93 available on arrival)
-            w.areas.Add(new AreaData { id = "E", name = "Ancient Egypt", requirement = 75, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.MummyHush },
+            w.areas.Add(new AreaData { id = "E", name = "Ancient Egypt", requirement = 90, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.MummyHush },
                 storyShard = new Vector3(500, 61.6f, 127f), storyShardColor = new Color(1f, .18f, .14f), spawn = new Vector3(0, .3f, 8f), spawnYaw = 0,
                 kiraForm = KiraForm.Mummy, outfit = Outfits.Egypt, box = new Bounds(new Vector3(160, 0, 160), new Vector3(800, 600, 700)) });
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "E", position = new Vector3(x, y, z), requires = req, note = note });
@@ -312,7 +316,7 @@ namespace ShardsOfTime
         {
             var w = CreateInstance<WorldData>(); w.name = Bethlehem; w.worldId = Bethlehem; w.displayName = "Bethlehem"; w.heightsAreHints = true;
             w.violinistInstrument = "Harp"; w.violinistPlayClip = "violinist_lyre";   // item 2: a small shepherd's harp, held and played like the lyre
-            w.areas.Add(new AreaData { id = "BE", name = "Bethlehem", requirement = 112, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.FlockHide, Abilities.WoolBounce },
+            w.areas.Add(new AreaData { id = "BE", name = "Bethlehem", requirement = 135, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.FlockHide, Abilities.WoolBounce },
                 storyShard = new Vector3(0, 1.25f, 37f), storyShardColor = new Color(1f, .78f, .2f), spawn = new Vector3(0, .1f, 29.5f), spawnYaw = 180,
                 kiraForm = KiraForm.Lamb, outfit = Outfits.Bethlehem, box = new Bounds(new Vector3(0, 0, 90), new Vector3(440, 600, 400)) });
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "BE", position = new Vector3(x, y, z), requires = req, note = note });
@@ -368,7 +372,7 @@ namespace ShardsOfTime
         {
             var w = CreateInstance<WorldData>(); w.name = Medieval; w.worldId = Medieval; w.displayName = "The Medieval Kingdom"; w.heightsAreHints = true;
             w.violinistInstrument = "Lute"; w.violinistPlayClip = "violinist_lyre";   // item 7: a bard with his lute (held across his body by IK, played with the lyre's clip, as the harp)
-            w.areas.Add(new AreaData { id = "ME", name = "The Medieval Kingdom", requirement = 150, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.Glide, Abilities.FirePuff },
+            w.areas.Add(new AreaData { id = "ME", name = "The Medieval Kingdom", requirement = 180, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.Glide, Abilities.FirePuff },
                 storyShard = new Vector3(0, 1.55f, 34f), storyShardColor = new Color(.62f, .32f, 1f), spawn = new Vector3(0, .1f, 8f), spawnYaw = 0,
                 kiraForm = KiraForm.Dragon, outfit = Outfits.Medieval, box = new Bounds(new Vector3(130, 0, -10), new Vector3(720, 600, 420)) });
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "ME", position = new Vector3(x, y, z), requires = req, note = note });
@@ -425,9 +429,9 @@ namespace ShardsOfTime
         {
             var w = CreateInstance<WorldData>(); w.name = Playground;
             string[] heroes = { "Dan", "Abi", "Kira" };
-            w.areas.Add(new AreaData { id = "A", name = "Area A", requirement = 10, firstVisit = heroes, storyShard = new Vector3(0, 1.4f, 52f), storyShardColor = new Color(.3f, .62f, 1f), spawn = new Vector3(0, .1f, -48f), spawnYaw = 0, kiraForm = KiraForm.Home, outfit = Outfits.Home, box = new Bounds(Vector3.zero, new Vector3(400, 400, 400)) });
+            w.areas.Add(new AreaData { id = "A", name = "Area A", requirement = 10, fromHere = 0, firstVisit = heroes, storyShard = new Vector3(0, 1.4f, 52f), storyShardColor = new Color(.3f, .62f, 1f), spawn = new Vector3(0, .1f, -48f), spawnYaw = 0, kiraForm = KiraForm.Home, outfit = Outfits.Home, box = new Bounds(Vector3.zero, new Vector3(400, 400, 400)) });
             // Area B: Kira arrives as the sabertooth (Round 2), so her ClawIce is there on the first visit
-            w.areas.Add(new AreaData { id = "B", name = "Area B", requirement = 0, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce }, spawn = new Vector3(400, .1f, -12f), spawnYaw = 0, kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(400, 0, 0), new Vector3(400, 400, 400)) });
+            w.areas.Add(new AreaData { id = "B", name = "Area B", requirement = 0, fromHere = 0, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.ClawIce }, spawn = new Vector3(400, .1f, -12f), spawnYaw = 0, kiraForm = KiraForm.Sabertooth, outfit = Outfits.IceAge, box = new Bounds(new Vector3(400, 0, 0), new Vector3(400, 400, 400)) });
             void S(string id, string area, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = area, position = new Vector3(x, y, z), requires = req, note = note });
             // Area A: the start path
             S("A01", "A", 0, 1f, -42f, "start path");

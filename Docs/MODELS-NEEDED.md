@@ -1,5 +1,83 @@
 # Shards of Time — models needed
 
+## Round 9 (2026-11-11): the Pirate Seas — images needed from Dan (prompts by the planning chat)
+
+Film art: `SourceArt/Reference/Characters/*/…-pirate-film.*`, `Kira/kira-otter-film.jpg`,
+`Violinist/violinist-pirate-fiddle-film.png`, the world in `Worlds/05-PirateSeas/` (incl. the clip
+`shard-rolls-overboard.mp4`). Same rules and negative prompt as before. People: front view, A-pose, empty hands.
+Animals: strict side profile. Save in `SourceArt/Concepts/`.
+
+### P1. Dan, pirate — `dan_pirate.png`
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead. Pirate
+> clothes: a dark red bandana tied over his hair, a brown and cream striped shirt with sleeves rolled to the elbows, a
+> brown leather vest with brass buttons, a leather strap across the chest with a buckle, a red-brown neckerchief, a wide
+> leather belt with a big buckle, dark green knee-length shorts, brown leather shoes. No necklace or pendant. Plain
+> light gray background, soft even light, no shadow, whole body in frame.
+
+### P2. Abi, pirate — `abi_pirate.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair,
+> green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not
+> touching the body, feet shoulder-width apart, mouth closed with a confident smile, hair falling behind her shoulders.
+> A daring pirate outfit: a dark purple bandana tied over her hair, small gold hoop earrings, a black laced corset top
+> with short ruffled cap sleeves, a deep burgundy sash knotted at the hip with long hanging ends, black shorts, black
+> fishnet stockings, fingerless black gloves, tall black cuffed boots. Plain light gray background, soft even light, no
+> shadow, whole body in frame.
+
+### P3. Kira, otter — `kira_otter.png`
+> Pixar-style 3D render of Kira, a tiny gray Scottish Fold kitten transformed into a cute little river otter. Full body,
+> strict side profile: the whole body and the head seen exactly from the side, nose pointing at the left edge of the
+> image, only one eye visible, not looking at the camera. Standing on four short legs with webbed paws, a long sleek
+> otter body and a thick tapering otter tail. A round cat face with a small nose and whiskers, folded-down ears that
+> lie flat and forward, never raised. Sleek solid gray fur everywhere with absolutely no white fur or markings.
+> Golden-amber eyes. Mouth closed. Plain light gray background, soft even light, no shadow, whole body in frame with
+> every paw and the tail visible.
+
+### P4. Muscle Man, pirate — `muscleman_pirate.png`
+> Pixar-style 3D character render of Muscle Man, the same huge, extremely muscular, cheerful man as in his Medieval
+> character sheet (brown hair swept back into a small ponytail, a short brown beard). Full body, front view, A-pose:
+> arms about 45 degrees out from the body, hands open and not touching the body, feet shoulder-width apart, mouth
+> closed in a big grin. A pirate brute's outfit: a weathered dark brown sleeveless leather vest laced up the front over
+> an open cream linen shirt, a thick coil of rope wrapped around his waist as a belt over a leather belt, dark brown
+> leather bracers, worn dark brown trousers with patches and a torn knee, tall cuffed boots. Plain light gray
+> background, soft even light, no shadow, whole body in frame.
+
+### P5. The Violinist, pirate fiddler — `violinist_pirate.png`
+> Pixar-style 3D character render of the Violinist, the same older gray-haired, gray-bearded man as in his other
+> character sheets (same face and hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands
+> open and not touching the body, feet shoulder-width apart, mouth closed with a calm knowing smile. A ship's fiddler
+> outfit: a loose cream linen shirt with rolled sleeves, a worn brown leather vest, a colorful patchwork sash at the
+> waist, faded black and cream striped trousers with a patch on one knee, a beaded bracelet, tall cuffed brown boots.
+> Holding nothing (no instrument). Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### P6. Pirate deckhand (enemy) — `pirate.png`
+> Pixar-style 3D character render of a goofy cartoon pirate deckhand for a family video game, not scary: round belly,
+> a red and white striped shirt, a black eyepatch, a scruffy ginger beard, a blue bandana, a wide belt, baggy trousers,
+> bare feet with one wooden peg leg. Full body, front view, A-pose: arms about 45 degrees out, hands open and empty,
+> feet apart, mouth closed, a cheeky grin. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### P7. Crab (enemy) — `crab.png`
+> Pixar-style 3D render of a cute grumpy cartoon crab for a family video game, not scary: a round red-orange shell, big
+> eyes on stalks, one claw much bigger than the other, little pointy legs. Front view, standing on its legs, claws held
+> up. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### P8. Pufferfish (underwater enemy) — `pufferfish.png`
+> Pixar-style 3D render of a cute cartoon pufferfish for a family video game, not scary: puffed up into a round spiky
+> ball, yellow with brown spots, big worried eyes, tiny fins and tail. Strict side profile, only one eye visible. Plain
+> light gray background, soft even light, no shadow, whole body in frame.
+
+### P9. Tropical fish (friendly, schools) — `fish.png`
+> Pixar-style 3D render of a cute cartoon tropical fish like in a family animated film: a round body, orange with bright
+> red and yellow stripes, a pale belly, big friendly eyes, a happy smile, flowing fins. Strict side profile, only one
+> eye visible. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+Built by Code, no image: the pirate ship (deck, masts, sails, rigging, crow's nest, cannons, barrels, crates, the
+treasure chest), the island, the reef, corals, the shipwreck, the green story shard, the fiddle.
+Mixamo after Meshy: `dan_pirate`, `abi_pirate`, `muscleman_pirate`, `violinist_pirate`, `pirate` (all with the shared
+clips, plus swimming for the four heroes and Muscle Man).
+
+
 ## Round 8 (2026-11-11): Mixamo for the Medieval Kingdom — DONE (same night)
 
 **In:** all seven rigs and every clip (Dan's picks: "Mutant Flexing Muscles" = flex, "Pointing" = taunt, "Lifting Object" = lift,

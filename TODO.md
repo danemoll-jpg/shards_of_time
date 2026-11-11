@@ -24,49 +24,59 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Fix 8.1: Medieval fixes + shard thresholds (target 0.8.1)
-Round 8 is delivered (below). Dan played 0.8.0 (2026-11-11). Report per item:
-done / not done / deferred, and why. Testing rules as always; rule 12 applies.
-For each of items 1–4: find the cause, fix it at the source, and check it in
-the built exe from the player's view (screenshot + numbers).
-
-1. **"In the room where you first meet Muscle Man the ground is high, like you
-   are wading through water."** The heroes sink into the floor there: the
-   floor's collider sits above its visible mesh (or the visible floor is lower
-   than the collider / a water or fog volume overlaps it). Feet must sit on the
-   visible floor. Then audit **every** walkable surface in the Medieval world
-   (and spot-check the other worlds) for feet sunk into or floating above the
-   floor: a probe that compares the hero's foot height with the visible
-   surface under it, reported per area.
-2. **The drawbridge isn't solid: Dan fell right through it.** Give it a real
-   collider that moves with it (lowered and raised), and check every moving or
-   animated platform in all worlds the same way (walk across each one, every
-   hero).
-3. **A shard behind the village can't be reached: an invisible wall.** Find
-   the invisible collider (probably the world-boundary wall or a leftover
-   blocker) and move it outside the shard, or move the shard. Then add to the
-   never-stuck / reachability check: **every shard in every world is reachable
-   by the bot with the moves it should need** (none behind invisible walls),
-   and report any that aren't.
-4. **The needed shard count is far too low ("I only needed like 3")** when you
-   have collected well in the earlier worlds. The universal total stays (extra
-   shards still help, Dan 2026-11-10), but each world must still ask for real
-   collecting there. New rule (DEFAULT, Dan can tune): a world's necklace wakes
-   when **both** are true:
-   - the universal total reaches the world's cumulative threshold, raised to
-     about **75%** of all shards in the worlds so far (Ice Age 45, Egypt 90,
-     Bethlehem 135, Medieval 180), and
-   - **at least 20 shards from this world** have been collected.
-   So a player who hunted everything earlier still needs 20 here, and one who
-   skipped a lot needs more. HUD: "Next: 180 (this world: 12 / 20)". Rule 2
-   (reachable on arrival with the moves held) must still pass with the new
-   numbers in every world: report them. Existing saves: no world that's already
-   awake relocks. Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md`.
-5. Build, check, publish 0.8.1, update `TODO.md` / `CLAUDE.md`, clean up. Don't
-   end your turn until 0.8.1 is published (unless truly blocked: say so).
+Current round — none (Fix 8.1 delivered below; Round 9, the Pirate Seas, is drafted under "Next rounds")
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 8.1: Medieval fixes + shard thresholds (0.8.1, build 801, 2026-11-11)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): new modes `fix81` (all four worlds, ~45 min), `fix81med`,
+`floors`, `platforms`, `reach`, `rule81` (`Checks/ExeCheck.Fix81.cs`: a probe collider is made from every visible mesh and compared
+with what the heroes stand on and bump into). `local/round81/final_med` (`fix81med`): all passed; `local/round81/final` (`fix81`, all
+worlds): 2 left, both reported below; `stuckmed` (rule 12): all passed; `medieval` (Round 8's play-through, regression): all passed,
+112 ok. Audio 0.000 RMS in every run, the builds and Blender; window watcher: no window, never in the foreground. Evidence:
+`Data/screenshots/round81/`.
+1. Wading in Muscle Man's room: **done.** Cause: the keep's stone plinth (`medieval_world.py`) was one solid block over the whole
+   keep, 0.8 m tall, so in the great hall (where the rival Muscle Man lifts his barrel) the floor you saw was its top while you walked
+   on the flagstones under it. Now a ring outside the walls only. The audit (every walkable collider top vs the visible surface, per
+   area) also found and fixed: the keep door's three steps had no collider; the feast table's collider was commented out (and 11 cm
+   too high) and its benches' colliders sat 45 cm off the benches; the flower pots, the arcade deck's end and its edge lip, the hearth.
+   Medieval now: 0 sunk points in the courtyard, hall, field, village and dungeon (2 stray points at 11 cm on the walls / moat); feet
+   at Muscle Man's spots +-3 cm for all three heroes (`81_feet_*`). Spot-check of the other worlds: no floor anyone walks sinks; listed
+   only (props whose look reaches past their collider: Egypt's 30 cm roof parapets, a 4-point patch at a far pyramid's foot).
+2. The drawbridge: **done.** Cause: its deck collider line had slipped into a `//` comment in Round 8. Now a child of the drawbridge
+   that sits exactly on the seen planks (measured at build time: x -4..4, z -18..-3, top 0.00) and moves with it (raised 80 deg its top
+   is at 15 m; lowered again 0). Every moving platform in every world, every hero (`platforms`): the drawbridge, both chandeliers, the
+   Ice Age's two mammoths, Egypt's 12 (boats, shuttle stone, hauled stones, carts, the lift, the turning bridge, the tomb's sliding
+   blocks; the camel is ridden, checked by `camel`): every hero stood on each, none fell through. Bethlehem has none.
+3. The invisible wall by the village: **done.** Cause: the village's back alley (shard V06, behind the brambles) was boxed by three
+   hidden 7 m walls with nothing drawn there, and the three bramble bushes (2 m across) had 4.6 m colliders turned with each bush, so
+   the gaps between bushes were invisible walls too; the chimney's walls were hidden as well. Now seen stone walls, bushes scaled to
+   fill the alley with unturned colliders. The new scan (every hidden solid's open sides: anything drawn there?) also found the yard
+   boulder's collider 1.9 m up in the air (the ground was found after its own new collider; a gap under it into the walled yard), the
+   round towers' colliders 1.4 m inside the drawn towers (now a 5 m cylinder), the north wall walks without a parapet (feet in the
+   merlons) and the hall's north gallery rail with no collider (you walked through it, and onto the east ledge without the
+   chandeliers). Medieval: 0 invisible colliders left (the gate arch over the passage is out of reach). Reachability (`reach`): the
+   bot walks to every shard from up to three open sides, with the moves taught so far and gates opened as their move would (jumping
+   gaps, skipping cutscenes): Ice Age 49, Egypt 48, Bethlehem 51, Medieval 53 walked, **0 not reached**; not walked: later-move shards
+   and shards under water (the never-stuck water checks cover those).
+4. The new shard rule: **done** (DEFAULT, Dan can tune). The necklace wakes when the total reaches ~75 % of all shards so far
+   **and** 20 come from this world (`AreaData.fromHere`). Thresholds: Ice Age **40** (not 45: only 43 of its 60 are reachable on
+   arrival, rule 2), Egypt 90, Bethlehem 135, Medieval 180. Rule 2 with both parts: Ice Age 43 >= 40 (43 here), Egypt 93 >= 90 (50 here),
+   Bethlehem 141 >= 135 (48 here), Medieval 191 >= 180 (50 here). In the exe: 170 in all + 25 here: asleep ("Next: 180 (this world:
+   20 / 20)"); 210 + 12 here: asleep ("Next: 180 (this world: 12 / 20)", `81_hud_next_this_world.png`); the 20th from here wakes it;
+   an awake world with 5 from here stays awake. CLAUDE.md rule 3 and `design-decisions.md` updated; hints and messages say both parts.
+5. Build / check / publish: **done.** 0.8.1 published as `game-801`; the Round 1 starter install in `local/sc` updated itself from
+   GitHub to build 801 and started. Disk: 9.8 GB -> 9.3 GB.
+
+Decisions Code made (Dan can overrule): the Ice Age threshold 40 instead of 45 (rule 2); the bramble bushes drawn 2.2x bigger so the
+alley looks closed where it is closed; the hall's north rail now blocks walking onto the east ledge (the chandeliers are the way, as
+designed); the old Round 8 check jumps onto the feast table for G01 (it sat inside the table before, with no collider under it).
+
+**For Dan to check:** the great hall (floor, steps, benches, table); the drawbridge both ways; the village alley and its brambles (do
+they read as "burn me"?); the round towers and wall walks (no walking into stone); the necklace pace with the new rule (HUD line).
+Known, not changed: Egypt's flat-roof parapets have no colliders (feet 30 cm into the lip at a roof's edge); the village houses'
+collider tops (7 m) cut through their pitched roofs (only a gliding Kira could get there).
+
 ### Round 8: the Medieval Kingdom (0.8.0, build 800, 2026-11-11)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round8/final` (`--only medieval`: from the vortex with
 three worlds done -> the arrival -> the world -> the stone -> the vortex with Muscle Man -> Bethlehem's boulder and cracked wall -> his
@@ -106,14 +116,14 @@ renders; window watcher: no window, never in the foreground. Evidence: `Data/scr
 9. Shards: **done.** 60 + 2 hearts (the brazier room; the east ledge over the hall). Threshold 150 = 63% of the 240 shards up to here;
    rule 2: 191 available on arrival (Ice Age 43 + Egypt 50 + Bethlehem 48 + Medieval 50); the 10 later-move shards not counted.
 10. `TheStone` (19 s, skippable): **done.** Muscle Man brags, heaves ("Pull Heavy Object"), falls flat on his back; Dan steps up, the
-   shard slides out; Muscle Man kneels: "Master!"; the purple vortex takes all four -> the vortex space (4 of 8; the Pirate Seas path
+   shard slides out; Muscle Man kneels: "My hero!"; the purple vortex takes all four -> the vortex space (4 of 8; the Pirate Seas path
    opens, "to be continued"). Only Dan can pull it (anyone else: "It won't budge for Abi... switch to Dan").
 11. Muscle Man the companion: **done.** Follows as a third follower (warps like the others), cheers at pickups, and does his jobs at
    X: rolls boulders aside in every world (checked: Bethlehem's cave, the Medieval yard), heaves the armory's portcullis up, boosts Dan
    onto the stands' flag platform. He goes through the vortex with the party and wears his Medieval clothes everywhere.
 12. Look: **done.** A torch-lit night: deep blue sky, cool moonlight, warm torches, the stone's purple glow. Frame rate above.
 13. Music and sound: **done.** Dan's `medieval.mp3` in the world (checked playing, muted). 23 ElevenLabs effects (fire puff, hay
-   fire, the wagon blast, armour, shield block / break, arrow, rat, Muscle Man's grunt / laugh / "Master!", boulder, the shard sliding
+   fire, the wagon blast, armour, shield block / break, arrow, rat, Muscle Man's grunt / laugh / "My hero!", boulder, the shard sliding
    out, the punch's charge and hit, a wall breaking, wings, crowd, the bell, the pony, cobble steps, the portcullis, the lute tune).
 14. Build / check / publish: **done.** 0.8.0 published as `game-800`. MP4s: `Recordings/MedievalArrival.mp4`, `TheStone.mp4`.
    The Round 1 starter install in `local/sc` updated itself from GitHub to 0.8.0 and started. Disk: 9.4 GB -> 8.8 GB.
@@ -126,7 +136,7 @@ Decisions Code made (Dan can overrule): the lute is held across his body with th
 Heavy Object" is the stone's heave ("Pulling A Rope" spare); the rival's three spots and bits as above; X near a job sets Muscle Man to
 it; rats run off after a nip (the bot kept losing all three hearts to them); the dungeon is a separate space down a stair door.
 
-**For Dan to check:** the arrival and the stone (MP4s in `Recordings/`, and in game); listen once to Muscle Man's "Master!"
+**For Dan to check:** the arrival and the stone (MP4s in `Recordings/`, and in game); listen once to Muscle Man's "My hero!"
 (`Assets/Resources/Sounds/mm_master.mp3`: ElevenLabs' sound model, not checked by ear; re-roll with `make_sounds.py --only mm_master
 --force` if it isn't a clear word); dragon Kira's glide and fire; the charged punch's feel (0.55 s hold); the rival's bits (funny?
 too often?); the knights / archers / rats (fair?); the chandeliers; the night look. Known: dragon Kira's wings look a little faceted when
@@ -168,34 +178,47 @@ stone apron round the well (fine, or should it look like ground?); Pause > Retur
 (15 s too long / too short?). Not re-run this fix: the long Bethlehem / Egypt routes (the changes are the well, the cave floor and
 the pause menu; the sweep covered each of them).
 
-### Fix 7.1: Bethlehem's real people + the new guard dog (0.7.1, build 701, 2026-11-10)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix71/final` (the Bethlehem route): RESULT all passed
-(65 ok). An earlier run (`beth2`) missed the far-pillar pounce once and the bot then got stuck on a fence (4 knock-on misses); the same
-build passed all 65 on the next run (`beth3`): bot variance, not the game. Frame rate 108 fps at the slowest place at 1080p (was 155
-before the seven real people), 146 fps with the Steam Deck setting (need 60 / 40). Audio 0.000 RMS in every run, the renders and the
-build; window watcher: no window, never in the foreground. Evidence: `Data/screenshots/fix71/`.
-1. Dan's Mixamo files: **done.** All seven rigged people imported (Dan, Abi, the Violinist in their Bethlehem models; the three Wise
-   Men; the watchman), Abi's mesh closed like Egypt's (`close_person.py`, 0 open edges). His eight clips in: "Sitting Idle" (riders),
-   "Standing Arguing", "Looking Down" (as the map), "Carrying" (as offering the presents), "Disappointed", "Yelling Out", "Sleeping
-   Idle" (the dozing watchman), "Surprised" (`import_characters.py` now takes either name).
-2. Guard dog: **done.** New Meshy model from the side-profile image: head turn -1 deg (was +51), rigged by `kira_rig.py` (10 clips);
-   barks and chases in the village.
-3. In the game: Dan and Abi wear their Bethlehem clothes (necklace on), the Violinist plays the harp in his own model, the watchmen
-   carry their lanterns, the Wise Men ride sitting on the camels' saddle blankets (the cream block was only for the placeholders),
-   and walk into the barn with their presents in the finale (`CutsceneAuthoring.Version` 17; presents moved down to their hands).
-   MP4s rendered again from the exe: `Recordings/BethlehemArrival.mp4`, `WiseMenArrive.mp4`.
-4. Publish: **done.** 0.7.1 as `game-701`; the Round 1 starter install in `local/sc` updated itself to it and started.
-
-Decisions Code made: Dan's substitute clips used as named above; the cream camel blanket dropped under the real riders.
-
-**For Dan to check:** the Wise Men on their camels (the Santa-hat one's present floats a little high beside him) and in the finale
-(`Recordings/WiseMenArrive.mp4`); Dan and Abi's Bethlehem clothes in game; the watchmen and the new dog; long robes stretch a bit in
-the run clip (Mixamo; they only walk and sit).
-
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Code's notes for Round 9 (the planning chat decides):** Dan's notes on 0.8.0 first; "Master!" by ear (re-roll if unclear);
+- **Round 9: the Pirate Seas (draft by the planning chat, 2026-11-11; written in full after Fix 8.1 and once Dan's
+  concept images are in).** Film references in `SourceArt/Reference/Worlds/05-PirateSeas/` and `Characters/*`
+  (added 2026-11-11), including Dan's clip `shard-rolls-overboard.mp4`; image prompts P1–P9 in
+  `Docs/MODELS-NEEDED.md`; music in `Docs/MUSIC.md`.
+  **All in (Dan, 2026-11-11), checked by the planning chat:** the 9 concept sheets in `SourceArt/Concepts/`
+  (`dan_pirate`, `abi_pirate`, `kira_otter`, `muscleman_pirate`, `violinist_pirate`, `pirate`, `crab`,
+  `pufferfish`, `fish`) and both songs: `Music/pirate.mp3` (2:59, the ship, crew shouts) and
+  `Music/underwater.mp3` (3:00, dreamy, soft choir). Notes for Code: otter Kira is a browner gray than hers: match
+  it; Muscle Man grins with teeth again (fine); the fish has an open smile (fine, it isn't rigged for talking).
+  - **Two areas, almost two levels (Dan, 2026-11-11):** the Pirate Seas are **the ship** (the deck, rigging, crow's
+    nest, the hold, plus the tropical island / cove) and **under the sea** (the reef, the shipwreck, underwater caves,
+    the sea floor where the green shard lies). Each has its own look, its own enemies, its own shards (DEFAULT about
+    30 each) and **its own song**: `pirate.mp3` on the ship and island, `underwater.mp3` whenever the party is under
+    water, crossfading at the surface. One world for the vortex and the story shard; the shard drop (Muscle Man
+    loses it overboard) is the doorway from the ship to the deep: before it, the water near the ship stays shallow;
+    after it, the deep sea opens. Rule 2 and the per-world minimum count both areas together.
+  - **Arrival:** a green whirlpool vortex over a pirate ship at sunset; Dan, Abi and Kira land in separate barrels,
+    Muscle Man crashes into a crate; they pop out as pirates, Kira as a little gray otter.
+  - **Look:** a red-brown wooden ship with turned rail balusters, pink sails, rope rigging, barrels; a pink-violet
+    sunset sky over a deep blue sea; underwater: bright blue water with light shafts, cheerful cartoon fish,
+    colorful corals, the green shard glowing on the sandy sea floor.
+  - **The film's story beat (Dan's version, from his clip):** the green shard is found (DEFAULT: in a treasure chest
+    by the rail, as the synopsis says). Muscle Man grabs it, holds it up laughing with joy, it slips from his hand,
+    bounces and rolls across the deck, under the rail and over the side into the sea. He leaps in after it, Dan and
+    Abi follow, otter Kira dives after them: the big underwater section.
+  - **Otter Kira:** fast swimming, deep diving and no breath limit; she squeezes through narrow underwater gaps;
+    on land she slides on her belly across wet decks.
+  - **New move: everyone's deep dive** (longer breath, swim deeper), taught by the Violinist as a ship's fiddler.
+    Opens every earlier world's deep-water gates (the Ice Age lake, Egypt's Nile, Bethlehem's well, Medieval's moat).
+  - **Muscle Man is a companion here** (his first world as one): lifts cannons, crates and the anchor, boosts Dan
+    up the rigging; underwater he swims slowly and is the comic one struggling to keep up (film).
+  - **Places (DEFAULT):** the pirate ship (deck, rigging, crow's nest, the hold), a tropical island with a cove and a
+    jungle path, the reef, a sunken shipwreck, underwater caves.
+  - **Enemies:** goofy pirate deckhands, crabs, pufferfish underwater (puff up and bump you). No boss (DEFAULT).
+  - **Finale:** when the necklace wakes it leads to the green shard on the sea floor (film:
+    `green-shard-sea-floor.png`); collecting it makes an underwater swirling vortex that pulls everyone in.
+
+- **Code's notes for Round 9 (the planning chat decides):** Dan's notes on 0.8.0 first; "My hero!" by ear (re-roll if unclear);
   Muscle Man already follows into every world (the Pirate Seas' "drops the shard overboard" can use him); the Pirate Seas path is in
   the vortex ("to be continued"); the deep dive opens the moat's pit (DD1, DD2), Bethlehem's well, Egypt's Nile pool and the Ice Age
   lake; art left over: real meshes for the plain boxes (Bethlehem's rock pillars and cave, Egypt's walls and plinths, Ice Age slabs,

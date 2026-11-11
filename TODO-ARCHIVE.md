@@ -1250,6 +1250,30 @@ watchmen (fair? too many?) and sneaking in with the flock; the night look (dark 
 the Wise Men, the watchmen and the dogs are placeholders until your Mixamo files / the dog redo; the sheep's walk shows a leg
 poking out of the wool at times; the rock pillars and the cave are plain stone boxes.
 
+### Fix 7.1: Bethlehem's real people + the new guard dog (0.7.1, build 701, 2026-11-10)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/fix71/final` (the Bethlehem route): RESULT all passed
+(65 ok). An earlier run (`beth2`) missed the far-pillar pounce once and the bot then got stuck on a fence (4 knock-on misses); the same
+build passed all 65 on the next run (`beth3`): bot variance, not the game. Frame rate 108 fps at the slowest place at 1080p (was 155
+before the seven real people), 146 fps with the Steam Deck setting (need 60 / 40). Audio 0.000 RMS in every run, the renders and the
+build; window watcher: no window, never in the foreground. Evidence: `Data/screenshots/fix71/`.
+1. Dan's Mixamo files: **done.** All seven rigged people imported (Dan, Abi, the Violinist in their Bethlehem models; the three Wise
+   Men; the watchman), Abi's mesh closed like Egypt's (`close_person.py`, 0 open edges). His eight clips in: "Sitting Idle" (riders),
+   "Standing Arguing", "Looking Down" (as the map), "Carrying" (as offering the presents), "Disappointed", "Yelling Out", "Sleeping
+   Idle" (the dozing watchman), "Surprised" (`import_characters.py` now takes either name).
+2. Guard dog: **done.** New Meshy model from the side-profile image: head turn -1 deg (was +51), rigged by `kira_rig.py` (10 clips);
+   barks and chases in the village.
+3. In the game: Dan and Abi wear their Bethlehem clothes (necklace on), the Violinist plays the harp in his own model, the watchmen
+   carry their lanterns, the Wise Men ride sitting on the camels' saddle blankets (the cream block was only for the placeholders),
+   and walk into the barn with their presents in the finale (`CutsceneAuthoring.Version` 17; presents moved down to their hands).
+   MP4s rendered again from the exe: `Recordings/BethlehemArrival.mp4`, `WiseMenArrive.mp4`.
+4. Publish: **done.** 0.7.1 as `game-701`; the Round 1 starter install in `local/sc` updated itself to it and started.
+
+Decisions Code made: Dan's substitute clips used as named above; the cream camel blanket dropped under the real riders.
+
+**For Dan to check:** the Wise Men on their camels (the Santa-hat one's present floats a little high beside him) and in the finale
+(`Recordings/WiseMenArrive.mp4`); Dan and Abi's Bethlehem clothes in game; the watchmen and the new dog; long robes stretch a bit in
+the run clip (Mixamo; they only walk and sit).
+
 ===========================================================================
 Round 8 plan (moved from TODO.md, 2026-11-11)
 ===========================================================================
@@ -1406,3 +1430,47 @@ Round 8 draft by the planning chat (superseded, moved from TODO.md, 2026-11-11):
     dodgeable arrows), dungeon rats.
   - **Exit:** collecting the purple shard opens the purple vortex, which sweeps Muscle Man along with the party,
     much to Dan's bewilderment.
+
+===========================================================================
+Fix 8.1 plan (moved from TODO.md, 2026-11-11)
+===========================================================================
+Current round — Fix 8.1: Medieval fixes + shard thresholds (target 0.8.1)
+Round 8 is delivered (below). Dan played 0.8.0 (2026-11-11). Report per item:
+done / not done / deferred, and why. Testing rules as always; rule 12 applies.
+For each of items 1–4: find the cause, fix it at the source, and check it in
+the built exe from the player's view (screenshot + numbers).
+
+1. **"In the room where you first meet Muscle Man the ground is high, like you
+   are wading through water."** The heroes sink into the floor there: the
+   floor's collider sits above its visible mesh (or the visible floor is lower
+   than the collider / a water or fog volume overlaps it). Feet must sit on the
+   visible floor. Then audit **every** walkable surface in the Medieval world
+   (and spot-check the other worlds) for feet sunk into or floating above the
+   floor: a probe that compares the hero's foot height with the visible
+   surface under it, reported per area.
+2. **The drawbridge isn't solid: Dan fell right through it.** Give it a real
+   collider that moves with it (lowered and raised), and check every moving or
+   animated platform in all worlds the same way (walk across each one, every
+   hero).
+3. **A shard behind the village can't be reached: an invisible wall.** Find
+   the invisible collider (probably the world-boundary wall or a leftover
+   blocker) and move it outside the shard, or move the shard. Then add to the
+   never-stuck / reachability check: **every shard in every world is reachable
+   by the bot with the moves it should need** (none behind invisible walls),
+   and report any that aren't.
+4. **The needed shard count is far too low ("I only needed like 3")** when you
+   have collected well in the earlier worlds. The universal total stays (extra
+   shards still help, Dan 2026-11-10), but each world must still ask for real
+   collecting there. New rule (DEFAULT, Dan can tune): a world's necklace wakes
+   when **both** are true:
+   - the universal total reaches the world's cumulative threshold, raised to
+     about **75%** of all shards in the worlds so far (Ice Age 45, Egypt 90,
+     Bethlehem 135, Medieval 180), and
+   - **at least 20 shards from this world** have been collected.
+   So a player who hunted everything earlier still needs 20 here, and one who
+   skipped a lot needs more. HUD: "Next: 180 (this world: 12 / 20)". Rule 2
+   (reachable on arrival with the moves held) must still pass with the new
+   numbers in every world: report them. Existing saves: no world that's already
+   awake relocks. Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md`.
+5. Build, check, publish 0.8.1, update `TODO.md` / `CLAUDE.md`, clean up. Don't
+   end your turn until 0.8.1 is published (unless truly blocked: say so).

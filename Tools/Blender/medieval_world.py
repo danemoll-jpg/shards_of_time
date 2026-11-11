@@ -435,7 +435,11 @@ def keep(e):
     blk('Ceiling__Timber', -15, 15, 66, 84, 14, 15, e)
     for x in range(-12, 13, 4): blk('Beam__Timber', x - .25, x + .25, 66, 84, 13.6, 14, e)
     blk('Roof__Flagstone', -15, 15, 66, 84, 21, 22, e)
-    blk('Plinth__Stone', -18.25, 18.25, 62.75, 87.25, 0, .8, e)
+    # Fix 8.1, item 1: the plinth rings the keep's outside only (it was one solid block over the whole keep: inside the great hall
+    # its top, 0.8 m up, was the floor you saw while you walked on the flagstones under it)
+    blk('Plinth__Stone', -18.25, -3, 62.75, 63.5, 0, .8, e); blk('Plinth__Stone', 3, 18.25, 62.75, 63.5, 0, .8, e)
+    blk('Plinth__Stone', -18.25, 18.25, 86.5, 87.25, 0, .8, e)
+    blk('Plinth__Stone', -18.25, -17.5, 62.75, 87.25, 0, .8, e); blk('Plinth__Stone', 17.5, 18.25, 62.75, 87.25, 0, .8, e)
     blk('Corbel__CastleStone', -18.4, 18.4, 62.6, 87.4, 20.6, 22.0, e)
     merlon_run(e, 'X', 62.6, 63.3, -18.4, 18.4, 22); merlon_run(e, 'X', 86.7, 87.4, -18.4, 18.4, 22)
     merlon_run(e, 'Y', -18.4, -17.7, 64.6, 85.4, 22); merlon_run(e, 'Y', 17.7, 18.4, 64.6, 85.4, 22)

@@ -136,7 +136,7 @@ namespace ShardsOfTime
         {
             Playground.CheckpointHere(Start, new Vector3(0, .05f, 29.5f), 180, root, false);   // inside the barn (no flag: the arrival lands here)
             Cp(VortexCp, 5, 16, 180);
-            Hint(new Vector3(0, 0, 22), 6f, () => $"Bethlehem, a starry night. Every shard counts: at {Game.World.areas[0].requirement} in all, the golden shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).");
+            Hint(new Vector3(0, 0, 22), 6f, () => $"Bethlehem, a starry night. Every shard counts: at {Game.RuleText(Game.World.areas[0])}, the golden shard on Dan's necklace wakes ({Game.I.Progress(Game.World.areas[0])}).");
             // the barn (12 x 16 m, the door south): its walls and the roof as colliders (the model's boards are only looks)
             var barn = Prop("Barn", BarnAt.x, BarnAt.z, 0, 1f, false, 0f);
             float W = 6f, L = 8f, H = 4.5f;

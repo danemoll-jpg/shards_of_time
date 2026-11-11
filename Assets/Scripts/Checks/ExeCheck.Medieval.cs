@@ -51,7 +51,7 @@ namespace ShardsOfTime
         bool necklaceSeenME;
         IEnumerator NecklaceIfAwakeME()
         {
-            if (necklaceSeenME || SaveGame.Current.Total < NeedME) yield break;
+            if (necklaceSeenME || !Game.I.Ready(Game.World.areas[0])) yield break;   // Fix 8.1: the total and 20 from here
             yield return WaitFor(() => played.Contains("NecklaceWakesMedieval"), 10f);
             if (!played.Contains("NecklaceWakesMedieval")) yield break;
             necklaceSeenME = true;
@@ -99,7 +99,8 @@ namespace ShardsOfTime
             yield return Shot("201_courtyard_start");
             var rr = Game.World.RequirementReport("ME"); Log("  " + rr.detail);
             Ok(rr.ok && Game.World.shards.Count == 60, $"item 9 / rule 2 (universal total): {rr.reachable} available on arrival (three worlds + the Medieval first visit), threshold {rr.requirement} (240 shards exist up to here: {100f * rr.requirement / 240f:0}%)");
-            Ok(Hud.UnderTotal == $"Next: {NeedME}", $"HUD on arrival: {Hud.TotalShown}, under it \"{Hud.UnderTotal}\"");
+            Ok(Hud.UnderTotal == $"Next: {NeedME} (this world: {Mathf.Min(ShardsME, 20)} / 20)",   // Fix 8.1: and 20 from here
+                $"HUD on arrival: {Hud.TotalShown}, under it \"{Hud.UnderTotal}\"");
 
             yield return RivalCourtyard();
             yield return Glide();
@@ -323,6 +324,9 @@ namespace ShardsOfTime
             yield return MShard("G06"); yield return MShard("G07");
             yield return GoF(new Vector3(13, 6, 75), .5f, 5f); yield return Wait(.4f);
             Ok(SaveGame.Current.heartUpgrades.Contains("ME-H2"), "the east ledge's heart");
+            // Fix 8.1: G01 lies on the feast table's real top (0.84 m; it had no collider): a jump up from the floor beside it
+            yield return TpSettle(new Vector3(SpotME("G01").x - 1.5f, .1f, 75.6f), 180);
+            yield return JumpTo(SpotME("G01"), () => true, .6f, .35f);
             yield return MShard("G01", .6f, 10f);
         }
 

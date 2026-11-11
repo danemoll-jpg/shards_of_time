@@ -55,17 +55,22 @@ Design sources (read these when a round touches story, worlds or characters):
    which shards are reachable with which abilities, and a check proves the
    threshold is met with the shards available on arrival: every earlier world
    with the moves the party has by then, plus this world's first-visit shards
-   (`WorldData.RequirementReport`; Egypt: Ice Age 43 + Egypt 50 = 93 >= 75).
-3. **Shards are universal (Dan, 2026-11-10; Fix 6.1):** many small shards per
-   world, but the player has **one total** across all worlds (every small shard
-   ever collected, never spent), plus one colored story shard per world. Each
-   world's necklace wakes when the **total** reaches that world's cumulative
-   threshold (Ice Age 35, Egypt 75; later worlds about 60-65% of all shards
-   that exist up to them), so extra shards from any world count toward later
-   ones. Never go back to per-world requirements. The necklace leads to the
-   story shard; the story shard opens the vortex. HUD: the total, "Next: N"
-   under it; per-world counts in the pause menu. Tomorrowland has no story
-   shard: the rocket plays that role.
+   (`WorldData.RequirementReport`; Egypt: Ice Age 43 + Egypt 50 = 93 >= 90,
+   and 50 >= 20 from Egypt itself).
+3. **Shards are universal (Dan, 2026-11-10; Fix 6.1), plus 20 from each world
+   (Dan, 2026-11-11; Fix 8.1):** many small shards per world, but the player
+   has **one total** across all worlds (every small shard ever collected,
+   never spent), plus one colored story shard per world. Each world's necklace
+   wakes when **both** are true: the **total** reaches that world's cumulative
+   threshold (about **75%** of all shards that exist up to it: Ice Age 40,
+   Egypt 90, Bethlehem 135, Medieval 180; the Ice Age stays at 40 because only
+   43 of its 60 are reachable on arrival), **and** at least **20 shards from
+   this world** (`AreaData.fromHere`) are collected. Extra shards from any world
+   still count toward later thresholds; a world that is already awake never
+   relocks. Rule 2's report checks both parts. The necklace leads to the story
+   shard; the story shard opens the vortex. HUD: the total, "Next: 180 (this
+   world: 12 / 20)" under it; per-world counts in the pause menu. Tomorrowland
+   has no story shard: the rocket plays that role.
 4. **All characters are visible.** The two inactive heroes (and Muscle Man from
    Medieval on) follow the player. A follower that falls behind, falls off, or
    can't make a move warps in just behind the player out of camera view. No
@@ -80,6 +85,8 @@ Design sources (read these when a round touches story, worlds or characters):
    be rendered to a video file (Unity Recorder, 1080p MP4) from an editor menu.
    Dan wants to make future films this way, so the tooling stays reusable and
    documented in `Docs/CUTSCENES.md`.
+   **When Dan's film clip of a scene exists** (`SourceArt/Reference/Clips/` or a
+   world folder), the cutscene follows its staging: shot order, angles, timing.
 9. **Kira lock (every form, every asset, every prompt):** Scottish Fold, folded
    ears that never rise or change shape, solid gray fur with no white anywhere,
    golden-amber eyes. Each transformation keeps these.
@@ -219,7 +226,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -268,7 +275,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 8: `game-800`, previous `Builds/LauncherRelease-800`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 8.1: `game-801`, previous `Builds/LauncherRelease-801`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -277,6 +284,26 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 8.1 delivered: 0.8.1 (build 801), 2026-11-11.** The great hall's floor is where it's drawn (the keep's plinth was a solid
+block over the hall: the wading), the drawbridge is solid and moves with its collider, no invisible walls by the village (or
+anywhere in the Medieval), every shard in every world reached by the bot, and the necklace's new rule (75 % of all shards so far AND
+20 from the world). Published: `game-801`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Fix 8.1:
+- Necklace rule: `AreaData.fromHere` (20; the playground 0) with `requirement` (Ice Age 40, Egypt 90, Bethlehem 135, Medieval 180);
+  `Game.Ready(area)` (both parts), `Game.RuleText` / `Game.I.Progress` for hints; HUD "Next: N (this world: n / 20)";
+  `RequirementReport` checks both. New world: threshold ~75 % of all shards up to it, and >= 20 of its own reachable on arrival.
+- `ExeCheck.Fix81.cs`: a probe collider (layer 31, collides with nothing, off while the bot moves) from every visible mesh. Floors fail
+  only where the visible surface over the feet is a floor part (names in `FloorLike`); props whose look reaches past their collider are
+  listed. Invisible-collider scan uses each collider's own surface (`ClosestPoint`, convex shapes only). Enemies are switched off during
+  the probes (arrows come and go).
+- Medieval: the drawbridge's deck collider is a child of the drawbridge, placed on its seen planks at build time (`Medieval.Drawbridge`);
+  round towers are convex cylinders (`Medieval.Round`, r 5, from the ground up); colliders for the keep steps, feast table and benches,
+  hearth, arcade lip, north wall parapets, the hall's north gallery rail; the village alley and chimney walls are drawn boxes; bramble
+  colliders are unturned children ("Bramble block"). `medieval_world.py`: the keep's plinth is a ring outside its walls.
+- Lesson: a collider line ended up inside a `//` comment twice in Round 8 (the drawbridge, the feast table); `grep -nE '//.*(Solid|Slab|Box|Wall|Stair)\('`
+  finds that. `AddComponent<SphereCollider>()` auto-sizes at once: find the ground before adding it.
+
 **Round 8 delivered: 0.8.0 (build 800), 2026-11-11.** The Medieval Kingdom, the fourth world: the hay-wagon arrival (the blast), the
 courtyard and the stone, the walls and towers, the great hall (chandeliers), the dungeon, the moat, the tournament field (the high
 striker), the village; dragon Kira (glide, fire puff); Dan's charged punch from the bard; knights, archers, rats; Muscle Man the rival,

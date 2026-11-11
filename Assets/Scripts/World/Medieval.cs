@@ -34,6 +34,7 @@ namespace ShardsOfTime
         public static HighStriker Striker { get; private set; }
         public static GameObject WreckSite { get; private set; }   // the wagon's wreck, its driver and pony: hidden until the arrival's blast
         public static RivalMuscleMan CourtRival { get; private set; }
+        public static Transform Drawbridge { get; private set; }   // Fix 8.1: the drawbridge (its deck collider is a child)
         public static Vector3 ArriveAt => new Vector3(0, Ground(0, 8, 3f), 8);
 
         public static Transform Build(WorldData w)
@@ -96,6 +97,14 @@ namespace ShardsOfTime
         {
             var b = new GameObject("Solid"); b.transform.SetParent(root, false); b.transform.position = at + Vector3.up * size.y / 2;
             b.transform.rotation = Quaternion.Euler(0, yaw, 0); b.AddComponent<BoxCollider>().size = size;
+        }
+        // a round solid (a convex cylinder: Unity's cylinder mesh, 20 sides)
+        static Mesh cylinder;
+        static void Round(Vector3 at, float r, float h)
+        {
+            if (!cylinder) { var tmp = GameObject.CreatePrimitive(PrimitiveType.Cylinder); cylinder = tmp.GetComponent<MeshFilter>().sharedMesh; Object.DestroyImmediate(tmp); }
+            var go = new GameObject("Tower round"); go.transform.SetParent(root, false); go.transform.position = at + Vector3.up * h / 2; go.transform.localScale = new Vector3(2 * r, h / 2, 2 * r);
+            var mc = go.AddComponent<MeshCollider>(); mc.sharedMesh = cylinder; mc.convex = true;
         }
         static void Hint(Vector3 at, float r, System.Func<string> text)
         {
@@ -164,11 +173,11 @@ namespace ShardsOfTime
             Wall("Gatehouse W", -8, -4, -6, 2, 14, wb); Wall("Gatehouse E", 4, 8, -6, 2, 14, wb); Wall("Gate arch", -4, 4, -6, 2, 14, 7);
             Wall("North wall W", -33, -18, 60, 63, 10, wb); Wall("North wall E", 18, 33, 60, 63, 10, wb);
             // crenellations along the walks' outer edges (a low lip so nobody walks off the outside by accident)
-            Wall("West parapet", -33, -32.4f, 3.5f, 56.5f, 11.2f, 10); Wall("East parapet", 32.4f, 33, 3.5f, 56.5f, 11.2f, 10); Wall("South parapet", -26.5f, 26.5f, -3, -2.4f, 11.2f, 10);
-            // the round towers: an octagon of two turned boxes each (radius 5); the north ones open on top at 16, the south ones roofed
+            Wall("West parapet", -33, -32.4f, 3.5f, 56.5f, 11.2f, 10); Wall("North parapet W", -27, -18, 62.4f, 63, 11.2f, 10); Wall("North parapet E", 18, 27, 62.4f, 63, 11.2f, 10);   // (Fix 8.1: the north walks had none: feet went into the merlons) Wall("East parapet", 32.4f, 33, 3.5f, 56.5f, 11.2f, 10); Wall("South parapet", -26.5f, 26.5f, -3, -2.4f, 11.2f, 10);
+            // the round towers: four turned boxes each (radius 5); the north ones open on top at 16, the south ones roofed
             foreach (var (x, z, open) in new[] { (-31.5f, -1.5f, false), (31.5f, -1.5f, false), (-31.5f, 61.5f, true), (31.5f, 61.5f, true) })
             {
-                Solid(new Vector3(x, wb, z), new Vector3(7.2f, 16f - wb, 7.2f)); Solid(new Vector3(x, wb, z), new Vector3(7.2f, 16f - wb, 7.2f), 45);
+                Round(new Vector3(x, 0, z), 5f, 16f);   // (Fix 8.1: a cylinder as drawn (r 5), from the ground up; the old two-box star left its flats 1.4 m inside the tower)
                 if (open) for (int i = 0; i < 8; i++) { if (i == 6) continue; /* the south side: the steps come up here */ float a = i * 45f * Mathf.Deg2Rad; Solid(new Vector3(x + Mathf.Cos(a) * 4.4f, 16, z + Mathf.Sin(a) * 4.4f), new Vector3(1.2f, 1.1f, 2.6f), -i * 45f); }
                 else Solid(new Vector3(x, 16, z), new Vector3(7.5f, 9f, 7.5f));   // the roof (no landing on its cone)
             }
@@ -176,11 +185,14 @@ namespace ShardsOfTime
             Wall("Keep south W", -18, -3, 63, 66, 22, 0); Wall("Keep south E", 3, 18, 63, 66, 22, 0); Wall("Keep door top", -3, 3, 63, 66, 22, 7);
             Wall("Keep north", -18, 18, 84, 87, 22, 0); Wall("Keep west", -18, -15, 66, 84, 22, 0); Wall("Keep east", 15, 18, 66, 84, 22, 0);
             Wall("Keep upper", -15, 15, 66, 84, 22, 14);
+            // Fix 8.1, item 1: the three steps in front of the keep door (the Blender ones were looks only: feet sank into them)
+            Wall("Keep step 1", -5, 5, 59, 63, .15f, 0); Wall("Keep step 2", -5, 5, 60.33f, 63, .3f, 0); Wall("Keep step 3", -5, 5, 61.67f, 63, .45f, 0);
             Solid(new Vector3(14, 21, 83), new Vector3(5.2f, 13f, 5.2f));   // the spired tower stands on the keep's roof
             // the arcade along the east wall: piers every 4 m, its roof deck at 6.6, a stair up from the courtyard's north end, steps on to
             // the east wall walk at 10
             for (float z = 8; z <= 52.1f; z += 4) Wall("Arcade pier", 24, 25, z - .5f, z + .5f, 6, 0);
-            Wall("Arcade roof", 24, 30, 7.5f, 52.5f, 6.6f, 6);
+            Wall("Arcade roof", 24, 30, 7.6f, 52.4f, 6.6f, 6);   // (Fix 8.1: to the deck's edge, not 0.5 m past it)
+            Wall("Arcade lip", 23.85f, 24.15f, 7.6f, 52.4f, 6.75f, 6.6f);   // (Fix 8.1: the deck's sandstone edge)
             Stair("Arcade stair", new Vector3(26.5f, 0, 61.8f), Vector3.back, 2.6f, 6.6f, .33f, .5f);
             Stair("East walk steps", new Vector3(28.9f, 6.6f, 9f), Vector3.forward, 2.2f, 10f, .3f, .7f);   // x 27.8..30, z 9..17
             Stair("West wall stair", new Vector3(-28.8f, 0, 13f), Vector3.forward, 2.4f, 10f, .33f, .6f);   // z 13..31 (the walled yard ends at 12)
@@ -201,7 +213,7 @@ namespace ShardsOfTime
         {
             Playground.CheckpointHere(Start, new Vector3(0, .05f, 8), 0, root, false);
             Cp(VortexCp, 6, 12, 0); Cp("ME-court", -10, 30, 90);
-            Hint(new Vector3(0, 0, 12), 7f, () => $"The Medieval Kingdom, by torchlight. Every shard counts: at {Game.World.areas[0].requirement} in all, the purple shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).");
+            Hint(new Vector3(0, 0, 12), 7f, () => $"The Medieval Kingdom, by torchlight. Every shard counts: at {Game.RuleText(Game.World.areas[0])}, the purple shard on Dan's necklace wakes ({Game.I.Progress(Game.World.areas[0])}).");
             // the stone: the round pedestal, the purple shard stuck in it (looks), the necklace's hum nearby
             Prop("Pedestal", StoneAt.x, StoneAt.z, 0, 1f, 0f); Solid(StoneAt, new Vector3(1.25f, 1.1f, 1.25f)); Solid(StoneAt, new Vector3(1.25f, 1.1f, 1.25f), 45);
             StuckShard = Prop("PurpleShard", StoneAt.x, StoneAt.z, 15, 1f, 1.05f);
@@ -212,7 +224,7 @@ namespace ShardsOfTime
             new GameObject("Stone hum").AddComponent<StoneHum>().transform.position = StoneAt;
             // benches, flower pots, barrels, crates
             foreach (var (x, z, yaw) in new[] { (-14f, 20f, 90f), (-14f, 26f, 90f), (14f, 46f, -90f), (-8f, 56f, 180f), (8f, 56f, 180f) }) { Prop("Bench", x, z, yaw); Solid(new Vector3(x, 0, z), new Vector3(2f, .5f, .6f), yaw); }
-            foreach (var (x, z) in new[] { (-16f, 17f), (-16f, 29f), (16f, 41f), (16f, 51f), (-5f, 60f), (5f, 60f), (-25f, 40f), (-4.5f, 30f), (4.5f, 38f) }) { Prop("FlowerPot", x, z, x * 13); Solid(new Vector3(x, 0, z), new Vector3(.7f, .7f, .7f)); }
+            foreach (var (x, z) in new[] { (-16f, 17f), (-16f, 29f), (16f, 41f), (16f, 51f), (-5f, 60f), (5f, 60f), (-25f, 40f), (-4.5f, 30f), (4.5f, 38f) }) { Prop("FlowerPot", x, z, x * 13); Solid(new Vector3(x, 0, z), new Vector3(.8f, .51f, .8f)); }   // (Fix 8.1: the pot's rim, r 0.4, top 0.51)
             foreach (var (x, z) in new[] { (-22f, 30f), (-21.2f, 31f), (20f, 58f) }) { Prop("Barrel", x, z, x * 31); Solid(new Vector3(x, 0, z), new Vector3(.8f, 1.1f, .8f)); }
             foreach (var (x, z, y) in new[] { (21f, 56.6f, 0f), (21f, 56.6f, 1f) }) { Prop("Crate", x, z, 0, 1f, y); Solid(new Vector3(x, y, z), new Vector3(1f, 1f, 1f)); }
             // the hay wagon's wreck against the west wall (the arrival), its singed driver and his pony (fine)
@@ -225,7 +237,7 @@ namespace ShardsOfTime
             // the walled yard behind a boulder (Muscle Man), its rival show-off spot
             Slab("Yard wall N", -30, -20, 11.5f, 12, 3.5f, 0); Slab("Yard wall E S", -20.5f, -20, 1, 5.5f, 3.5f, 0); Slab("Yard wall E N", -20.5f, -20, 9.5f, 12, 3.5f, 0);
             var bould = Prop("Boulder", -19f, 7.5f, 30, 1.25f) ?? Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(-19, 7.5f) + Vector3.up * 1.8f, Vector3.one * 3.6f, WorldArt.Mat("Stone"), false, "Boulder");
-            if (!bould.GetComponentInChildren<Collider>()) { var bc = bould.AddComponent<SphereCollider>(); bc.radius = 1.85f / Mathf.Max(.01f, bould.transform.lossyScale.x); bc.center = bould.transform.InverseTransformPoint(OnGround(-19, 7.5f) + Vector3.up * 1.6f); }
+            if (!bould.GetComponentInChildren<Collider>()) { var bAt = OnGround(-19, 7.5f) + Vector3.up * 1.6f; var bc = bould.AddComponent<SphereCollider>(); bc.radius = 1.85f / Mathf.Max(.01f, bould.transform.lossyScale.x); bc.center = bould.transform.InverseTransformPoint(bAt); }   // (Fix 8.1: the ground found before the sphere exists: it used to land on its own new collider, 1.9 m up, with a gap under it)
             var boulder = bould.AddComponent<Boulder>(); boulder.id = "ME-boulder-yard"; boulder.aside = new Vector3(3.2f, 0, 1.5f);
             Hint(new Vector3(-16, 0, 7.5f), 3.5f, () => SaveGame.Current.Has(Abilities.MuscleMan) ? "" : "A walled yard, blocked by a boulder. Way too heavy for anyone here...");
             var pebble = Prop("Boulder", -11f, 13f, 0, .42f); if (!pebble) pebble = Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(-11, 13) + Vector3.up * .7f, Vector3.one * 1.3f, WorldArt.Mat("Stone"), false, "Small boulder");
@@ -275,12 +287,13 @@ namespace ShardsOfTime
         {
             Cp("ME-hall", 0, 68, 0);
             Hint(new Vector3(0, 0, 68), 5f, () => "The great hall. Up the stair to the gallery... and those chandeliers look sturdy enough to ride.");
-            Prop("FeastTable", 0, 73, 0, 1f, 0f);   // 12 m along x Solid(new Vector3(0, 0, 73), new Vector3(12f, .95f, 2.2f));
-            foreach (var z in new[] { 71.4f, 74.6f }) Solid(new Vector3(0, 0, z), new Vector3(11f, .45f, .5f));
+            Prop("FeastTable", 0, 73, 0, 1f, 0f); Solid(new Vector3(0, 0, 73), new Vector3(12f, .84f, 1.3f));   // 12 m along x, top at 0.84 (Fix 8.1: its collider had slipped into a comment)
+            foreach (var z in new[] { 71.85f, 74.15f }) Solid(new Vector3(0, 0, z), new Vector3(11.6f, .47f, .4f));   // the benches (Fix 8.1: on the Blender ones, z 73 +- 1.15)
             foreach (var x in new[] { -10f, 0f, 10f }) Prop("Banner", x, 83.4f, 0, 1f, 12.5f);   // origin at its rod, the cloth hangs 4 m, facing -z (into the hall)
             // the gallery (west and north, at 6), its stair along the south wall
             Slab("West gallery", -15, -11, 66, 84, 6, 5.6f, "Plank"); Slab("North gallery", -11, 15, 80, 84, 6, 5.6f, "Plank");
             Slab("West gallery rail", -11.15f, -11, 69, 80, 7.1f, 6, "Wood");
+            Wall("North gallery rail", -11.1f, 15, 79.85f, 80.1f, 7.1f, 6);   // (Fix 8.1: the Blender rail had no collider: you walked through it, and onto the east ledge without the chandeliers)
             Stair("Gallery stair", new Vector3(-.8f, 0, 67f), Vector3.left, 2f, 6f, .33f, .56f);
             // the east ledge (a heart, two shards) across the hall: two chandeliers swing to it
             Slab("East ledge", 11, 15, 70, 80, 6, 5.6f, "Plank");
@@ -300,7 +313,7 @@ namespace ShardsOfTime
             Hint(new Vector3(-12, 6, 75), 2.5f, () => "Ride the chandeliers across: jump on as one swings close, hop to the next in the middle.");
             PointLight("Fireplace", new Vector3(13.5f, 1.2f, 75), 14, 3f, new Color(1f, .5f, .2f));
             Placeholders.Prim(PrimitiveType.Sphere, root, new Vector3(14.2f, .6f, 75), new Vector3(1.4f, .8f, .9f), Placeholders.Mat(new Color(1f, .5f, .15f), "Glow"), name: "Fire");
-            Solid(new Vector3(14.2f, 0, 75), new Vector3(1.6f, 1f, 2.6f));
+            Solid(new Vector3(14.2f, 0, 75), new Vector3(1.6f, 1f, 2.6f)); Wall("Hearth", 13.2f, 15, 72, 78, .25f, 0);   // (Fix 8.1: the hearth stone is a 25 cm step)
             // the rival at the feast: he lifts a barrel over his head with one hand
             var keg = Prop("Barrel", 9.5f, 70.5f, 0, 1.2f, 0f) ?? Placeholders.Prim(PrimitiveType.Cylinder, root, new Vector3(9.5f, .6f, 70.5f), new Vector3(.9f, .6f, .9f), WorldArt.Mat("Wood"), false, "Barrel");
             var r3 = RivalMuscleMan.Make(root, "hall", new Vector3(8.2f, 0, 69.5f), -60, "lifts a barrel"); r3.lifted = keg.transform; r3.liftedHome = keg.transform.position; r3.radius = 9f;
@@ -331,7 +344,22 @@ namespace ShardsOfTime
                 Slab("Moat step (upper)", hx0, hx1, hz0, hz1, -.3f, -5.2f, "CastleStone");
             }
             // the drawbridge (down) over the south moat, under the gatehouse
-            Prop("Drawbridge", 0, -3, 0, 1f, 0f);   // hinged at the gate, its deck out to z -18 Slab("Drawbridge deck", -4, 4, -18.2f, -5.8f, 0f, -.4f, "Plank").GetComponent<Renderer>().enabled = WorldArt.File("medieval_props") == null;
+            // Fix 8.1, item 2: the deck's collider is a child of the drawbridge (hinged at the gate, the deck out to z -18), so it moves with
+            // it when it's raised or lowered (the line had slipped into a comment in Round 8: Dan fell through)
+            var bridge = Prop("Drawbridge", 0, -3, 0, 1f, 0f);
+            float dx0 = -4, dx1 = 4, dz0 = -18.2f, dz1 = -5.8f, dTop = 0f;
+            if (bridge)
+            {
+                // the collider goes exactly where the planks are seen (and the deck must point out over the moat, not into the gate)
+                Bounds DeckSeen() { Bounds b = default; bool any = false; foreach (var r in bridge.GetComponentsInChildren<Renderer>()) if (r.name.StartsWith("Deck")) { if (!any) b = r.bounds; else b.Encapsulate(r.bounds); any = true; } return any ? b : new Bounds(new Vector3(0, -.2f, -10.5f), new Vector3(8, .4f, 15)); }
+                var seen = DeckSeen();
+                if (seen.center.z > -3f) { bridge.transform.rotation = Quaternion.Euler(0, 180, 0) * bridge.transform.rotation; seen = DeckSeen(); }
+                dx0 = seen.min.x; dx1 = seen.max.x; dz0 = Mathf.Min(seen.min.z, -18.2f); dz1 = Mathf.Max(seen.max.z, -5.8f); dTop = seen.max.y;
+                PlayLog.Line($"drawbridge: planks seen x {seen.min.x:0.0}..{seen.max.x:0.0}, z {seen.min.z:0.0}..{seen.max.z:0.0}, top {seen.max.y:0.00}");
+            }
+            var deck = Slab("Drawbridge deck", dx0, dx1, dz0, dz1, dTop, dTop - .4f, "Plank");
+            if (bridge) { deck.GetComponent<Renderer>().enabled = false; deck.SetParent(bridge.transform, true); }
+            Drawbridge = bridge ? bridge.transform : deck;
             Hint(new Vector3(0, 0, -12), 4f, () => "The drawbridge. Outside: the tournament field (east) and the village (west).");
         }
 
@@ -450,14 +478,19 @@ namespace ShardsOfTime
             // brambles across an alley (V06 behind them): burn them, Kira
             foreach (var x in new[] { -64.5f, -60f, -55.5f })
             {
-                var br = Prop("Bramble", x, -118.5f, x * 9) ?? Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(x, -118.5f) + Vector3.up * .9f, new Vector3(2.2f, 1.8f, 1.6f), WorldArt.Mat("Bramble"), false, "Bramble");
-                var bc = br.AddComponent<BoxCollider>(); bc.center = br.transform.InverseTransformPoint(OnGround(x, -118.5f) + Vector3.up * 1f); bc.size = br.transform.InverseTransformVector(new Vector3(4.6f, 2f, 1.6f)); bc.size = new Vector3(Mathf.Abs(bc.size.x), Mathf.Abs(bc.size.y), Mathf.Abs(bc.size.z));
+                // Fix 8.1, item 3: the bushes were 2 m across with 4.6 m colliders turned with each bush (invisible walls in the gaps): now
+                // big enough to fill the alley, the collider an unturned child (the fire puff finds it in its parent)
+                var br = Prop("Bramble", x, -118.5f, x * 9, 2.2f) ?? Placeholders.Prim(PrimitiveType.Sphere, root, OnGround(x, -118.5f) + Vector3.up * 1.4f, new Vector3(4.6f, 2.8f, 2f), WorldArt.Mat("Bramble"), false, "Bramble");
+                var blk = new GameObject("Bramble block"); blk.transform.SetParent(br.transform, false);
+                blk.transform.SetPositionAndRotation(OnGround(x, -118.5f) + Vector3.up * 1.4f, Quaternion.identity);
+                blk.AddComponent<BoxCollider>().size = new Vector3(4.6f, 2.8f, 1.8f) / Mathf.Max(.01f, br.transform.lossyScale.x);
                 var f = br.AddComponent<FireTarget>(); f.kind = FireTarget.Kind.Bramble; f.id = "ME-bramble-" + (int)x;
             }
-            Wall("Alley wall W", -69, -67, -130, -118, 7, 0); Wall("Alley wall E", -53, -51, -130, -118, 7, 0); Wall("Alley back", -69, -51, -131, -129, 7, 0);
+            // Fix 8.1, item 3: these were invisible (nothing in the Blender village stands here): now seen stone walls
+            Slab("Alley wall W", -69, -67, -130, -118, 7, 0); Slab("Alley wall E", -53, -51, -130, -118, 7, 0); Slab("Alley back", -69, -51, -131, -129, 7, 0);
             Hint(new Vector3(-60, 0, -114), 3f, () => "Thorny brambles choke the alley. Dragon Kira's fire would clear them.");
             // a narrow chimney between two houses (the wall jump, later)
-            Wall("Chimney W", -101, -100, -126, -122, 9, 0); Wall("Chimney E", -98, -97, -126, -122, 9, 0); Slab("Chimney cap", -101, -97, -126, -122, 9.3f, 9, "CastleStone");
+            Slab("Chimney W", -101, -100, -126, -122, 9, 0); Slab("Chimney E", -98, -97, -126, -122, 9, 0);   // (Fix 8.1: seen, not invisible) Slab("Chimney cap", -101, -97, -126, -122, 9.3f, 9, "CastleStone");
             Hint(new Vector3(-99, 0, -119), 3f, () => "A narrow gap between two tall chimney walls. Someone who can kick off walls could climb it... (later)");
             _ = prog;
         }

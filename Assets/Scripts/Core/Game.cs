@@ -80,6 +80,10 @@ namespace ShardsOfTime
         }
 
         public AreaData Area => Party.I ? World.AreaAt(Party.I.Player.transform.position) : null;
+        // Fix 8.1: the necklace's rule: the universal total reaches the threshold AND this world gave at least `fromHere`
+        public bool Ready(AreaData a) => SaveGame.Current.Total >= a.requirement && AreaShards(a.id) >= a.fromHere;
+        public static string RuleText(AreaData a) => a.fromHere > 0 ? $"{a.requirement} shards in all and {a.fromHere} from here" : $"{a.requirement} shards in all";
+        public string Progress(AreaData a) => $"{SaveGame.Current.Total} in all, {AreaShards(a.id)} from here so far";
         public int AreaShards(string area) { var got = SaveGame.Current.World(World.worldId).shards; return World.InArea(area).Count(s => got.Contains(s.id)); }
 
         // Fix 6.1: the pause menu's completion tracker: each world's own count (the HUD shows the universal total)
@@ -153,7 +157,7 @@ namespace ShardsOfTime
             Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
             yield return Cutscenes.Play("IceAgeArrival", at, face);
             Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
-            Hud.Message($"Find the shards! {a.requirement} of them wake Dan's necklace.", 6f);
+            Hud.Message($"Find the shards! {RuleText(a)} wake Dan's necklace.", 6f);
             Busy = false;
         }
 
@@ -298,8 +302,9 @@ namespace ShardsOfTime
                 var area = Area;
                 if (Party.I.Companion && !Party.I.Companion.gameObject.activeSelf) Party.I.Companion.gameObject.SetActive(true); var prog = SaveGame.Current.World(World.worldId);
                 Necklace.Tick(area != null ? area.id : "", area != null && area.requirement > 0 && prog.necklaceAwake && !prog.storyShard);
-                // Fix 6.1: the necklace wakes when the universal total reaches this world's threshold (also on arriving with enough already)
-                if (area != null && area.requirement > 0 && !prog.necklaceAwake && !prog.storyShard && !Busy && !InCutscene && SaveGame.Current.Total >= area.requirement)
+                // Fix 6.1: the necklace wakes when the universal total reaches this world's threshold (also on arriving with enough already);
+                // Fix 8.1: and at least `fromHere` shards come from this world (a world that is already awake never relocks)
+                if (area != null && area.requirement > 0 && !prog.necklaceAwake && !prog.storyShard && !Busy && !InCutscene && Ready(area))
                     StartCoroutine(WakeNecklace(area));
                 if (area != null) { ApplyKiraForm(area); ApplyOutfits(area); }
                 if (Party.I.Companion && area != null) Party.I.Companion.SetOutfit(string.IsNullOrEmpty(area.outfit) ? Outfits.Home : area.outfit);
@@ -350,7 +355,7 @@ namespace ShardsOfTime
         {
             Busy = true;
             var prog = SaveGame.Current.World(World.worldId); prog.necklaceAwake = true;
-            PlayLog.Line($"area {area.id}: {SaveGame.Current.Total} shards in all (threshold {area.requirement}; {AreaShards(area.id)} from here), the necklace wakes");
+            PlayLog.Line($"area {area.id}: {SaveGame.Current.Total} shards in all (threshold {area.requirement} and {area.fromHere} from here; {AreaShards(area.id)} from here), the necklace wakes");
             yield return new WaitForSeconds(.4f);
             // not mid-air (a vent, a jump) and not in a cave (its cameras need the open sky): it waits for the party to come out
             while ((!Party.I.Player.Motor.Grounded && Party.I.Player.Motor.Mode != MoveMode.Swim) || DarkVolume.At(Party.I.Player.Motor.Center) || !Game.Playing) yield return null;
@@ -533,7 +538,7 @@ namespace ShardsOfTime
             Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
             var prog = SaveGame.Current.World(WorldData.Bethlehem); if (!prog.opened.Contains("BE-arrived")) prog.opened.Add("BE-arrived");
             SaveGame.Current.checkpoint = Bethlehem.Start; SaveGame.Save("arrived in Bethlehem");
-            Hud.Message($"Bethlehem! Kira is a little lamb. At {a.requirement} shards in all, the golden shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 6f);
+            Hud.Message($"Bethlehem! Kira is a little lamb. At {RuleText(a)}, the golden shard on Dan's necklace wakes ({Progress(a)}).", 6f);
             Busy = false;
         }
 
@@ -552,7 +557,7 @@ namespace ShardsOfTime
             Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
             var prog = SaveGame.Current.World(WorldData.Medieval); if (!prog.opened.Contains("ME-arrived")) prog.opened.Add("ME-arrived");
             SaveGame.Current.checkpoint = Medieval.Start; SaveGame.Save("arrived in the Medieval Kingdom");
-            Hud.Message($"The Medieval Kingdom! Kira is a baby dragon: hold {Controls.Btn(Controls.Act.Jump)} in the air to glide, {Controls.Btn(Controls.Act.Attack)} puffs fire. At {a.requirement} shards in all, the purple shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 8f);
+            Hud.Message($"The Medieval Kingdom! Kira is a baby dragon: hold {Controls.Btn(Controls.Act.Jump)} in the air to glide, {Controls.Btn(Controls.Act.Attack)} puffs fire. At {RuleText(a)}, the purple shard on Dan's necklace wakes ({Progress(a)}).", 8f);
             Busy = false;
         }
 
@@ -567,7 +572,7 @@ namespace ShardsOfTime
             Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
             var prog = SaveGame.Current.World(WorldData.Egypt); if (!prog.opened.Contains("EG-arrived")) prog.opened.Add("EG-arrived");
             SaveGame.Current.checkpoint = Egypt.Start; SaveGame.Save("arrived in Egypt");
-            Hud.Message($"Ancient Egypt! Every shard counts: at {a.requirement} in all, the red shard on Dan's necklace wakes ({SaveGame.Current.Total} so far).", 6f);
+            Hud.Message($"Ancient Egypt! Every shard counts: at {RuleText(a)}, the red shard on Dan's necklace wakes ({Progress(a)}).", 6f);
             Busy = false;
         }
 

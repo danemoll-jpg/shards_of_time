@@ -276,7 +276,7 @@ namespace ShardsOfTime
                 at = Time.time; Hums++; Sfx.Play("necklace", .35f, .8f);
                 var who = Party.I.Player.Stats.displayName;
                 Hud.Message(prog.necklaceAwake ? (who == "Dan" ? "The necklace blazes. The purple shard is singing to it..." : $"It won't budge for {who}. The shard is singing to Dan's necklace: switch to Dan.") :
-                    $"A purple shard stuck fast in a stone. Dan's necklace hums near it... but nothing happens. ({SaveGame.Current.Total} of {Game.World.areas[0].requirement} shards)", 4.5f);
+                    $"A purple shard stuck fast in a stone. Dan's necklace hums near it... but nothing happens. ({Game.I.Progress(Game.World.areas[0])}; it needs {Game.RuleText(Game.World.areas[0])})", 4.5f);
             }
         }
     }
