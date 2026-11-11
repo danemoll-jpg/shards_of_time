@@ -9,7 +9,7 @@ All 10 Medieval images are Meshy models (fronts: `Data/screenshots/round8/models
 | Dan, Medieval | `SourceArt/Mixamo/dan_medieval/upload/dan_medieval.fbx` | 1.8 m |
 | Abi, Medieval | `SourceArt/Mixamo/abi_medieval/upload/abi_medieval.fbx` | 1.65 m |
 | Muscle Man | `SourceArt/Mixamo/muscleman_medieval/upload/muscleman_medieval.fbx` | 2.0 m |
-| The Violinist, bard | `SourceArt/Mixamo/violinist_medieval/upload/violinist_medieval.fbx` | 1.85 m |
+| The Violinist, bard | **`SourceArt/Mixamo/violinist_medieval/upload/violinist_medieval_nocape.fbx`** (no cape: the long cape wouldn't rig cleanly; Code puts it back) | 1.85 m |
 | Knight | `SourceArt/Mixamo/knight/upload/knight.fbx` | 1.6 m |
 | Archer | `SourceArt/Mixamo/archer/upload/archer.fbx` | 1.8 m |
 | Wagon driver | `SourceArt/Mixamo/wagon_driver/upload/wagon_driver.fbx` | 1.65 m |
@@ -19,6 +19,10 @@ For **each of the seven**:
    (Dan's and the Violinist's cloaks hang to the shins: put the knee markers where the knees are under the cloak.)
 2. **Download the rigged character** with no animation picked: **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
    Save as `SourceArt/Mixamo/<model>/T-Pose.fbx` (next to `upload`, not inside it).
+   **The Violinist:** upload the no-cape file (Dan, 2026-11-11: the cape wouldn't rig). The cape was split off by
+   `Tools/Blender/split_cape.py` (renders `Data/screenshots/round8/cape/`); after your `T-Pose.fbx` is in, Code runs
+   `Tools/Blender/attach_cape.py violinist_medieval`: the cape goes back on the spine and shoulder bones as a rigid piece (no arm
+   or leg bones, no cloth, so it never stretches), inside faces added, one mesh -> `rigged.fbx`, which the import prefers.
 
 Then the **clips**: each **FBX for Unity, 30 fps, Keyframe Reduction none, Without Skin, In Place ticked where offered**. Any of
 the seven can be on screen while you download (Unity retargets). Save each with the file name in the first column, in the folder

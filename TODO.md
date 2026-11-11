@@ -49,6 +49,9 @@ Dan does a feat of strength he couldn't: pulling the shard from the stone.
    upload and download (file, clip search names, settings, where to save).
    Previews can follow later. Everything else (the other models, props, world)
    comes after that stop; carry on with it without waiting for Dan.
+   **(Dan, 2026-11-11: the Violinist's cape wouldn't rig in Mixamo.)** Upload file without the cape
+   `violinist_medieval_nocape.fbx` (`Tools/Blender/split_cape.py`); after Dan's rig, `Tools/Blender/attach_cape.py
+   violinist_medieval` puts the cape back on the spine / shoulder bones (rigid, no stretching) -> `rigged.fbx`.
    Then: Meshy → clean-up → previews for the rest. Notes: Muscle Man grins
    with teeth (check the mouth); dragon Kira is darker than her gray (match it,
    Kira lock check); keep her thin wings as their own two-sided part (don't let
