@@ -1,5 +1,56 @@
 # Shards of Time — models needed
 
+## Round 8 (2026-11-11): Mixamo for the Medieval Kingdom — for Dan, now
+
+All 10 Medieval images are Meshy models (fronts: `Data/screenshots/round8/models/`). The seven people go through Mixamo:
+
+| Model | Upload this (mixamo.com > Upload Character) | Height |
+|---|---|---|
+| Dan, Medieval | `SourceArt/Mixamo/dan_medieval/upload/dan_medieval.fbx` | 1.8 m |
+| Abi, Medieval | `SourceArt/Mixamo/abi_medieval/upload/abi_medieval.fbx` | 1.65 m |
+| Muscle Man | `SourceArt/Mixamo/muscleman_medieval/upload/muscleman_medieval.fbx` | 2.0 m |
+| The Violinist, bard | `SourceArt/Mixamo/violinist_medieval/upload/violinist_medieval.fbx` | 1.85 m |
+| Knight | `SourceArt/Mixamo/knight/upload/knight.fbx` | 1.6 m |
+| Archer | `SourceArt/Mixamo/archer/upload/archer.fbx` | 1.8 m |
+| Wagon driver | `SourceArt/Mixamo/wagon_driver/upload/wagon_driver.fbx` | 1.65 m |
+
+For **each of the seven**:
+1. **Upload**, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**.
+   (Dan's and the Violinist's cloaks hang to the shins: put the knee markers where the knees are under the cloak.)
+2. **Download the rigged character** with no animation picked: **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
+   Save as `SourceArt/Mixamo/<model>/T-Pose.fbx` (next to `upload`, not inside it).
+
+Then the **clips**: each **FBX for Unity, 30 fps, Keyframe Reduction none, Without Skin, In Place ticked where offered**. Any of
+the seven can be on screen while you download (Unity retargets). Save each with the file name in the first column, in the folder
+given. If a search name isn't there, take the closest one that fits "For" and save it under the first column's name anyway.
+
+| Save as | Mixamo search | Folder | For |
+|---|---|---|---|
+| `Flexing.fbx` | **Flexing** (if missing: **Victory Idle**) | `SourceArt/Mixamo/muscleman_medieval/` | Muscle Man shows off |
+| `Taunt.fbx` | **Taunt** (pointing and laughing; else **Pointing**) | `SourceArt/Mixamo/muscleman_medieval/` | mocking Dan |
+| `Lifting.fbx` | **Lifting** (a heavy thing up over the head; else **Picking Up**) | `SourceArt/Mixamo/muscleman_medieval/` | lifts a boulder / cart / knight; portcullis |
+| `Pushing.fbx` | **Pushing** (copy the one already in `SourceArt/Mixamo/` if you like: same clip) | `SourceArt/Mixamo/muscleman_medieval/` | moving boulders |
+| `Pulling.fbx` | **Pulling** (straining, both hands; else **Tug Of War**) | `SourceArt/Mixamo/muscleman_medieval/` | the failed heave at the stone |
+| `Falling Back Death.fbx` | **Falling Back Death** (falls flat on his back) | `SourceArt/Mixamo/muscleman_medieval/` | falls flat at the stone |
+| `Victory.fbx` | **Victory** | `SourceArt/Mixamo/muscleman_medieval/` | his big cheer |
+| `Toss.fbx` | **Toss** (two hands, upward; else **Throwing**) | `SourceArt/Mixamo/muscleman_medieval/` | boosting Dan up to a ledge |
+| `Kneeling.fbx` | **Kneeling** (going down on one knee; else **Kneel**) | `SourceArt/Mixamo/muscleman_medieval/` | "Master!" |
+| `Sword And Shield Idle.fbx` | **Sword And Shield Idle** | `SourceArt/Mixamo/knight/` | knight standing guard |
+| `Sword And Shield Walk.fbx` | **Sword And Shield Walk** (In Place) | `SourceArt/Mixamo/knight/` | knight patrol |
+| `Sword And Shield Slash.fbx` | **Sword And Shield Slash** | `SourceArt/Mixamo/knight/` | knight's swing |
+| `Sword And Shield Block.fbx` | **Sword And Shield Block** | `SourceArt/Mixamo/knight/` | shield up |
+| `Standing Draw Arrow.fbx` | **Standing Draw Arrow** | `SourceArt/Mixamo/archer/` | archer reloads |
+| `Standing Aim Overdraw.fbx` | **Standing Aim Overdraw** (else **Standing Aim Idle**) | `SourceArt/Mixamo/archer/` | aiming |
+| `Standing Aim Recoil.fbx` | **Standing Aim Recoil** | `SourceArt/Mixamo/archer/` | the shot |
+| `Nervously Look Around.fbx` | **Nervously Look Around** | `SourceArt/Mixamo/archer/` | the nervous archer |
+| `Dizzy Idle.fbx` | **Dizzy Idle** (else **Drunk Idle** / **Stunned**) | `SourceArt/Mixamo/wagon_driver/` | the singed driver after the blast |
+| `Injured Walk.fbx` | **Injured Walk** (else **Drunk Walk**) | `SourceArt/Mixamo/wagon_driver/` | he staggers out |
+
+**Nothing else:** walking, running, idle, jumping, punching, laughing, cheering, sitting (the driver on the wagon), surprised (Dan
+at the stone) are the shared clips already in `SourceArt/Mixamo/`. The Violinist plays his lute with a clip made by code (like the
+lyre). Sword, shield, bow and lute are separate props. Abi's long hair: if Mixamo ties it to her arms, Code fixes it. Until the
+files are in, the world uses placeholders; when they are, tell Code (or Code picks them up later this round).
+
 ## Round 8 (2026-11-10): the Medieval Kingdom — images needed from Dan (prompts by the planning chat)
 
 Film art: `SourceArt/Reference/Characters/*/…-medieval-film.png`, `MuscleMan/muscleman-medieval-film.png`,
