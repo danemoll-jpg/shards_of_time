@@ -24,9 +24,29 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — none (the planning chat writes Round 8)
-Round 7's plan is in `TODO-ARCHIVE.md`. Nothing is waiting on Dan for Bethlehem (Fix 7.1 brought his Mixamo files and the
-new guard dog in).
+Current round — Fix 7.2: never stuck (the well) + a reset option (target 0.7.2)
+Round 7 and Fix 7.1 are delivered (below). Round 8 (the Medieval Kingdom) is
+next; the planning chat writes it once Dan's film references are in. Report
+per item: done / not done / deferred, and why.
+
+1. **"If you get stuck in the well you can't get out" (Dan, 2026-11-10).** The
+   well is a deep-dive gate (divers are pushed back up), but a hero who falls
+   in can't climb out. Fix it: a rope and bucket (or rungs) inside to climb up,
+   and swimming up to the rim climbs out automatically (like the ice holes in
+   Round 6). Check from the player's view, each hero, both from a fall and a jump.
+2. **Never stuck anywhere (standing rule, add to `CLAUDE.md`).** Every pit,
+   well, pool, hole, crawl space and enclosed area in every world must have a
+   way out with the moves the player has at that point, or not be enterable
+   without them. Add a check that runs for every world: drop each hero into
+   every water volume and every low enclosed spot (the level data lists them)
+   and prove the bot gets out within ~20 s; report any it can't, then fix them.
+   Run it on the Ice Age, Egypt and Bethlehem now.
+3. **A reset button (Dan, 2026-11-10).** Pause menu: **"Return to checkpoint"**
+   (back to the last checkpoint with the party, no heart lost, shards kept),
+   plus a safety net: if the player hasn't been able to move far for ~15 s in a
+   spot with no exit (no progress, stuck against geometry), show a small hint
+   "Stuck? Pause → Return to checkpoint". Works in every world and in the vortex.
+4. Build, check, publish 0.7.2, update `TODO.md` / `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
