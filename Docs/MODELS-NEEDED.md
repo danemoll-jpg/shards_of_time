@@ -2,13 +2,8 @@
 
 ## Round 11 (2026-11-12): Mixamo for Victorian Steampunk — what Dan uploads and downloads
 
-**Meshy ran out of credits** after three models ("402 Insufficient funds"). Ready now: Dan, Abi and Muscle Man (fronts:
-`Data/screenshots/round11/models/`). Waiting on a Meshy top-up: the Violinist, the factory worker, mechanical Kira, the clockwork
-horse, the steam carriage, the street clock, the steam press. Code retries Meshy during the round; when the Violinist and the worker
-come through, their upload files appear here too (same steps).
-**The Tripo website works too:** Dan made the Violinist there (`SourceArt/Tripo/violinist_steampunk.glb`, 1.9M triangles); Code decimates it
-(`Tools/Blender/decimate_glb.py`, 25k) and cleans it up. Save any of the others the same way (`SourceArt/Tripo/<name>.glb`: factory_worker,
-kira_mechanical, clockwork_horse, steam_carriage, street_clock, steam_press) and tell Code.
+Dan, Abi and Muscle Man are Meshy models; the Violinist and the factory worker are Dan's Tripo models (`SourceArt/Tripo/`, decimated by
+`Tools/Blender/decimate_glb.py`). Fronts: `Data/screenshots/round11/models/`. **Upload these five:**
 
 | Model | Upload this (mixamo.com > Upload Character) | Height |
 |---|---|---|
@@ -16,7 +11,7 @@ kira_mechanical, clockwork_horse, steam_carriage, street_clock, steam_press) and
 | Abi, steampunk | `SourceArt/Mixamo/abi_steampunk/upload/abi_steampunk.fbx` | 1.65 m |
 | Muscle Man, steampunk | `SourceArt/Mixamo/muscleman_steampunk/upload/muscleman_steampunk.fbx` | 2.0 m |
 | The Violinist, street musician (Dan's Tripo model, decimated to 25k) | `SourceArt/Mixamo/violinist_steampunk/upload/violinist_steampunk.fbx` | 1.85 m |
-| (later) Factory worker | `SourceArt/Mixamo/factory_worker/upload/factory_worker.fbx` | 1.8 m |
+| Factory worker (Dan's Tripo model, decimated to 15k; enemy) | `SourceArt/Mixamo/factory_worker/upload/factory_worker.fbx` | 1.8 m |
 
 For **each**:
 1. **Upload**, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**.
@@ -38,7 +33,9 @@ and save it under the first column's name anyway.
 **Still open from Round 10** (same settings, folder `SourceArt/Mixamo/muscleman_pirate/`): `Drowning.fbx` (search **Drowning**, else
 the most flailing **Swim**), `Getting Up.fbx` (**Getting Up**, else **Stand Up**), `Jumping Down.fbx` (**Jumping Down**, else **Jump**).
 
-That's 3 T-poses now (+2 when Meshy has credits) + 2 Muscle Man clips (+3 from Round 10). Tell Code when they're in.
+That's **5 T-poses** (Dan, Abi, Muscle Man, the Violinist, the factory worker) + 2 Muscle Man clips (+3 from Round 10). Tell Code when they're in.
+
+**Fix 11.1 (2026-11-12): all seven Tripo models are in.** The Violinist and the worker are the uploads above. Code rigged mechanical Kira (23 bones, no ear bones) and the clockwork horse (Code's four-legged rig, 9 clips each); the street clock, the carriage and the press are static models (`Tools/Blender/static_export.py`). Previews: `Data/screenshots/round11/models/`, rigs `round11/rig/`.
 
 ## Round 11 (2026-11-12): Victorian Steampunk — images needed from Dan (prompts by the planning chat)
 

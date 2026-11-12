@@ -214,8 +214,13 @@ namespace ShardsOfTime
             yield return Wait(3f);
             Ok(Player.transform.position.y > 2.6f && Vector3.Distance(car.transform.position, cs) > 5f, $"rode a carriage's roof ({Fmt(Player.transform.position)}, the carriage moved {Vector3.Distance(car.transform.position, cs):0.0} m)");
             yield return Shot("450_carriage_ride");
-            int b0 = Carriage.Bumps; var ahead = car.transform.position + car.transform.forward * 6f; ahead.y = .1f;
-            yield return TpSettle(ahead, car.transform.eulerAngles.y + 180); yield return WaitFor(() => Carriage.Bumps > b0, 5f);
+            int b0 = Carriage.Bumps;
+            for (int tr = 0; tr < 4 && Carriage.Bumps == b0; tr++)   // 3.5 m ahead of it on a straight (not just before a corner, where it turns away)
+            {
+                yield return WaitFor(() => Mathf.Abs(car.transform.position.x) < 13f || Mathf.Abs(car.transform.position.z - 200f) < 13f, 12f);   // the middle of a straight
+                var ahead = car.transform.position + car.transform.forward * 3.5f; ahead.y = .1f;
+                yield return TpSettle(ahead, car.transform.eulerAngles.y + 180); yield return WaitFor(() => Carriage.Bumps > b0, 3f);
+            }
             Ok(Carriage.Bumps > b0 && Health.Hearts > 0, $"standing in a carriage's way: bumped aside, no harm ({Carriage.Bumps - b0} bumps, {Health.Hearts} hearts)");
             int g0 = HorseGag.Played; yield return TpSettle(new Vector3(-31f, .1f, 188f), 0);
             yield return WaitFor(() => HorseGag.Played > g0, 4f); yield return Wait(2.6f); yield return Shot("451_horse_gag"); yield return WaitFor(() => !Game.I.Busy, 10f); yield return Wait(.5f);

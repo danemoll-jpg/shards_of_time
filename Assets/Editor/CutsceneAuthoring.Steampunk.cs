@@ -175,7 +175,7 @@ namespace ShardsOfTime
             const float L = ClockShardLength;
             var k = new Kit("ClockShard", L);
             var dan = Cast0(k, "Dan", c.dan); var abi = Cast0(k, "Abi", c.abi); var kira = Cast0(k, "Kira", c.kira); var mm = SteamMM(k, "Muscle Man");
-            var face = new Vector3(0, 6.4f, -1.25f);
+            var face = System.IO.File.Exists("Assets/Resources/World/street_clock.fbx") ? new Vector3(0, 5.85f, -1.0f) : new Vector3(0, 6.4f, -1.25f);   // Fix 11.1: Dan's Tripo clock
             var gearH = k.Holder("Teal gear", Vector3.zero, 0);
             var g = PropFrom("steampunk_props", "TealGearShard", gearH.transform, face, 0);
             if (!g) Placeholders.CrystalObject("Crystal", c.shard, .4f).transform.SetParent(gearH.transform, false);
@@ -189,9 +189,9 @@ namespace ShardsOfTime
             k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("look"), 1.4f), (PeopleClip("cheer"), 6.4f), (PeopleClip("idle"), 7.6f));
             Path(k, mm, (0f, new Vector3(1.6f, 0, -6f), 0f), (2.6f, new Vector3(1.6f, 0, -6f), 0f), (3.8f, new Vector3(0, 0, -2.1f), 0f), (L, new Vector3(0, 0, -2.1f), 0f));
             k.Clips(mm, (PeopleClip("idle"), 0f), (PeopleClip("walk"), 2.6f), (MMHold, 3.8f), (PC("mm_cheer", "cheer"), 7.0f));
-            Path(k, dan, (0f, new Vector3(-.4f, 0, -4.6f), 0f), (3.6f, new Vector3(-.4f, 0, -4.6f), 0f), (4.0f, new Vector3(0, 0, -2.3f), 0f), (5.2f, new Vector3(0, 3.0f, -2.0f), 0f), (6.8f, new Vector3(0, 3.0f, -2.0f), 0f), (7.4f, new Vector3(0, 0, -2.6f), 0f), (L, new Vector3(0, 0, -2.6f), 0f));
+            Path(k, dan, (0f, new Vector3(-.4f, 0, -4.6f), 0f), (3.6f, new Vector3(-.4f, 0, -4.6f), 0f), (4.0f, new Vector3(0, 0, -2.3f), 0f), (5.2f, new Vector3(0, face.y - 3.4f, -2.0f), 0f), (6.8f, new Vector3(0, face.y - 3.4f, -2.0f), 0f), (7.4f, new Vector3(0, 0, -2.6f), 0f), (L, new Vector3(0, 0, -2.6f), 0f));
             k.Clips(dan, (PeopleClip("look"), 0f), (PeopleClip("idle"), 2.6f), (PeopleClip("offer") ?? PeopleClip("cheer"), 5.2f), (PeopleClip("cheer"), 6.4f), (PeopleClip("idle"), 7.4f));
-            k.Key(gearH, gp, "m_LocalPosition", 5.9f, face); k.Key(gearH, gp, "m_LocalPosition", 6.3f, new Vector3(.3f, 4.9f, -2.0f)); k.Key(gearH, gp, "m_LocalPosition", 7.2f, new Vector3(.3f, 4.9f, -2.0f));
+            k.Key(gearH, gp, "m_LocalPosition", 5.9f, face); k.Key(gearH, gp, "m_LocalPosition", 6.3f, new Vector3(.3f, face.y - 1.5f, -2.0f)); k.Key(gearH, gp, "m_LocalPosition", 7.2f, new Vector3(.3f, face.y - 1.5f, -2.0f));
             k.Show(gearH, 0f, 7.3f);
             Burst(k, "Teal flash", face, c.shard, 6.0f, 1.6f, 12, .9f, .4f);
             if (k.Necklaces.ContainsKey(dan)) PulseFrom(k, dan, 6.2f, L, L);

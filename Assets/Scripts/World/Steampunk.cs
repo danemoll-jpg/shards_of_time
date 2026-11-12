@@ -137,6 +137,7 @@ namespace ShardsOfTime
             if (!save.heartUpgrades.Contains("SP-H2")) Pickup.Make(Pickup.Kind.HeartUpgrade, "SP-H2", "SP", new Vector3(94f, 1f, 208f), root, Playground.Accent);
             foreach (var h in new[] { new Vector3(-6, 0, 30), new Vector3(10, 0, 70), new Vector3(0, 0, 106), new Vector3(-6, 0, 186), new Vector3(-60, 0, 206), new Vector3(56, 0, 194) })
                 Pickup.HealHeart(OnGround(h.x, h.z) + Vector3.up * 1f, root);
+            TripoDecor();
             Enemies();
             new GameObject("Steampunk watch").AddComponent<SteampunkWatch>().transform.SetParent(root, false);
             SetPressGone(prog.opened.Contains(PressFlag));
@@ -417,7 +418,8 @@ namespace ShardsOfTime
         static void Square(WorldProgress prog)
         {
             Cp(VortexCp, new Vector3(-10, 0, 184), 0, false);
-            var clock = Prop("StreetClock", ClockAt.x, ClockAt.z, 0, 1f, 0f);
+            // Fix 11.1: Dan's Tripo clock (static, its face toward the avenue: -z); the Blender one if it's missing
+            var clock = StaticModel.Spawn("street_clock", root, ClockAt, 180f, 7.5f) ?? Prop("StreetClock", ClockAt.x, ClockAt.z, 0, 1f, 0f);
             Solid(ClockAt, new Vector3(3f, 1f, 3f)); Solid(ClockAt, new Vector3(1.3f, 8f, 1.3f));
             if (!clock) { Box("Fallback clock column", ClockAt + Vector3.up * 3.5f, new Vector3(1.2f, 7, 1.2f), new Color(.12f, .32f, .25f)); Box("Fallback clock head", ClockAt + Vector3.up * 7f, new Vector3(2.6f, 2.6f, 2.6f), "Brass"); }
             PointLight("Clock glow", ClockAt + new Vector3(0, 6.4f, -2.2f), 6, 1.2f, Teal);
@@ -491,7 +493,8 @@ namespace ShardsOfTime
             var mp = tt.AddComponent<MovingPlatform>(); mp.Hold(tt.transform.position);
             var tp = Prop("Turntable", -60, 200, 0, 1f, 0f, tt.transform); MeshSolid(tp);
             if (!tp) Placeholders.Prim(PrimitiveType.Cylinder, tt.transform, new Vector3(-60, .15f, 200), new Vector3(8f, .15f, 8f), WorldArt.Mat("IronGrate"), false, "Fallback turntable").AddComponent<MeshCollider>();
-            Prop("SteamCarriage", -60, 200, 90, 1f, .3f, tt.transform);
+            var parked = StaticModel.Spawn("steam_carriage", tt.transform, new Vector3(-60, .3f, 200), 90f, 3.4f) ?? Prop("SteamCarriage", -60, 200, 90, 1f, .3f, tt.transform);
+            _ = parked;
             var turn = tt.AddComponent<WindTurntable>(); turn.id = "SP-turntable"; turn.what = "the carriage turntable"; turn.spin = 14f;
             Socket(new Vector3(-52f, 0, 195f), turn);
             Hint(new Vector3(-54, 0, 198), 3f, () => turn.Powered ? "" : "A carriage turntable, stuck. Its gear socket wants winding... (mechanical Kira)");
@@ -527,6 +530,21 @@ namespace ShardsOfTime
             foreach (var z in new[] { 245f, 255f, 265f, 275f, 285f, 295f }) { House(z % 20 == 5 ? "HouseCream" : "HouseBrick", -14, z, -90); House(z % 20 == 5 ? "HouseBrick" : "HouseCream", 14, z, 90); }
             Wall("North street end", -10, 10, 300, 300.6f, 4, "Brick");
             for (int i = 0; i < 4; i++) { Lamp(-9.2f, 248 + i * 14); Lamp(9.2f, 255 + i * 14); }
+        }
+
+        // Fix 11.1: Dan's Tripo models where they stand still: parked carriages, smaller presses in the factory (each with a box collider)
+        static void TripoDecor()
+        {
+            foreach (var (x, z, yaw) in new[] { (22f, 104f, 90f), (-56f, 207f, 0f), (54f, 193f, 180f) })
+                MeshSolidAll(StaticModel.Spawn("steam_carriage", root, new Vector3(x, 0, z), yaw, 3.4f));
+            foreach (var (x, z, yaw) in new[] { (-26f, 90.5f, 180f), (8f, 14f, 90f) })
+                MeshSolidAll(StaticModel.Spawn("steam_press", root, new Vector3(x, 0, z), yaw, 4f));
+        }
+        // a static model solid as drawn (its own mesh: the press is open between its pillars)
+        static void MeshSolidAll(GameObject go)
+        {
+            if (!go) return;
+            foreach (var mf in go.GetComponentsInChildren<MeshFilter>()) { var mc = mf.gameObject.AddComponent<MeshCollider>(); mc.sharedMesh = mf.sharedMesh; }
         }
 
         static void Enemies()

@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 11: `game-1100`, previous `Builds/LauncherRelease-1100`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 11.1: `game-1101`, previous `Builds/LauncherRelease-1101`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,15 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 11.1 delivered: 0.11.1 (build 1101), 2026-11-12.** Dan's seven Tripo models: mechanical Kira and the clockwork horse rigged by
+Code (Kira lock OK), the street clock, carriage and press as static models; the Violinist's and the worker's Mixamo uploads ready.
+Standing facts from Fix 11.1:
+- Tripo website models: `SourceArt/Tripo/<name>.glb` -> `Tools/Blender/decimate_glb.py <in> SourceArt/Meshy/<name>/model.glb <tris>` ->
+  `python Tools/glb_textures.py <name>` (base_color.png etc.) -> `meshy_cleanup.py` (YAW 90 for side-profile animals) -> rig / static export.
+- Kira lock: mechanical Kira needs > 25% grey (`CharacterImport`); her texture went through `match_fur.py`.
+- Steampunk: `StaticModel.Spawn("street_clock", .., 180, 7.5)` (its face at y 5.85, z 199.0: `storyShard`), `steam_carriage` /
+  `steam_press` as decor (`Steampunk.TripoDecor`, MeshColliders from their own meshes); the rail-loop carriages and the press scene stay Blender props.
+
 **Round 11 delivered: 0.11.0 (build 1100), 2026-11-12.** Victorian Steampunk, the sixth world: the factory at night (the arrival in the
 bolt bucket, the belt run, `MuscleManHero`, then catwalks, wind-up machines, riveted pillars, Muscle Man's jobs, workers) and the streets by day
 (the avenue, the square with the great clock, carriages, clockwork horses, the gear gate); mechanical Kira (wind-up, magnet paws), Abi's wall jump,

@@ -47,7 +47,7 @@ ROUND8 = {'dan_medieval', 'abi_medieval', 'muscleman_medieval', 'violinist_medie
 ROUND11 = {'dan_steampunk', 'abi_steampunk', 'muscleman_steampunk', 'violinist_steampunk', 'factory_worker', 'kira_mechanical',
            'clockwork_horse', 'steam_carriage', 'street_clock', 'steam_press'}
 ROUND10 = {'dan_pirate', 'abi_pirate', 'muscleman_pirate', 'violinist_pirate', 'pirate', 'kira_otter', 'crab', 'pufferfish', 'fish'}
-YAW = {'guardian': 90}   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
+YAW = {'guardian': 90, 'kira_mechanical': 90, 'clockwork_horse': 90}   # Round 11: Tripo's side-profile models face -X   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'models')
 
 

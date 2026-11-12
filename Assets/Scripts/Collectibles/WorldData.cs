@@ -526,7 +526,7 @@ namespace ShardsOfTime
             var w = CreateInstance<WorldData>(); w.name = Steampunk; w.worldId = Steampunk; w.displayName = "Victorian Steampunk"; w.heightsAreHints = true;
             w.violinistInstrument = "SteamViolin"; w.violinistPlayClip = "violinist_play";   // item 7: a street musician with his steampunk violin (the fiddle's clip)
             w.areas.Add(new AreaData { id = "SP", name = "Victorian Steampunk", requirement = 150, fromHere = 15, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.WindUp, Abilities.MagnetPaws, Abilities.MuscleMan, Abilities.PressDone },
-                storyShard = new Vector3(0, 6.4f, 198.6f), storyShardColor = new Color(.15f, .9f, .85f), spawn = new Vector3(0, 3.1f, 10f), spawnYaw = 0,
+                storyShard = new Vector3(0, 5.85f, 199.0f), storyShardColor = new Color(.15f, .9f, .85f), spawn = new Vector3(0, 3.1f, 10f), spawnYaw = 0,
                 kiraForm = KiraForm.Mechanical, outfit = Outfits.Steampunk, box = new Bounds(new Vector3(0, 30, 150), new Vector3(240, 140, 340)) });
             void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "SP", position = new Vector3(x, y, z), requires = req, note = note });
             string K = "Kira", WU = Abilities.WindUp, MP = Abilities.MagnetPaws, MM = Abilities.MuscleMan, WJ = Abilities.WallJump;

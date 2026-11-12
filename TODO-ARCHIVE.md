@@ -1846,3 +1846,59 @@ the world is night (Bethlehem, Medieval) and keep the game's colours rather than
 WiseMenArrive,MedievalArrival,TheStone}.jpg` and the eight videos `Recordings/<same names>.mp4` (no sound in the videos); Act I with
 your song from New game (does it land on your beats?); listen to `Assets/Resources/Sounds/mm_my_hero.mp3` and `stone_whirl.mp3`
 (Code doesn't play sound on your PC).
+
+### Round 10: the Pirate Seas (0.10.0, build 1000, 2026-11-11)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round10/final` (new mode `pirate`: from the vortex with four
+worlds done -> PirateArrival -> the ship, the rigging, Muscle Man's jobs, the fiddler, the island and cove -> the necklace -> the chest ->
+ShardOverboard -> under the sea -> the green shard -> SeaVortex -> the vortex -> back in for the grotto -> the Medieval moat's deep pit):
+RESULT all passed (61 ok); the bot took 3.2 min from the arrival to the vortex. `stuckpirate` (rule 12, 13 spots x every hero): all passed.
+`fix81pirate`: all passed (25 walkable shards reached, 0 invisible walls, no moving platforms). `seareach` (new): all 30 under-sea shards
+swum to. `perfpirate`: 272 fps at the slowest place (the reef, 1080p), 288 (Steam Deck setting) (need 60 / 40). `r9` (regression, the
+vortex paths moved): all passed. Audio 0.000 RMS in every run, build and render; window watcher: no window, never in the foreground (one
+build listed a visible "Task Manager" by a reused process id: not started by Code, never in the foreground). Evidence: `Data/screenshots/round10/`.
+1. Mixamo first: **done.** Meshy -> clean-up -> five upload files; Code stopped and told Dan (5 T-poses + 3 Muscle Man clips; the heroes'
+   swim clips were already in). Dan's five rigs arrived the same evening and are in (Abi's mesh closed). **Not in:** his three clips
+   (Drowning, Getting Up, Jumping Down): fallbacks Treading Water / Hard Landing / Jump until they are (`Docs/MODELS-NEEDED.md`).
+2. The other models: **done.** Otter Kira (Code's rig, 10 clips incl. a belly-slide; fur moved to Kira's gray; Kira lock OK: 0 ear bones,
+   55% gray, 0% white, amber eyes 0.03% (small on her long atlas: the lock takes 0.02% for her, as for the dragon)); crab, pufferfish, fish
+   as static models moved by code (fish decimated to 1k triangles). Props by script (`Tools/Blender/pirate_world.py`): the ship (red-brown
+   hull, turned balusters, pink sails, rigging nets, tops, crow's nest, lanterns, the hold), the island and cove, the sea floor, reef corals,
+   kelp, the shipwreck, the sea cave, chest, cannon, anchor, barrels, crates, palms. The fiddle is the Ice Age's (with its playing clip).
+3. Two areas: **done.** The ship at sunset (decks, rigging, crow's nest, hold, cabin, locker) + the island and cove with `pirate.mp3`; under
+   the sea (reef, wreck, cave, grotto) with `underwater.mp3`, crossfading at the surface (head under 0.6 s / out 1.2 s). One world, one area.
+4. `PirateArrival` (34 s): **done.** The film's order: the tunnel, the ship at night, the green vortex, the barrels, Dan and otter Kira out,
+   Abi, Muscle Man through the sails, the crash, flat, sits up grinning, Abi laughs, the green shard. Sheet `round10/PirateArrival.jpg`.
+5. `ShardOverboard` (17.5 s): **done.** Held up from behind, it slips, bounces, rolls across the deck, under the rail, into the sea; he leaps
+   after it, Dan and Abi follow, otter Kira dives. Before it the sea pushes everyone up below 3.5 m; after it the deep sea is open.
+   Sheet `round10/ShardOverboard.jpg`. Also `SeaVortex` (9 s, the finale). MP4s in `Recordings/`.
+6. Otter Kira: **done.** Swims 1.6x, any depth, no breath limit; squeezes into the cave's grotto (0.95 m gap) and the hold's cargo nook;
+   belly-slide (B while running): 6.1 m in the check, full speed on the wet deck.
+7. Muscle Man: **done.** Rolls the cabin's cannon aside, lifts the hold's crates and the locker's anchor, boosts Dan / Abi onto the fore
+   top; struggles under water (slower, his struggle clip). Jobs now only on your own level (an attack below decks no longer triggers one).
+8. The deep dive: **done.** The fiddler on the quarterdeck teaches everyone (breath x3, any depth). Checked in an earlier world: DD1 in the
+   Medieval moat's deep pit.
+9. Enemies: **done.** Goofy deckhands (chase on their own deck, trip over the peg leg: 1.6 s harmless), crabs (sideways, snap), pufferfish
+   (puff up near you, harmless deflated). 80 friendly fish in 8 schools. No boss.
+10. Shards: **done.** 60 (30 ship + island, 30 under the sea) + 2 hearts (the cabin, the wreck). Threshold **225** (75% of 300) and 20 from
+   here; rule 2: Ice Age 45 + Egypt 52 + Bethlehem 50 + Medieval 54 + Pirate Seas 30 = 231 on arrival (Muscle Man counts now), 30 here.
+11. The finale: **done.** The necklace leads to the chest, then down to the green shard among corals; `SeaVortex` takes all four ->
+   the vortex (Home: 5 of 8; Victorian Steampunk "to be continued").
+12. Look: **done.** Pink-violet sunset, deep blue sea; under water bright blue fog to 75 m, light, colourful corals. Frame rate above.
+13. Sound: **done.** 18 new ElevenLabs effects (waves, wood creak, barrel thud, sail rip, crash, chest, shard bounce / roll, splash,
+   bubbles, sea vortex, crab, pufferfish, "Arr!", rope, deck steps, cannon roll, the fiddle's shanty); Muscle Man's laugh and "My hero!"
+   reused. No music made by Code.
+14. Build / check / publish: **done.** 0.10.0 published as `game-1000`; the Round 1 starter install in `local/sc` updated itself from GitHub
+   to build 1000 and started (ready signal).
+
+Also found and fixed on the way: Blender's merge left all ship balusters on one spot (stale transforms); hold beams crossed the hatch ramp at
+head height; ramps had a crawl space under them (now solid wedges); the back room's lintel was exactly Dan's height; the port rail had no
+gap at the rope ladder; the cove's bank was too steep to walk out; the wreck's ribs closed its open deck; a deckhand and the heal heart sat
+in the arrival's shots (world enemies are hidden during Pirate cutscenes).
+Decisions Code made (Dan can overrule): the vortex now has seven paths 20 deg apart (Victorian Steampunk added); Pirate threshold 225; the
+plank goes out through a gap in the rail at deck level; the rigging is climbed by Jump at its net (an automatic climb), the fore top by
+Muscle Man's boost; air bubbles from vents give Dan and Abi their breath; the arrival plays at night, play continues at sunset.
+
+**For Dan to check:** the two sheets `Data/screenshots/round10/{PirateArrival,ShardOverboard}.jpg` and the MP4s in `Recordings/`; the ship
+by the rope nets, the plank, the crow's nest; otter Kira's belly-slide on the wet deck; the music switching as you dive and surface; the
+sounds (Code doesn't play sound on your PC). Known: the first view of the reef / the deck stutters once (250-420 ms, shaders warming up);
+the wreck reads as a ribbed box; the island's grass edge is still a little stepped; Muscle Man's three clips (above).
