@@ -95,6 +95,25 @@ namespace ShardsOfTime
             ["Steel"] = (new Color(.78f, .8f, .84f), "Lit", .8f),
             ["Bramble"] = (new Color(.26f, .24f, .14f), "Lit", .1f),
             ["PurpleShard"] = (new Color(.7f, .4f, 1f), "Glow", 0),
+            // Round 10: the Pirate Seas (Tools/Blender/pirate_world.py): the red-brown ship, honey decks, pink sails, brass, sand, jungle, corals
+            ["ShipRed"] = (new Color(.55f, .2f, .14f), "Lit", .35f),
+            ["DeckWood"] = (new Color(.74f, .54f, .33f), "Lit", .25f),
+            ["SailPink"] = (new Color(.98f, .72f, .8f), "Lit", .1f),
+            ["Brass"] = (new Color(.86f, .66f, .3f), "Lit", .7f),
+            ["SeaSand"] = (new Color(.93f, .84f, .64f), "Lit", .1f),
+            ["Jungle"] = (new Color(.24f, .55f, .26f), "Lit", .15f),
+            ["PalmTrunk"] = (new Color(.62f, .46f, .3f), "Lit", .15f),
+            ["PalmLeaf"] = (new Color(.25f, .62f, .28f), "Lit", .2f),
+            ["CoralPink"] = (new Color(1f, .45f, .6f), "Lit", .3f),
+            ["CoralOrange"] = (new Color(1f, .55f, .25f), "Lit", .3f),
+            ["CoralPurple"] = (new Color(.6f, .35f, .9f), "Lit", .3f),
+            ["CoralYellow"] = (new Color(1f, .85f, .3f), "Lit", .3f),
+            ["Seaweed"] = (new Color(.2f, .58f, .38f), "Lit", .2f),
+            ["WreckWood"] = (new Color(.36f, .3f, .25f), "Lit", .15f),
+            ["ChestWood"] = (new Color(.5f, .3f, .15f), "Lit", .3f),
+            ["GreenShard"] = (new Color(.35f, 1f, .5f), "Glow", 0),
+            ["Starfish"] = (new Color(1f, .5f, .35f), "Lit", .3f),
+            ["Black"] = (new Color(.08f, .07f, .07f), "Lit", .2f),
         };
 
         public static Material Mat(string name)

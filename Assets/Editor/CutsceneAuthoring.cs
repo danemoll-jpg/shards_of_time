@@ -33,6 +33,8 @@ namespace ShardsOfTime
             ("BethlehemArrival", BethlehemArrival), ("WiseMenArrive", WiseMenArrive), ("NecklaceWakesBethlehem", NecklaceWakesBethlehem),
             ("ViolinistTeachesBethlehem", ViolinistTeachesBethlehem),
             ("MedievalArrival", MedievalArrival), ("TheStone", TheStone), ("NecklaceWakesMedieval", NecklaceWakesMedieval), ("ViolinistTeachesMedieval", ViolinistTeachesMedieval),   // Round 8
+            ("PirateArrival", PirateArrival), ("ShardOverboard", ShardOverboard), ("SeaVortex", SeaVortex), ("NecklaceWakesPirate", NecklaceWakesPirate),
+            ("ViolinistTeachesPirate", ViolinistTeachesPirate),   // Round 10
         };
 
         // Round 6: who plays in a world's story cutscenes (a model not in yet falls back: Dan's / Abi's home models, home Kira) and the

@@ -14,7 +14,7 @@ namespace ShardsOfTime
     // (attack / punch / kick), hurt, cheer. Landing and cheering stop as soon as the hero runs off.
     public sealed class CreatureAnimator : MonoBehaviour
     {
-        public static readonly string[] KiraClips = { "idle", "walk", "run", "jump", "fall", "land", "swim", "attack", "hurt", "stunned" };
+        public static readonly string[] KiraClips = { "idle", "walk", "run", "jump", "fall", "land", "swim", "attack", "hurt", "stunned", "slide" };   // Round 10: otter Kira's belly-slide
         public static readonly string[] PeopleClips = { "idle", "walk", "run_slow", "run", "jump", "fall", "land", "land_hard", "swim", "tread", "push", "punch", "kick", "hurt", "cheer",
             // Round 7 (Dan's Mixamo downloads; missing = skipped): the Wise Men (sit on the camel, argue, read the map, hold out a gift, disappointed),
             // the watchman (yell "Halt!", doze), everyone's surprise
@@ -22,7 +22,9 @@ namespace ShardsOfTime
             // Round 8 (Dan's Mixamo downloads): Muscle Man's own (show off, mock, lift, push, heave, fall flat, cheer, boost, kneel), the knight's
             // block, the archer's draw / aim / shoot / nervous look, the wagon driver's daze and limp
             "mm_flex", "mm_taunt", "mm_lift", "mm_push", "mm_heave", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel",
-            "block", "draw", "aim", "shoot", "nervous", "dazed", "limp" };
+            "block", "draw", "aim", "shoot", "nervous", "dazed", "limp",
+            // Round 10 (Dan's Mixamo downloads): Muscle Man's struggling swim, getting up after his crash, his leap overboard
+            "mm_struggle", "mm_getup", "mm_leap" };
         static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer", "yell", "surprised",
             "mm_flex", "mm_taunt", "mm_lift", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel", "draw", "shoot" };   // Round 8
         static readonly HashSet<string> UpperBody = new HashSet<string> { "punch", "cheer", "hurt" };
@@ -153,6 +155,8 @@ namespace ShardsOfTime
         string Loop(float s)
         {
             if (!motor) { var d = Drive != null ? Drive().loop : null; return d ?? (s < .25f ? "idle" : "gait"); }
+            if (motor.Mode == MoveMode.Swim && motor.Struggling && index.ContainsKey("mm_struggle")) return "mm_struggle";   // Round 10
+            if (motor.Sliding && index.ContainsKey("slide")) return "slide";
             if (motor.Mode == MoveMode.Swim) return (s > .6f || Mathf.Abs(motor.Velocity.y) > 1f || !index.ContainsKey("tread")) ? "swim" : "tread";
             if (!motor.Grounded) return "fall";
             if (Time.time - motor.LastPush < .2f && index.ContainsKey("push")) return "push";

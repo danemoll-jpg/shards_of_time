@@ -56,7 +56,7 @@ Design sources (read these when a round touches story, worlds or characters):
    threshold is met with the shards available on arrival: every earlier world
    with the moves the party has by then, plus this world's first-visit shards
    (`WorldData.RequirementReport`; Egypt: Ice Age 43 + Egypt 50 = 93 >= 90,
-   and 50 >= 20 from Egypt itself).
+   and 50 >= 20 from Egypt itself; the Pirate Seas: 231 >= 225, 30 >= 20).
 3. **Shards are universal (Dan, 2026-11-10; Fix 6.1), plus 20 from each world
    (Dan, 2026-11-11; Fix 8.1):** many small shards per world, but the player
    has **one total** across all worlds (every small shard ever collected,
@@ -69,7 +69,7 @@ Design sources (read these when a round touches story, worlds or characters):
    still count toward later thresholds; a world that is already awake never
    relocks. Rule 2's report checks both parts. The necklace leads to the story
    shard; the story shard opens the vortex. HUD: the total, "Next: 180 (this
-   world: 12 / 20)" under it; per-world counts in the pause menu. Tomorrowland
+   world: 12 / 20)" under it; per-world counts in the pause menu. Pirate Seas 225 (Round 10). Tomorrowland
    has no story shard: the rocket plays that role.
 4. **All characters are visible.** The two inactive heroes (and Muscle Man from
    Medieval on) follow the player. A follower that falls behind, falls off, or
@@ -226,7 +226,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -246,7 +246,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   (WorldData; positions match `World/Playground.cs`). The rule-2 check: `WorldData.RequirementReport`, logged by every
   check run.
   Egypt: `Assets/Resources/Data/Worlds/Egypt.asset` (made once from `WorldData.EgyptDefaults()`; delete it to remake it). Bethlehem:
-  `Bethlehem.asset` the same way (`WorldData.BethlehemDefaults()`).
+  `Bethlehem.asset` the same way (`WorldData.BethlehemDefaults()`). Medieval / Pirate Seas: `Medieval.asset`, `PirateSeas.asset` the same way.
 - **Art pipeline tools (from Hostile Horizon):** `python Tools/meshy_generate.py [--only a,b] [--force]` (concepts in
   `SourceArt/Concepts/<name>.png`, key from `MESHY_API_KEY`), `python Tools/import_characters.py` (all six models + the people's shared clips into
   `Assets/Resources/Characters/`). Prompts and Mixamo status: `Docs/MODELS-NEEDED.md`.
@@ -275,7 +275,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 9: `game-900`, previous `Builds/LauncherRelease-900`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 10: `game-1000`, previous `Builds/LauncherRelease-1000`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -284,6 +284,47 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 10 delivered: 0.10.0 (build 1000), 2026-11-11.** The Pirate Seas, the fifth world, in two parts: the ship at sunset (decks,
+rigging nets, crow's nest, hold, cabin, locker) + the tropical island and cove (`pirate.mp3`), and under the sea (reef, shipwreck, sea
+cave and grotto; `underwater.mp3`). `PirateArrival` and `ShardOverboard` from Dan's clips (sheets in `Data/screenshots/round10/`),
+`SeaVortex` (the finale). Otter Kira (fast swim, any depth, belly-slide), the deep dive for everyone (the fiddler), Muscle Man's jobs on
+board, deckhands / crabs / pufferfish, fish schools. 60 shards, threshold 225 + 20 from here. Published: `game-1000`. Report and "For Dan
+to check": `TODO.md`.
+
+Standing facts from Round 10:
+- Worlds: `Game.InPirate` (`WorldData.Pirate` = "PirateSeas"); `World/Pirate.cs` builds it (the sea's surface at 0: one `WaterVolume`
+  x -200..200, z -150..200, down to -60; the ship's keel on x 0, bow +z, hull z -22..24: main deck 3.5, quarterdeck and forecastle 6.0, the
+  hold's floor 0.6, the main top 13.35, the crow's nest 21, the fore top 11.8; the island east (x 25..135, centre (80, 12)), its cove at
+  (82, 64); the reef x -115..-25; the green shard's clearing (-45, 10); the wreck (-70, 118) in a trench at -21; the sea cave (-135, 0) on
+  -18.2, its grotto gap at world x -137..-136.3, y up to -17.25, z 20..20.6). Its pieces in `World/PirateWorld.cs` (SeaLock, AirVolume,
+  WetDeck, RopeClimb, FishSchool, PirateWatch). Ground and props: `Tools/Blender/pirate_world.py` (-> `pirate_terrain.fbx`,
+  `pirate_props.fbx`; it reuses `medieval_world.py`'s helpers; `merge_parts` must `view_layer.update()` first or new parts merge onto one
+  spot). Colliders are the drawn meshes (`Pirate.SolidParts`: MeshColliders on the named parts; sails, ropes, nets, glows have none).
+  `PirateSeas.asset` is made once from `WorldData.PirateDefaults()` (delete it to remake). `WorldData.StoryOrder` ends with the Pirate Seas.
+- Story flow: necklace awake -> the chest's story shard (`Pirate.ChestShardId`, a StoryShard pickup that does not set `storyShard`) ->
+  `Game.Overboard` (`ShardOverboard`, world flag `PS-overboard`, `Pirate.OpenDeepSea`) -> the sea-floor story shard -> `Game.SeaFinale`
+  (`SeaVortex`) -> the vortex. Before the overboard `SeaLock` pushes swimmers up below 3.5 m; `DeepWater` below 16 m (otter Kira or the
+  deep dive). Rule 2: under-sea shards need `Abilities.Overboard` (never on arrival).
+- Vortex: seven paths 20 deg apart (Ice Age -60, Egypt -40, Bethlehem -20, Medieval 0, Pirate Seas 20, Victorian Steampunk 40 "to be
+  continued" until the green shard, Home 60); checks read the angles (`ExeCheck.Yaw`).
+- Moves: `Abilities.OtterSwim` / `BellySlide` (`KiraForm.Otter`, `kira_otter`; `CharacterMotor.Otter`, `Sliding`, `SlideSpeed` 10.5,
+  `SlidesAll` for checks); `Abilities.DeepDive` for everyone (`Abilities.Learns`; `Violinist.learner = "*"`; `CharacterMotor.BreathMax` x3).
+  `CharacterMotor.Struggling` (Muscle Man under water). `RopeClimb.Try` (Jump at a net -> `ClimbOut(to, straightUp)`). `WellExit.fixedExit`
+  (rope ladders). `Boulder.verbText` / `lifts` (cannon, crates, anchor). `MuscleJob.Near` only on the player's own level (|dy| <= 1.6).
+  `Party.KillY` is -90 in the Pirate Seas (-25 elsewhere).
+- Look: `Look.SetNight` (the arrival), `Look.SetUnderwater` + `CameraRig.LateUpdate` (the sea's fog: `Look.SeaFog`, 2..75 m).
+  Music: `Game.MusicFor` -> `pirate` / `underwater` by `Pirate.Underwater`; `Music.Ambience["pirate"] = waves_loop`.
+- Enemies `Combat/EnemyPirate.cs`: Deckhand (Mixamo `pirate`, chases only on its own deck, trips), Crab and Pufferfish (static models;
+  the pufferfish ignores gravity). They hide during Pirate cutscenes (`PirateWatch`).
+- Models: `dan_pirate`, `abi_pirate` (closed), `muscleman_pirate`, `violinist_pirate`, `pirate` (Mixamo); clips `mm_struggle`,
+  `mm_getup`, `mm_leap` (`import_characters.py EXTRA_CLIPS`; fallbacks until Dan's are in). `static_export.py name:ratio` decimates.
+  Kira lock: otter Kira's eyes are small on her atlas (0.02% like the dragon).
+- Cutscenes: `Assets/Editor/CutsceneAuthoring.Pirate.cs` (PirateArrival, ShardOverboard, SeaVortex, NecklaceWakesPirate,
+  ViolinistTeachesPirate). `CutsceneAuthoring.Version` still 25: rebuild one by deleting its prefab in `Assets/Resources/Cutscenes/`.
+  `film_sheet.py` MATCH has both scenes (sheets -> `Data/screenshots/round10/`).
+- Exe check modes: `pirate` (~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach` (every under-sea shard), `perfpirate`,
+  `piratediag`, `deepgate`. `stuck` and `fix81` include the Pirate Seas. The never-stuck kind "underwater" = out of the place in any mode.
+
 **Round 9 delivered: 0.9.0 (build 900), 2026-11-11.** The eight film scenes redone from Dan's clips (shot order, angles, framing,
 timing): `ActOne` 60 s on Dan's 60 s song, `IceAgeArrival` (the on-screen transformation), `EgyptArrival`, `SphinxGag`,
 `BethlehemArrival`, `WiseMenArrive` (the tossed present), `MedievalArrival` (Kira flying), `TheStone` ("My hero!", the cobblestone

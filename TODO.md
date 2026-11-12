@@ -24,63 +24,67 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 10: the Pirate Seas (target 0.10.0)
-Round 9 is delivered (below). Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice,
-Dan can overrule after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a
-window in front of Dan); rule 12 (never stuck) and the Fix 8.1 floor / platform / reach checks apply. Don't end your
-turn until 0.10.0 is published unless truly blocked (say so).
-
-**Inputs, all in (Dan, 2026-11-11):** the 9 concept sheets P1–P9 in `SourceArt/Concepts/` (`dan_pirate`,
-`abi_pirate`, `kira_otter`, `muscleman_pirate`, `violinist_pirate`, `pirate`, `crab`, `pufferfish`, `fish`),
-references in `SourceArt/Reference/Worlds/05-PirateSeas/` and `Characters/*`, his clips (`Clips/04-Medieval_TheStone_05-Pirate_Arrival.mp4`
-from ~70 s, `Worlds/05-PirateSeas/shard-rolls-overboard.mp4`) with notes in `Docs/CUTSCENE-FILM-NOTES.md`, and two
-songs: `Music/pirate.mp3` (the ship, 2:59) and `Music/underwater.mp3` (under the sea, 3:00). Notes: otter Kira is a
-browner gray (match her gray, Kira lock); Muscle Man grins with teeth (fine).
-
-1. **Mixamo first (Dan wants it early):** Meshy → clean-up → Mixamo upload files for `dan_pirate`, `abi_pirate`,
-   `muscleman_pirate`, `violinist_pirate`, `pirate`, then **stop at once and tell Dan exactly what to upload and
-   download** (shared clips reused; add swim / tread-water clips if any hero lacks them; Muscle Man's struggling swim).
-   Then carry on with everything else in the same turn; import Dan's clips when they arrive.
-2. **The other models:** otter Kira (Code's rig; swim, dive, belly-slide), crab, pufferfish (puff up / deflate), the
-   tropical fish (schools, simple swim cycle). Props: the pirate ship (red-brown hull, turned rail balusters, pink
-   sails, rigging, crow's nest, cannons, lanterns, barrels, crates, the hold), the island and cove, corals, the
-   shipwreck, the green story shard, the fiddle (its own playing clip).
-3. **Two areas, almost two levels (Dan, 2026-11-11):** **the ship** (deck, rigging, crow's nest, the hold, plus the
-   tropical island and cove) and **under the sea** (the reef, the shipwreck, underwater caves, the sea floor). Each
-   with its own look, enemies, about 30 shards and **its own song** (`pirate.mp3` above water, `underwater.mp3`
-   below, crossfading at the surface). One world for the vortex and the story shard.
-4. **`PirateArrival`** (from Dan's clip): the ship at **night** with lanterns; a green vortex swirls round it; Dan and
-   otter Kira pop out of barrels (Abi too), Muscle Man drops from the sky **through the sails** and crashes flat onto the
-   deck, lies there, sits up grinning; Abi laughs; Dan's necklace glows green. Side-by-side sheet against the clip as in
-   Round 9. (Gameplay can move on to sunset / day: DEFAULT the ship section at sunset, as the film's deck shots.)
-5. **`ShardOverboard`** (from Dan's clip `shard-rolls-overboard.mp4`, the doorway between the two areas): when the
-   ship part's necklace moment comes, Muscle Man grabs the green shard, holds it up laughing with joy, it slips from his
-   hand, bounces and rolls across the deck, under the rail and over the side; he leaps in after it, Dan and Abi follow,
-   otter Kira dives. Before this the water round the ship stays shallow; after it the deep sea opens.
-6. **Otter Kira:** fast swimming, deep diving and no breath limit, squeezes through narrow underwater gaps; on land a
-   belly-slide across wet decks.
-7. **Muscle Man the companion** (his first world as one): lifts cannons, crates and the anchor, boosts Dan up the
-   rigging; underwater he swims slowly and struggles to keep up (comic, never blocks the player).
-8. **New move: everyone's deep dive** (longer breath, swim deeper), taught by the Violinist as a ship's fiddler. Opens
-   the earlier worlds' deep-water gates (the Ice Age lake, Egypt's Nile, Bethlehem's well, Medieval's moat): check one.
-9. **Enemies:** goofy pirate deckhands (above), crabs (beach and deck), pufferfish (underwater: puff up and bump). Light
-   combat, no boss (DEFAULT). Friendly fish schools everywhere under the sea.
-10. **Shards (Fix 8.1 rule):** about 60 (30 + 30); threshold at about 75% of all shards so far **and** at least 20 from
-    this world, reachable on arrival with the moves held (the deep dive only after the Violinist). Two hearts. Report
-    the numbers.
-11. **The finale:** the necklace leads to the green shard on the sea floor among corals (film:
-    `green-shard-sea-floor.png`); collecting it opens a swirling underwater vortex that pulls everyone in, Muscle Man
-    included → the vortex space (Home: 5 / 8).
-12. **Look:** above, a pink-violet sunset over a deep blue sea, red-brown ship, pink sails; below, bright blue water,
-    light shafts, colorful corals, cheerful fish. Frame rate checked on both settings (water and fish schools are the
-    risk).
-13. **Sound:** ElevenLabs: waves, creaking wood, barrel thuds, the splash, bubbles, cannon, crab clicks, pufferfish
-    puff, Muscle Man's laughs and "My hero!", the fiddle tune.
-14. Build, check (a full run: … Medieval → vortex → Pirate Seas → ship → overboard → under the sea → green shard →
-    vortex; plus a deep-water gate in an earlier world), publish 0.10.0, update `TODO.md` / `CLAUDE.md`, clean up.
+Current round — none (Round 10 delivered: see below). The planning chat writes the next round here.
+Round 10's plan (as written) is in `TODO-ARCHIVE.md`.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 10: the Pirate Seas (0.10.0, build 1000, 2026-11-11)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round10/final` (new mode `pirate`: from the vortex with four
+worlds done -> PirateArrival -> the ship, the rigging, Muscle Man's jobs, the fiddler, the island and cove -> the necklace -> the chest ->
+ShardOverboard -> under the sea -> the green shard -> SeaVortex -> the vortex -> back in for the grotto -> the Medieval moat's deep pit):
+RESULT all passed (61 ok); the bot took 3.2 min from the arrival to the vortex. `stuckpirate` (rule 12, 13 spots x every hero): all passed.
+`fix81pirate`: all passed (25 walkable shards reached, 0 invisible walls, no moving platforms). `seareach` (new): all 30 under-sea shards
+swum to. `perfpirate`: 272 fps at the slowest place (the reef, 1080p), 288 (Steam Deck setting) (need 60 / 40). `r9` (regression, the
+vortex paths moved): all passed. Audio 0.000 RMS in every run, build and render; window watcher: no window, never in the foreground (one
+build listed a visible "Task Manager" by a reused process id: not started by Code, never in the foreground). Evidence: `Data/screenshots/round10/`.
+1. Mixamo first: **done.** Meshy -> clean-up -> five upload files; Code stopped and told Dan (5 T-poses + 3 Muscle Man clips; the heroes'
+   swim clips were already in). Dan's five rigs arrived the same evening and are in (Abi's mesh closed). **Not in:** his three clips
+   (Drowning, Getting Up, Jumping Down): fallbacks Treading Water / Hard Landing / Jump until they are (`Docs/MODELS-NEEDED.md`).
+2. The other models: **done.** Otter Kira (Code's rig, 10 clips incl. a belly-slide; fur moved to Kira's gray; Kira lock OK: 0 ear bones,
+   55% gray, 0% white, amber eyes 0.03% (small on her long atlas: the lock takes 0.02% for her, as for the dragon)); crab, pufferfish, fish
+   as static models moved by code (fish decimated to 1k triangles). Props by script (`Tools/Blender/pirate_world.py`): the ship (red-brown
+   hull, turned balusters, pink sails, rigging nets, tops, crow's nest, lanterns, the hold), the island and cove, the sea floor, reef corals,
+   kelp, the shipwreck, the sea cave, chest, cannon, anchor, barrels, crates, palms. The fiddle is the Ice Age's (with its playing clip).
+3. Two areas: **done.** The ship at sunset (decks, rigging, crow's nest, hold, cabin, locker) + the island and cove with `pirate.mp3`; under
+   the sea (reef, wreck, cave, grotto) with `underwater.mp3`, crossfading at the surface (head under 0.6 s / out 1.2 s). One world, one area.
+4. `PirateArrival` (34 s): **done.** The film's order: the tunnel, the ship at night, the green vortex, the barrels, Dan and otter Kira out,
+   Abi, Muscle Man through the sails, the crash, flat, sits up grinning, Abi laughs, the green shard. Sheet `round10/PirateArrival.jpg`.
+5. `ShardOverboard` (17.5 s): **done.** Held up from behind, it slips, bounces, rolls across the deck, under the rail, into the sea; he leaps
+   after it, Dan and Abi follow, otter Kira dives. Before it the sea pushes everyone up below 3.5 m; after it the deep sea is open.
+   Sheet `round10/ShardOverboard.jpg`. Also `SeaVortex` (9 s, the finale). MP4s in `Recordings/`.
+6. Otter Kira: **done.** Swims 1.6x, any depth, no breath limit; squeezes into the cave's grotto (0.95 m gap) and the hold's cargo nook;
+   belly-slide (B while running): 6.1 m in the check, full speed on the wet deck.
+7. Muscle Man: **done.** Rolls the cabin's cannon aside, lifts the hold's crates and the locker's anchor, boosts Dan / Abi onto the fore
+   top; struggles under water (slower, his struggle clip). Jobs now only on your own level (an attack below decks no longer triggers one).
+8. The deep dive: **done.** The fiddler on the quarterdeck teaches everyone (breath x3, any depth). Checked in an earlier world: DD1 in the
+   Medieval moat's deep pit.
+9. Enemies: **done.** Goofy deckhands (chase on their own deck, trip over the peg leg: 1.6 s harmless), crabs (sideways, snap), pufferfish
+   (puff up near you, harmless deflated). 80 friendly fish in 8 schools. No boss.
+10. Shards: **done.** 60 (30 ship + island, 30 under the sea) + 2 hearts (the cabin, the wreck). Threshold **225** (75% of 300) and 20 from
+   here; rule 2: Ice Age 45 + Egypt 52 + Bethlehem 50 + Medieval 54 + Pirate Seas 30 = 231 on arrival (Muscle Man counts now), 30 here.
+11. The finale: **done.** The necklace leads to the chest, then down to the green shard among corals; `SeaVortex` takes all four ->
+   the vortex (Home: 5 of 8; Victorian Steampunk "to be continued").
+12. Look: **done.** Pink-violet sunset, deep blue sea; under water bright blue fog to 75 m, light, colourful corals. Frame rate above.
+13. Sound: **done.** 18 new ElevenLabs effects (waves, wood creak, barrel thud, sail rip, crash, chest, shard bounce / roll, splash,
+   bubbles, sea vortex, crab, pufferfish, "Arr!", rope, deck steps, cannon roll, the fiddle's shanty); Muscle Man's laugh and "My hero!"
+   reused. No music made by Code.
+14. Build / check / publish: **done.** 0.10.0 published as `game-1000`; the Round 1 starter install in `local/sc` updated itself from GitHub
+   to build 1000 and started (ready signal).
+
+Also found and fixed on the way: Blender's merge left all ship balusters on one spot (stale transforms); hold beams crossed the hatch ramp at
+head height; ramps had a crawl space under them (now solid wedges); the back room's lintel was exactly Dan's height; the port rail had no
+gap at the rope ladder; the cove's bank was too steep to walk out; the wreck's ribs closed its open deck; a deckhand and the heal heart sat
+in the arrival's shots (world enemies are hidden during Pirate cutscenes).
+Decisions Code made (Dan can overrule): the vortex now has seven paths 20 deg apart (Victorian Steampunk added); Pirate threshold 225; the
+plank goes out through a gap in the rail at deck level; the rigging is climbed by Jump at its net (an automatic climb), the fore top by
+Muscle Man's boost; air bubbles from vents give Dan and Abi their breath; the arrival plays at night, play continues at sunset.
+
+**For Dan to check:** the two sheets `Data/screenshots/round10/{PirateArrival,ShardOverboard}.jpg` and the MP4s in `Recordings/`; the ship
+by the rope nets, the plank, the crow's nest; otter Kira's belly-slide on the wet deck; the music switching as you dive and surface; the
+sounds (Code doesn't play sound on your PC). Known: the first view of the reef / the deck stutters once (250-420 ms, shaders warming up);
+the wreck reads as a ribbed box; the island's grass edge is still a little stepped; Muscle Man's three clips (above).
+
 ### Round 9: the cutscene redo (0.9.0, build 900, 2026-11-11)
 Every scene was built from Dan's clip (contact sheets of each clip, `python Tools/film_sheet.py frames <clip>`), rendered from the exe
 and compared on a side-by-side sheet (film on top, game below, matching moments: `python Tools/film_sheet.py sheet <Scene>`), four
@@ -184,125 +188,16 @@ they read as "burn me"?); the round towers and wall walks (no walking into stone
 Known, not changed: Egypt's flat-roof parapets have no colliders (feet 30 cm into the lip at a roof's edge); the village houses'
 collider tops (7 m) cut through their pitched roofs (only a gliding Kira could get there).
 
-### Round 8: the Medieval Kingdom (0.8.0, build 800, 2026-11-11)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round8/final` (`--only medieval`: from the vortex with
-three worlds done -> the arrival -> the world -> the stone -> the vortex with Muscle Man -> Bethlehem's boulder and cracked wall -> his
-jobs here): RESULT all passed (113 ok); the bot took 5.2 min from the arrival to the necklace (a player is slower). `stuckmed` / `stuck` (rule 12, all four worlds): all passed: every moat side, the deep pit, the dungeon, the hall, and the yard / armory / store behind their opened gates, each hero out in 1-5 s; the Ice Age, Egypt and Bethlehem too, now including the spots behind their boulders and cracked walls (Muscle Man and the charged punch are learned now). Frame rate 157 fps at the slowest place (1080p),
-148 (Steam Deck setting) (need 60 / 40). `bethlehem` (regression): 64 ok and one bot-side stealth miss (the yard's watchman saw lamb Kira once in 1,212 hidden frames; that code is untouched; Round 7 saw the same variance). Audio 0.000 RMS in every run, the build and the
-renders; window watcher: no window, never in the foreground. Evidence: `Data/screenshots/round8/`.
-1. Models: **done.** Dan's seven Mixamo rigs and 26 clips in the same night (the Violinist rigged without his cape: `split_cape.py`,
-   then `attach_cape.py` put it back on his spine / shoulder bones, rigid, no stretch); Abi's mesh closed. Code's rigs: dragon Kira
-   (fur matched to Kira's gray; her wings kept as their own two-sided sheet on two wing bones; Kira lock OK: 49% gray, 0% white, amber
-   eyes, no ear bones; her eyes are a deeper amber, so the lock's eye test takes that for the dragon form), the rat, the pony (head
-   turns 4 / 0 / -1 deg). Previews `round8/models`, `round8/rigs`, `round8/mixamo`.
-2. Props: **done.** `medieval_world.py`: the castle (curtain walls with walks, four round towers, two with cone roofs, the gatehouse,
-   the keep and its spire, the arcade, the hollow great hall with its gallery), the courtyard's cobbles, the stone pedestal and the
-   purple shard, the hay wagon and its wreck, torches, braziers, benches, flower pots, banners, chandeliers, the feast table,
-   portcullises, the drawbridge, cell bars, keys, sword, shield, bow, arrow, timber houses, stalls, the smithy, the stands, tents,
-   the tilt rail, the high striker, trees (74.5k triangles). The lute (`instruments.py`).
-3. `MedievalArrival` (17 s, skippable): **done.** The purple vortex over the courtyard, into the hay wagon, Kira's fiery sneeze, the
-   runaway wagon into the west wall (a cartoon blast), the driver staggers out singed (his hat smoking), the pony trots off fine, the
-   party slinks away. The wreck, the driver (dazed) and the pony stay in the courtyard.
-4. Layout: **done** (DEFAULT): the courtyard and the stone, the walls and towers (stairs, the NW / NE tower tops), the great hall
-   (gallery, two swinging chandeliers to the east ledge), the dungeon (its own dark space: rats, three locked cells and their keys, the
-   brazier room), the moat (its deep pit for later), the drawbridge, the tournament field, the village and market. Gates as data:
-   the yard's boulder and the armory's portcullis (Muscle Man), the store room's cracked wall (charged punch), a village chimney (wall
-   jump), the stands' flag platform (double jump, or Muscle Man's boost), the moat's deep pit (deep dive).
-5. Muscle Man the rival: **done.** Three spots: the courtyard (lifts a boulder one-handed, flexes, points and laughs; laughs again when
-   Dan pushes the yard's boulder), the tournament (rings the high striker's bell; Dan's punch gets the puck 35% up, the charged punch
-   86%: "So close!"; he laughs), the great hall (lifts a barrel over his head). Grunts and laughs only, no collider, gone once he joins.
-6. Dragon Kira: **done.** Glide (hold Jump in the air: 59 m from the 10 m wall; a plain jump goes 7 m). Fire puff (her attack):
-   lights braziers (the dungeon's three open its last room; the stands' three open the prize chest), burns the hay heap and the
-   brambles, scares rats; never hurts people.
-7. The charged punch: **done.** The bard (the Violinist, his lute held across him by IK, the lyre's playing clip) teaches Dan
-   (`ViolinistTeachesMedieval`). Hold the attack (the fist glows after 0.55 s), let go: a lunge-punch that breaks cracked walls in every
-   world (checked: the store room here, Bethlehem's courtyard) and knocks knights' shields away.
-8. Enemies: **done.** Clumsy knights (shield up at the front: a punch clangs off; from behind it lands; the charged punch sends the
-   shield flying), nervous archers on the walls (draw 1 s, a slow arcing arrow; they back off when you come close), dungeon rats (a
-   nip, then they scurry off; fire sends them squeaking away). No boss.
-9. Shards: **done.** 60 + 2 hearts (the brazier room; the east ledge over the hall). Threshold 150 = 63% of the 240 shards up to here;
-   rule 2: 191 available on arrival (Ice Age 43 + Egypt 50 + Bethlehem 48 + Medieval 50); the 10 later-move shards not counted.
-10. `TheStone` (19 s, skippable): **done.** Muscle Man brags, heaves ("Pull Heavy Object"), falls flat on his back; Dan steps up, the
-   shard slides out; Muscle Man kneels: "My hero!"; the purple vortex takes all four -> the vortex space (4 of 8; the Pirate Seas path
-   opens, "to be continued"). Only Dan can pull it (anyone else: "It won't budge for Abi... switch to Dan").
-11. Muscle Man the companion: **done.** Follows as a third follower (warps like the others), cheers at pickups, and does his jobs at
-   X: rolls boulders aside in every world (checked: Bethlehem's cave, the Medieval yard), heaves the armory's portcullis up, boosts Dan
-   onto the stands' flag platform. He goes through the vortex with the party and wears his Medieval clothes everywhere.
-12. Look: **done.** A torch-lit night: deep blue sky, cool moonlight, warm torches, the stone's purple glow. Frame rate above.
-13. Music and sound: **done.** Dan's `medieval.mp3` in the world (checked playing, muted). 23 ElevenLabs effects (fire puff, hay
-   fire, the wagon blast, armour, shield block / break, arrow, rat, Muscle Man's grunt / laugh / "My hero!", boulder, the shard sliding
-   out, the punch's charge and hit, a wall breaking, wings, crowd, the bell, the pony, cobble steps, the portcullis, the lute tune).
-14. Build / check / publish: **done.** 0.8.0 published as `game-800`. MP4s: `Recordings/MedievalArrival.mp4`, `TheStone.mp4`.
-   The Round 1 starter install in `local/sc` updated itself from GitHub to 0.8.0 and started. Disk: 9.4 GB -> 8.8 GB.
-
-Also fixed on the way (found by the checks): the moat had no way out once its steps were gone (now two 0.3 m steps on each side's
-middle); the dungeon's checkpoint flag stood in the corridor (now no flag); a follower further back in line (Muscle Man) warped every 3 s (the "not caught up" distance now grows with the
-place in line); the older checks walked the vortex at fixed angles (now read from the paths: six paths, 24 deg apart).
-
-Decisions Code made (Dan can overrule): the lute is held across his body with the lyre's playing clip (as Bethlehem's harp); "Pull
-Heavy Object" is the stone's heave ("Pulling A Rope" spare); the rival's three spots and bits as above; X near a job sets Muscle Man to
-it; rats run off after a nip (the bot kept losing all three hearts to them); the dungeon is a separate space down a stair door.
-
-**For Dan to check:** the arrival and the stone (MP4s in `Recordings/`, and in game); listen once to Muscle Man's "My hero!"
-(`Assets/Resources/Sounds/mm_master.mp3`: ElevenLabs' sound model, not checked by ear; re-roll with `make_sounds.py --only mm_master
---force` if it isn't a clear word); dragon Kira's glide and fire; the charged punch's feel (0.55 s hold); the rival's bits (funny?
-too often?); the knights / archers / rats (fair?); the chandeliers; the night look. Known: dragon Kira's wings look a little faceted when
-spread (Meshy's thin sheet); the pony's gallop is the generic quadruped run.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **(Now the current round above.) Round 9: the cutscene redo (planned by the planning chat, 2026-11-11; next after Fix 8.1, before the Pirate
-  Seas, which becomes Round 10).** Dan's film clips are in `SourceArt/Reference/Clips/` and the planning chat's
-  shot-by-shot notes in `Docs/CUTSCENE-FILM-NOTES.md`. Rebuild the eight existing cutscenes (`ActOne`,
-  `IceAgeArrival`, `EgyptArrival`, `SphinxGag`, `BethlehemArrival`, `WiseMenArrive`, `MedievalArrival`,
-  `TheStone`) to follow each clip's shot order, angles, framing and timing, in the game's style with the game's
-  models; the "What the game should change" list in that doc is the checklist. Muscle Man says "My hero!".
-  `TheStone` ends in the cobblestone whirlpool. `ActOne` will be about a minute (the film's length): Dan's longer Act I
-  song is in (2026-11-11): `Music/act1.mp3`, 60.0 s, replacing the 22 s one; time the scene to it. For each: render the MP4 from the exe and a
-  side-by-side contact sheet (film frames above, game frames below, same times) for Dan to compare.
-- **(Superseded by the Round 10 above; kept for reference.) Round 10: the Pirate Seas (draft by the planning chat, 2026-11-11; written in full after Fix 8.1 and once Dan's
-  concept images are in).** Film references in `SourceArt/Reference/Worlds/05-PirateSeas/` and `Characters/*`
-  (added 2026-11-11), including Dan's clip `shard-rolls-overboard.mp4`; image prompts P1–P9 in
-  `Docs/MODELS-NEEDED.md`; music in `Docs/MUSIC.md`.
-  **All in (Dan, 2026-11-11), checked by the planning chat:** the 9 concept sheets in `SourceArt/Concepts/`
-  (`dan_pirate`, `abi_pirate`, `kira_otter`, `muscleman_pirate`, `violinist_pirate`, `pirate`, `crab`,
-  `pufferfish`, `fish`) and both songs: `Music/pirate.mp3` (2:59, the ship, crew shouts) and
-  `Music/underwater.mp3` (3:00, dreamy, soft choir). Notes for Code: otter Kira is a browner gray than hers: match
-  it; Muscle Man grins with teeth again (fine); the fish has an open smile (fine, it isn't rigged for talking).
-  - **Two areas, almost two levels (Dan, 2026-11-11):** the Pirate Seas are **the ship** (the deck, rigging, crow's
-    nest, the hold, plus the tropical island / cove) and **under the sea** (the reef, the shipwreck, underwater caves,
-    the sea floor where the green shard lies). Each has its own look, its own enemies, its own shards (DEFAULT about
-    30 each) and **its own song**: `pirate.mp3` on the ship and island, `underwater.mp3` whenever the party is under
-    water, crossfading at the surface. One world for the vortex and the story shard; the shard drop (Muscle Man
-    loses it overboard) is the doorway from the ship to the deep: before it, the water near the ship stays shallow;
-    after it, the deep sea opens. Rule 2 and the per-world minimum count both areas together.
-  - **Arrival (from Dan's clip, `Docs/CUTSCENE-FILM-NOTES.md`):** the ship at **night** with lanterns; a green vortex swirls round it; Dan and otter Kira pop out of barrels, Muscle Man drops through the sails and crashes onto the deck, Abi laughs. Earlier draft text, superseded where it differs: a green whirlpool vortex over a pirate ship at sunset; Dan, Abi and Kira land in separate barrels,
-    Muscle Man crashes into a crate; they pop out as pirates, Kira as a little gray otter.
-  - **Look:** a red-brown wooden ship with turned rail balusters, pink sails, rope rigging, barrels; a pink-violet
-    sunset sky over a deep blue sea; underwater: bright blue water with light shafts, cheerful cartoon fish,
-    colorful corals, the green shard glowing on the sandy sea floor.
-  - **The film's story beat (Dan's version, from his clip):** the green shard is found (DEFAULT: in a treasure chest
-    by the rail, as the synopsis says). Muscle Man grabs it, holds it up laughing with joy, it slips from his hand,
-    bounces and rolls across the deck, under the rail and over the side into the sea. He leaps in after it, Dan and
-    Abi follow, otter Kira dives after them: the big underwater section.
-  - **Otter Kira:** fast swimming, deep diving and no breath limit; she squeezes through narrow underwater gaps;
-    on land she slides on her belly across wet decks.
-  - **New move: everyone's deep dive** (longer breath, swim deeper), taught by the Violinist as a ship's fiddler.
-    Opens every earlier world's deep-water gates (the Ice Age lake, Egypt's Nile, Bethlehem's well, Medieval's moat).
-  - **Muscle Man is a companion here** (his first world as one): lifts cannons, crates and the anchor, boosts Dan
-    up the rigging; underwater he swims slowly and is the comic one struggling to keep up (film).
-  - **Places (DEFAULT):** the pirate ship (deck, rigging, crow's nest, the hold), a tropical island with a cove and a
-    jungle path, the reef, a sunken shipwreck, underwater caves.
-  - **Enemies:** goofy pirate deckhands, crabs, pufferfish underwater (puff up and bump you). No boss (DEFAULT).
-  - **Finale:** when the necklace wakes it leads to the green shard on the sea floor (film:
-    `green-shard-sea-floor.png`); collecting it makes an underwater swirling vortex that pulls everyone in.
-
-- **Code's notes for Round 9 (the planning chat decides):** Dan's notes on 0.8.0 first; "My hero!" by ear (re-roll if unclear);
-  Muscle Man already follows into every world (the Pirate Seas' "drops the shard overboard" can use him); the Pirate Seas path is in
-  the vortex ("to be continued"); the deep dive opens the moat's pit (DD1, DD2), Bethlehem's well, Egypt's Nile pool and the Ice Age
-  lake; art left over: real meshes for the plain boxes (Bethlehem's rock pillars and cave, Egypt's walls and plinths, Ice Age slabs,
-  the Medieval dungeon), dragon Kira's wing membrane (faceted when spread), the pony's own gallop.
+- **Code's notes for Round 11 (the planning chat decides):** Dan's notes on 0.10.0 first; Muscle Man's three Pirate clips (Drowning,
+  Getting Up, Jumping Down: drop them in `SourceArt/Mixamo/muscleman_pirate/`, see `Docs/MODELS-NEEDED.md`); the vortex's Victorian
+  Steampunk path is in ("to be continued" until now: open after the green shard); its move roadmap entry is Abi's wall jump (the Medieval
+  village chimney and the Ice Age gates wait for it); the deep dive now opens every earlier world's deep water (checked: the Medieval moat's
+  pit); art left over: the wreck's look (a ribbed box), the island's grass edge, real meshes for the plain boxes in earlier worlds, dragon
+  Kira's wing membrane, the pony's own gallop.
 - Memory Fragments (Dan's time-echo visions when touching temporal artifacts)
   and the Violinist's per-world appearances. Deferred, not decided against.
 

@@ -69,6 +69,7 @@ namespace ShardsOfTime
             string model = Stats.displayName.ToLowerInvariant() + "_" + outfit;
             // Round 7: Bethlehem's clothes until their models are in: Egypt's (simple robes), not the home pyjamas
             if (!CharacterModel.Exists(model) && outfit == Outfits.Bethlehem) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Egypt;
+            if (!CharacterModel.Exists(model) && outfit == Outfits.Pirate) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Medieval;   // Round 10: until the pirate models are in
             if (!CharacterModel.Exists(model) && IsMuscleMan) model = "muscleman_medieval";   // Round 8: Muscle Man has one outfit, every world
             if (Model && Model.name == "Model " + model) { Outfit = outfit; return; }
             if (!CharacterModel.Exists(model)) { if (Outfit == null) PlayLog.Line($"{Stats.displayName}: no model {model}, graybox"); Outfit = outfit; return; }
@@ -97,6 +98,7 @@ namespace ShardsOfTime
             Anim = Model ? Model.GetComponent<CreatureAnimator>() : null;
             Graybox.gameObject.SetActive(!Model);
             if (Motor) Motor.CanGlide = HasAbility(Abilities.Glide);   // Round 8: dragon Kira's wings
+            if (Motor) { Motor.CanBellySlide = HasAbility(Abilities.BellySlide); Motor.Otter = HasAbility(Abilities.OtterSwim); Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive) || Motor.Otter; if (Motor.CanBellySlide) Motor.CanPounce = false; else if (Stats.displayName == "Kira") Motor.CanPounce = SaveGame.Current.Has(Abilities.Pounce); }   // Round 10: otter Kira
             PlayLog.Line($"Kira's form: {f.displayName} ({(Model ? "model " + f.model : "graybox: no model")}, abilities [{string.Join(", ", f.abilities)}])");
         }
 
@@ -227,7 +229,7 @@ namespace ShardsOfTime
                 if (hv.magnitude > 1.5f && (stepTimer -= Time.deltaTime) <= 0)
                 {
                     stepTimer = Mathf.Lerp(.42f, .27f, hv.magnitude / Stats.runSpeed);
-                    Sfx.Play(Game.InMedieval ? "footstep_cobble" : Game.InEgypt ? "footstep_sand" : Game.InBethlehem ? "footstep_grass" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
+                    Sfx.Play(Game.InPirate ? (transform.position.y > 1.5f ? "footstep_wood" : "footstep_sand") : Game.InMedieval ? "footstep_cobble" : Game.InEgypt ? "footstep_sand" : Game.InBethlehem ? "footstep_grass" : "footstep_snow", IsPerson ? .3f : .15f, Random.Range(.9f, 1.1f) * (IsPerson ? 1f : 1.5f));
                 }
             }
             if (swipeTimer > 0) { swipeTimer -= Time.deltaTime; if (swipeTimer <= 0) swipe.gameObject.SetActive(false); }
@@ -252,5 +254,5 @@ namespace ShardsOfTime
     }
 
     // Dan's and Abi's outfits (Round 3): AreaData.outfit names one per area
-    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval"; }
+    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval", Pirate = "pirate"; }
 }

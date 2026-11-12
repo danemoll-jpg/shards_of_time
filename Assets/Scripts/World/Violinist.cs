@@ -58,7 +58,7 @@ namespace ShardsOfTime
         // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage), his own clips (Clips/violinist_play, _bow, _nod)
         // and the shared idle / walk replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
         public const string Model = "violinist_iceage";   // the Ice Age's; Round 6: each world's own when it exists (ModelName)
-        public string ModelName => instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
+        public string ModelName => Game.InPirate && CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
         PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
         string loop = "idle", oneShot; float oneShotEnd;
         public string ClipNow => oneShot ?? loop;
@@ -317,7 +317,7 @@ namespace ShardsOfTime
             var p = Party.I.Player; var d = p.transform.position - transform.position; d.y = 0;
             if (d.magnitude > radius) return;
             if (SaveGame.Current.Has(ability)) return;
-            if (p.Stats.displayName == learner) { Game.I.StartCoroutine(Teach(p)); return; }
+            if (p.Stats.displayName == learner || learner == "*") { Game.I.StartCoroutine(Teach(p)); return; }   // Round 10: "*" = anyone (the deep dive)
             if (Time.time > hintAt + 6f) { hintAt = Time.time; Hud.Message($"The musician smiles, but he is looking past you, at {learner}.", 4f); }
         }
 
@@ -327,10 +327,10 @@ namespace ShardsOfTime
         {
             Game.I.SetBusy(true); Playing = true;
             PlayLog.Line($"the Violinist plays for {hero.Stats.displayName}");
-            Sfx.Play(instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
+            Sfx.Play(Game.InPirate ? "fiddle_shanty" : instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
             var face = Quaternion.LookRotation(Vector3.ProjectOnPlane(hero.transform.position - transform.position, Vector3.up).normalized);
             transform.rotation = face;
-            yield return Cutscenes.Play(Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
+            yield return Cutscenes.Play(Game.InPirate ? "ViolinistTeachesPirate" : Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
             Playing = false;
             OneShot("bow"); Game.I.StartCoroutine(NodLater());
             if (!SaveGame.Current.abilities.Contains(ability)) SaveGame.Current.abilities.Add(ability);
@@ -340,6 +340,8 @@ namespace ShardsOfTime
                 ? $"{hero.Stats.displayName} learned the {moveName}! Press {Controls.Btn(Controls.Act.Jump)} again in the air. High ledges everywhere are in reach now (the Ice Age's too)."
                 : ability == Abilities.ChargedPunch   // Round 8
                 ? $"{hero.Stats.displayName} learned the {moveName}! Hold {Controls.Btn(Controls.Act.Attack)}, let go when his fist glows. It breaks cracked walls (in every world: the Ice Age's grotto, Egypt's tomb, Bethlehem's courtyard) and knocks knights' shields away."
+                : ability == Abilities.DeepDive   // Round 10
+                ? $"Everyone learned the {moveName}! Dan, Abi and Kira hold their breath three times as long and swim as deep as they like: the trench, the cave, and the deep water in every world (the Ice Age's lake, Egypt's Nile, Bethlehem's well, the Medieval moat)."
                 : ability == Abilities.Pounce   // Round 7
                 ? $"{hero.Stats.displayName} learned the {moveName}! On the ground, press {Controls.Btn(Controls.Act.Dive)}: she crouches, aims with the stick, and leaps far. Wide gaps everywhere are in reach now (Egypt's rooftops too)."
                 : $"{hero.Stats.displayName} learned the {moveName}! Jump, then press {Controls.Btn(Controls.Act.Dive)}. It breaks cracked ice and stuns enemies.", 7f);

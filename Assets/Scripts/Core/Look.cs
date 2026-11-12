@@ -57,6 +57,18 @@ namespace ShardsOfTime
                 Sun.color = new Color(.6f, .68f, 1f); sunIntensity = .5f; Sun.transform.rotation = Quaternion.Euler(40f, 160f, 0);
                 ambSky = new Color(.24f, .28f, .5f); ambEq = new Color(.22f, .19f, .26f); ambGround = new Color(.16f, .12f, .1f);
             }
+            else if (world == WorldData.Pirate)   // Round 10, item 12: a pink-violet sunset over a deep blue sea, a low warm sun
+            {
+                Sky = new Color(.86f, .56f, .72f); FogColor = new Color(.9f, .62f, .7f); FogStart = 90f; FogEnd = 900f; FarClip = 1300f;
+                Sun.color = new Color(1f, .74f, .55f); sunIntensity = 1.15f; Sun.transform.rotation = Quaternion.Euler(16f, -70f, 0);
+                ambSky = new Color(.7f, .55f, .8f); ambEq = new Color(.72f, .55f, .55f); ambGround = new Color(.25f, .3f, .45f);
+                if (night)   // the arrival (Dan's clip): the ship at night with its lanterns
+                {
+                    Sky = new Color(.04f, .07f, .2f); FogColor = new Color(.05f, .09f, .22f); FogStart = 60f; FogEnd = 600f;
+                    Sun.color = new Color(.55f, .65f, 1f); sunIntensity = .45f; Sun.transform.rotation = Quaternion.Euler(40f, 150f, 0);
+                    ambSky = new Color(.2f, .26f, .5f); ambEq = new Color(.16f, .18f, .3f); ambGround = new Color(.08f, .1f, .16f);
+                }
+            }
             else   // the Ice Age (Dan's reference: a wide snowy valley, soft blue-white light, warm rock, fog for depth)
             {
                 Sky = new Color(.66f, .79f, .94f); FogColor = new Color(.8f, .87f, .95f); FogStart = 45f; FogEnd = 1700f; FarClip = 2200f;
@@ -65,6 +77,20 @@ namespace ShardsOfTime
             }
             darkness = 0; Refresh();
             if (CameraRig.I) { CameraRig.I.Cam.farClipPlane = FarClip; CameraRig.I.Gameplay.Lens.FarClipPlane = FarClip; CameraRig.I.Cam.backgroundColor = Sky; }
+        }
+
+        // Round 10: the arrival's night on the ship (Pirate.SetNight), and under the sea: bright blue water, short blue fog, sun shafts
+        static bool night;
+        public static void SetNight(bool on) { night = on; ApplyWorld(world); }
+        public static bool Underwater { get; private set; }
+        public static readonly Color SeaFog = new Color(.1f, .5f, .78f);
+        static float under;
+        public static void SetUnderwater(bool on)
+        {
+            float to = on ? 1f : 0f;
+            if (Mathf.Approximately(under, to)) { Underwater = on; return; }
+            under = Mathf.MoveTowards(under, to, Time.deltaTime * 4f); Underwater = under > .5f;
+            Refresh();
         }
 
         // the ice cave: day light down to 6%, ambient to 12% (the necklace's light and the fire do the rest)
@@ -91,6 +117,16 @@ namespace ShardsOfTime
             if (Sun) Sun.intensity = sunIntensity * k;
             RenderSettings.ambientSkyColor = ambSky * a; RenderSettings.ambientEquatorColor = ambEq * a; RenderSettings.ambientGroundColor = ambGround * a;
             RenderSettings.fogColor = Color.Lerp(FogColor, new Color(1f, .98f, .92f), backlit);
+            // Round 10: under the sea
+            var deep = SeaFog;   // (the fog itself: CameraRig.LateUpdate)
+            if (under > 0)
+            {
+                RenderSettings.ambientSkyColor = Color.Lerp(RenderSettings.ambientSkyColor, new Color(.45f, .8f, 1f), under * .8f);
+                RenderSettings.ambientEquatorColor = Color.Lerp(RenderSettings.ambientEquatorColor, new Color(.3f, .62f, .85f), under * .8f);
+                RenderSettings.ambientGroundColor = Color.Lerp(RenderSettings.ambientGroundColor, new Color(.25f, .45f, .55f), under * .8f);
+                if (Sun) { Sun.intensity *= Mathf.Lerp(1f, .8f, under); }
+            }
+            if (CameraRig.I && !vortex && backlit <= 0) CameraRig.I.Cam.backgroundColor = Color.Lerp(Sky, deep, under);
         }
 
         // the vortex space: a deep violet sky and fog behind the swirl

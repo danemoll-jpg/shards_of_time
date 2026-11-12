@@ -28,7 +28,7 @@ from mathutils.kdtree import KDTree
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
 COUNTER_TURN = {'kira', 'kira_mummy'}   # Round 6: mummy Kira's head measures 14 deg turned (home Kira 34)
-THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1, 'kira_dragon': 1}   # Round 6: mummy Kira's whiskers too
+THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1, 'kira_dragon': 1, 'kira_otter': 1}   # Round 10: otter Kira's whiskers   # Round 6: mummy Kira's whiskers too
 # Round 5, item 9: the Ice Age creatures get the same four-legged rig. Their real heights (metres): each is rigged at Kira's size
 # (0.5 m: every number here was tuned for her), then the armature is scaled back up for the export.
 CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7, 'goat': 1.05, 'sheep': .95, 'guard_dog': .85, 'rat': .35, 'horse': 1.6}   # Round 8: the dungeon rat, the wagon pony   # Round 7: Bethlehem's animals   # Round 6: Egypt's camel and temple guardian
@@ -472,6 +472,15 @@ def clips(arm, L):
         for k in LEGS: p = merge(p, leg(k, -6 * c, 55 * c))
         return merge(p, tail_wave(0, 0, -10 * c), {'Spine': [(X, 6 * c)], 'Head': [(X, 6 * c)]}), -.1 * H * c, 0
     make('land', 10, land, False)
+
+    if L['name'] == 'kira_otter':   # Round 10: otter Kira's belly-slide (on her tummy, front paws tucked back, hind legs out behind)
+        def slide(t):
+            p = {}
+            for k in LEGS:
+                front = k[0] == 'F'
+                p = merge(p, leg(k, (-55 if front else -70) + 3 * s(t, .2 if front else 0), 10))
+            return merge(p, tail_wave(2 * math.pi * t, 6, 8), {'Spine': [(X, -4)], 'Neck': [(X, -14)], 'Head': [(X, -8 + 2 * s(t))]}), -.32 * H, 0
+        make('slide', 24, slide)
 
     def swim(t):
         p = {}

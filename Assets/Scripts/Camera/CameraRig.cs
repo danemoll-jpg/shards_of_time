@@ -137,9 +137,11 @@ namespace ShardsOfTime
             var w = WaterVolume.At(Cam.transform.position);
             Underwater = w;
             Hud.SetUnderwater(Underwater);
-            RenderSettings.fogColor = Underwater ? new Color(.12f, .35f, .5f) : Look.FogColor;
-            RenderSettings.fogStartDistance = Underwater ? 0f : Look.FogStart;
-            RenderSettings.fogEndDistance = Underwater ? 28f : Look.FogEnd;
+            bool sea = Game.InPirate;   // Round 10: under the sea: bright blue water you can see 70 m through (the reef), not a murky pond
+            Look.SetUnderwater(Underwater && sea);
+            RenderSettings.fogColor = Underwater ? (sea ? Look.SeaFog : new Color(.12f, .35f, .5f)) : Look.FogColor;
+            RenderSettings.fogStartDistance = Underwater ? (sea ? 2f : 0f) : Look.FogStart;
+            RenderSettings.fogEndDistance = Underwater ? (sea ? 75f : 28f) : Look.FogEnd;
         }
 
         // the camera's distance from the focus (checks: pulled in by walls)

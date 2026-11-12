@@ -64,8 +64,12 @@ def main():
             if not dry:
                 for dn in dns:
                     q = os.path.join(dp, dn)
-                    if os.path.isdir(q) and not os.listdir(q): os.rmdir(q)
-        if not dry and not os.listdir(p): os.rmdir(p)
+                    if os.path.isdir(q) and not os.listdir(q):
+                        try: os.rmdir(q)
+                        except OSError as e: print(f'  kept {q}: {e.strerror} (open in another program)')   # Round 10: a folder held open elsewhere
+        if not dry and not os.listdir(p):
+            try: os.rmdir(p)
+            except OSError: pass
         gone.append(d)
     # older release folders (the newest is the next release's "previous": kept)
     rel_dirs = sorted([d for d in os.listdir(os.path.join(ROOT, "Builds")) if d.startswith("LauncherRelease-")], key=lambda d: int(re.sub(r"\D", "", d) or 0)) if os.path.isdir(os.path.join(ROOT, "Builds")) else []

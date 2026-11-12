@@ -228,7 +228,7 @@ namespace ShardsOfTime
                 Object.DestroyImmediate(img);
                 float pg = 100f * grey / n, pw = 100f * white / n, pa = 100f * amber / n;
                 float needGrey = f.id == KiraForm.Mummy ? 20f : 35f;   // Round 6: mummy Kira's bandages cover most of her; grey wherever fur shows
-                float needAmber = deep ? .02f : .05f;
+                float needAmber = deep || f.id == KiraForm.Otter ? .02f : .05f;   // Round 10: otter Kira's long body leaves her eyes small on the atlas too (0.03%, median (223,176,111): amber)
                 bool ok = ears.Count == 0 && pg > needGrey && pw < 1.5f && pa > needAmber;
                 lines.Add($"KIRA LOCK {f.id} ({f.model}): {(ok ? "OK" : "FAILED")}: ear bones {ears.Count}{(ears.Count > 0 ? " (" + string.Join(", ", ears) + ")" : "")}; " +
                           $"grey fur {pg:0}% of the texture (need > {needGrey:0}%); white {pw:0.0}% (need < 1.5%); golden-amber eyes {pa:0.00}% (need > {needAmber:0.00}%)");

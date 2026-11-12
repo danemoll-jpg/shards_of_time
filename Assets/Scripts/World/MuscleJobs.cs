@@ -43,7 +43,8 @@ namespace ShardsOfTime
             foreach (var j in All)
             {
                 if (!j || !j.isActiveAndEnabled || j.IsDone || !j.Allowed(player)) continue;
-                var d = player.transform.position - j.transform.position; d.y *= .5f; float m = d.magnitude;
+                var d = player.transform.position - j.transform.position; if (Mathf.Abs(d.y) > 1.6f) continue;   // Round 10: on the same level (not a deck below or above)
+                d.y *= .5f; float m = d.magnitude;
                 if (m < j.radius && m < bd) { bd = m; best = j; }
             }
             return best;
@@ -91,7 +92,9 @@ namespace ShardsOfTime
         float lastMessage = -10;
         public int Touches { get; private set; }
         public Vector3 aside;                    // where it ends up (world offset); zero = 3.5 m to its right
-        protected override string Verb => "rolls the boulder away";
+        public string verbText;                  // Round 10: "rolls the cannon aside", "lifts the crates aside", "lifts the anchor away"
+        public bool lifts;                       // Round 10: lifted and set down (crates, a cannon, the anchor), not rolled
+        protected override string Verb => string.IsNullOrEmpty(verbText) ? "rolls the boulder away" : verbText;
         protected override string Clip => "mm_lift";
         protected override float Reach => Mathf.Max(1.8f, Mathf.Max(transform.lossyScale.x, transform.lossyScale.z) * .5f);
         public static event System.Action<Boulder, Hero> Tried;   // someone pushed it without Muscle Man (the rival laughs)
@@ -119,13 +122,13 @@ namespace ShardsOfTime
             for (float t = 0; t < 1f; t += Time.deltaTime / 1.4f)
             {
                 float e = Mathf.SmoothStep(0, 1, t);
-                transform.SetPositionAndRotation(Vector3.Lerp(from, to, e) + Vector3.up * Mathf.Sin(e * Mathf.PI) * .6f, Quaternion.AngleAxis(e * 160f, axis) * r0);
+                transform.SetPositionAndRotation(Vector3.Lerp(from, to, e) + Vector3.up * Mathf.Sin(e * Mathf.PI) * (lifts ? 1.8f : .6f), lifts ? r0 : Quaternion.AngleAxis(e * 160f, axis) * r0);
                 yield return null;
             }
             transform.position = to; Free();
             Placeholders.Puff(to, new Color(.7f, .65f, .55f));
             mm.Cheer();
-            Hud.Message("Muscle Man rolls it away like a pebble.", 3f);
+            Hud.Message(lifts ? "Muscle Man lifts it like a feather." : "Muscle Man rolls it away like a pebble.", 3f);
             PlayLog.Line($"boulder {id} moved by Muscle Man");
             yield return new WaitForSeconds(.6f);
         }

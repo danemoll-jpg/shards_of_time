@@ -24,10 +24,14 @@ MODELS = {"dan_home": 20000, "dan_iceage": 20000, "abi_home": 20000, "abi_iceage
           "wiseman_old": 18000, "watchman": 15000, "kira_lamb": 15000, "goat": 12000, "sheep": 8000, "guard_dog": 12000, "scorpion": 6000,
           # Round 8: the Medieval Kingdom (people -> Mixamo; dragon Kira, rat, horse -> Code's rigs)
           "dan_medieval": 20000, "abi_medieval": 20000, "muscleman_medieval": 22000, "violinist_medieval": 20000, "knight": 15000,
-          "archer": 15000, "wagon_driver": 15000, "kira_dragon": 15000, "rat": 6000, "horse": 15000}
+          "archer": 15000, "wagon_driver": 15000, "kira_dragon": 15000, "rat": 6000, "horse": 15000,
+          # Round 10: the Pirate Seas (people -> Mixamo; otter Kira, crab, pufferfish, fish -> Code's rigs)
+          "dan_pirate": 20000, "abi_pirate": 20000, "muscleman_pirate": 22000, "violinist_pirate": 20000, "pirate": 15000,
+          "kira_otter": 15000, "crab": 8000, "pufferfish": 6000, "fish": 4000}
 CHARACTERS = {"dan_home", "dan_iceage", "abi_home", "abi_iceage", "violinist_iceage", "dan_egypt", "abi_egypt", "violinist_egypt", "mummy",
               "dan_bethlehem", "abi_bethlehem", "violinist_bethlehem", "wiseman_santa", "wiseman_crown", "wiseman_old", "watchman",
-              "dan_medieval", "abi_medieval", "muscleman_medieval", "violinist_medieval", "knight", "archer", "wagon_driver"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
+              "dan_medieval", "abi_medieval", "muscleman_medieval", "violinist_medieval", "knight", "archer", "wagon_driver",
+              "dan_pirate", "abi_pirate", "muscleman_pirate", "violinist_pirate", "pirate"}   # humanoids: Meshy's A-pose option (Kira stands on four legs)
 
 
 def key():

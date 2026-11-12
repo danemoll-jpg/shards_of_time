@@ -46,8 +46,10 @@ namespace ShardsOfTime
             if (!File.Exists(be)) AssetDatabase.CreateAsset(WorldData.BethlehemDefaults(), be);
             string me = Data + "/Worlds/" + WorldData.Medieval + ".asset";   // Round 8
             if (!File.Exists(me)) AssetDatabase.CreateAsset(WorldData.MedievalDefaults(), me);
+            string ps = Data + "/Worlds/" + WorldData.Pirate + ".asset";   // Round 10
+            if (!File.Exists(ps)) AssetDatabase.CreateAsset(WorldData.PirateDefaults(), ps);
             // Fix 7.2: the never-stuck spots (new defaults added to an existing world asset by id)
-            foreach (var wp2 in new[] { ia, eg, be, me })
+            foreach (var wp2 in new[] { ia, eg, be, me, ps })
             {
                 var wd = AssetDatabase.LoadAssetAtPath<WorldData>(wp2); if (!wd) continue;
                 int n = 0;
@@ -60,7 +62,7 @@ namespace ShardsOfTime
                 if (n > 0) { EditorUtility.SetDirty(wd); Debug.Log($"DataAssets: {wd.worldId}.asset: {n} never-stuck spot(s) added"); }
             }
             Directory.CreateDirectory(Data + "/KiraForms");
-            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb, KiraForm.Dragon })
+            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb, KiraForm.Dragon, KiraForm.Otter })
             {
                 string path = $"{Data}/KiraForms/{f}.asset";
                 if (!File.Exists(path)) AssetDatabase.CreateAsset(KiraForm.Defaults(f), path);

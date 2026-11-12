@@ -85,7 +85,7 @@ namespace ShardsOfTime
         // Fix 8.1: thresholds about 75 % of every shard up to a world (Ice Age 40: only 43 of its 60 are reachable on arrival, rule 2),
         // plus 20 from the world itself (AreaData.fromHere).
         // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
-        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval };
+        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval, Pirate };   // Round 10: the Pirate Seas
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -167,11 +167,27 @@ namespace ShardsOfTime
                 L("ME-armory", "enclosed", new Vector3(22, .3f, 4), new Vector3(22, 0, 14), 6, "the armory behind the portcullis", Abilities.MuscleMan, opens: "ME-portcullis-armory");
                 L("ME-store", "enclosed", new Vector3(-26, .3f, 56), new Vector3(-16, 0, 56), 6, "the store room behind the cracked wall", Abilities.ChargedPunch, opens: "ME-crack-store");
             }
+            else if (world == Pirate)   // Round 10 (the deep-sea spots: the check opens the deep sea first; "underwater" = out of the place, any mode)
+            {
+                L("PS-sea-port", "water", new Vector3(-10, 0, -6), new Vector3(-4.6f, 3.5f, -6), 4, "the sea by the ship's port side (the rope ladder up the hull)", via: new Vector3(-7.2f, 0, -6));
+                L("PS-sea-east", "water", new Vector3(14, 0, 20), new Vector3(33, 0, 20), 14, "the sea between the ship and the island (swim to the beach)");
+                L("PS-sea-south", "water", new Vector3(0, 0, -34), new Vector3(32, 0, -22), 22, "the sea south of the ship (the beach)");
+                L("PS-sea-north", "water", new Vector3(0, 0, 45), new Vector3(37, 0, 40), 24, "the sea north of the ship (the beach)");
+                L("PS-sea-west", "water", new Vector3(-36, 0, 6), new Vector3(-4.6f, 3.5f, -6), 8, "the open sea west of the ship (back to its rope ladder)", via: new Vector3(-7.2f, 0, -6));
+                L("PS-cove", "water", new Vector3(82, 0, 66), new Vector3(82, 0, 42), 16, "the island's cove (out onto its bank)");
+                L("PS-hold", "enclosed", new Vector3(.5f, .9f, .3f), new Vector3(0, 3.5f, 8.6f), 7, "the ship's hold (up the ramp to the deck)");
+                L("PS-hold-back", "enclosed", new Vector3(0, .9f, -9.5f), new Vector3(0, 3.5f, 8.6f), 12, "the hold's back room behind the crates", Abilities.MuscleMan, via: new Vector3(0, .6f, 1.0f), opens: "PS-crates-hold");
+                L("PS-cabin", "enclosed", new Vector3(0, 3.8f, -17.5f), new Vector3(0, 3.5f, -9), 6, "the captain's cabin behind the cannon", Abilities.MuscleMan, opens: "PS-cannon-cabin");
+                L("PS-locker", "enclosed", new Vector3(0, 3.8f, 19.5f), new Vector3(0, 3.5f, 10), 6, "the bosun's locker behind the anchor", Abilities.MuscleMan, opens: "PS-anchor-locker");
+                L("PS-cave", "underwater", new Vector3(-135, -16, 0), new Vector3(-110, -14, 0), 17, "the sea cave (out of its mouth)", Abilities.DeepDive, via: new Vector3(-121, -15.5f, 0));
+                L("PS-grotto", "underwater", new Vector3(-134, -17, 25), new Vector3(-134, -16, 6), 12, "the cave's little grotto (back through the narrow gap)", heroes: "Kira", via: new Vector3(-136.65f, -17.7f, 19.8f));
+                L("PS-wreck", "underwater", new Vector3(-70, -16.5f, 118), new Vector3(-70, -10, 92), 15, "inside the shipwreck (out through its broken side or deck)", Abilities.DeepDive);
+            }
             return l;
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : Defaults());
-        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval";
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : id == Pirate ? PirateDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval", Pirate = "PirateSeas";
 
         // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
@@ -420,6 +436,62 @@ namespace ShardsOfTime
             G("ME-chimney-village", "wall-jump chimney", Abilities.WallJump, new Vector3(-99, 0, -124), "a chimney between two village houses (wall jump, Steampunk)", "J01");
             G("ME-ledge-stands", "double-jump ledge", Abilities.DoubleJump, new Vector3(85, 5.6f, -58.5f), "the stands' flag platform (double jump; or a boost from Muscle Man)", "X01");
             G("ME-deep-moat", "deep water", Abilities.DeepDive, new Vector3(-42, -10, 96), "the moat's deep pit (deep dive, Pirate Seas)", "DD1", "DD2");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
+            return w;
+        }
+
+        // Round 10: the Pirate Seas (World/Pirate.cs builds it; the ground, the ship and the props in Tools/Blender/pirate_world.py, the same
+        // numbers). One area, "PS", two parts: the ship and the island (S/Q/F/P/T/H/C/L/J/I/V/K: 30) and under the sea (U: 30, only after the
+        // green shard goes overboard: they need Abilities.Overboard, which rule 2 never counts on arrival). Fix 8.1's rule: about 75 % of every
+        // shard up to here (5 x 60 = 300): 225, and 20 from here (the ship and the island hold 30). Rule 2: the first visit has the three
+        // heroes, otter Kira (swim, belly-slide) and Muscle Man (he joined at the stone); not the deep dive (the ship's fiddler teaches it).
+        public static WorldData PirateDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Pirate; w.worldId = Pirate; w.displayName = "The Pirate Seas"; w.heightsAreHints = true;
+            w.violinistInstrument = "Fiddle"; w.violinistPlayClip = "violinist_play";   // item 8: the ship's fiddler, his fiddle (the Ice Age's own clip)
+            w.areas.Add(new AreaData { id = "PS", name = "The Pirate Seas", requirement = 225, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.OtterSwim, Abilities.BellySlide, Abilities.MuscleMan },
+                storyShard = new Vector3(-45, -11f, 10f), storyShardColor = new Color(.2f, .95f, .45f), spawn = new Vector3(0, 3.6f, -4f), spawnYaw = 0,
+                kiraForm = KiraForm.Otter, outfit = Outfits.Pirate, box = new Bounds(new Vector3(0, -20, 25), new Vector3(420, 140, 380)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "PS", position = new Vector3(x, y, z), requires = req, note = note });
+            string O = Abilities.Overboard;
+            // the ship: the main deck (3.5), the quarterdeck (6), the forecastle (6), the plank, the tops (rope nets; the fore top: Muscle Man's boost)
+            S("S01", 0, 3.5f, -9, "the main deck, aft of the mainmast"); S("S02", -3.5f, 3.5f, 9, "the main deck, by the foremast"); S("S03", 1.6f, 3.5f, 13.6f, "the main deck, by the foremast's foot");
+            S("Q01", -2.5f, 6, -19, "the quarterdeck, by the wheel"); S("Q02", 2.5f, 6, -16, "the quarterdeck");
+            S("F01", 0, 6, 17.5f, "the forecastle"); S("F02", -1.6f, 6, 21.5f, "the forecastle's bow");
+            S("P01", -9.2f, 3.6f, 4, "the end of the plank (walk it!)");
+            S("T01", 1.2f, 13, .8f, "the main top (climb the rope net)"); S("T02", 0, 21, 0, "the crow's nest (the net up the mainmast)");
+            S("T03", .5f, 11.8f, 12.9f, "the fore top (Muscle Man boosts Dan or Abi)", Abilities.MuscleMan);
+            // the hold (floor 0.6): open; its back room behind the crates (Muscle Man); under the low cargo rack (otter Kira slides under)
+            S("H01", 2, .6f, 4, "the hold"); S("H02", -3, .6f, 10, "the hold, by the barrels"); S("H03", 3, .6f, -2.5f, "the hold, by the mainmast's foot");
+            S("H04", -2, .6f, -9, "the hold's back room (Muscle Man lifts the crates)", Abilities.MuscleMan); S("H05", 2, .6f, -10, "the hold's back room (Muscle Man lifts the crates)", Abilities.MuscleMan);
+            S("K01", -4.2f, .6f, 1, "the cargo nook behind the crates (only otter Kira fits through the gap at the bottom)", "Kira");
+            // the captain's cabin (behind the cannon: Muscle Man), the bosun's locker (behind the anchor: Muscle Man)
+            S("C01", -2, 3.5f, -18, "the captain's cabin (Muscle Man moves the cannon)", Abilities.MuscleMan); S("C02", 2, 3.5f, -16, "the captain's cabin (Muscle Man moves the cannon)", Abilities.MuscleMan);
+            S("L01", 1.2f, 3.5f, 19, "the bosun's locker (Muscle Man lifts the anchor)", Abilities.MuscleMan);
+            // the jetty and the island (beaches, the jungle path, the hilltop), the cove (shallow water)
+            S("J01", 22, 1.2f, -2, "the jetty");
+            S("I01", 36, 12, 10, "the island's west beach"); S("I02", 50, 12, -38, "the south beach"); S("I03", 62, 12, 32, "the jungle path");
+            S("I04", 80, 12, 12, "the island's hilltop"); S("I05", 102, 12, -12, "the east side"); S("I06", 112, 12, 34, "the east beach"); S("I07", 70, 12, -46, "the south point");
+            S("V01", 82, -2.4f, 64, "the cove's floor (shallow)"); S("V02", 82, -2.4f, 84, "the cove's channel");
+            // under the sea (after the shard goes overboard): round the ship, the reef, the green shard's clearing, the trench and the wreck, the
+            // cave and its grotto, the island's slopes, under the jetty, the kelp. Deeper than 16 m (the trench, the cave): otter Kira or the deep dive
+            S("U01", -10, -14, -5, "the sea floor under the ship", O); S("U02", 8, -14, 20, "the sea floor by the bow", O); S("U03", -5, -14, 30, "the sea floor ahead of the ship", O);
+            S("U04", -35, -10, -20, "the reef", O); S("U05", -50, -10, -35, "the reef", O); S("U06", -60, -10, 0, "the reef", O); S("U07", -75, -10, 30, "the reef", O);
+            S("U08", -90, -10, -10, "the reef's far side", O); S("U09", -100, -10, 45, "the reef's far side", O); S("U10", -40, -10, 40, "the reef", O); S("U11", -65, -10, 55, "the reef", O);
+            S("U12", -85, -10, -50, "the reef's south end", O); S("U13", -41, -11, 14, "the green shard's clearing", O); S("U14", -49, -11, 6, "the green shard's clearing", O);
+            S("U15", -60, -21, 108, "the wreck's trench (deep)", O, "Kira"); S("U16", -80, -21, 128, "the wreck's trench (deep)", O, "Kira");
+            S("U17", -70, -20, 118, "inside the shipwreck (deep)", O, "Kira"); S("U18", -68.6f, -18, 120.1f, "inside the shipwreck (deep)", O, "Kira");
+            S("U19", -135, -18, -10, "the sea cave (deep)", O, "Kira"); S("U20", -130, -18, 10, "the sea cave (deep)", O, "Kira"); S("U21", -140, -18, 0, "the sea cave (deep)", O, "Kira");
+            S("U22", -136, -18, 24, "the cave's grotto (otter Kira squeezes through)", O, "Kira"); S("U23", -131, -18, 25.5f, "the cave's grotto (otter Kira squeezes through)", O, "Kira");
+            S("U24", 30, -6, 30, "the island's underwater slope", O); S("U25", 40, -8, -40, "the island's underwater slope", O); S("U26", 15, -10, -30, "the sea floor south of the ship", O);
+            S("U27", -115, -18, -30, "the cave's basin (deep)", O, "Kira"); S("U28", -118, -18, 35, "the cave's basin (deep)", O, "Kira");
+            S("U29", 18, -6, -2, "under the jetty", O); S("U30", 0, -14, 60, "the kelp forest north of the ship", O);
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("PS-crates-hold", "crate stack", Abilities.MuscleMan, new Vector3(0, .6f, -6), "the hold's back room (Muscle Man lifts the crates)", "H04", "H05");
+            G("PS-cannon-cabin", "cannon", Abilities.MuscleMan, new Vector3(0, 3.5f, -12.2f), "the captain's cabin door (Muscle Man moves the cannon)", "C01", "C02", "PS-H1");
+            G("PS-anchor-locker", "anchor", Abilities.MuscleMan, new Vector3(0, 3.5f, 14.2f), "the bosun's locker door (Muscle Man lifts the anchor)", "L01");
+            G("PS-boost-foretop", "boost", Abilities.MuscleMan, new Vector3(0, 3.5f, 7.6f), "the fore top (Muscle Man's boost)", "T03");
+            G("PS-deep", "deep water", Abilities.DeepDive, new Vector3(-70, -18, 110), "the trench, the wreck and the cave (deeper than 16 m: otter Kira any time, everyone with the deep dive)", "U15", "U16", "U17", "U18", "U19", "U20", "U21", "U27", "U28", "PS-H2");
             w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
         }

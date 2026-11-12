@@ -7,9 +7,13 @@ Assets/Resources/World/<name>.fbx (no textures inside) and copies its texture to
 import bpy, os, shutil, sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'Assets', 'Resources', 'World')
-for name in sys.argv[sys.argv.index('--') + 1:]:
+for arg in sys.argv[sys.argv.index('--') + 1:]:
+    name, _, ratio = arg.partition(':')   # Round 10: name:0.25 = decimated to a quarter (the fish school: many on screen)
     bpy.ops.wm.open_mainfile(filepath=os.path.join(ROOT, 'SourceArt', 'Meshy', name, name + '.blend'))
     ob = bpy.data.objects[name]
+    if ratio:
+        m = ob.modifiers.new('Decimate', 'DECIMATE'); m.ratio = float(ratio)
+        bpy.context.view_layer.objects.active = ob; bpy.ops.object.modifier_apply(modifier=m.name)
     bpy.ops.object.select_all(action='DESELECT'); ob.select_set(True); bpy.context.view_layer.objects.active = ob
     bpy.ops.export_scene.fbx(filepath=os.path.join(OUT, name + '.fbx'), use_selection=True, object_types={'MESH'}, path_mode='STRIP',
                              embed_textures=False, apply_scale_options='FBX_SCALE_ALL', add_leaf_bones=False)

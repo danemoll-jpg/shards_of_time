@@ -50,6 +50,18 @@ namespace ShardsOfTime
         public float GlideDistance { get; private set; }   // the last glide's ground covered (checks)
         public const float GlideFall = 1.1f, GlideSpeed = 7.8f;
         Vector3 glideFrom;
+        // Round 10: otter Kira. Swims 1.6x faster (any depth: CanDeepDive). Belly-slide: Dive while on the ground = a long slide on her tummy
+        // (SlideSpeed, slowing over SlideTime; on a wet deck (WetDeck) it keeps its speed); Jump out of a slide carries its speed through the air.
+        public bool Otter, CanBellySlide;
+        public bool Sliding { get; private set; }
+        public int Slides { get; private set; }
+        public static int SlidesAll { get; private set; }   // (checks)
+        public float LastSlideDistance { get; private set; }
+        public const float SlideSpeed = 10.5f, SlideTime = 1.1f, OtterSwimScale = 1.6f;
+        float slideT; Vector3 slideDir, slideFrom;
+        // Round 10: the deep dive (everyone, the ship's fiddler): breath x3 under water; air bubbles (AirVolume) give it back
+        public bool DeepBreath;
+        public float BreathMax => Stats.breathSeconds * (DeepBreath ? 3f : 1f);
         public bool Pounding { get; private set; }       // the ground pound: a short hang, then straight down
         public int Pounds { get; private set; }
         public const float PoundSpeed = 26f, PoundHang = .14f;
@@ -90,8 +102,8 @@ namespace ShardsOfTime
         {
             Cc.enabled = false; transform.SetPositionAndRotation(pos, rot); Cc.enabled = true;
             Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false; Climbing = false; swimDeepest = 0; swimTime = 0;
-            aimT = 0; Pouncing = false; Gliding = false; keepAir = 0;
-            if (!Stats.swimmer) Breath = Stats.breathSeconds;
+            aimT = 0; Pouncing = false; Gliding = false; keepAir = 0; Sliding = false;
+            if (!Stats.swimmer) Breath = BreathMax;
         }
 
         public void Knockback(Vector3 v) { Velocity = v; Grounded = false; rising = false; platform = null; coyote = 0; Pounding = false; aimT = 0; Pouncing = false; }
@@ -175,6 +187,24 @@ namespace ShardsOfTime
                 var keep = pounceDir * PounceSpeed;   // a little steering, no slowing down
                 hv = Vector3.MoveTowards(hv0, keep + Vector3.ProjectOnPlane(input.move, pounceDir) * 3f, 6f * dt);   // from last frame's speed: the air drag above doesn't apply
             }
+            // Round 10: otter Kira's belly-slide
+            if (CanBellySlide && Grounded && !Sliding && aimT <= 0 && input.divePressed)
+            {
+                Sliding = true; Slides++; SlidesAll++; slideT = SlideTime; slideFrom = transform.position;
+                slideDir = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.z).normalized : new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+                Event?.Invoke("slide"); if (CompareTag("Player")) PlayLog.Line($"belly-slide from {transform.position}");
+            }
+            if (Sliding)
+            {
+                bool wet = WetDeck.At(transform.position + Vector3.up * .2f);
+                slideT -= dt;
+                if (input.move.sqrMagnitude > .04f) slideDir = Vector3.RotateTowards(slideDir, new Vector3(input.move.x, 0, input.move.z).normalized, 1.6f * dt, 0);
+                float sp = wet ? SlideSpeed : Mathf.Lerp(Stats.runSpeed * .6f, SlideSpeed, Mathf.Clamp01(slideT / SlideTime));
+                hv = slideDir * sp;
+                if (input.jumpPressed && (Grounded || coyote > 0)) { keepAir = 1.2f; EndSlide(); }
+                else if ((slideT <= 0 && !wet) || slideT < -2.5f ||   // (a wet slide keeps going, but not into a wall for ever)
+                          (!Grounded && coyote <= 0 && airTime > .3f)) { if (!Grounded) keepAir = 1.2f; EndSlide(); }
+            }
             if (input.jumpPressed) buffer = JumpBuffer; else buffer -= dt;
             if (Grounded) coyote = CoyoteTime; else coyote -= dt;
             if (buffer > 0 && (Grounded || coyote > 0))
@@ -239,15 +269,19 @@ namespace ShardsOfTime
             TrackPlatform();
         }
 
+        void EndSlide() { Sliding = false; var d = transform.position - slideFrom; d.y = 0; LastSlideDistance = d.magnitude; }
+
         void SwimStep(MotorInput input, float dt)
         {
+            if (Sliding) EndSlide();
             var s = Stats;
             float surfaceFeet = Water.Top - s.height * .75f;     // floating: the top quarter out of the water
             float y = transform.position.y;
             bool atSurface = y >= surfaceFeet - .2f;
-            var target = Vector3.ClampMagnitude(input.move, 1f) * s.swimSpeed * SpeedScale;
-            if (input.diveHeld) target.y = -s.swimSpeed * .8f;
-            else if (input.jumpHeld && !atSurface) target.y = s.swimSpeed * .8f;
+            float swimSpeed = s.swimSpeed * (Otter ? OtterSwimScale : 1f) * (Struggling ? .55f : 1f);   // Round 10: the otter's fast swim; Muscle Man's struggle
+            var target = Vector3.ClampMagnitude(input.move, 1f) * swimSpeed * SpeedScale;
+            if (input.diveHeld) target.y = -swimSpeed * .8f;
+            else if (input.jumpHeld && !atSurface) target.y = swimSpeed * .8f;
             else if (atSurface || y > surfaceFeet - 1.2f) target.y = Mathf.Clamp((surfaceFeet - y) * 4f, -2f, 2.5f);   // float up to and at the surface
             else target.y = .5f;                                                                          // gentle rise
             swimTime += dt; swimDeepest = Mathf.Max(swimDeepest, surfaceFeet - y);
@@ -264,6 +298,8 @@ namespace ShardsOfTime
             {
                 ClimbOut(well.ExitFrom(transform.position, input.move), true); return;
             }
+            var seaLock = SeaLock.At(transform.position);                                                  // Round 10: the deep sea before the shard goes overboard
+            if (seaLock) { target.y = Mathf.Max(target.y, 2.4f); if (CompareTag("Player")) seaLock.Hint(); }
             var deep = DeepWater.At(transform.position);                                                   // Round 5: too deep without the deep dive
             if (deep && !CanDeepDive) { target.y = Mathf.Max(target.y, 2.6f); if (CompareTag("Player")) deep.Hint(); }
             if (atSurface && input.jumpPressed && !input.diveHeld)
@@ -317,14 +353,17 @@ namespace ShardsOfTime
         {
             HeadUnderwater = Water && Head.y < Water.Top - .05f;
             if (Stats.swimmer) { Breath = 0; return; }
+            if (HeadUnderwater && AirVolume.At(Head)) { Breath = Mathf.MoveTowards(Breath, BreathMax, dt * BreathMax / 1.2f); AirRefills += dt; return; }   // Round 10: air bubbles
             if (HeadUnderwater)
             {
                 Breath -= dt;
                 if (Breath <= 0) { Breath = 3f; Event?.Invoke("outofbreath"); }
             }
-            else Breath = Mathf.MoveTowards(Breath, Stats.breathSeconds, dt * Stats.breathSeconds / 1.5f);
+            else Breath = Mathf.MoveTowards(Breath, BreathMax, dt * BreathMax / 1.5f);
         }
-        public float Breath01 => Stats.swimmer || Stats.breathSeconds <= 0 ? 1f : Mathf.Clamp01(Breath / Stats.breathSeconds);
+        public float AirRefills { get; private set; }
+        public bool Struggling;   // Round 10: Muscle Man under water (slow; his struggling clip)
+        public float Breath01 => Stats.swimmer || Stats.breathSeconds <= 0 ? 1f : Mathf.Clamp01(Breath / BreathMax);
 
         void Face(Vector3 hv, float dt)
         {

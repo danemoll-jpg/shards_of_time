@@ -86,10 +86,14 @@ namespace ShardsOfTime
         // Round 8: the Medieval Kingdom
         public const string Glide = "Glide";                 // dragon Kira: hold Jump in the air, her little wings slow the fall (long gaps)
         public const string FirePuff = "FirePuff";           // dragon Kira: her attack is a puff of fire (lights torches and braziers, burns ropes, hay, brambles; scares rats; never hurts people)
+        // Round 10: the Pirate Seas
+        public const string OtterSwim = "OtterSwim";         // otter Kira: fast swimming, any depth, no breath limit (the narrow gaps under water)
+        public const string BellySlide = "BellySlide";       // otter Kira: Dive while running = a long belly-slide (far on wet decks)
+        public const string Overboard = "Overboard";         // not a move: the deep sea is open (after ShardOverboard); rule 2 never counts it on arrival
         // the charged punch (Dan, Medieval: hold attack, release) is ChargedPunch above; MuscleMan = he has joined (after the stone)
 
         // Round 8: every move a hero can learn from the Violinist (Dan learns two)
         public static bool Learns(string hero, string id) =>
-            hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump : hero == "Kira" && id == Pounce;
+            id == DeepDive || (hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump : hero == "Kira" && id == Pounce);   // Round 10: everyone learns the deep dive
     }
 }

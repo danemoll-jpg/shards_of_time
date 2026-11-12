@@ -1,5 +1,44 @@
 # Shards of Time — models needed
 
+## Round 10 (2026-11-11): Mixamo for the Pirate Seas — rigs DONE (same night); 3 Muscle Man clips still open
+
+**In:** all five T-poses (Dan 41 bones, Abi 65, Muscle Man 41, the Violinist 65, the deckhand 49); renders `Data/screenshots/round10/mixamo/`;
+Abi's mesh closed (`close_person.py`, 0 open edges). **Not found:** `Drowning.fbx`, `Getting Up.fbx`, `Jumping Down.fbx` in
+`SourceArt/Mixamo/muscleman_pirate/`. Until they are in, Muscle Man uses Treading Water (his struggle), Hard Landing (getting up after the
+crash) and Jump (the leap overboard). Drop them in that folder and run `python Tools/import_characters.py --only muscleman_pirate`, then a
+build (the cutscenes pick them up when rebuilt: delete `Assets/Resources/Cutscenes/{PirateArrival,ShardOverboard,SeaVortex}.prefab`).
+
+What was asked (kept for the record):
+
+All 9 Pirate Seas images are Meshy models (fronts: `Data/screenshots/round10/models/`). The five people go through Mixamo;
+otter Kira, the crab, the pufferfish and the fish are Code's rigs (no Mixamo).
+
+| Model | Upload this (mixamo.com > Upload Character) | Height |
+|---|---|---|
+| Dan, pirate | `SourceArt/Mixamo/dan_pirate/upload/dan_pirate.fbx` | 1.8 m |
+| Abi, pirate | `SourceArt/Mixamo/abi_pirate/upload/abi_pirate.fbx` | 1.65 m |
+| Muscle Man, pirate | `SourceArt/Mixamo/muscleman_pirate/upload/muscleman_pirate.fbx` | 2.0 m |
+| The Violinist, ship's fiddler | `SourceArt/Mixamo/violinist_pirate/upload/violinist_pirate.fbx` | 1.85 m |
+| Pirate deckhand | `SourceArt/Mixamo/pirate/upload/pirate.fbx` (one peg leg: put both knee markers where the knees are) | 1.65 m |
+
+For **each of the five**:
+1. **Upload**, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**.
+2. **Download the rigged character** with no animation picked: **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
+   Save as `SourceArt/Mixamo/<model>/T-Pose.fbx` (next to `upload`, not inside it).
+
+Swimming: **nothing new to download for the heroes.** Your shared clips already have `Swimming.fbx`, `Treading Water.fbx` and
+`Swimming To Edge.fbx` (they play on every person, the pirates too). Only Muscle Man gets three new clips of his own:
+**FBX for Unity, 30 fps, Keyframe Reduction none, Without Skin, In Place ticked where offered**, Muscle Man on screen. If a search
+name isn't there, take the closest one that fits "For" and save it under the first column's name anyway.
+
+| Save as | Mixamo search | Folder | For |
+|---|---|---|---|
+| `Drowning.fbx` | **Drowning** (if missing: search **Swim** and take the most flailing, struggling one) | `SourceArt/Mixamo/muscleman_pirate/` | his struggling swim under the sea (he can't keep up) |
+| `Getting Up.fbx` | **Getting Up** (if missing: **Stand Up**) | `SourceArt/Mixamo/muscleman_pirate/` | the arrival: he lies flat on the deck after crashing through the sails, then sits up grinning |
+| `Jumping Down.fbx` | **Jumping Down** (if missing: **Jump**) | `SourceArt/Mixamo/muscleman_pirate/` | the shard overboard: he leaps off the deck after it |
+
+That's 5 T-poses + 3 clips. Tell Code when they're in; Code imports them and keeps going.
+
 ## Round 9 (2026-11-11): the Pirate Seas — images needed from Dan (prompts by the planning chat)
 
 Film art: `SourceArt/Reference/Characters/*/…-pirate-film.*`, `Kira/kira-otter-film.jpg`,

@@ -42,6 +42,8 @@ Under the music: the wind ambience (`Assets/Resources/Sounds/wind_loop.mp3`, Ele
 | `act1.mp3` (59.9 s, Round 9) | `ActOne` (60 s) from its start | fades out over 2.2 s from 58.4 s, over the white-out into the Ice Age arrival (the Ice Age theme starts on the landing) |
 | `iceage.mp3` (3:00) | from the arrival, then the valley (loops) | the wind ambience under it |
 | `vortex.mp3` (3:00) | inside the vortex space (loops) | crossfades in when the party enters, back to the Ice Age when it leaves |
+| `pirate.mp3` (2:59, Round 10) | `PirateArrival`, `ShardOverboard`, then the ship and the island (loops) | the sea's lapping (`waves_loop`) under it |
+| `underwater.mp3` (3:00, Round 10) | under the sea: once the player's head has been under the surface 0.6 s (back to `pirate.mp3` 1.2 s after surfacing) | crossfades both ways; silence under `SeaVortex` |
 
 A missing file is silence (nothing is generated in its place).
 

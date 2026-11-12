@@ -1,0 +1,581 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: PirateSeas
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: PirateSeas
+  displayName: The Pirate Seas
+  heightsAreHints: 1
+  areas:
+  - id: PS
+    name: The Pirate Seas
+    requirement: 225
+    fromHere: 20
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - OtterSwim
+    - BellySlide
+    - MuscleMan
+    storyShard: {x: -45, y: -11, z: 10}
+    storyShardColor: {r: 0.2, g: 0.95, b: 0.45, a: 1}
+    spawn: {x: 0, y: 3.6, z: -4}
+    spawnYaw: 0
+    kiraForm: Otter
+    outfit: pirate
+    box:
+      m_Center: {x: 0, y: -20, z: 25}
+      m_Extent: {x: 210, y: 70, z: 190}
+  shards:
+  - id: S01
+    area: PS
+    position: {x: 0, y: 3.5, z: -9}
+    requires: []
+    note: the main deck, aft of the mainmast
+  - id: S02
+    area: PS
+    position: {x: -3.5, y: 3.5, z: 9}
+    requires: []
+    note: the main deck, by the foremast
+  - id: S03
+    area: PS
+    position: {x: 1.6, y: 3.5, z: 13.6}
+    requires: []
+    note: the main deck, by the foremast's foot
+  - id: Q01
+    area: PS
+    position: {x: -2.5, y: 6, z: -19}
+    requires: []
+    note: the quarterdeck, by the wheel
+  - id: Q02
+    area: PS
+    position: {x: 2.5, y: 6, z: -16}
+    requires: []
+    note: the quarterdeck
+  - id: F01
+    area: PS
+    position: {x: 0, y: 6, z: 17.5}
+    requires: []
+    note: the forecastle
+  - id: F02
+    area: PS
+    position: {x: -1.6, y: 6, z: 21.5}
+    requires: []
+    note: the forecastle's bow
+  - id: P01
+    area: PS
+    position: {x: -9.2, y: 3.6, z: 4}
+    requires: []
+    note: the end of the plank (walk it!)
+  - id: T01
+    area: PS
+    position: {x: 1.2, y: 13, z: 0.8}
+    requires: []
+    note: the main top (climb the rope net)
+  - id: T02
+    area: PS
+    position: {x: 0, y: 21, z: 0}
+    requires: []
+    note: the crow's nest (the net up the mainmast)
+  - id: T03
+    area: PS
+    position: {x: 0.5, y: 11.8, z: 12.9}
+    requires:
+    - MuscleMan
+    note: the fore top (Muscle Man boosts Dan or Abi)
+  - id: H01
+    area: PS
+    position: {x: 2, y: 0.6, z: 4}
+    requires: []
+    note: the hold
+  - id: H02
+    area: PS
+    position: {x: -3, y: 0.6, z: 10}
+    requires: []
+    note: the hold, by the barrels
+  - id: H03
+    area: PS
+    position: {x: 3, y: 0.6, z: -2.5}
+    requires: []
+    note: the hold, by the mainmast's foot
+  - id: H04
+    area: PS
+    position: {x: -2, y: 0.6, z: -9}
+    requires:
+    - MuscleMan
+    note: the hold's back room (Muscle Man lifts the crates)
+  - id: H05
+    area: PS
+    position: {x: 2, y: 0.6, z: -10}
+    requires:
+    - MuscleMan
+    note: the hold's back room (Muscle Man lifts the crates)
+  - id: K01
+    area: PS
+    position: {x: -4.2, y: 0.6, z: 1}
+    requires:
+    - Kira
+    note: the cargo nook behind the crates (only otter Kira fits through the gap at the bottom)
+  - id: C01
+    area: PS
+    position: {x: -2, y: 3.5, z: -18}
+    requires:
+    - MuscleMan
+    note: the captain's cabin (Muscle Man moves the cannon)
+  - id: C02
+    area: PS
+    position: {x: 2, y: 3.5, z: -16}
+    requires:
+    - MuscleMan
+    note: the captain's cabin (Muscle Man moves the cannon)
+  - id: L01
+    area: PS
+    position: {x: 1.2, y: 3.5, z: 19}
+    requires:
+    - MuscleMan
+    note: the bosun's locker (Muscle Man lifts the anchor)
+  - id: J01
+    area: PS
+    position: {x: 22, y: 1.2, z: -2}
+    requires: []
+    note: the jetty
+  - id: I01
+    area: PS
+    position: {x: 36, y: 12, z: 10}
+    requires: []
+    note: the island's west beach
+  - id: I02
+    area: PS
+    position: {x: 50, y: 12, z: -38}
+    requires: []
+    note: the south beach
+  - id: I03
+    area: PS
+    position: {x: 62, y: 12, z: 32}
+    requires: []
+    note: the jungle path
+  - id: I04
+    area: PS
+    position: {x: 80, y: 12, z: 12}
+    requires: []
+    note: the island's hilltop
+  - id: I05
+    area: PS
+    position: {x: 102, y: 12, z: -12}
+    requires: []
+    note: the east side
+  - id: I06
+    area: PS
+    position: {x: 112, y: 12, z: 34}
+    requires: []
+    note: the east beach
+  - id: I07
+    area: PS
+    position: {x: 70, y: 12, z: -46}
+    requires: []
+    note: the south point
+  - id: V01
+    area: PS
+    position: {x: 82, y: -2.4, z: 64}
+    requires: []
+    note: the cove's floor (shallow)
+  - id: V02
+    area: PS
+    position: {x: 82, y: -2.4, z: 84}
+    requires: []
+    note: the cove's channel
+  - id: U01
+    area: PS
+    position: {x: -10, y: -14, z: -5}
+    requires:
+    - Overboard
+    note: the sea floor under the ship
+  - id: U02
+    area: PS
+    position: {x: 8, y: -14, z: 20}
+    requires:
+    - Overboard
+    note: the sea floor by the bow
+  - id: U03
+    area: PS
+    position: {x: -5, y: -14, z: 30}
+    requires:
+    - Overboard
+    note: the sea floor ahead of the ship
+  - id: U04
+    area: PS
+    position: {x: -35, y: -10, z: -20}
+    requires:
+    - Overboard
+    note: the reef
+  - id: U05
+    area: PS
+    position: {x: -50, y: -10, z: -35}
+    requires:
+    - Overboard
+    note: the reef
+  - id: U06
+    area: PS
+    position: {x: -60, y: -10, z: 0}
+    requires:
+    - Overboard
+    note: the reef
+  - id: U07
+    area: PS
+    position: {x: -75, y: -10, z: 30}
+    requires:
+    - Overboard
+    note: the reef
+  - id: U08
+    area: PS
+    position: {x: -90, y: -10, z: -10}
+    requires:
+    - Overboard
+    note: the reef's far side
+  - id: U09
+    area: PS
+    position: {x: -100, y: -10, z: 45}
+    requires:
+    - Overboard
+    note: the reef's far side
+  - id: U10
+    area: PS
+    position: {x: -40, y: -10, z: 40}
+    requires:
+    - Overboard
+    note: the reef
+  - id: U11
+    area: PS
+    position: {x: -65, y: -10, z: 55}
+    requires:
+    - Overboard
+    note: the reef
+  - id: U12
+    area: PS
+    position: {x: -85, y: -10, z: -50}
+    requires:
+    - Overboard
+    note: the reef's south end
+  - id: U13
+    area: PS
+    position: {x: -41, y: -11, z: 14}
+    requires:
+    - Overboard
+    note: the green shard's clearing
+  - id: U14
+    area: PS
+    position: {x: -49, y: -11, z: 6}
+    requires:
+    - Overboard
+    note: the green shard's clearing
+  - id: U15
+    area: PS
+    position: {x: -60, y: -21, z: 108}
+    requires:
+    - Overboard
+    - Kira
+    note: the wreck's trench (deep)
+  - id: U16
+    area: PS
+    position: {x: -80, y: -21, z: 128}
+    requires:
+    - Overboard
+    - Kira
+    note: the wreck's trench (deep)
+  - id: U17
+    area: PS
+    position: {x: -70, y: -20, z: 118}
+    requires:
+    - Overboard
+    - Kira
+    note: inside the shipwreck (deep)
+  - id: U18
+    area: PS
+    position: {x: -68.6, y: -18, z: 120.1}
+    requires:
+    - Overboard
+    - Kira
+    note: inside the shipwreck (deep)
+  - id: U19
+    area: PS
+    position: {x: -135, y: -18, z: -10}
+    requires:
+    - Overboard
+    - Kira
+    note: the sea cave (deep)
+  - id: U20
+    area: PS
+    position: {x: -130, y: -18, z: 10}
+    requires:
+    - Overboard
+    - Kira
+    note: the sea cave (deep)
+  - id: U21
+    area: PS
+    position: {x: -140, y: -18, z: 0}
+    requires:
+    - Overboard
+    - Kira
+    note: the sea cave (deep)
+  - id: U22
+    area: PS
+    position: {x: -136, y: -18, z: 24}
+    requires:
+    - Overboard
+    - Kira
+    note: the cave's grotto (otter Kira squeezes through)
+  - id: U23
+    area: PS
+    position: {x: -131, y: -18, z: 25.5}
+    requires:
+    - Overboard
+    - Kira
+    note: the cave's grotto (otter Kira squeezes through)
+  - id: U24
+    area: PS
+    position: {x: 30, y: -6, z: 30}
+    requires:
+    - Overboard
+    note: the island's underwater slope
+  - id: U25
+    area: PS
+    position: {x: 40, y: -8, z: -40}
+    requires:
+    - Overboard
+    note: the island's underwater slope
+  - id: U26
+    area: PS
+    position: {x: 15, y: -10, z: -30}
+    requires:
+    - Overboard
+    note: the sea floor south of the ship
+  - id: U27
+    area: PS
+    position: {x: -115, y: -18, z: -30}
+    requires:
+    - Overboard
+    - Kira
+    note: the cave's basin (deep)
+  - id: U28
+    area: PS
+    position: {x: -118, y: -18, z: 35}
+    requires:
+    - Overboard
+    - Kira
+    note: the cave's basin (deep)
+  - id: U29
+    area: PS
+    position: {x: 18, y: -6, z: -2}
+    requires:
+    - Overboard
+    note: under the jetty
+  - id: U30
+    area: PS
+    position: {x: 0, y: -14, z: 60}
+    requires:
+    - Overboard
+    note: the kelp forest north of the ship
+  gates:
+  - id: PS-crates-hold
+    kind: crate stack
+    needs: MuscleMan
+    position: {x: 0, y: 0.6, z: -6}
+    opens:
+    - H04
+    - H05
+    note: the hold's back room (Muscle Man lifts the crates)
+  - id: PS-cannon-cabin
+    kind: cannon
+    needs: MuscleMan
+    position: {x: 0, y: 3.5, z: -12.2}
+    opens:
+    - C01
+    - C02
+    - PS-H1
+    note: the captain's cabin door (Muscle Man moves the cannon)
+  - id: PS-anchor-locker
+    kind: anchor
+    needs: MuscleMan
+    position: {x: 0, y: 3.5, z: 14.2}
+    opens:
+    - L01
+    note: the bosun's locker door (Muscle Man lifts the anchor)
+  - id: PS-boost-foretop
+    kind: boost
+    needs: MuscleMan
+    position: {x: 0, y: 3.5, z: 7.6}
+    opens:
+    - T03
+    note: the fore top (Muscle Man's boost)
+  - id: PS-deep
+    kind: deep water
+    needs: DeepDive
+    position: {x: -70, y: -18, z: 110}
+    opens:
+    - U15
+    - U16
+    - U17
+    - U18
+    - U19
+    - U20
+    - U21
+    - U27
+    - U28
+    - PS-H2
+    note: 'the trench, the wreck and the cave (deeper than 16 m: otter Kira any time, everyone with the deep dive)'
+  lowSpots:
+  - id: PS-sea-port
+    kind: water
+    drop: {x: -10, y: 0, z: -6}
+    via: {x: -7.2, y: 0, z: -6}
+    exit: {x: -4.6, y: 3.5, z: -6}
+    radius: 4
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the sea by the ship's port side (the rope ladder up the hull)
+  - id: PS-sea-east
+    kind: water
+    drop: {x: 14, y: 0, z: 20}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 33, y: 0, z: 20}
+    radius: 14
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the sea between the ship and the island (swim to the beach)
+  - id: PS-sea-south
+    kind: water
+    drop: {x: 0, y: 0, z: -34}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 32, y: 0, z: -22}
+    radius: 22
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the sea south of the ship (the beach)
+  - id: PS-sea-north
+    kind: water
+    drop: {x: 0, y: 0, z: 45}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 37, y: 0, z: 40}
+    radius: 24
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the sea north of the ship (the beach)
+  - id: PS-sea-west
+    kind: water
+    drop: {x: -36, y: 0, z: 6}
+    via: {x: -7.2, y: 0, z: -6}
+    exit: {x: -4.6, y: 3.5, z: -6}
+    radius: 8
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the open sea west of the ship (back to its rope ladder)
+  - id: PS-cove
+    kind: water
+    drop: {x: 82, y: 0, z: 66}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 82, y: 0, z: 42}
+    radius: 16
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the island's cove (out onto its bank)
+  - id: PS-hold
+    kind: enclosed
+    drop: {x: 0.5, y: 0.9, z: 0.3}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 0, y: 3.5, z: 8.6}
+    radius: 7
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the ship's hold (up the ramp to the deck)
+  - id: PS-hold-back
+    kind: enclosed
+    drop: {x: 0, y: 0.9, z: -9.5}
+    via: {x: 0, y: 0.6, z: 1}
+    exit: {x: 0, y: 3.5, z: 8.6}
+    radius: 12
+    needs: MuscleMan
+    heroes: 
+    opens: PS-crates-hold
+    checkpoint: 
+    note: the hold's back room behind the crates
+  - id: PS-cabin
+    kind: enclosed
+    drop: {x: 0, y: 3.8, z: -17.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 0, y: 3.5, z: -9}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: PS-cannon-cabin
+    checkpoint: 
+    note: the captain's cabin behind the cannon
+  - id: PS-locker
+    kind: enclosed
+    drop: {x: 0, y: 3.8, z: 19.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 0, y: 3.5, z: 10}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: PS-anchor-locker
+    checkpoint: 
+    note: the bosun's locker behind the anchor
+  - id: PS-cave
+    kind: underwater
+    drop: {x: -135, y: -16, z: 0}
+    via: {x: -121, y: -15.5, z: 0}
+    exit: {x: -110, y: -14, z: 0}
+    radius: 17
+    needs: DeepDive
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the sea cave (out of its mouth)
+  - id: PS-grotto
+    kind: underwater
+    drop: {x: -134, y: -17, z: 25}
+    via: {x: -136.65, y: -17.7, z: 19.8}
+    exit: {x: -134, y: -16, z: 6}
+    radius: 12
+    needs: 
+    heroes: Kira
+    opens: 
+    checkpoint: 
+    note: the cave's little grotto (back through the narrow gap)
+  - id: PS-wreck
+    kind: underwater
+    drop: {x: -70, y: -16.5, z: 118}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -70, y: -10, z: 92}
+    radius: 15
+    needs: DeepDive
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: inside the shipwreck (out through its broken side or deck)
+  violinistInstrument: Fiddle
+  violinistPlayClip: violinist_play

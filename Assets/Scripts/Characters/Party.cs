@@ -9,7 +9,7 @@ namespace ShardsOfTime
     public sealed class Party : MonoBehaviour
     {
         public static Party I { get; private set; }
-        public const float KillY = -25f;
+        public static float KillY => Game.InPirate ? -90f : -25f;   // Round 10: the Pirate Seas' floor goes down to -27
         public readonly List<Hero> Heroes = new List<Hero>();
         public Hero Player { get; private set; }
         public int Switches { get; private set; }
@@ -63,8 +63,11 @@ namespace ShardsOfTime
             {
                 h.Motor.CanDoubleJump = h.Stats.lockedAbility == Abilities.DoubleJump && SaveGame.Current.Has(Abilities.DoubleJump);
                 h.Motor.CanGroundPound = h.Stats.lockedAbility == Abilities.GroundPound && SaveGame.Current.Has(Abilities.GroundPound);   // Round 4
-                h.Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive);   // Round 5 (everyone)
-                h.Motor.CanPounce = h.Stats.displayName == "Kira" && SaveGame.Current.Has(Abilities.Pounce);   // Round 7 (Kira, Bethlehem's Violinist)
+                h.Motor.CanBellySlide = h.HasAbility(Abilities.BellySlide);   // Round 10 (otter Kira)
+                h.Motor.Otter = h.HasAbility(Abilities.OtterSwim);
+                h.Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive) || h.Motor.Otter;   // Round 5 (everyone); Round 10: otter Kira any depth
+                h.Motor.DeepBreath = SaveGame.Current.Has(Abilities.DeepDive);   // Round 10: the deep dive's longer breath
+                h.Motor.CanPounce = h.Stats.displayName == "Kira" && SaveGame.Current.Has(Abilities.Pounce) && !h.Motor.CanBellySlide;   // Round 7 (Kira, Bethlehem's Violinist); the otter slides instead
                 h.Motor.CanGlide = h.HasAbility(Abilities.Glide);   // Round 8 (dragon Kira's wings; set again when her form changes)
             }
         }
@@ -140,6 +143,7 @@ namespace ShardsOfTime
                 else if (Controls.PickKira.WasPressedThisFrame()) Switch(2);
             }
             Player.Motor.SpeedScale = 1f;
+            if (Game.Playing && RopeClimb.Try(Player, input.jumpPressed)) input.jumpPressed = false;   // Round 10: the ship's rigging
             Player.Motor.Step(input, Time.deltaTime);
             if (Game.Playing) IceHole.Watch(Player);   // Round 6, item 2: nobody stays stuck under the ice
             RecordTrail();

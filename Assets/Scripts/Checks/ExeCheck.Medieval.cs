@@ -464,8 +464,8 @@ namespace ShardsOfTime
         IEnumerator MuscleManEarlierWorld()
         {
             Head("Round 8, items 7 and 11: in an earlier world (Bethlehem): Muscle Man rolls the cave's boulder away; Dan's charged punch breaks the courtyard's cracked wall");
-            yield return Go(VPath(-12, 4), .8f); yield return Go(VPath(-12, 19), .6f);
-            yield return Go(VPath(-12, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(Yaw("Bethlehem"), 4), .8f); yield return Go(VPath(Yaw("Bethlehem"), 19), .6f);
+            yield return Go(VPath(Yaw("Bethlehem"), 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Game.InBethlehem && !Game.I.Busy, 12f);
             Ok(Game.InBethlehem && P.Companion, $"Bethlehem, with Muscle Man along ({(P.Companion && P.Companion.Model ? P.Companion.Model.name : "-")})");
             yield return SwitchTo(0);
@@ -491,8 +491,8 @@ namespace ShardsOfTime
         {
             Head("Round 8, item 11: Muscle Man's jobs in the Medieval Kingdom (the yard's boulder, the armory's portcullis, a boost)");
             SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind(); yield return Wait(.6f);
-            yield return Go(VPath(12, 4), .8f); yield return Go(VPath(12, 19), .6f);
-            yield return Go(VPath(12, 24), .5f, 6f, 1f, () => Game.I.Busy);
+            yield return Go(VPath(Yaw("Medieval"), 4), .8f); yield return Go(VPath(Yaw("Medieval"), 19), .6f);
+            yield return Go(VPath(Yaw("Medieval"), 24), .5f, 6f, 1f, () => Game.I.Busy);
             yield return WaitFor(() => Game.InMedieval && !Game.I.Busy, 12f);
             Ok(Game.InMedieval && played.Count(p => p == "MedievalArrival") <= 1 && P.Companion, "back in the Medieval Kingdom (no second arrival), Muscle Man along");
             Ok(RivalMuscleMan.All.All(r => !r.gameObject.activeInHierarchy), "the rival is gone from his spots (he's with the party now)");

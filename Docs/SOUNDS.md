@@ -60,3 +60,21 @@ one: generate it again (`--only <name> --force`) or drop your own file with the 
 | `footstep_cobble.mp3` | 0.5 s | sfx | a step on cobblestones (Medieval, per step while running) | A single footstep on stone cobblestones, a short hard tap with a tiny scuff, close, no reverb, no music. |
 | `portcullis.mp3` | 2 s | sfx | the portcullis is heaved up | A heavy iron portcullis being heaved up, chains rattling over a winch and the iron gate creaking and clanking, no music. |
 | `lute_tune.mp3` | 6 s | sfx | the Violinist plays his lute as a bard (Medieval: he teaches a move) | A short mysterious gentle playful melody plucked on a medieval lute, a few slow bright rising notes, warm and magical, solo instrument, music cue. |
+| `waves_loop.mp3` | 8 s | sfx | gentle sea waves lapping at a wooden ship (ambience) | Gentle calm sea waves lapping against the wooden hull of an old sailing ship at sunset, soft splashes, a little creak, no music, no voices. |
+| `wood_creak.mp3` | 2 s | sfx | the ship's timbers creak | The wooden timbers and ropes of an old sailing ship creaking slowly as it rocks on the sea, close, no music. |
+| `barrel_thud.mp3` | 0.8 s | sfx | someone lands in a wooden barrel | A hollow wooden barrel thud as something lands inside it, a short bonk with a little rattle, comic, close, no music. |
+| `sail_rip.mp3` | 1.2 s | sfx | Muscle Man drops through a sail | A big canvas sail ripping as something heavy crashes through it from above, a fast tearing whoosh, comic, no music. |
+| `wood_crash.mp3` | 1.5 s | sfx | Muscle Man crashes flat onto the deck among barrels | A huge heavy cartoon crash onto a wooden ship deck, barrels smashing into staves and planks clattering, comic, no music. |
+| `chest_open.mp3` | 1.2 s | sfx | the treasure chest creaks open | An old wooden treasure chest lid creaking open with a little metal clink and a magical shimmer, no music. |
+| `shard_bounce.mp3` | 0.6 s | sfx | the crystal shard bounces on the deck | A small glass crystal bouncing on a wooden deck, a bright clink tock, close, no music. |
+| `shard_roll.mp3` | 3 s | sfx | the crystal shard rolls across the deck | A small crystal rolling across wooden deck planks, a light rattling roll that speeds up, close, no music. |
+| `splash.mp3` | 1.2 s | sfx | someone splashes into the sea | Someone jumping into the sea with a big splash, water splashing up and falling back, outdoors, no music. |
+| `bubbles.mp3` | 2 s | sfx | bubbles under water | Air bubbles rising underwater, soft gurgling bubbly pops, muffled underwater, no music. |
+| `sea_vortex.mp3` | 4 s | sfx | the swirling green underwater vortex (the finale) | A magical swirling vortex opening under the sea, a deep muffled rushing whirl with rising sparkling shimmering chimes and bubbles, fairytale, no music. |
+| `crab_click.mp3` | 0.8 s | sfx | a grumpy crab snaps its claw | A small crab clicking and snapping its claws together quickly, crisp clicks, comic, close, no music. |
+| `puffer_puff.mp3` | 1 s | sfx | a pufferfish puffs up | A cartoon pufferfish suddenly inflating underwater with a quick muffled whoomp and a squeaky stretch, comic, no music. |
+| `pirate_arr.mp3` | 1.2 s | sfx | a goofy pirate deckhand spots you: "Arr!" | A goofy cartoon pirate man growling the word "Arrr!" in a silly gruff voice, comic, close, no music. |
+| `rope_creak.mp3` | 1.5 s | sfx | climbing the rope rigging | Someone climbing a rope net on a sailing ship, ropes creaking and stretching, hand over hand, close, no music. |
+| `footstep_wood.mp3` | 0.5 s | sfx | a step on a wooden deck (Pirate Seas, per step while running) | A single footstep on a wooden ship deck, a short hollow knock with a tiny creak, close, no reverb, no music. |
+| `cannon_roll.mp3` | 2 s | sfx | Muscle Man rolls a heavy cannon aside | A heavy iron cannon on wooden wheels rolling over a wooden deck, a deep rumbling roll and creak, no music. |
+| `fiddle_shanty.mp3` | 6 s | sfx | the Violinist plays a sea shanty on his fiddle (Pirate Seas: he teaches the deep dive) | A short lively playful sea shanty melody played on a solo fiddle, a few bouncy bright notes then a warm magical rising phrase, solo instrument, music cue. |

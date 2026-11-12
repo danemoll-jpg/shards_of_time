@@ -40,6 +40,7 @@ namespace ShardsOfTime
                     PlayLog.Line($"shard {id} ({s.Total} total)");
                     break;
                 case Kind.StoryShard:
+                    if (Game.InPirate && id == Pirate.ChestShardId) { Sfx.Play("story", .5f, 1.2f); PlayLog.Line("the green shard in the chest"); break; }   // Round 10: the chest (it goes overboard)
                     s.World(Game.World.worldId).storyShard = true;
                     Sfx.Play("story", .7f);
                     PlayLog.Line($"story shard of area {area}");

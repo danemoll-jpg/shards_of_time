@@ -11,7 +11,7 @@ namespace ShardsOfTime
     public sealed partial class ExeCheck
     {
         // moves the story teaches by Bethlehem (a spot that needs one to get in is tested with it); anything else is a later move
-        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan };   // Round 8: the charged punch, Muscle Man
+        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan, Abilities.DeepDive };   // Round 10: the deep dive (the Pirate Seas)   // Round 8: the charged punch, Muscle Man
 
         IEnumerator Fix72()
         {
@@ -27,6 +27,7 @@ namespace ShardsOfTime
             yield return StuckWorld(WorldData.Egypt, Egypt.Start);
             yield return StuckWorld(WorldData.Bethlehem, Bethlehem.Start);
             yield return StuckWorld(WorldData.Medieval, Medieval.Start);   // Round 8
+            yield return PirateEnter(Pirate.Start); yield return StuckWorld(WorldData.Pirate, null);   // Round 10
         }
 
         IEnumerator StuckMedieval() { yield return EnsurePlaying(false); yield return StuckWorld(WorldData.Medieval, Medieval.Start); }   // Round 8
@@ -42,7 +43,7 @@ namespace ShardsOfTime
         IEnumerator ToWorld(string world, string cp)
         {
             if (Game.World.worldId == world) yield break;
-            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : null;
+            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : null;
             if (flag != null && !SaveGame.Current.World(world).opened.Contains(flag)) SaveGame.Current.World(world).opened.Add(flag);
             SaveGame.Current.checkpoint = cp; yield return StartWorld(world); yield return WaitFor(() => !Game.I.Busy, 10f);
             yield return Wait(1f);
@@ -53,6 +54,7 @@ namespace ShardsOfTime
         {
             if (cp != null) yield return ToWorld(world, cp);
             var wd = Game.World;
+            if (Game.InPirate) Pirate.OpenDeepSea(true);   // Round 10: the deep-sea spots (the check opens the deep sea first)
             Head($"Fix 7.2, item 2: never stuck in {wd.displayName} ({wd.lowSpots.Count} spots listed in its world data)");
             Ok(wd.lowSpots.Count > 0, $"{wd.displayName} lists its low / enclosed spots");
             // every water volume in the world is on the list (so a new pool can't be forgotten)
@@ -119,6 +121,7 @@ namespace ShardsOfTime
                 prev = p;
                 var fd = p - s.drop; fd.y = 0;
                 bool sand = Quicksand.All.Any(q => { var b = q.Box; b.Expand(new Vector3(0, 1.2f, 0)); return b.Contains(p); });
+                if (s.kind == "underwater" && fd.magnitude >= s.radius) { escaped = true; escapedBy = "swam out"; break; }   // Round 10: out of a sea cave / the wreck (any mode)
                 if (M.Grounded && M.Mode != MoveMode.Swim && !M.Climbing && fd.magnitude >= s.radius && p.y >= rim - .6f && !sand)
                 { escaped = true; if (M.ClimbOuts > climbs) escapedBy = "climbed out"; break; }
                 var tgt = viaDone ? s.exit : s.via; var d = tgt - p; d.y = 0;
@@ -127,7 +130,8 @@ namespace ShardsOfTime
                 if (Time.time < dodgeUntil) dir = Quaternion.Euler(0, dodge, 0) * dir;
                 Stick(StickFor(dir));
                 cyc += Time.deltaTime; float c = cyc % 1.1f;
-                Btn(GamepadButton.South, c < .4f || (c > .55f && c < .8f));
+                if (s.kind == "underwater") { float dy = tgt.y - M.Center.y; Btn(GamepadButton.East, dy < -.5f); Btn(GamepadButton.South, dy > .5f); }   // Round 10: swim by depth toward the way out
+                else Btn(GamepadButton.South, c < .4f || (c > .55f && c < .8f));
                 if (Time.time - lastT > 2.5f)
                 {
                     if ((p - lastP).magnitude < .8f) { dodge = dodge == 0 ? 60 : -dodge; dodgeUntil = Time.time + 1.2f; }
@@ -135,7 +139,7 @@ namespace ShardsOfTime
                 }
                 yield return null;
             }
-            Btn(GamepadButton.South, false); Stick(Vector2.zero);
+            Btn(GamepadButton.South, false); Btn(GamepadButton.East, false); Stick(Vector2.zero);
             yield return Wait(.3f);
         }
 
