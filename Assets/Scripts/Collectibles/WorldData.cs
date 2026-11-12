@@ -85,7 +85,7 @@ namespace ShardsOfTime
         // Fix 10.1: stepped thresholds: each world's = the previous world's + 25 (Ice Age 25, Egypt 50, Bethlehem 75, Medieval 100,
         // Pirate Seas 125, ...), and at least 15 from the world itself (AreaData.fromHere). Replaces Fix 8.1's 75 % rule.
         // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
-        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval, Pirate };   // Round 10: the Pirate Seas
+        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval, Pirate, Steampunk };   // Round 11: Victorian Steampunk
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -189,11 +189,24 @@ namespace ShardsOfTime
                 L("PS-grotto", "underwater", new Vector3(-134, -17, 25), new Vector3(-134, -16, 6), 12, "the cave's little grotto (back through the narrow gap)", heroes: "Kira", via: new Vector3(-136.65f, -17.7f, 19.8f));
                 L("PS-wreck", "underwater", new Vector3(-70, -16.5f, 118), new Vector3(-70, -10, 92), 15, "inside the shipwreck (out through its broken side or deck)", Abilities.DeepDive);
             }
+            else if (world == Steampunk)   // Round 11 (the factory spots: after the press; the check smashes it first)
+            {
+                L("SP-belt", "enclosed", new Vector3(0, 3.1f, 40), new Vector3(9, 0, 74), 7, "on the conveyor belt (after the press: down its side stairs)", via: new Vector3(0, 3.1f, 74));
+                L("SP-boiler-room", "enclosed", new Vector3(-30, .3f, 6), new Vector3(-18, 0, 6), 6, "the boiler room behind the gear door (mechanical Kira winds it open)", Abilities.WindUp, opens: "SP-geardoor-boiler");
+                L("SP-cage", "enclosed", new Vector3(32, .3f, 44), new Vector3(22, 0, 44), 6, "the store cage behind the bars (Muscle Man bends them)", Abilities.MuscleMan, opens: "SP-bars-cage");
+                L("SP-nook", "enclosed", new Vector3(-33, .3f, 33), new Vector3(-24, 0, 33), 5, "the tool nook behind the machine (Muscle Man lifts it)", Abilities.MuscleMan, opens: "SP-crank-nook");
+                L("SP-lane", "enclosed", new Vector3(20, .3f, 64.5f), new Vector3(20, 0, 46), 10, "the end of the stamper lane (Muscle Man holds the big stamper up)", Abilities.MuscleMan, opens: "SP-stamper-lane");
+                L("SP-chimney", "pit", new Vector3(27.2f, .3f, 93), new Vector3(27.2f, 0, 85), 6, "the brick stack's shaft by the north wall (walk out the front)");
+                L("SP-alley-west", "pit", new Vector3(-14, .3f, 139.2f), new Vector3(-4, 0, 139.2f), 7, "the narrow alley between the tall houses (walk out to the avenue)");
+                L("SP-alley-pipes", "enclosed", new Vector3(14, .3f, 143.5f), new Vector3(4, 0, 143.5f), 7, "the alley behind the pipes (Muscle Man bends them)", Abilities.MuscleMan, opens: "SP-pipes-alley");
+                L("SP-passage", "enclosed", new Vector3(-28.5f, .3f, 238), new Vector3(-28.5f, 0, 226), 7, "the passage behind the crates (Muscle Man lifts them)", Abilities.MuscleMan, opens: "SP-crates-passage");
+                L("SP-gear-yard", "enclosed", new Vector3(86, .3f, 200), new Vector3(62, 0, 200), 14, "the clockmaker's yard behind the great gear gate (mechanical Kira winds it open)", Abilities.WindUp, opens: "SP-geargate");
+            }
             return l;
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : id == Pirate ? PirateDefaults() : Defaults());
-        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval", Pirate = "PirateSeas";
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : id == Pirate ? PirateDefaults() : id == Steampunk ? SteampunkDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval", Pirate = "PirateSeas", Steampunk = "Steampunk";
 
         // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
@@ -432,7 +445,7 @@ namespace ShardsOfTime
             S("B01", -25, 0, 8, "the walled yard behind the boulder (Muscle Man)", Abilities.MuscleMan); S("B02", -27, 0, 5, "the walled yard behind the boulder (Muscle Man)", Abilities.MuscleMan);
             S("A01", 20, 0, 4, "the armory behind the portcullis (Muscle Man)", Abilities.MuscleMan); S("A02", 24, 0, 4, "the armory behind the portcullis (Muscle Man)", Abilities.MuscleMan);
             S("K01", -26, 0, 55, "the store room behind the cracked wall (charged punch, learned here)", Abilities.ChargedPunch); S("K02", -26, 0, 58, "the store room behind the cracked wall (charged punch, learned here)", Abilities.ChargedPunch);
-            S("J01", -99, 9, -124, "the top of the chimney between two village houses (wall jump)", Abilities.WallJump);
+            S("J01", -99, 9, -125.7f, "the ledge at the top of the chimney between two village houses (wall jump)", Abilities.WallJump);
             S("X01", 86.3f, 5.6f, -58.5f, "the stands' flag platform (double jump)", Abilities.DoubleJump);
             S("DD1", -42, -16, 96, "the moat's deep pit (deep dive)", Abilities.DeepDive); S("DD2", -40, -16, 98, "the moat's deep pit (deep dive)", Abilities.DeepDive);
             void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
@@ -498,6 +511,70 @@ namespace ShardsOfTime
             G("PS-anchor-locker", "anchor", Abilities.MuscleMan, new Vector3(0, 3.5f, 14.2f), "the bosun's locker door (Muscle Man lifts the anchor)", "L01");
             G("PS-boost-foretop", "boost", Abilities.MuscleMan, new Vector3(0, 3.5f, 7.6f), "the fore top (Muscle Man's boost)", "T03");
             G("PS-deep", "deep water", Abilities.DeepDive, new Vector3(-70, -18, 110), "the trench, the wreck and the cave (deeper than 16 m: otter Kira any time, everyone with the deep dive)", "U15", "U16", "U17", "U18", "U19", "U20", "U21", "U27", "U28", "PS-H2");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
+            return w;
+        }
+
+        // Round 11: Victorian Steampunk (World/Steampunk.cs builds it; the props in Tools/Blender/steampunk_world.py). One area, "SP", two
+        // parts on flat ground at 0: the factory at night (the hall x -36..36, z 0..96: the belt run on the conveyor x -2..2 (top 3.0), the
+        // press at z 84, the catwalk ring at 7, F: 30) and the streets of steampunk London by day (the yard z 96..112 through the hole the
+        // press smashes, the avenue z 112..176, the square with the great clock at (0, 200), the east and west streets, S: 30). Fix 10.1's
+        // rule: the Pirate Seas' 125 + 25 = 150, and 15 from here. Rule 2: the first visit has the three heroes, mechanical Kira (wind-up,
+        // magnet paws) and Muscle Man; the press scene comes before any play (PressDone, counted); not the wall jump (Abi learns it here).
+        public static WorldData SteampunkDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Steampunk; w.worldId = Steampunk; w.displayName = "Victorian Steampunk"; w.heightsAreHints = true;
+            w.violinistInstrument = "SteamViolin"; w.violinistPlayClip = "violinist_play";   // item 7: a street musician with his steampunk violin (the fiddle's clip)
+            w.areas.Add(new AreaData { id = "SP", name = "Victorian Steampunk", requirement = 150, fromHere = 15, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.WindUp, Abilities.MagnetPaws, Abilities.MuscleMan, Abilities.PressDone },
+                storyShard = new Vector3(0, 6.4f, 198.6f), storyShardColor = new Color(.15f, .9f, .85f), spawn = new Vector3(0, 3.1f, 10f), spawnYaw = 0,
+                kiraForm = KiraForm.Mechanical, outfit = Outfits.Steampunk, box = new Bounds(new Vector3(0, 30, 150), new Vector3(240, 140, 340)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "SP", position = new Vector3(x, y, z), requires = req, note = note });
+            string K = "Kira", WU = Abilities.WindUp, MP = Abilities.MagnetPaws, MM = Abilities.MuscleMan, WJ = Abilities.WallJump;
+            // the factory (night): its floor, the stopped belt, the catwalk ring (7), the machines mechanical Kira winds up, Muscle Man's jobs
+            S("F01", -14, 0, 14, "the factory floor, by the boiler"); S("F02", -14, 0, 28, "the factory floor, past the boiler"); S("F03", 14, 0, 30, "the factory floor, by the crates");
+            S("F04", 12, 0, 44, "the factory floor"); S("F05", -12, 0, 50, "the factory floor, by the barrels"); S("F06", 12, 0, 62, "the factory floor");
+            S("F07", -12, 0, 82, "the factory floor, north end"); S("F08", 14, 0, 88, "the factory floor, by the control panels"); S("F09", 0, 0, 92, "by the hole the press made");
+            S("F10", -10, 0, 6, "the factory floor, south end");
+            S("F11", 0, 3, 30, "on the conveyor belt (it stopped after the press)"); S("F12", 0, 3, 52, "on the conveyor belt");
+            S("F13", 34.7f, 7, 40, "the east catwalk"); S("F14", 34.7f, 7, 70, "the east catwalk"); S("F15", -34.7f, 7, 40, "the west catwalk");
+            S("F16", -34.7f, 7, 20, "the west catwalk"); S("F17", 0, 7, 1.2f, "the south catwalk");
+            S("F18", 27.2f, 10.5f, 95.7f, "the top of the brick stack's shaft (wall jump)", WJ);
+            S("F19", 20, 0, 64.5f, "the end of the stamper lane (Muscle Man holds the big stamper up)", MM);
+            S("F20", -31, 0, 4, "the boiler room (mechanical Kira winds the gear door open)", K, WU); S("F21", -31, 0, 9, "the boiler room (mechanical Kira winds the gear door open)", K, WU);
+            S("F22", -31, 12, 53.5f, "the crane deck (mechanical Kira winds up the lift)", K, WU); S("F23", -27.5f, 12, 53.5f, "the crane deck (mechanical Kira winds up the lift)", K, WU);
+            S("F24", 18.5f, 7, 28, "the gantry (mechanical Kira lowers its catwalk bridge)", K, WU); S("F25", 21.5f, 7, 30, "the gantry (mechanical Kira lowers its catwalk bridge)", K, WU);
+            S("F26", 20, 12, 72, "on the girder (mechanical Kira's magnet paws up the riveted pillar)", K, MP); S("F27", -18, 12, 64, "on the girder (mechanical Kira's magnet paws up the riveted pillar)", K, MP);
+            S("F28", 31, 0, 42, "the store cage (Muscle Man bends the bars)", MM); S("F29", 33, 0, 46, "the store cage (Muscle Man bends the bars)", MM);
+            S("F30", -33.5f, 0, 33, "the tool nook (Muscle Man lifts the machine aside)", MM);
+            // the streets (day): the yard, the avenue, the square and its great clock, the west and east streets, the clockmaker's yard
+            S("S01", 0, 0, 120, "the avenue"); S("S02", -5, 0, 135, "the avenue"); S("S03", 5, 0, 150, "the avenue"); S("S04", -4, 0, 165, "the avenue");
+            S("S05", -6, 0, 104, "the factory yard");
+            S("S06", -15, 0, 190, "the square"); S("S07", 15, 0, 190, "the square"); S("S08", -15, 0, 212, "the square"); S("S09", 15, 0, 212, "the square");
+            S("S10", -14, 14, 143.4f, "a tall house's roof (wall jump up the narrow alley)", WJ);
+            S("S11", 0, 0, 250, "the north street"); S("S12", -70, 0, 196, "the west street"); S("S13", -92, 0, 196, "the west street's end");
+            S("S14", 50, 0, 200, "the east street"); S("S15", 58, 0, 206, "the east street, by the gear gate");
+            S("S16", 82, 0, 192, "the clockmaker's yard (mechanical Kira winds the gear gate open)", K, WU); S("S17", 90, 0, 200, "the clockmaker's yard (mechanical Kira winds the gear gate open)", K, WU);
+            S("S18", 82, 0, 208, "the clockmaker's yard (mechanical Kira winds the gear gate open)", K, WU);
+            S("S19", -80, 12, 204.75f, "the signal tower's girder (magnet paws)", K, MP); S("S20", 34, 12, 216.75f, "the lamp tower's girder (magnet paws)", K, MP);
+            S("S21", 13, 0, 143.5f, "the alley behind the pipes (Muscle Man bends them)", MM); S("S22", 16.5f, 0, 143.5f, "the alley behind the pipes (Muscle Man bends them)", MM);
+            S("S23", -28.5f, 0, 236, "the passage behind the crates (Muscle Man lifts them)", MM); S("S24", -28.5f, 0, 239, "the passage behind the crates (Muscle Man lifts them)", MM);
+            S("S25", 44, 9, 183, "a cream house's roof (Muscle Man boosts Dan or Abi)", MM);
+            S("S26", -30, 0, 194, "the square, by the clockwork horse"); S("S27", 30, 0, 219, "the square's north-east corner"); S("S28", -30, 0, 219, "the square's north-west corner");
+            S("S29", 0, 0, 280, "the north street's end"); S("S30", -60, .3f, 200, "on the carriage turntable");
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("SP-geardoor-boiler", "gear door", Abilities.WindUp, new Vector3(-24, 0, 6), "the boiler room's gear door (mechanical Kira winds it)", "F20", "F21", "SP-H1");
+            G("SP-lift", "wind-up lift", Abilities.WindUp, new Vector3(-28, 0, 44), "the lift to the crane deck (mechanical Kira winds it)", "F22", "F23");
+            G("SP-bridge", "wind-up bridge", Abilities.WindUp, new Vector3(34.7f, 7, 30), "the gantry's catwalk bridge (mechanical Kira winds it down)", "F24", "F25");
+            G("SP-geargate", "gear gate", Abilities.WindUp, new Vector3(64, 0, 195), "the great gear gate (mechanical Kira winds it)", "S16", "S17", "S18", "SP-H2");
+            G("SP-magnet", "magnet pillars", Abilities.MagnetPaws, new Vector3(20, 0, 71.25f), "riveted iron pillars (mechanical Kira's magnet paws)", "F26", "F27", "S19", "S20");
+            G("SP-bars-cage", "iron bars", Abilities.MuscleMan, new Vector3(28, 0, 44), "the store cage's bars (Muscle Man bends them)", "F28", "F29");
+            G("SP-crank-nook", "machine", Abilities.MuscleMan, new Vector3(-30, 0, 33), "the tool nook's machine (Muscle Man lifts it)", "F30");
+            G("SP-stamper-lane", "big stamper", Abilities.MuscleMan, new Vector3(20, 0, 62), "the big stamper at the lane's end (Muscle Man holds it up)", "F19");
+            G("SP-pipes-alley", "pipe fence", Abilities.MuscleMan, new Vector3(10, 0, 143.5f), "the alley's pipes (Muscle Man bends them)", "S21", "S22");
+            G("SP-crates-passage", "crate stack", Abilities.MuscleMan, new Vector3(-28.5f, 0, 232), "the passage's crates (Muscle Man lifts them)", "S23", "S24");
+            G("SP-boost-roof", "boost", Abilities.MuscleMan, new Vector3(36.5f, 0, 183), "a cream house's roof (Muscle Man's boost)", "S25");
+            G("SP-chimney-stack", "wall-jump chimney", Abilities.WallJump, new Vector3(27.2f, 0, 93), "the brick stack's shaft (wall jump, learned here)", "F18");
+            G("SP-alley-west", "wall-jump alley", Abilities.WallJump, new Vector3(-14, 0, 139.2f), "the narrow alley between the tall houses (wall jump, learned here)", "S10");
             w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
         }

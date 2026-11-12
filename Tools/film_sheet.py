@@ -18,6 +18,11 @@ CLIPS = ROOT / 'SourceArt' / 'Reference' / 'Clips'
 
 # scene -> (clip file, [(film seconds, game seconds, label), ...]): the matching moments, in the film's order
 MATCH = {
+    # Round 11: Victorian Steampunk (film seconds, game seconds, what)
+    'SteampunkArrival': ('06-Steampunk_Arrival.mp4', [(1, 1, 'gear, teal streak'), (6, 5.5, 'teal spiral'), (12, 9, 'the big spiral'), (16, 10.8, 'over the domes'),
+                          (18, 13.6, 'onto the chain'), (19, 15.2, 'into the bucket'), (23, 18, 'carried along'), (25, 20.4, 'tipped out')]),
+    'MuscleManHero': ('06-Steampunk_MuscleManHero.mp4', [(1, 1.5, 'tumbling on the belt'), (3, 3, 'flat, heads covered'), (4, 5, 'the press comes'), (7, 6.9, 'heads down'),
+                       (8, 8.2, 'he holds it up'), (9, 9, 'alarms'), (10, 10.2, 'heave'), (12, 12.5, 'through the wall')]),
     'ActOne': ('00-Home_ActOne.mp4', [(4, 3, 'decorating'), (10.5, 10.4, 'Kira swats'), (13.5, 12.6, 'the fumble'), (16.5, 16, 'lunge, gasp'), (21, 19.8, 'on the floor'),
                                       (24, 23, 'glow, Kira sniffs'), (27, 26.5, 'Abi holds Kira'), (30, 30.3, 'beams, shards'), (37.5, 35.5, 'rainbow spiral'), (40.5, 39.8, 'holding hands'),
                                       (44, 44, 'tumbling in'), (49, 47.5, 'the swirl'), (52, 51, 'mammoth, vortex'), (55, 55, 'the vortex'), (58, 58, 'falling')]),
@@ -47,7 +52,7 @@ MATCH = {
                        [(0.3, 3.8, 'held up'), (1.0, 5.4, 'it slips'), (1.5, 6.0, 'it falls'), (2.5, 7.4, 'it rolls'), (3.5, 8.6, 'rolling'), (4.5, 10.1, 'to the edge'),
                         (5.0, 11.0, 'over the side'), (5.5, 11.8, 'into the sea')]),
 }
-ROUND = {'PirateArrival': 'fix101', 'ShardOverboard': 'round10'}
+ROUND = {'PirateArrival': 'fix101', 'ShardOverboard': 'round10', 'SteampunkArrival': 'round11', 'MuscleManHero': 'round11'}
 
 
 def ffmpeg():

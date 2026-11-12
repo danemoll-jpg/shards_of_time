@@ -492,7 +492,8 @@ namespace ShardsOfTime
             Hint(new Vector3(-60, 0, -114), 3f, () => "Thorny brambles choke the alley. Dragon Kira's fire would clear them.");
             // a narrow chimney between two houses (the wall jump, later)
             Slab("Chimney W", -101, -100, -126, -122, 9, 0); Slab("Chimney E", -98, -97, -126, -122, 9, 0);   // (Fix 8.1: seen, not invisible) Slab("Chimney cap", -101, -97, -126, -122, 9.3f, 9, "CastleStone");
-            Hint(new Vector3(-99, 0, -119), 3f, () => "A narrow gap between two tall chimney walls. Someone who can kick off walls could climb it... (later)");
+            Slab("Chimney ledge", -100, -98, -126, -125.4f, 9, 8.7f, "CastleStone");   // Round 11: the ledge J01 sits on (its cap had slipped into a comment in Fix 8.1: the shard lay on the ground)
+            Hint(new Vector3(-99, 0, -119), 3f, () => SaveGame.Current.Has(Abilities.WallJump) ? "The narrow chimney: Abi bounces from wall to wall up to the ledge." : "A narrow gap between two tall chimney walls. Someone who can kick off walls could climb it... (later)");
             _ = prog;
         }
 

@@ -1,5 +1,42 @@
 # Shards of Time — models needed
 
+## Round 11 (2026-11-12): Mixamo for Victorian Steampunk — what Dan uploads and downloads
+
+**Meshy ran out of credits** after three models ("402 Insufficient funds"). Ready now: Dan, Abi and Muscle Man (fronts:
+`Data/screenshots/round11/models/`). Waiting on a Meshy top-up: the Violinist, the factory worker, mechanical Kira, the clockwork
+horse, the steam carriage, the street clock, the steam press. Code retries Meshy during the round; when the Violinist and the worker
+come through, their upload files appear here too (same steps).
+
+| Model | Upload this (mixamo.com > Upload Character) | Height |
+|---|---|---|
+| Dan, steampunk | `SourceArt/Mixamo/dan_steampunk/upload/dan_steampunk.fbx` | 1.8 m |
+| Abi, steampunk | `SourceArt/Mixamo/abi_steampunk/upload/abi_steampunk.fbx` | 1.65 m |
+| Muscle Man, steampunk | `SourceArt/Mixamo/muscleman_steampunk/upload/muscleman_steampunk.fbx` | 2.0 m |
+| (later) The Violinist, street musician | `SourceArt/Mixamo/violinist_steampunk/upload/violinist_steampunk.fbx` | 1.85 m |
+| (later) Factory worker | `SourceArt/Mixamo/factory_worker/upload/factory_worker.fbx` | 1.8 m |
+
+For **each**:
+1. **Upload**, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**.
+   (Dan's long coat: put the knee markers on the knees, not the coat's hem.)
+2. **Download the rigged character** with no animation picked: **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
+   Save as `SourceArt/Mixamo/<model>/T-Pose.fbx` (next to `upload`, not inside it).
+
+Everything else is reused (the shared clips in `SourceArt/Mixamo/` play on every person; the workers slip with Fall Flat and get up
+with Hard Landing like the deckhands). **Muscle Man needs two new clips** for the press and the clock (his folder has Lifting Object,
+Throw, Carrying, Pushing and Pull Heavy Object, but nothing held up over the head): **FBX for Unity, 30 fps, Keyframe Reduction none,
+Without Skin, In Place ticked where offered**, Muscle Man on screen. If a search name isn't there, take the closest one that fits "For"
+and save it under the first column's name anyway.
+
+| Save as | Mixamo search | Folder | For |
+|---|---|---|---|
+| `Overhead Hold.fbx` | **Overhead** (else **Lift** / **Hold Up**): the one where he holds both arms straight up over his head, as if holding up something heavy, and stays there | `SourceArt/Mixamo/muscleman_steampunk/` | holding the dome press up over Dan, Abi and Kira; lifting Dan up to the clock face |
+| `Heavy Throw.fbx` | **Throw** (else **Toss**): a big two-handed throw from over the head | `SourceArt/Mixamo/muscleman_steampunk/` | heaving the press off so it smashes out through the wall |
+
+**Still open from Round 10** (same settings, folder `SourceArt/Mixamo/muscleman_pirate/`): `Drowning.fbx` (search **Drowning**, else
+the most flailing **Swim**), `Getting Up.fbx` (**Getting Up**, else **Stand Up**), `Jumping Down.fbx` (**Jumping Down**, else **Jump**).
+
+That's 3 T-poses now (+2 when Meshy has credits) + 2 Muscle Man clips (+3 from Round 10). Tell Code when they're in.
+
 ## Round 11 (2026-11-12): Victorian Steampunk — images needed from Dan (prompts by the planning chat)
 
 Film art: `SourceArt/Reference/Characters/*/…-steampunk-film.png`, `Kira/kira-mechanical-film.png`,

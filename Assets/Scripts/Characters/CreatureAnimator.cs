@@ -24,7 +24,7 @@ namespace ShardsOfTime
             "mm_flex", "mm_taunt", "mm_lift", "mm_push", "mm_heave", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel",
             "block", "draw", "aim", "shoot", "nervous", "dazed", "limp",
             // Round 10 (Dan's Mixamo downloads): Muscle Man's struggling swim, getting up after his crash, his leap overboard
-            "mm_struggle", "mm_getup", "mm_leap" };
+            "mm_struggle", "mm_getup", "mm_leap", "mm_hold", "mm_throw" };   // Round 11
         static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer", "yell", "surprised",
             "mm_flex", "mm_taunt", "mm_lift", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel", "draw", "shoot" };   // Round 8
         static readonly HashSet<string> UpperBody = new HashSet<string> { "punch", "cheer", "hurt" };

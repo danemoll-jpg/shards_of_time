@@ -1,0 +1,595 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: Steampunk
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: Steampunk
+  displayName: Victorian Steampunk
+  heightsAreHints: 1
+  areas:
+  - id: SP
+    name: Victorian Steampunk
+    requirement: 150
+    fromHere: 15
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - WindUp
+    - MagnetPaws
+    - MuscleMan
+    - PressDone
+    storyShard: {x: 0, y: 6.4, z: 198.6}
+    storyShardColor: {r: 0.15, g: 0.9, b: 0.85, a: 1}
+    spawn: {x: 0, y: 3.1, z: 10}
+    spawnYaw: 0
+    kiraForm: Mechanical
+    outfit: steampunk
+    box:
+      m_Center: {x: 0, y: 30, z: 150}
+      m_Extent: {x: 120, y: 70, z: 170}
+  shards:
+  - id: F01
+    area: SP
+    position: {x: -14, y: 0, z: 14}
+    requires: []
+    note: the factory floor, by the boiler
+  - id: F02
+    area: SP
+    position: {x: -14, y: 0, z: 28}
+    requires: []
+    note: the factory floor, past the boiler
+  - id: F03
+    area: SP
+    position: {x: 14, y: 0, z: 30}
+    requires: []
+    note: the factory floor, by the crates
+  - id: F04
+    area: SP
+    position: {x: 12, y: 0, z: 44}
+    requires: []
+    note: the factory floor
+  - id: F05
+    area: SP
+    position: {x: -12, y: 0, z: 50}
+    requires: []
+    note: the factory floor, by the barrels
+  - id: F06
+    area: SP
+    position: {x: 12, y: 0, z: 62}
+    requires: []
+    note: the factory floor
+  - id: F07
+    area: SP
+    position: {x: -12, y: 0, z: 82}
+    requires: []
+    note: the factory floor, north end
+  - id: F08
+    area: SP
+    position: {x: 14, y: 0, z: 88}
+    requires: []
+    note: the factory floor, by the control panels
+  - id: F09
+    area: SP
+    position: {x: 0, y: 0, z: 92}
+    requires: []
+    note: by the hole the press made
+  - id: F10
+    area: SP
+    position: {x: -10, y: 0, z: 6}
+    requires: []
+    note: the factory floor, south end
+  - id: F11
+    area: SP
+    position: {x: 0, y: 3, z: 30}
+    requires: []
+    note: on the conveyor belt (it stopped after the press)
+  - id: F12
+    area: SP
+    position: {x: 0, y: 3, z: 52}
+    requires: []
+    note: on the conveyor belt
+  - id: F13
+    area: SP
+    position: {x: 34.7, y: 7, z: 40}
+    requires: []
+    note: the east catwalk
+  - id: F14
+    area: SP
+    position: {x: 34.7, y: 7, z: 70}
+    requires: []
+    note: the east catwalk
+  - id: F15
+    area: SP
+    position: {x: -34.7, y: 7, z: 40}
+    requires: []
+    note: the west catwalk
+  - id: F16
+    area: SP
+    position: {x: -34.7, y: 7, z: 20}
+    requires: []
+    note: the west catwalk
+  - id: F17
+    area: SP
+    position: {x: 0, y: 7, z: 1.2}
+    requires: []
+    note: the south catwalk
+  - id: F18
+    area: SP
+    position: {x: 27.2, y: 10.5, z: 95.7}
+    requires:
+    - WallJump
+    note: the top of the brick stack's shaft (wall jump)
+  - id: F19
+    area: SP
+    position: {x: 20, y: 0, z: 64.5}
+    requires:
+    - MuscleMan
+    note: the end of the stamper lane (Muscle Man holds the big stamper up)
+  - id: F20
+    area: SP
+    position: {x: -31, y: 0, z: 4}
+    requires:
+    - Kira
+    - WindUp
+    note: the boiler room (mechanical Kira winds the gear door open)
+  - id: F21
+    area: SP
+    position: {x: -31, y: 0, z: 9}
+    requires:
+    - Kira
+    - WindUp
+    note: the boiler room (mechanical Kira winds the gear door open)
+  - id: F22
+    area: SP
+    position: {x: -31, y: 12, z: 53.5}
+    requires:
+    - Kira
+    - WindUp
+    note: the crane deck (mechanical Kira winds up the lift)
+  - id: F23
+    area: SP
+    position: {x: -27.5, y: 12, z: 53.5}
+    requires:
+    - Kira
+    - WindUp
+    note: the crane deck (mechanical Kira winds up the lift)
+  - id: F24
+    area: SP
+    position: {x: 18.5, y: 7, z: 28}
+    requires:
+    - Kira
+    - WindUp
+    note: the gantry (mechanical Kira lowers its catwalk bridge)
+  - id: F25
+    area: SP
+    position: {x: 21.5, y: 7, z: 30}
+    requires:
+    - Kira
+    - WindUp
+    note: the gantry (mechanical Kira lowers its catwalk bridge)
+  - id: F26
+    area: SP
+    position: {x: 20, y: 12, z: 72}
+    requires:
+    - Kira
+    - MagnetPaws
+    note: on the girder (mechanical Kira's magnet paws up the riveted pillar)
+  - id: F27
+    area: SP
+    position: {x: -18, y: 12, z: 64}
+    requires:
+    - Kira
+    - MagnetPaws
+    note: on the girder (mechanical Kira's magnet paws up the riveted pillar)
+  - id: F28
+    area: SP
+    position: {x: 31, y: 0, z: 42}
+    requires:
+    - MuscleMan
+    note: the store cage (Muscle Man bends the bars)
+  - id: F29
+    area: SP
+    position: {x: 33, y: 0, z: 46}
+    requires:
+    - MuscleMan
+    note: the store cage (Muscle Man bends the bars)
+  - id: F30
+    area: SP
+    position: {x: -33.5, y: 0, z: 33}
+    requires:
+    - MuscleMan
+    note: the tool nook (Muscle Man lifts the machine aside)
+  - id: S01
+    area: SP
+    position: {x: 0, y: 0, z: 120}
+    requires: []
+    note: the avenue
+  - id: S02
+    area: SP
+    position: {x: -5, y: 0, z: 135}
+    requires: []
+    note: the avenue
+  - id: S03
+    area: SP
+    position: {x: 5, y: 0, z: 150}
+    requires: []
+    note: the avenue
+  - id: S04
+    area: SP
+    position: {x: -4, y: 0, z: 165}
+    requires: []
+    note: the avenue
+  - id: S05
+    area: SP
+    position: {x: -6, y: 0, z: 104}
+    requires: []
+    note: the factory yard
+  - id: S06
+    area: SP
+    position: {x: -15, y: 0, z: 190}
+    requires: []
+    note: the square
+  - id: S07
+    area: SP
+    position: {x: 15, y: 0, z: 190}
+    requires: []
+    note: the square
+  - id: S08
+    area: SP
+    position: {x: -15, y: 0, z: 212}
+    requires: []
+    note: the square
+  - id: S09
+    area: SP
+    position: {x: 15, y: 0, z: 212}
+    requires: []
+    note: the square
+  - id: S10
+    area: SP
+    position: {x: -14, y: 14, z: 143.4}
+    requires:
+    - WallJump
+    note: a tall house's roof (wall jump up the narrow alley)
+  - id: S11
+    area: SP
+    position: {x: 0, y: 0, z: 250}
+    requires: []
+    note: the north street
+  - id: S12
+    area: SP
+    position: {x: -70, y: 0, z: 196}
+    requires: []
+    note: the west street
+  - id: S13
+    area: SP
+    position: {x: -92, y: 0, z: 196}
+    requires: []
+    note: the west street's end
+  - id: S14
+    area: SP
+    position: {x: 50, y: 0, z: 200}
+    requires: []
+    note: the east street
+  - id: S15
+    area: SP
+    position: {x: 58, y: 0, z: 206}
+    requires: []
+    note: the east street, by the gear gate
+  - id: S16
+    area: SP
+    position: {x: 82, y: 0, z: 192}
+    requires:
+    - Kira
+    - WindUp
+    note: the clockmaker's yard (mechanical Kira winds the gear gate open)
+  - id: S17
+    area: SP
+    position: {x: 90, y: 0, z: 200}
+    requires:
+    - Kira
+    - WindUp
+    note: the clockmaker's yard (mechanical Kira winds the gear gate open)
+  - id: S18
+    area: SP
+    position: {x: 82, y: 0, z: 208}
+    requires:
+    - Kira
+    - WindUp
+    note: the clockmaker's yard (mechanical Kira winds the gear gate open)
+  - id: S19
+    area: SP
+    position: {x: -80, y: 12, z: 204.75}
+    requires:
+    - Kira
+    - MagnetPaws
+    note: the signal tower's girder (magnet paws)
+  - id: S20
+    area: SP
+    position: {x: 34, y: 12, z: 216.75}
+    requires:
+    - Kira
+    - MagnetPaws
+    note: the lamp tower's girder (magnet paws)
+  - id: S21
+    area: SP
+    position: {x: 13, y: 0, z: 143.5}
+    requires:
+    - MuscleMan
+    note: the alley behind the pipes (Muscle Man bends them)
+  - id: S22
+    area: SP
+    position: {x: 16.5, y: 0, z: 143.5}
+    requires:
+    - MuscleMan
+    note: the alley behind the pipes (Muscle Man bends them)
+  - id: S23
+    area: SP
+    position: {x: -28.5, y: 0, z: 236}
+    requires:
+    - MuscleMan
+    note: the passage behind the crates (Muscle Man lifts them)
+  - id: S24
+    area: SP
+    position: {x: -28.5, y: 0, z: 239}
+    requires:
+    - MuscleMan
+    note: the passage behind the crates (Muscle Man lifts them)
+  - id: S25
+    area: SP
+    position: {x: 44, y: 9, z: 183}
+    requires:
+    - MuscleMan
+    note: a cream house's roof (Muscle Man boosts Dan or Abi)
+  - id: S26
+    area: SP
+    position: {x: -30, y: 0, z: 194}
+    requires: []
+    note: the square, by the clockwork horse
+  - id: S27
+    area: SP
+    position: {x: 30, y: 0, z: 219}
+    requires: []
+    note: the square's north-east corner
+  - id: S28
+    area: SP
+    position: {x: -30, y: 0, z: 219}
+    requires: []
+    note: the square's north-west corner
+  - id: S29
+    area: SP
+    position: {x: 0, y: 0, z: 280}
+    requires: []
+    note: the north street's end
+  - id: S30
+    area: SP
+    position: {x: -60, y: 0.3, z: 200}
+    requires: []
+    note: on the carriage turntable
+  gates:
+  - id: SP-geardoor-boiler
+    kind: gear door
+    needs: WindUp
+    position: {x: -24, y: 0, z: 6}
+    opens:
+    - F20
+    - F21
+    - SP-H1
+    note: the boiler room's gear door (mechanical Kira winds it)
+  - id: SP-lift
+    kind: wind-up lift
+    needs: WindUp
+    position: {x: -28, y: 0, z: 44}
+    opens:
+    - F22
+    - F23
+    note: the lift to the crane deck (mechanical Kira winds it)
+  - id: SP-bridge
+    kind: wind-up bridge
+    needs: WindUp
+    position: {x: 34.7, y: 7, z: 30}
+    opens:
+    - F24
+    - F25
+    note: the gantry's catwalk bridge (mechanical Kira winds it down)
+  - id: SP-geargate
+    kind: gear gate
+    needs: WindUp
+    position: {x: 64, y: 0, z: 195}
+    opens:
+    - S16
+    - S17
+    - S18
+    - SP-H2
+    note: the great gear gate (mechanical Kira winds it)
+  - id: SP-magnet
+    kind: magnet pillars
+    needs: MagnetPaws
+    position: {x: 20, y: 0, z: 71.25}
+    opens:
+    - F26
+    - F27
+    - S19
+    - S20
+    note: riveted iron pillars (mechanical Kira's magnet paws)
+  - id: SP-bars-cage
+    kind: iron bars
+    needs: MuscleMan
+    position: {x: 28, y: 0, z: 44}
+    opens:
+    - F28
+    - F29
+    note: the store cage's bars (Muscle Man bends them)
+  - id: SP-crank-nook
+    kind: machine
+    needs: MuscleMan
+    position: {x: -30, y: 0, z: 33}
+    opens:
+    - F30
+    note: the tool nook's machine (Muscle Man lifts it)
+  - id: SP-stamper-lane
+    kind: big stamper
+    needs: MuscleMan
+    position: {x: 20, y: 0, z: 62}
+    opens:
+    - F19
+    note: the big stamper at the lane's end (Muscle Man holds it up)
+  - id: SP-pipes-alley
+    kind: pipe fence
+    needs: MuscleMan
+    position: {x: 10, y: 0, z: 143.5}
+    opens:
+    - S21
+    - S22
+    note: the alley's pipes (Muscle Man bends them)
+  - id: SP-crates-passage
+    kind: crate stack
+    needs: MuscleMan
+    position: {x: -28.5, y: 0, z: 232}
+    opens:
+    - S23
+    - S24
+    note: the passage's crates (Muscle Man lifts them)
+  - id: SP-boost-roof
+    kind: boost
+    needs: MuscleMan
+    position: {x: 36.5, y: 0, z: 183}
+    opens:
+    - S25
+    note: a cream house's roof (Muscle Man's boost)
+  - id: SP-chimney-stack
+    kind: wall-jump chimney
+    needs: WallJump
+    position: {x: 27.2, y: 0, z: 93}
+    opens:
+    - F18
+    note: the brick stack's shaft (wall jump, learned here)
+  - id: SP-alley-west
+    kind: wall-jump alley
+    needs: WallJump
+    position: {x: -14, y: 0, z: 139.2}
+    opens:
+    - S10
+    note: the narrow alley between the tall houses (wall jump, learned here)
+  lowSpots:
+  - id: SP-belt
+    kind: enclosed
+    drop: {x: 0, y: 3.1, z: 40}
+    via: {x: 0, y: 3.1, z: 74}
+    exit: {x: 9, y: 0, z: 74}
+    radius: 7
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: 'on the conveyor belt (after the press: down its side stairs)'
+  - id: SP-boiler-room
+    kind: enclosed
+    drop: {x: -30, y: 0.3, z: 6}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -18, y: 0, z: 6}
+    radius: 6
+    needs: WindUp
+    heroes: 
+    opens: SP-geardoor-boiler
+    checkpoint: 
+    note: the boiler room behind the gear door (mechanical Kira winds it open)
+  - id: SP-cage
+    kind: enclosed
+    drop: {x: 32, y: 0.3, z: 44}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 22, y: 0, z: 44}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: SP-bars-cage
+    checkpoint: 
+    note: the store cage behind the bars (Muscle Man bends them)
+  - id: SP-nook
+    kind: enclosed
+    drop: {x: -33, y: 0.3, z: 33}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -24, y: 0, z: 33}
+    radius: 5
+    needs: MuscleMan
+    heroes: 
+    opens: SP-crank-nook
+    checkpoint: 
+    note: the tool nook behind the machine (Muscle Man lifts it)
+  - id: SP-lane
+    kind: enclosed
+    drop: {x: 20, y: 0.3, z: 64.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 20, y: 0, z: 46}
+    radius: 10
+    needs: MuscleMan
+    heroes: 
+    opens: SP-stamper-lane
+    checkpoint: 
+    note: the end of the stamper lane (Muscle Man holds the big stamper up)
+  - id: SP-chimney
+    kind: pit
+    drop: {x: 27.2, y: 0.3, z: 93}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 27.2, y: 0, z: 85}
+    radius: 6
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the brick stack's shaft by the north wall (walk out the front)
+  - id: SP-alley-west
+    kind: pit
+    drop: {x: -14, y: 0.3, z: 139.2}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -4, y: 0, z: 139.2}
+    radius: 7
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the narrow alley between the tall houses (walk out to the avenue)
+  - id: SP-alley-pipes
+    kind: enclosed
+    drop: {x: 14, y: 0.3, z: 143.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 4, y: 0, z: 143.5}
+    radius: 7
+    needs: MuscleMan
+    heroes: 
+    opens: SP-pipes-alley
+    checkpoint: 
+    note: the alley behind the pipes (Muscle Man bends them)
+  - id: SP-passage
+    kind: enclosed
+    drop: {x: -28.5, y: 0.3, z: 238}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -28.5, y: 0, z: 226}
+    radius: 7
+    needs: MuscleMan
+    heroes: 
+    opens: SP-crates-passage
+    checkpoint: 
+    note: the passage behind the crates (Muscle Man lifts them)
+  - id: SP-gear-yard
+    kind: enclosed
+    drop: {x: 86, y: 0.3, z: 200}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 62, y: 0, z: 200}
+    radius: 14
+    needs: WindUp
+    heroes: 
+    opens: SP-geargate
+    checkpoint: 
+    note: the clockmaker's yard behind the great gear gate (mechanical Kira winds it open)
+  violinistInstrument: SteamViolin
+  violinistPlayClip: violinist_play

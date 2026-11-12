@@ -18,7 +18,7 @@ namespace ShardsOfTime
 
         public bool Has(string ability) => abilities != null && abilities.Contains(ability);
 
-        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb", Dragon = "Dragon", Otter = "Otter";
+        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb", Dragon = "Dragon", Otter = "Otter", Mechanical = "Mechanical";
 
         public static KiraForm Load(string id)
         {
@@ -50,6 +50,10 @@ namespace ShardsOfTime
                 case Otter:   // Round 10
                     f.displayName = "Otter Kira"; f.model = "kira_otter"; f.abilities = new[] { Abilities.OtterSwim, Abilities.BellySlide };
                     f.note = "The Pirate Seas: a little gray river otter with her own cat face (folded ears, amber eyes). She swims fast, dives as deep as she likes with no breath limit, squeezes through narrow gaps under water, and belly-slides across wet decks (Dive while running).";
+                    break;
+                case Mechanical:   // Round 11
+                    f.displayName = "Mechanical Kira"; f.model = "kira_mechanical"; f.abilities = new[] { Abilities.WindUp, Abilities.MagnetPaws };
+                    f.note = "Victorian Steampunk: a little clockwork cat of gunmetal and brass with her own face (folded ears, amber eyes). Standing on a gear socket she winds up machines (lifts, catwalks, gear doors, the turntable); her magnet paws carry her up iron pillars marked with rivets (Jump at one).";
                     break;
                 default:
                     f.displayName = "Kira"; f.model = "kira"; f.abilities = new string[0];

@@ -33,6 +33,7 @@ namespace ShardsOfTime
                     if (Chasing && dist < 1.3f) return Vector3.zero;
                     return m;
                 }
+                case Kind.Worker: return WorkerMove(player, pos);   // Round 11
                 case Kind.Crab:
                 {
                     bool was = Chasing; var m = PatrolMove(player, pos);
@@ -58,7 +59,7 @@ namespace ShardsOfTime
             }
         }
 
-        bool Harmless => (kind == Kind.Puffer && !Puffed) || (kind == Kind.Deckhand && Time.time < tripUntil);
+        bool Harmless => (kind == Kind.Puffer && !Puffed) || ((kind == Kind.Deckhand || kind == Kind.Worker) && Time.time < tripUntil);
 
         // a goofy pirate deckhand (Mixamo model `pirate`: Dan's rig; shared people's clips)
         public static Enemy Deckhand(Transform parent, Vector3 a, Vector3 b)

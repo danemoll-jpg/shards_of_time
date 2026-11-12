@@ -5,7 +5,8 @@ Run:  F:\\blender\\blender.exe -b --factory-startup --python Tools/Blender/instr
 Writes Assets/Resources/World/instruments.fbx: one empty per instrument (Fiddle, Bow, Lyre), its parts named <part>__<Material>
 (the game colours each part by the word after "__": World/WorldArt.cs), plus marker empties the game uses to hold it, whatever the
 axes come out as after the FBX trip:
-  Fiddle: M_Chin (the chin rest end), M_Scroll (the far end of the neck), M_Up (above the strings), M_Grip (where the left hand holds
+  Fiddle (and SteamViolin, Round 11: the same fiddle with brass gears set into its body, the same markers):
+          M_Chin (the chin rest end), M_Scroll (the far end of the neck), M_Up (above the strings), M_Grip (where the left hand holds
           the neck), M_Bow (where the bow crosses the strings)
   Bow:    M_Frog (the right hand), M_Tip
   Lyre:   M_Base (the bottom of the sound box), M_Top (the middle of the yoke), M_Front (in front of the strings), M_Hold (the left
@@ -18,9 +19,10 @@ from mathutils import Vector
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'Assets', 'Resources', 'World')
-SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'instruments')
+SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round11', 'instruments')
 COL = {'Bone': (.93, .88, .76), 'Ebony': (.12, .09, .08), 'Gut': (.95, .92, .8), 'Wood': (.45, .28, .16), 'Gold': (.95, .72, .25),
-       'Lapis': (.12, .25, .7), 'Bark': (.42, .28, .18), 'Hair': (.97, .96, .92), 'Plank': (.55, .36, .2), 'Dark': (.15, .12, .1)}
+       'Lapis': (.12, .25, .7), 'Bark': (.42, .28, .18), 'Hair': (.97, .96, .92), 'Plank': (.55, .36, .2), 'Dark': (.15, .12, .1),
+       'Brass': (.86, .66, .3), 'Copper': (.78, .45, .28)}
 
 
 def mat(name):
@@ -85,8 +87,9 @@ def ball(name, c, r, parent, scale=(1, 1, 1)):
 
 
 # ---------------------------------------------------------------------------------------------------------------- the fiddle
-def fiddle():
-    e = empty('Fiddle')
+def fiddle(name='Fiddle', gears=False):
+    e = empty(name)
+    W = 'Wood' if gears else 'Bone'   # the steam violin: varnished wood, the Ice Age's: bone
     L = .355   # the body, chin end at y 0
     def half(y):   # the body's half width along its length: two bouts and a waist (a violin's figure eight)
         lo = .105 * math.sqrt(max(0, 1 - ((y - .1) / .1) ** 2))
@@ -97,10 +100,10 @@ def fiddle():
     ys = [L * i / 48 for i in range(49)]
     right = [(half(y), y) for y in ys]; left = [(-half(y), y) for y in reversed(ys)]
     outline = right + left
-    prism('Body__Bone', outline, 0, .042, e, bevel=.006)
+    prism('Body__' + W, outline, 0, .042, e, bevel=.006)
     # the top plate's arch, the f-holes, the bridge, the tailpiece, the chin rest
     inner = [(x * .9, .018 + y * .9) for x, y in outline]
-    prism('Top__Bone', inner, .042, .052, e, bevel=.004)
+    prism('Top__' + W, inner, .042, .052, e, bevel=.004)
     for s in (-1, 1):
         box('FHole__Ebony', (s * .045, .19, .058), (.008, .07, .006), e, rot=(0, 0, math.radians(s * 8)))
         ball('FHoleDot__Ebony', (s * .05, .225, .058), .008, e, (1, 1, .4))
@@ -109,10 +112,10 @@ def fiddle():
     prism('Tailpiece__Ebony', [(-.012, .025), (.012, .025), (.022, .1), (-.022, .1)], .052, .062, e)
     ball('ChinRest__Ebony', (-.045, .03, .058), .035, e, (1.2, .9, .3))
     # the neck, the fingerboard, the peg box, the scroll and the pegs
-    box('Neck__Bone', (0, L + .065, .045), (.03, .14, .03), e)
+    box('Neck__' + W, (0, L + .065, .045), (.03, .14, .03), e)
     prism('Fingerboard__Ebony', [(-.014, .2), (.014, .2), (.021, L + .135), (-.021, L + .135)], .06, .07, e)
-    box('PegBox__Bone', (0, L + .165, .05), (.032, .06, .04), e)
-    ball('Scroll__Bone', (0, L + .205, .058), .022, e, (.9, 1, 1))
+    box('PegBox__' + W, (0, L + .165, .05), (.032, .06, .04), e)
+    ball('Scroll__' + W, (0, L + .205, .058), .022, e, (.9, 1, 1))
     ball('ScrollEye__Ebony', (.017, L + .205, .06), .008, e, (.5, 1, 1))
     ball('ScrollEye__Ebony', (-.017, L + .205, .06), .008, e, (.5, 1, 1))
     for i, y in enumerate((L + .145, L + .165, L + .155, L + .175)):
@@ -122,9 +125,24 @@ def fiddle():
     for i, x in enumerate((-.012, -.004, .004, .012)):
         cyl('String__Gut', (x * .9, .1, .064), (x * 1.0, .15, .082), .0012, .0012, e, 4)
         cyl('String__Gut', (x * 1.0, .15, .082), (x * .5, L + .14, .073), .0012, .0012, e, 4)
+    if gears:   # Round 11: the Victorian Steampunk violin: small brass gears set into the top plate (clear of the strings and the bridge)
+        for (x, y, r, n) in ((.062, .085, .024, 10), (-.045, .285, .018, 8), (.042, .3, .014, 7), (-.07, .12, .015, 7)):
+            gear_flat('Gear__Brass', (x, y, .052), r, .007, e, n)
+        box('Plate__Copper', (0, -.003, .024), (.05, .008, .026), e)   # the end button's plate
+        ball('Pin__Brass', (0, L + .205, .084), .008, e)
     empty('M_Chin', e, (-.045, .02, .04)); empty('M_Scroll', e, (0, L + .21, .05)); empty('M_Up', e, (0, .15, .2))
     empty('M_Grip', e, (0, L + .1, .04)); empty('M_Bow', e, (0, .2, .08))
     return e
+
+
+def gear_flat(name, c, r, thick, parent, teeth):
+    """a small gear lying on the fiddle's top (its bottom at c.z): a disc, teeth, a hub"""
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=r, radius2=r, depth=thick)
+    ob = mesh_obj(name, bm, parent); ob.location = (c[0], c[1], c[2] + thick / 2)
+    for k in range(teeth):
+        a = (k + .5) / teeth * math.tau
+        box(name, (c[0] + math.cos(a) * (r + r * .12), c[1] + math.sin(a) * (r + r * .12), c[2] + thick / 2), (r * .3, r * .32, thick), parent, (0, 0, a))
+    cyl(name, (c[0], c[1], c[2]), (c[0], c[1], c[2] + thick * 1.8), r * .3, r * .3, parent, 8)
 
 
 def bow():
@@ -199,8 +217,9 @@ def lute():
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    roots = [fiddle(), bow(), lyre(), harp(), lute()]
+    roots = [fiddle(), bow(), lyre(), harp(), lute(), fiddle('SteamViolin', gears=True)]
     roots[1].location = (.3, 0, 0); roots[2].location = (.75, 0, 0); roots[3].location = (1.2, 0, 0); roots[4].location = (1.65, 0, 0)
+    roots[5].location = (2.05, 0, 0)
     bpy.context.view_layer.update()
     for o in bpy.context.scene.objects:   # bake the bevels
         if o.type == 'MESH' and o.modifiers:
@@ -211,7 +230,7 @@ def main():
     sc = bpy.context.scene; sc.render.engine = 'BLENDER_WORKBENCH'; sc.display.shading.color_type = 'MATERIAL'
     sc.display.shading.light = 'STUDIO'; sc.render.resolution_x = 1400; sc.render.resolution_y = 700
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
-    cam.location = (.9, -2.3, 1.3); cam.rotation_euler = (math.radians(62), 0, 0); cam.data.lens = 35
+    cam.location = (1.1, -2.7, 1.5); cam.rotation_euler = (math.radians(62), 0, 0); cam.data.lens = 35
     sc.render.filepath = os.path.join(SHOTS, 'instruments.png'); bpy.ops.render.render(write_still=True)
     for r in roots: r.location = (0, 0, 0)
     bpy.context.view_layer.update()

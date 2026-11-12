@@ -114,6 +114,27 @@ namespace ShardsOfTime
             ["GreenShard"] = (new Color(.35f, 1f, .5f), "Glow", 0),
             ["Starfish"] = (new Color(1f, .5f, .35f), "Lit", .3f),
             ["Black"] = (new Color(.08f, .07f, .07f), "Lit", .2f),
+            // Round 11: Victorian Steampunk (Tools/Blender/steampunk_world.py): red brick, cream stone, iron, copper, teal lamps
+            ["Brick"] = (new Color(.62f, .25f, .18f), "Lit", .1f),
+            ["BrickDark"] = (new Color(.45f, .18f, .14f), "Lit", .1f),
+            ["CreamStone"] = (new Color(.93f, .86f, .7f), "Lit", .15f),
+            ["FactoryFloor"] = (new Color(.36f, .34f, .36f), "Lit", .3f),
+            ["IronGrate"] = (new Color(.3f, .31f, .34f), "Lit", .5f),
+            ["IronMesh"] = (new Color(.28f, .29f, .32f), "Lit", .5f),
+            ["Copper"] = (new Color(.78f, .45f, .28f), "Lit", .65f),
+            ["BeltRubber"] = (new Color(.16f, .16f, .18f), "Lit", .15f),
+            ["BlueRoller"] = (new Color(.2f, .45f, .85f), "Lit", .5f),
+            ["NightGlass"] = (new Color(.25f, .35f, .7f), "Glow", 0),
+            ["WarmGlass"] = (new Color(1f, .8f, .45f), "Glow", 0),
+            ["TealGlow"] = (new Color(.2f, .95f, .85f), "Glow", 0),
+            ["TealShard"] = (new Color(.2f, 1f, .9f), "Glow", 0),
+            ["Teal"] = (new Color(.15f, .6f, .6f), "Lit", .4f),
+            ["ClockFace"] = (new Color(.97f, .94f, .85f), "Lit", .3f),
+            ["ClockGreen"] = (new Color(.12f, .32f, .25f), "Lit", .45f),
+            ["Glass"] = (new Color(.55f, .7f, .8f), "Lit", .9f),
+            ["Oil"] = (new Color(.05f, .05f, .07f), "Lit", .9f),
+            ["Rubble"] = (new Color(.5f, .3f, .25f), "Lit", .1f),
+            ["RedAlarm"] = (new Color(1f, .15f, .1f), "Glow", 0),
         };
 
         public static Material Mat(string name)

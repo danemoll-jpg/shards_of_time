@@ -14,7 +14,7 @@ namespace ShardsOfTime
         public static bool HasClip => I && I.clip;
         AudioSource[] src = new AudioSource[2]; AudioSource amb; int cur; AudioClip clip; float fadeT = -1, trackGain;
         // a world track's ambience (none under the title, Act I or the vortex)
-        static readonly System.Collections.Generic.Dictionary<string, string> Ambience = new System.Collections.Generic.Dictionary<string, string> { ["iceage"] = "wind_loop", ["pirate"] = "waves_loop" };   // Round 10: the sea lapping at the ship
+        static readonly System.Collections.Generic.Dictionary<string, string> Ambience = new System.Collections.Generic.Dictionary<string, string> { ["iceage"] = "wind_loop", ["pirate"] = "waves_loop", ["steampunk"] = "factory_loop" };   // Round 11: the factory's clanks (the streets: Steampunk.Watch swaps in the city)   // Round 10: the sea lapping at the ship
         float fadeLen = Crossfade;
 
         public static void Init(GameObject host)
@@ -42,6 +42,15 @@ namespace ShardsOfTime
             PlayLog.Line($"music: {(c ? track + $" ({c.length:0.0} s)" : (string.IsNullOrEmpty(track) ? "silence" : track + " missing: silence"))}{(wind ? ", ambience " + ambName : "")}");
         }
         public static AudioSource Current => I ? I.src[I.cur] : null;
+        // Round 11: the same song, another place's ambience (the factory / the streets)
+        public static void SetAmbience(string name)
+        {
+            if (!I) return;
+            var c = string.IsNullOrEmpty(name) ? null : Resources.Load<AudioClip>("Sounds/" + name);
+            if (I.amb.clip == c) return;
+            I.amb.clip = c; if (c) I.amb.Play(); else I.amb.Stop();
+            PlayLog.Line("ambience: " + (c ? name : "none"));
+        }
 
         void Switch(AudioClip c)
         {

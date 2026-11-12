@@ -61,6 +61,17 @@ namespace ShardsOfTime
         float slideT; Vector3 slideDir, slideFrom;
         // Round 10: the deep dive (everyone, the ship's fiddler): breath x3 under water; air bubbles (AirVolume) give it back
         public bool DeepBreath;
+        // Round 11, item 7: Abi's wall jump (the Violinist, Steampunk). In the air, touching a wall: Jump = off the wall, up and away from
+        // it (a chimney: bounce from wall to wall). Then her double jump is there again.
+        public bool CanWallJump;
+        public int WallJumps { get; private set; }
+        public static int WallJumpsAll { get; private set; }   // (checks)
+        public bool TouchingWall => wallT > 0;
+        public Vector3 WallNormal => wallN;
+        public const float WallJumpPush = 5.2f, WallGrace = .22f;
+        float wallT; Vector3 wallN;
+        // Round 11, item 5: a conveyor belt under the feet carries the character (Conveyor.Push, world m/s)
+        public Conveyor Belt { get; private set; }
         public float BreathMax => Stats.breathSeconds * (DeepBreath ? 3f : 1f);
         public bool Pounding { get; private set; }       // the ground pound: a short hang, then straight down
         public int Pounds { get; private set; }
@@ -82,7 +93,7 @@ namespace ShardsOfTime
         public bool Climbing { get; private set; }
         public int ClimbOuts { get; private set; }
         Vector3 climbTo; float climbTime, swimDeepest, swimTime; bool cameFromUnderIce;
-        bool rising; Vector3 groundNormal = Vector3.up; bool steep;
+        bool rising; Vector3 groundNormal = Vector3.up; bool steep; bool sideHit;
         Transform platform; Vector3 platformLocal; Quaternion platformRot;
         public Collider GroundCollider { get; private set; }
 
@@ -214,6 +225,15 @@ namespace ShardsOfTime
                 takeoffY = apexY = transform.position.y; airTime = 0;
                 Event?.Invoke("jump");
             }
+            else if (input.jumpPressed && !Grounded && coyote <= 0 && CanWallJump && wallT > 0 && !Pounding)
+            {
+                // Round 11: off the wall: up as a normal jump, pushed away from the wall (kept for a moment so air control doesn't eat it)
+                vy = Mathf.Sqrt(2f * s.gravity * s.jumpHeight * 1.08f) * jumpScale;
+                hv = wallN * WallJumpPush; keepAir = .3f; hv0 = hv;
+                buffer = 0; rising = true; JumpsThisAir = 1; wallT = 0; WallJumps++; WallJumpsAll++;
+                transform.rotation = Quaternion.LookRotation(new Vector3(wallN.x, 0, wallN.z));
+                Event?.Invoke("walljump");
+            }
             else if (input.jumpPressed && !Grounded && coyote <= 0 && CanDoubleJump && JumpsThisAir < 2)
             {
                 vy = Mathf.Sqrt(2f * s.gravity * s.doubleJumpHeight) * jumpScale;
@@ -248,7 +268,11 @@ namespace ShardsOfTime
             Velocity = new Vector3(hv.x, vy, hv.z);
             bool wasGrounded = Grounded; float vyBefore = Velocity.y;
             groundNormal = Vector3.up; GroundCollider = null;
-            var flags = Cc.Move(Velocity * dt);
+            Belt = wasGrounded ? Conveyor.At(transform.position + Vector3.up * .2f) : null;   // Round 11: the belt carries what stands on it
+            var carry = Belt ? Belt.Push : Vector3.zero;
+            wallT -= dt; sideHit = false;
+            var flags = Cc.Move((Velocity + carry) * dt);
+            if (sideHit && !Grounded) wallT = WallGrace;
             bool below = (flags & CollisionFlags.Below) != 0;
             steep = below && Vector3.Angle(groundNormal, Vector3.up) > SlopeLimit;
             Grounded = below && !steep;
@@ -379,6 +403,8 @@ namespace ShardsOfTime
             {
                 if (GroundCollider == null || hit.normal.y > groundNormal.y) { groundNormal = hit.normal; GroundCollider = hit.collider; }
             }
+            // Round 11: a wall beside the character (for the wall jump): near-vertical, met while moving sideways
+            if (Mathf.Abs(hit.normal.y) < .3f && hit.point.y > transform.position.y + .15f) { sideHit = true; wallN = new Vector3(hit.normal.x, 0, hit.normal.z).normalized; }
             if (Mathf.Abs(hit.moveDirection.y) < .5f)
             {
                 var push = hit.collider.GetComponentInParent<PushBlock>();

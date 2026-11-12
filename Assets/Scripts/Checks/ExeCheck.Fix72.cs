@@ -11,7 +11,7 @@ namespace ShardsOfTime
     public sealed partial class ExeCheck
     {
         // moves the story teaches by Bethlehem (a spot that needs one to get in is tested with it); anything else is a later move
-        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan, Abilities.DeepDive };   // Round 10: the deep dive (the Pirate Seas)   // Round 8: the charged punch, Muscle Man
+        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan, Abilities.DeepDive, Abilities.WallJump };   // Round 11: the wall jump (Steampunk)   // Round 10: the deep dive (the Pirate Seas)   // Round 8: the charged punch, Muscle Man
 
         IEnumerator Fix72()
         {
@@ -28,6 +28,7 @@ namespace ShardsOfTime
             yield return StuckWorld(WorldData.Bethlehem, Bethlehem.Start);
             yield return StuckWorld(WorldData.Medieval, Medieval.Start);   // Round 8
             yield return PirateEnter(Pirate.Start); yield return StuckWorld(WorldData.Pirate, null);   // Round 10
+            yield return SteamEnter(Steampunk.FactoryCp); yield return StuckWorld(WorldData.Steampunk, null);   // Round 11
         }
 
         IEnumerator StuckMedieval() { yield return EnsurePlaying(false); yield return StuckWorld(WorldData.Medieval, Medieval.Start); }   // Round 8
@@ -43,8 +44,9 @@ namespace ShardsOfTime
         IEnumerator ToWorld(string world, string cp)
         {
             if (Game.World.worldId == world) yield break;
-            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : null;
+            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : null;
             if (flag != null && !SaveGame.Current.World(world).opened.Contains(flag)) SaveGame.Current.World(world).opened.Add(flag);
+            if (world == WorldData.Steampunk && !SaveGame.Current.World(world).opened.Contains(Steampunk.PressFlag)) SaveGame.Current.World(world).opened.Add(Steampunk.PressFlag);   // Round 11: past the press
             SaveGame.Current.checkpoint = cp; yield return StartWorld(world); yield return WaitFor(() => !Game.I.Busy, 10f);
             yield return Wait(1f);
         }

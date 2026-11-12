@@ -89,11 +89,15 @@ namespace ShardsOfTime
         // Round 10: the Pirate Seas
         public const string OtterSwim = "OtterSwim";         // otter Kira: fast swimming, any depth, no breath limit (the narrow gaps under water)
         public const string BellySlide = "BellySlide";       // otter Kira: Dive while running = a long belly-slide (far on wet decks)
-        public const string Overboard = "Overboard";         // not a move: the deep sea is open (after ShardOverboard); rule 2 never counts it on arrival
+        public const string Overboard = "Overboard";
+        // Round 11: Victorian Steampunk
+        public const string WindUp = "WindUp";               // mechanical Kira: standing on a gear socket she winds up a machine (lifts, catwalks, gear doors, the turntable)
+        public const string MagnetPaws = "MagnetPaws";       // mechanical Kira: Jump at an iron pillar with a rivet strip = up it to the top
+        public const string PressDone = "PressDone";         // not a move: the press is gone (after MuscleManHero); rule 2 counts it on arrival (it comes before play)         // not a move: the deep sea is open (after ShardOverboard); rule 2 never counts it on arrival
         // the charged punch (Dan, Medieval: hold attack, release) is ChargedPunch above; MuscleMan = he has joined (after the stone)
 
         // Round 8: every move a hero can learn from the Violinist (Dan learns two)
         public static bool Learns(string hero, string id) =>
-            id == DeepDive || (hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump : hero == "Kira" && id == Pounce);   // Round 10: everyone learns the deep dive
+            id == DeepDive || (hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump || id == WallJump : hero == "Kira" && id == Pounce);   // Round 11: Abi's wall jump   // Round 10: everyone learns the deep dive
     }
 }

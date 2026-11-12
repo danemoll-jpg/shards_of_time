@@ -43,6 +43,12 @@ quality pass, no film clips in game); focus on the game.
 not Dan's shard necklace); Muscle Man grins with teeth (fine, as before); the street clock has an empty gear socket in
 its face for the teal shard; mechanical Kira passes the lock (folded ears, gunmetal, amber eyes, no white).
 
+**Round 11 progress (resume note, Code, 2026-11-12):** done and checked in the exe: item 0 (Theater: `theater` passed), the world
+(factory + streets), belt run + press, wind-up / magnet paws / wall jump, jobs, horse gag, carriages, clock finale, vortex 8 paths
+(`steampunk` all passed, `stucksteam` all passed), the Medieval chimney ledge (J01 was on the ground). Mixamo: 3 upload files ready,
+Meshy out of credits for the other 7. Still to do: `fix81steam`, `perfsteam` (+ Steam Deck), rebuild with the cutscene fixes (press scene
+hides the world's press; Dan/Abi lie flat), render + side-by-side sheets, `minplayer`, `tpose`, publish 0.11.0, TODO/CLAUDE report.
+
 0. **The Theater bug first (Dan):** the Theater plays one scene, then refuses to play another until the game is
    restarted. Fix it (state left over after the first scene?) and add to the `theater` check: play three scenes in a row
    from the title and two from the pause menu, each one actually playing.
@@ -208,61 +214,6 @@ Muscle Man's boost; air bubbles from vents give Dan and Abi their breath; the ar
 by the rope nets, the plank, the crow's nest; otter Kira's belly-slide on the wet deck; the music switching as you dive and surface; the
 sounds (Code doesn't play sound on your PC). Known: the first view of the reef / the deck stutters once (250-420 ms, shaders warming up);
 the wreck reads as a ribbed box; the island's grass edge is still a little stepped; Muscle Man's three clips (above).
-
-### Round 9: the cutscene redo (0.9.0, build 900, 2026-11-11)
-Every scene was built from Dan's clip (contact sheets of each clip, `python Tools/film_sheet.py frames <clip>`), rendered from the exe
-and compared on a side-by-side sheet (film on top, game below, matching moments: `python Tools/film_sheet.py sheet <Scene>`), four
-passes of fixes. Code: `Assets/Editor/CutsceneAuthoring.Film.cs` (`CutsceneAuthoring.Version` 25). Check `local/round9/r9` (new mode
-`r9`, ~5 min: New game -> Act I to its end -> each scene through the game's own path, each skipped with a held A): RESULT all passed (49
-ok). Audio 0.000 RMS in the check, the builds and all 8 renders x 4 passes; window watcher: no window, never in the foreground (one
-build's watcher listed a visible "Task Manager" window by a reused process id: not started by Code, never in the foreground).
-1. `ActOne` (60 s, Dan's 60 s `act1.mp3`): **done.** Decorating (Abi left, Dan right of the tree, Kira under it), Kira leaps at the bauble
-   in Dan's hand, his fumble, the lunge and gasp, the close-up on the floor, the gold glow, Kira sniffs, Abi scoops her up, light beams
-   and blue crystal shards, the rainbow spiral between them, holding hands, the rainbow tunnel, then the Ice Age sky (the room's light
-   switches to the world's): a mammoth under the blue vortex, the vortex in the clouds, the three falling past the mountains. Act I's
-   song plays to its end; the Ice Age theme starts on the landing (`Game.ActOneMusicFadeAt` 58.4).
-2. `IceAgeArrival` (22 s): **done.** Landing white-out; by a campfire the gray house cat glows and is the sabertooth when it fades;
-   high shots on Dan and Abi, ground-level on her (snarl, stalk toward the camera), the leap, Dan on his back, Abi kneeling, Kira on his
-   chest pawing the blue necklace; Round 5's relief beat (laugh, the shard in his hand) kept.
-3. `EgyptArrival` (33 s; the film's 44 s with a shorter empty-dune pause and dig): **done.** The building site (scaffolded pyramid, sledge
-   teams, the camel crossing close), the red vortex over a dune north of town, the sand plume, the empty dune, they pop out, look round,
-   kneel and dig, mummy Kira pops up, Abi holds her, the necklace red. Play then starts on the plaza as before.
-4. `SphinxGag` (17.6 s): **done.** From behind them (Abi left), the push-in to Kira's stone face, held; they turn, react; Dan looks down;
-   mummy Kira's innocent close-ups; the long look, red necklace. (The old 16.5 m / 21 m face position was inside its chin: measured anew.)
-5. `BethlehemArrival` (21 s): **done.** The Wise Men in the field east of the barn see the star grow into a golden spiral; the golden ring
-   over the barn with its beam; a golden flash; top-down crash through the roof; the Wise Men puzzled; inside (warm light): Abi sitting
-   on the hay with lamb Kira, Dan flat on the floor in a gold glow.
-6. `WiseMenArrive` (17 s): **done.** Silhouettes at the barn, they push the doors open (cutscene doors), Dan and Abi face each other over
-   the glowing manger with lamb Kira, the Wise Men stare then sag (Santa hat on the left), turn and leave, **the Santa-hat one tosses his
-   present over his shoulder**, the hug, the golden hay tornado takes them.
-7. `MedievalArrival` (41 s): **done.** The castle under the purple vortex, the three fall out of it, top-down the pony pulls the wagon
-   in and they drop into the hay, it heaves, they pop up (Kira, Dan, Abi), Kira's sneeze sets it alight, out, the runaway wagon from
-   behind them, the wall blast and the singed driver (kept), then they walk on with **Kira flying** beside them.
-8. `TheStone` (60 s): **done.** Muscle Man heaves, falls back, embarrassed then smug close-ups, points: your turn; Dan steps up (necklace
-   glowing), reaches, lifts it out with no effort into his palm; Muscle Man laughs, then **"My hero!"** (new `mm_my_hero.mp3`; `mm_master`
-   deleted; no "Master" left in code, sounds or messages); the cobblestones twist up into a column and **a whirlpool** that takes Dan,
-   Abi with Kira, and Muscle Man; the blue-white tunnel with all four tumbling. New `stone_whirl.mp3`.
-9. Hand-offs: **done** (`r9` above): each scene plays from the game's own path, its music is right (Act I's song, then the world themes;
-   no theme under WiseMenArrive / TheStone; the vortex track after them), a held A skips it, control comes back and the stick moves.
-10. Build / check / publish: **done.** 0.9.0 published as `game-900`; the Round 1 starter install in `local/sc` updated itself from
-    GitHub to build 900 and started (ready signal). Disk: 10.7 GB -> 10.2 GB.
-
-Also found and fixed on the way: the people's Mixamo "fall" carries a downward root motion that a Timeline adds up (a long fall sank
-metres; `Kit.Clips` now plays a long fall as restarting 0.6 s pieces); a shot can pan as it moves (`Kit.Shot(..., lookTo)`); film mode
-hides the stone's own shard for `TheStone` as the game does.
-Decisions Code made (Dan can overrule): lengths as above (Egypt shorter than the clip, Medieval longer for the game's blast and driver);
-Egypt's dune and the Wise Men's field are sets out in the world (`Kit.Set`), so the scenes stand where the film's do; outfits from the
-concept sheets; Dan's 60 s Act I song was in Downloads ("Shards of Time - Act I cutscene (1).mp3", 59.9 s), not yet in
-`Music/act1.mp3` (still the 22 s one): Code copied it there.
-Known, not changed: no facial animation (laughing, gaping and smug read through the body clips only); Egypt's workers are the graybox
-figures; the Sphinx is the game's own (with its headdress); the vortexes are blob spirals, not painted swirls; the scenes are night where
-the world is night (Bethlehem, Medieval) and keep the game's colours rather than the film's warm grade.
-
-**For Dan to check:** the eight sheets `Data/screenshots/round9/{ActOne,IceAgeArrival,EgyptArrival,SphinxGag,BethlehemArrival,
-WiseMenArrive,MedievalArrival,TheStone}.jpg` and the eight videos `Recordings/<same names>.mp4` (no sound in the videos); Act I with
-your song from New game (does it land on your beats?); listen to `Assets/Resources/Sounds/mm_my_hero.mp3` and `stone_whirl.mp3`
-(Code doesn't play sound on your PC).
-
 
 
 ---------------------------------------------------------------------------

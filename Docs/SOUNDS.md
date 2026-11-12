@@ -78,3 +78,29 @@ one: generate it again (`--only <name> --force`) or drop your own file with the 
 | `footstep_wood.mp3` | 0.5 s | sfx | a step on a wooden deck (Pirate Seas, per step while running) | A single footstep on a wooden ship deck, a short hollow knock with a tiny creak, close, no reverb, no music. |
 | `cannon_roll.mp3` | 2 s | sfx | Muscle Man rolls a heavy cannon aside | A heavy iron cannon on wooden wheels rolling over a wooden deck, a deep rumbling roll and creak, no music. |
 | `fiddle_shanty.mp3` | 6 s | sfx | the Violinist plays a sea shanty on his fiddle (Pirate Seas: he teaches the deep dive) | A short lively playful sea shanty melody played on a solo fiddle, a few bouncy bright notes then a warm magical rising phrase, solo instrument, music cue. |
+| `factory_loop.mp3` | 8 s | loop | the factory hall at night (ambience) | A big Victorian steam factory hall at night, distant rhythmic clanking machines, hissing steam and a low mechanical hum, ambience, no music, no voices. |
+| `city_loop.mp3` | 8 s | loop | the steampunk streets by day (ambience) | A busy Victorian steampunk city street in the morning, distant clockwork ticking, soft hiss of steam, faraway hooves and wheels on cobbles, ambience, no music, no voices. |
+| `chain_line.mp3` | 3 s | sfx | the overhead chain line rattles along | A heavy overhead factory chain conveyor rattling and clanking along its iron rail, metallic chain links, no music. |
+| `bucket_rattle.mp3` | 1.5 s | sfx | the copper bolt bucket rattles full of bolts | A copper bucket full of metal bolts rattling and clinking as it swings, comic, close, no music. |
+| `bucket_tip.mp3` | 1.5 s | sfx | the bolt bucket tips them out onto the belt | A metal bucket tipping over and a pile of bolts and people tumbling out onto a rubber conveyor belt, clatter and thump, comic, no music. |
+| `belt_loop.mp3` | 6 s | loop | the conveyor belt with its blue rollers | A factory conveyor belt running over many metal rollers, a steady rumbling whirr with soft rhythmic clicks, loop, no music. |
+| `stamper.mp3` | 0.8 s | sfx | a small stamper slams down | A small industrial steam stamper slamming down, a short heavy metallic thunk with a hiss of steam, no music. |
+| `press_thump.mp3` | 2 s | sfx | the great press thumps down | A gigantic factory steam press slamming down, a huge deep metallic boom with a long hiss of steam and a groan, no music. |
+| `press_groan.mp3` | 3 s | sfx | the press groans as Muscle Man holds it up | A huge iron machine straining and groaning under great pressure, creaking metal, rumbling, steam hissing, no music. |
+| `alarm.mp3` | 3 s | sfx | the factory alarm bells while the press runs | A Victorian factory alarm, a loud clanging fire bell ringing fast with a wailing steam whistle, urgent, no music. |
+| `cable_snap.mp3` | 1 s | sfx | a cable snaps with sparks | A thick steel cable snapping with a sharp twang and a crackle of electric sparks, no music. |
+| `wall_smash.mp3` | 2.5 s | sfx | the press smashes out through the brick wall and window | A huge heavy machine smashing through a brick factory wall and a big glass window, bricks crumbling, glass shattering, debris falling, no music. |
+| `steam_hiss.mp3` | 1.5 s | sfx | a steam jet hisses | A sharp jet of steam hissing out of a pipe valve, a strong whoosh hiss, close, no music. |
+| `gears_tick.mp3` | 3 s | sfx | gears ticking (a machine wakes) | Big brass clockwork gears turning and ticking, a rhythmic mechanical clicking and a soft whir, no music. |
+| `clock_chime.mp3` | 4 s | sfx | the great street clock chimes | A big Victorian street clock chiming, deep warm bell tones ringing twice with a ticking clockwork underneath, no music. |
+| `horse_hooves.mp3` | 2 s | sfx | a clockwork horse clip-clops by | A mechanical clockwork horse walking on cobblestones, metal hooves clip-clopping with little whirring gears and clicks, no music. |
+| `horse_puff.mp3` | 1.2 s | sfx | a clockwork horse puffs steam (in Muscle Man’s face) | A mechanical horse snorting a big puff of steam from its nose, a sharp hiss whoosh with a little clank, comic, no music. |
+| `carriage_roll.mp3` | 3 s | sfx | a steam carriage rolls by on its rails | A brass steam carriage rolling along iron rails, chuffing steam engine, rumbling wheels on rails and a clang, no music. |
+| `worker_grumble.mp3` | 1.2 s | sfx | a goofy factory worker grumbles (he spots you) | A goofy grumpy cartoon factory worker man grumbling and huffing "Oi!" in a silly gruff voice, comic, close, no music. |
+| `worker_slip.mp3` | 1.2 s | sfx | a worker slips on oil | A cartoon man slipping on an oily floor, a squeaky slide and a heavy comic thud, no music. |
+| `metal_step.mp3` | 0.5 s | sfx | mechanical Kira steps (small metal paws) | A single tiny metal paw step on a hard floor, a light little clink tap, close, no reverb, no music. |
+| `windup.mp3` | 1.8 s | sfx | mechanical Kira winds up a machine | A clockwork key being wound up quickly, ratcheting clicks speeding up into a soft whirr, close, no music. |
+| `magnet_clank.mp3` | 0.6 s | sfx | magnet paws clamp onto an iron beam | A small magnet clamping onto an iron beam, a soft metallic clank with a tiny buzz, close, no music. |
+| `bars_bend.mp3` | 2 s | sfx | Muscle Man bends iron bars or pipes aside | Thick iron bars being bent apart by hand, a long metallic creak and groan ending in a clank, no music. |
+| `steam_violin.mp3` | 6 s | sfx | the Violinist plays his steampunk violin as a street musician (Steampunk: he teaches the wall jump) | A short whimsical playful melody played on a solo violin with a tiny ticking music-box clockwork underneath, a few bright bouncy notes then a warm magical rising phrase, solo instrument, music cue. |
+| `teal_vortex.mp3` | 4 s | sfx | the teal vortex opens over the clock (the finale) | A magical swirling vortex opening in the sky, a rushing whirl with ticking clockwork, rising sparkling chimes and a deep whoosh, fairytale, no music. |

@@ -32,6 +32,7 @@ namespace ShardsOfTime
 
         public static void ApplyWorld(string w)
         {
+            if (w != world) night = false;   // Round 11: a world's night (the factory, the ship's arrival) never follows into the next world
             world = w; vortex = false;
             if (world == WorldData.Playground)
             {
@@ -67,6 +68,18 @@ namespace ShardsOfTime
                     Sky = new Color(.04f, .07f, .2f); FogColor = new Color(.05f, .09f, .22f); FogStart = 60f; FogEnd = 600f;
                     Sun.color = new Color(.55f, .65f, 1f); sunIntensity = .45f; Sun.transform.rotation = Quaternion.Euler(40f, 150f, 0);
                     ambSky = new Color(.2f, .26f, .5f); ambEq = new Color(.16f, .18f, .3f); ambGround = new Color(.08f, .1f, .16f);
+                }
+            }
+            else if (world == WorldData.Steampunk)   // Round 11, item 12: the streets on a warm golden morning; the factory at night (blue-violet haze)
+            {
+                Sky = new Color(.98f, .8f, .58f); FogColor = new Color(.95f, .8f, .64f); FogStart = 70f; FogEnd = 520f; FarClip = 900f;
+                Sun.color = new Color(1f, .85f, .62f); sunIntensity = 1.25f; Sun.transform.rotation = Quaternion.Euler(28f, -50f, 0);
+                ambSky = new Color(.78f, .7f, .62f); ambEq = new Color(.72f, .6f, .5f); ambGround = new Color(.4f, .32f, .28f);
+                if (night)   // inside the factory: night through the skylights, warm brass lamps do the rest
+                {
+                    Sky = new Color(.12f, .1f, .3f); FogColor = new Color(.2f, .16f, .38f); FogStart = 25f; FogEnd = 190f;
+                    Sun.color = new Color(.55f, .55f, 1f); sunIntensity = .35f; Sun.transform.rotation = Quaternion.Euler(55f, 150f, 0);
+                    ambSky = new Color(.3f, .26f, .55f); ambEq = new Color(.28f, .22f, .38f); ambGround = new Color(.16f, .12f, .14f);
                 }
             }
             else   // the Ice Age (Dan's reference: a wide snowy valley, soft blue-white light, warm rock, fog for depth)

@@ -69,6 +69,7 @@ namespace ShardsOfTime
                 h.Motor.DeepBreath = SaveGame.Current.Has(Abilities.DeepDive);   // Round 10: the deep dive's longer breath
                 h.Motor.CanPounce = h.Stats.displayName == "Kira" && SaveGame.Current.Has(Abilities.Pounce) && !h.Motor.CanBellySlide;   // Round 7 (Kira, Bethlehem's Violinist); the otter slides instead
                 h.Motor.CanGlide = h.HasAbility(Abilities.Glide);   // Round 8 (dragon Kira's wings; set again when her form changes)
+                h.Motor.CanWallJump = h.Stats.displayName == "Abi" && SaveGame.Current.Has(Abilities.WallJump);   // Round 11 (Abi, the Steampunk Violinist)
             }
         }
 
@@ -144,6 +145,7 @@ namespace ShardsOfTime
             }
             Player.Motor.SpeedScale = 1f;
             if (Game.Playing && RopeClimb.Try(Player, input.jumpPressed)) input.jumpPressed = false;   // Round 10: the ship's rigging
+            if (Game.Playing && MagnetPillar.Try(Player, input.jumpPressed)) input.jumpPressed = false;   // Round 11: mechanical Kira's magnet paws
             Player.Motor.Step(input, Time.deltaTime);
             if (Game.Playing) IceHole.Watch(Player);   // Round 6, item 2: nobody stays stuck under the ice
             RecordTrail();

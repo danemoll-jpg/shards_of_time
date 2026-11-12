@@ -30,7 +30,9 @@ NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_saber
          "dan_medieval", "abi_medieval", "muscleman_medieval", "violinist_medieval", "knight", "archer", "wagon_driver",
          "kira_dragon", "rat", "horse",
          # Round 10: the Pirate Seas (the people from Dan's Mixamo files; otter Kira: Code's rig)
-         "dan_pirate", "abi_pirate", "muscleman_pirate", "violinist_pirate", "pirate", "kira_otter"]
+         "dan_pirate", "abi_pirate", "muscleman_pirate", "violinist_pirate", "pirate", "kira_otter",
+         # Round 11: Victorian Steampunk (the people from Dan's Mixamo files; mechanical Kira, the clockwork horse: Code's rigs)
+         "dan_steampunk", "abi_steampunk", "muscleman_steampunk", "violinist_steampunk", "factory_worker", "kira_mechanical", "clockwork_horse"]
 # Round 5: the Violinist's own Mixamo clips (SourceArt/Mixamo/violinist_iceage/<Mixamo name>.fbx -> Clips/violinist_<clip>.fbx);
 # his idle and walk are the shared Idle / Walking clips (Clips/idle.fbx, walk.fbx), like Dan's and Abi's
 VIOLINIST_CLIPS = {"play": "Playing The Violin", "bow": "Quick Informal Bow", "nod": "Head Nod Yes"}
@@ -65,7 +67,9 @@ EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing
                "dazed": ("wagon_driver", "Drunk Idle|Dizzy Idle|Stunned"), "limp": ("wagon_driver", "Injured Walk|Drunk Walk"),
                # Round 10: Muscle Man's struggling swim, getting up after the crash, his leap overboard
                "mm_struggle": ("muscleman_pirate", "Drowning|Struggling|Treading Water"), "mm_getup": ("muscleman_pirate", "Getting Up|Stand Up"),
-               "mm_leap": ("muscleman_pirate", "Jumping Down|Jump")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
+               "mm_leap": ("muscleman_pirate", "Jumping Down|Jump"),
+               # Round 11: holding the press up / lifting Dan to the clock; heaving the press off
+               "mm_hold": ("muscleman_steampunk", "Overhead Hold|Overhead|Lifting|Hold Up"), "mm_throw": ("muscleman_steampunk", "Heavy Throw|Throw Object|Toss")}   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
 # Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
 # the people's clip of the same name (CreatureAnimator)
 MUMMY_CLIPS = {"idle": "Thriller Idle", "walk": "Zombie Walk", "run_slow": "Zombie Walk", "run": "Zombie Walk", "punch": "Zombie Attack",

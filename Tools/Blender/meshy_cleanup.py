@@ -29,17 +29,23 @@ HEIGHT = {'dan_home': 1.8, 'dan_iceage': 1.8, 'abi_home': 1.65, 'abi_iceage': 1.
           'archer': 1.8, 'wagon_driver': 1.65, 'kira_dragon': 0.5, 'rat': 0.35, 'horse': 1.6,
           # Round 10: the Pirate Seas (the deckhand is short and round; crab / pufferfish / fish are small, to the top)
           'dan_pirate': 1.8, 'abi_pirate': 1.65, 'muscleman_pirate': 2.0, 'violinist_pirate': 1.85, 'pirate': 1.65,
-          'kira_otter': 0.5, 'crab': 0.45, 'pufferfish': 0.6, 'fish': 0.3}
+          'kira_otter': 0.5, 'crab': 0.45, 'pufferfish': 0.6, 'fish': 0.3,
+          # Round 11: Victorian Steampunk (the worker big and round; the horse to the top of its head; carriage / clock / press static props)
+          'dan_steampunk': 1.8, 'abi_steampunk': 1.65, 'muscleman_steampunk': 2.0, 'violinist_steampunk': 1.85, 'factory_worker': 1.8,
+          'kira_mechanical': 0.5, 'clockwork_horse': 1.9, 'steam_carriage': 3.4, 'street_clock': 7.5, 'steam_press': 7.0}
 PEOPLE = {'dan_home', 'dan_iceage', 'abi_home', 'abi_iceage', 'violinist_iceage', 'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy',
           'dan_bethlehem', 'abi_bethlehem', 'violinist_bethlehem', 'wiseman_santa', 'wiseman_crown', 'wiseman_old', 'watchman',
           'dan_medieval', 'abi_medieval', 'muscleman_medieval', 'violinist_medieval', 'knight', 'archer', 'wagon_driver',
-          'dan_pirate', 'abi_pirate', 'muscleman_pirate', 'violinist_pirate', 'pirate'}
+          'dan_pirate', 'abi_pirate', 'muscleman_pirate', 'violinist_pirate', 'pirate',
+          'dan_steampunk', 'abi_steampunk', 'muscleman_steampunk', 'violinist_steampunk', 'factory_worker'}
 ROUND5 = {'violinist_iceage', 'wolf', 'snow_critter', 'mammoth'}
 ROUND6 = {'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy', 'kira_mummy', 'camel', 'scarab', 'guardian', 'sphinx_kira'}
 ROUND7 = {'dan_bethlehem', 'abi_bethlehem', 'violinist_bethlehem', 'wiseman_santa', 'wiseman_crown', 'wiseman_old', 'watchman',
           'kira_lamb', 'goat', 'sheep', 'guard_dog', 'scorpion'}
 ROUND8 = {'dan_medieval', 'abi_medieval', 'muscleman_medieval', 'violinist_medieval', 'knight', 'archer', 'wagon_driver',
           'kira_dragon', 'rat', 'horse'}
+ROUND11 = {'dan_steampunk', 'abi_steampunk', 'muscleman_steampunk', 'violinist_steampunk', 'factory_worker', 'kira_mechanical',
+           'clockwork_horse', 'steam_carriage', 'street_clock', 'steam_press'}
 ROUND10 = {'dan_pirate', 'abi_pirate', 'muscleman_pirate', 'violinist_pirate', 'pirate', 'kira_otter', 'crab', 'pufferfish', 'fish'}
 YAW = {'guardian': 90}   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'models')
@@ -107,7 +113,7 @@ def render(name):
     size = max(h, hi.x - lo.x, hi.y - lo.y)
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
     cam.data.type = 'ORTHO'; cam.data.ortho_scale = size * 1.15
-    shots = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'models') if name in ROUND5 else os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'models') if name in ROUND6 else os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'models') if name in ROUND7 else os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'models') if name in ROUND8 else os.path.join(ROOT, 'Data', 'screenshots', 'round10', 'models') if name in ROUND10 else SHOTS
+    shots = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'models') if name in ROUND5 else os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'models') if name in ROUND6 else os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'models') if name in ROUND7 else os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'models') if name in ROUND8 else os.path.join(ROOT, 'Data', 'screenshots', 'round10', 'models') if name in ROUND10 else os.path.join(ROOT, 'Data', 'screenshots', 'round11', 'models') if name in ROUND11 else SHOTS
     os.makedirs(shots, exist_ok=True)
     for tag, ang in (('front', 0), ('side', 90), ('back', 180), ('34', 35)):
         a = math.radians(ang); r = 10

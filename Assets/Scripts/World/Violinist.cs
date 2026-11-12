@@ -22,7 +22,8 @@ namespace ShardsOfTime
         void OnEnable() => I = this;
         void OnDisable() { if (I == this) I = null; }
 
-        public string instrument = "Fiddle";   // Round 6, item 4: per world (WorldData.violinistInstrument)
+        public string instrument = "Fiddle";
+        bool IsFiddle => instrument == "Fiddle" || instrument == "SteamViolin";   // Round 11: the steampunk violin is held and bowed as the fiddle   // Round 6, item 4: per world (WorldData.violinistInstrument)
         public string playClip = "violinist_play";   // Fix 6.1, item 2: per world (WorldData.violinistPlayClip): the fiddle's or the lyre's
 
         public static Violinist Make(Transform parent, Vector3 at, float yaw, string instrument = "Fiddle", string playClip = null)
@@ -58,7 +59,7 @@ namespace ShardsOfTime
         // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage), his own clips (Clips/violinist_play, _bow, _nod)
         // and the shared idle / walk replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
         public const string Model = "violinist_iceage";   // the Ice Age's; Round 6: each world's own when it exists (ModelName)
-        public string ModelName => Game.InPirate && CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
+        public string ModelName => Game.InSteampunk ? (CharacterModel.Exists("violinist_steampunk") ? "violinist_steampunk" : CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : Model) : Game.InPirate && CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
         PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
         string loop = "idle", oneShot; float oneShotEnd;
         public string ClipNow => oneShot ?? loop;
@@ -94,7 +95,7 @@ namespace ShardsOfTime
             {
                 B = b => anim.GetBoneTransform(b);
                 inst = fiddle.transform; inst.SetParent(transform, true); inst.localScale = Vector3.one;
-                if (instrument == "Fiddle") { var bg = WorldArt.Prop("instruments", "Bow", transform, transform.position); if (bg) { bowT = bg.transform; bowT.localScale = Vector3.one; } }
+                if (IsFiddle) { var bg = WorldArt.Prop("instruments", "Bow", transform, transform.position); if (bg) { bowT = bg.transform; bowT.localScale = Vector3.one; } }
             }
             else if (fiddle) fiddle.SetActive(false);
             PlayLog.Line($"the Violinist: model {ModelName} ({instrument}, playing clip {playClip}), clips [{string.Join(", ", clipIndex.Keys)}]");
@@ -105,7 +106,13 @@ namespace ShardsOfTime
         public Transform Instrument => inst;
         public string InstrumentPose { get; private set; } = "";
 
-        static Transform M(Transform root, string n) { foreach (var t in root.GetComponentsInChildren<Transform>(true)) if (t.name == n) return t; return null; }
+        static Transform M(Transform root, string n)
+        {
+            var all = root.GetComponentsInChildren<Transform>(true);
+            foreach (var t in all) if (t.name == n) return t;
+            foreach (var t in all) { int d = t.name.LastIndexOf('.'); if (d > 0 && t.name.Substring(0, d) == n) return t; }   // Round 11: Blender's "M_Chin.001" (a second instrument's markers)
+            return null;
+        }
 
         // turn and move `root` so marker a sits at `at`, a->b points along `dir` and a->up leans toward `up`
         static void Align(Transform root, Transform a, Transform b, Transform upM, Vector3 at, Vector3 dir, Vector3 up)
@@ -146,7 +153,7 @@ namespace ShardsOfTime
             }
             Vector3 f = transform.forward, r = transform.right, u = Vector3.up, l = -r;
             string pose = ClipNow == "play" ? "play" : ClipNow == "walk" ? "back" : "hold"; InstrumentPose = pose;
-            if (instrument == "Fiddle")
+            if (IsFiddle)
             {
                 Transform chin = M(inst, "M_Chin"), scroll = M(inst, "M_Scroll"), upM = M(inst, "M_Up"), grip = M(inst, "M_Grip"), contact = M(inst, "M_Bow");
                 Transform frog = bowT ? M(bowT, "M_Frog") : null, tip = bowT ? M(bowT, "M_Tip") : null;
@@ -327,10 +334,10 @@ namespace ShardsOfTime
         {
             Game.I.SetBusy(true); Playing = true;
             PlayLog.Line($"the Violinist plays for {hero.Stats.displayName}");
-            Sfx.Play(Game.InPirate ? "fiddle_shanty" : instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
+            Sfx.Play(Game.InSteampunk ? "steam_violin" : Game.InPirate ? "fiddle_shanty" : instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
             var face = Quaternion.LookRotation(Vector3.ProjectOnPlane(hero.transform.position - transform.position, Vector3.up).normalized);
             transform.rotation = face;
-            yield return Cutscenes.Play(Game.InPirate ? "ViolinistTeachesPirate" : Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
+            yield return Cutscenes.Play(Game.InSteampunk ? "ViolinistTeachesSteampunk" : Game.InPirate ? "ViolinistTeachesPirate" : Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
             Playing = false;
             OneShot("bow"); Game.I.StartCoroutine(NodLater());
             if (!SaveGame.Current.abilities.Contains(ability)) SaveGame.Current.abilities.Add(ability);
@@ -342,6 +349,8 @@ namespace ShardsOfTime
                 ? $"{hero.Stats.displayName} learned the {moveName}! Hold {Controls.Btn(Controls.Act.Attack)}, let go when his fist glows. It breaks cracked walls (in every world: the Ice Age's grotto, Egypt's tomb, Bethlehem's courtyard) and knocks knights' shields away."
                 : ability == Abilities.DeepDive   // Round 10
                 ? $"Everyone learned the {moveName}! Dan, Abi and Kira hold their breath three times as long and swim as deep as they like: the trench, the cave, and the deep water in every world (the Ice Age's lake, Egypt's Nile, Bethlehem's well, the Medieval moat)."
+                : ability == Abilities.WallJump   // Round 11
+                ? $"{hero.Stats.displayName} learned the {moveName}! Jump at a wall, then press {Controls.Btn(Controls.Act.Jump)} as she touches it: off it and up. Bounce up narrow chimneys and alleys (here, and the Medieval village's chimney, the Ice Age's glacier chimneys)."
                 : ability == Abilities.Pounce   // Round 7
                 ? $"{hero.Stats.displayName} learned the {moveName}! On the ground, press {Controls.Btn(Controls.Act.Dive)}: she crouches, aims with the stick, and leaps far. Wide gaps everywhere are in reach now (Egypt's rooftops too)."
                 : $"{hero.Stats.displayName} learned the {moveName}! Jump, then press {Controls.Btn(Controls.Act.Dive)}. It breaks cracked ice and stuns enemies.", 7f);

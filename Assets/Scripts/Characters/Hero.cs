@@ -70,6 +70,8 @@ namespace ShardsOfTime
             // Round 7: Bethlehem's clothes until their models are in: Egypt's (simple robes), not the home pyjamas
             if (!CharacterModel.Exists(model) && outfit == Outfits.Bethlehem) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Egypt;
             if (!CharacterModel.Exists(model) && outfit == Outfits.Pirate) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Medieval;   // Round 10: until the pirate models are in
+            if (!CharacterModel.Exists(model) && outfit == Outfits.Steampunk) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Pirate;   // Round 11: until the steampunk models are in
+            if (!CharacterModel.Exists(model) && outfit == Outfits.Steampunk) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Medieval;
             if (!CharacterModel.Exists(model) && IsMuscleMan) model = "muscleman_medieval";   // Round 8: Muscle Man has one outfit, every world
             if (Model && Model.name == "Model " + model) { Outfit = outfit; return; }
             if (!CharacterModel.Exists(model)) { if (Outfit == null) PlayLog.Line($"{Stats.displayName}: no model {model}, graybox"); Outfit = outfit; return; }
@@ -94,7 +96,7 @@ namespace ShardsOfTime
             if (!f || (Form && Form.id == f.id)) return;
             Form = f;
             if (Model) { Destroy(Model); Model = null; Anim = null; }
-            Model = CharacterModel.Build(f.model, Body, Motor);
+            Model = CharacterModel.Build(CharacterModel.Exists(f.model) ? f.model : "kira", Body, Motor);   // Round 11: a form whose model isn't in yet: home Kira
             Anim = Model ? Model.GetComponent<CreatureAnimator>() : null;
             Graybox.gameObject.SetActive(!Model);
             if (Motor) Motor.CanGlide = HasAbility(Abilities.Glide);   // Round 8: dragon Kira's wings
@@ -254,5 +256,5 @@ namespace ShardsOfTime
     }
 
     // Dan's and Abi's outfits (Round 3): AreaData.outfit names one per area
-    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval", Pirate = "pirate"; }
+    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval", Pirate = "pirate", Steampunk = "steampunk"; }
 }

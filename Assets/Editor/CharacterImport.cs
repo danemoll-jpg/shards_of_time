@@ -25,7 +25,7 @@ namespace ShardsOfTime
         public static readonly string[] Creatures = { "wolf", "snow_critter", "mammoth", "camel", "guardian", "goat", "sheep", "guard_dog", "rat", "horse" };   // Round 6: Egypt's camel and temple guardian; Round 7: Bethlehem's animals; Round 8: the dungeon rat, the wagon pony
         static bool IsGeneric(string path) { string n = Path.GetFileNameWithoutExtension(path); return n.StartsWith("kira") || System.Array.IndexOf(Creatures, n) >= 0; }
         public static bool IsPerson(string name) => name.StartsWith("dan_") || name.StartsWith("abi_") || name.StartsWith("violinist_") || name == "mummy" || name.StartsWith("wiseman_") || name == "watchman"
-            || name.StartsWith("muscleman_") || name == "knight" || name == "archer" || name == "wagon_driver" || name == "pirate";   // Fix 10.1: the deckhand (it was Generic: a T-pose)   // Round 8: the Medieval people (Mixamo)   // Round 7: the Wise Men and the watchman (Mixamo)   // Round 6: the Egypt Violinist and the mummy (Mixamo)
+            || name.StartsWith("muscleman_") || name == "knight" || name == "archer" || name == "wagon_driver" || name == "pirate" || name == "factory_worker";   // Round 11: the factory worker (Mixamo)   // Fix 10.1: the deckhand (it was Generic: a T-pose)   // Round 8: the Medieval people (Mixamo)   // Round 7: the Wise Men and the watchman (Mixamo)   // Round 6: the Egypt Violinist and the mummy (Mixamo)
         static bool IsClip(string path) => path.Replace('\\', '/').StartsWith(Dir + "/Clips/");
 
         // The people's clips (Round 3; frames as Blender / Mixamo number them, 30 fps; 0 = the whole take). loop; the vertical

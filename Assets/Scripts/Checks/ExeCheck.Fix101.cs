@@ -122,7 +122,7 @@ namespace ShardsOfTime
                 var wd = WorldData.Load(wid);
                 foreach (var a in wd.areas) { var r = wd.RequirementReport(a.id); Ok(r.ok, r.detail.Split(new[] { "; gates:" }, System.StringSplitOptions.None)[0]); }
             }
-            Head("Fix 10.1, item 6: the minimum player from New game to the Pirate Seas' green shard");
+            Head("Fix 10.1, item 6 / Round 11: the minimum player from New game to Steampunk's teal shard");
             yield return WaitFor(() => Game.I.State == Game.Mode.Title, 10f);
             if (SaveGame.Exists) { Log("  (a save was there: starting over)"); }
             Game.I.StartGame(true);
@@ -152,6 +152,21 @@ namespace ShardsOfTime
             var steam = VortexDoor.All.FirstOrDefault(d => d.info.id == "Steampunk");
             Ok(steam && !steam.Blocked, "the Victorian Steampunk path is open");
             yield return Shot("min_done_vortex");
+            // Round 11: on into Victorian Steampunk: the arrival (skipped), the belt run (the bot rides it), the press (skipped), 25 more, the clock
+            yield return TakePath("Steampunk", "to Victorian Steampunk");
+            yield return WaitFor(() => Steampunk.BeltRunning, 10f);
+            Ok(Steampunk.BeltRunning, "on the belt after the arrival");
+            yield return BeltRunBot(false); yield return UntilFree(40f);
+            Ok(Steampunk.PressGone && Game.Playing, "past the press (MuscleManHero skipped with the pad): the factory is free");
+            yield return MinimumHere("Steampunk");
+            Ok(SaveGame.Current.Total == 150, $"the minimum player wakes Steampunk's necklace at {SaveGame.Current.Total} shards in all (6 x 25)");
+            Health.Refill(); Tp(Steampunk.ClockAt + new Vector3(0, .1f, -3.6f), 0);
+            yield return WaitFor(() => Game.I.Busy || Game.InCutscene, 4f); yield return UntilFree(60f);
+            yield return WaitFor(() => Vortex.Inside(Player.transform.position), 6f);
+            Ok(SaveGame.Current.World(WorldData.Steampunk).storyShard && Vortex.Inside(Player.transform.position), $"the teal shard (ClockShard), in the vortex ({SaveGame.Current.StoryShards} story shards)");
+            var tl = VortexDoor.All.FirstOrDefault(d => d.info.id == "Tomorrowland");
+            Ok(tl && !tl.Blocked, "the Tomorrowland path is open (to be continued)");
+            yield return Shot("min_done_steampunk");
             Log($"  Theater after the run: [{string.Join(", ", SaveGame.Current.seen)}]");
         }
 
@@ -241,7 +256,7 @@ namespace ShardsOfTime
             yield return EnsurePlaying(false);
             if (!P.Companion) P.AddCompanion(Player.transform.position + Vector3.back * 3f, Quaternion.identity);
             var rest = new Dictionary<string, string>(); var seen = new Dictionary<string, int>();
-            foreach (var (wid, cp) in new[] { (WorldData.IceAge, "IA-vortex"), (WorldData.Egypt, Egypt.VortexCp), (WorldData.Bethlehem, Bethlehem.VortexCp), (WorldData.Medieval, Medieval.VortexCp), (WorldData.Pirate, Pirate.VortexCp) })
+            foreach (var (wid, cp) in new[] { (WorldData.IceAge, "IA-vortex"), (WorldData.Egypt, Egypt.VortexCp), (WorldData.Bethlehem, Bethlehem.VortexCp), (WorldData.Medieval, Medieval.VortexCp), (WorldData.Pirate, Pirate.VortexCp), (WorldData.Steampunk, Steampunk.FactoryCp) })
             {
                 SaveGame.Current.checkpoint = cp;
                 if (Game.World.worldId != wid) yield return ToWorld(wid, cp);
@@ -330,9 +345,30 @@ namespace ShardsOfTime
         }
 
         // ---------------------------------------------------------------- the Theater on the title screen
+        // Round 11, item 0: several scenes in a row. The save's world is made "ready but asleep" (the necklace could wake: what Dan's
+        // save had when the Theater stopped answering after one scene); three scenes from the title, then Continue, then two from pause.
+        IEnumerator TheaterPick(int worldRow, int sceneRow, string label)
+        {
+            var page = Menu.I.Current;
+            while (Menu.I.Current.sel != worldRow) { yield return Press(GamepadButton.DpadDown); yield return Wait(.12f); }
+            string wname = page.rows[worldRow].label;
+            yield return Press(GamepadButton.South); yield return Wait(.3f);
+            var sp = Menu.I.Current; int n = sp.rows.Count - 1;   // the last row is Back
+            int row = Mathf.Min(sceneRow, n - 1);
+            while (Menu.I.Current.sel != row) { yield return Press(GamepadButton.DpadDown); yield return Wait(.12f); }
+            string want = sp.rows[row].label;
+            int t0 = Game.I.TheaterPlays;
+            yield return Press(GamepadButton.South);
+            yield return WaitFor(() => Game.InCutscene, 10f);
+            string playing = Cutscenes.Playing;
+            Ok(Game.I.TheaterPlays > t0 && playing != null, $"{label}: {wname} > {want}: it plays ({playing ?? "nothing"}; busy before the pick: {(Game.I.TheaterPlays > t0 ? "no" : "?")})");
+            yield return Wait(2.5f); yield return Shot("theater_" + label.Replace(" ", "_"));
+            yield return Hold(GamepadButton.South, 1.3f);
+        }
+
         IEnumerator TheaterTitle()
         {
-            Head("Fix 10.1, item 5: the title screen's Theater");
+            Head("Fix 10.1 / Round 11 item 0: the Theater, several scenes in a row");
             yield return WaitFor(() => Game.I.State == Game.Mode.Title, 10f); yield return Wait(1f);
             var args = System.Environment.GetCommandLineArgs(); int ai = System.Array.IndexOf(args, "-oldSave");
             if (ai >= 0 && ai + 1 < args.Length && System.IO.File.Exists(args[ai + 1]))
@@ -341,6 +377,10 @@ namespace ShardsOfTime
                 System.IO.File.Copy(args[ai + 1], SaveGame.FilePath, true); SaveGame.Load(); Game.I.ToTitle(); yield return Wait(.5f);
                 var sv = SaveGame.Current;
                 Ok(sv.seen.Contains("ActOne") && sv.seen.Contains("EgyptArrival") && sv.seen.Contains("VortexOpensEgypt") && !sv.seen.Contains("BethlehemArrival"), $"an old save (0.6.0, after Egypt) fills in what it has seen: [{string.Join(", ", sv.seen)}]");
+                // the save's world: its necklace ready to wake but asleep (the state that stuck the Theater)
+                var wp = sv.World(sv.currentWorld); wp.necklaceAwake = false; wp.storyShard = false; SaveGame.Save("check: ready but asleep");
+                var wd = WorldData.Load(sv.currentWorld);
+                Log($"  the save's world {sv.currentWorld}: necklace asleep with {sv.Total} in all and {wp.shards.Count} from here (threshold {wd.areas[0].requirement} / {wd.areas[0].fromHere})");
             }
             var page = Menu.I.Current; int row = page.rows.FindIndex(r => r.label == "Theater");
             Ok(row >= 0, $"the title offers: {string.Join(" / ", page.rows.Select(r => r.label + (r.enabled != null && !r.enabled() ? " (grey)" : "")))}; seen {SaveGame.Current.seen.Count}");
@@ -349,13 +389,36 @@ namespace ShardsOfTime
             yield return Press(GamepadButton.South); yield return Wait(.3f);
             Log($"  Theater: {string.Join(" / ", Menu.I.Current.rows.Select(r => r.label))}");
             yield return Shot("theater_title");
-            yield return Press(GamepadButton.South); yield return Wait(.3f);
+            int worlds = Menu.I.Current.rows.Count - 1;
+            // three in a row from the title, each from a different place in the list
+            var picks = new[] { (0, 1, "title 1"), (Mathf.Min(1, worlds - 1), 0, "title 2"), (0, 2, "title 3") };
+            foreach (var (w, sc, label) in picks)
+            {
+                yield return TheaterPick(w, sc, label);
+                yield return WaitFor(() => Game.I.State == Game.Mode.Title && !Game.InCutscene && Menu.I.Current != null && Menu.I.Current.title == "Theater", 20f); yield return Wait(.6f);
+                Ok(Game.I.State == Game.Mode.Title && Menu.I.Current.title == "Theater" && !Game.I.Busy, $"{label}: skipped, back on the title's Theater page (busy {Game.I.Busy})");
+            }
+            // then into the game, and two in a row from the pause menu
+            yield return Press(GamepadButton.East); yield return Wait(.3f);
+            page = Menu.I.Current; row = page.rows.FindIndex(r => r.label == "Continue");
+            while (Menu.I.Current.sel != row) { yield return Press(GamepadButton.DpadUp); yield return Wait(.12f); }
             yield return Press(GamepadButton.South);
-            yield return WaitFor(() => Game.InCutscene, 8f); string n = Cutscenes.Playing;
-            yield return Wait(2f); yield return Shot("theater_title_playing");
-            yield return Hold(GamepadButton.South, 1.3f);
-            yield return WaitFor(() => Game.I.State == Game.Mode.Title && !Game.InCutscene, 15f); yield return Wait(.5f);
-            Ok(n != null && Game.I.State == Game.Mode.Title && Menu.I.Current.title == "Theater", $"played {n}, skipped, back on the title's Theater page");
+            yield return WaitFor(() => Game.Playing, 15f); yield return Wait(1f);
+            int wakes = 0; float end = Time.time + 40f;
+            while (Time.time < end && (Game.I.Busy || Game.InCutscene)) { if (Game.InCutscene) { wakes++; Log($"  (on Continue: {Cutscenes.Playing})"); yield return Wait(.5f); yield return Hold(GamepadButton.South, 1.3f); yield return WaitFor(() => !Game.InCutscene, 4f); } yield return null; }
+            yield return Wait(1f);
+            Ok(wakes <= 1 && Game.Playing && !Game.I.Busy, $"Continue: in {Game.World.worldId}, {wakes} story scene(s) on the way in (the wake once, never twice)");
+            for (int k = 0; k < 2; k++)
+            {
+                var spot = Player.transform.position;
+                yield return PauseRow("Theater");
+                Ok(Menu.I.Current.title == "Theater", $"pause {k + 1}: the Theater lists {string.Join(" / ", Menu.I.Current.rows.Select(r => r.label))}");
+                yield return TheaterPick(0, k == 0 ? 1 : 3, "pause " + (k + 1));
+                yield return WaitFor(() => !Game.InCutscene && Game.Playing && !Game.I.Busy, 20f); yield return Wait(1f);
+                float d = Vector3.Distance(Player.transform.position, spot);
+                Ok(Game.Playing && !Game.I.Busy && d < 1.5f, $"pause {k + 1}: back in play where they stood ({d:0.0} m)");
+            }
+            Ok(Game.I.TheaterPlays >= 5, $"{Game.I.TheaterPlays} Theater plays in one run");
         }
     }
 }
