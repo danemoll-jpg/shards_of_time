@@ -96,11 +96,12 @@ Notes:
   and robot cat replace them.
 - Dan's necklace shard pulses near shards: an in-fiction shard detector.
 - Muscle Man is in the party from Medieval through the Moon, then leaves.
-- Steampunk → Tomorrowland happens by reality changing, not a vortex.
+- **Steampunk and Tomorrowland are two separate levels, each ending in a vortex like every other world** (Dan, 2026-11-12). This changes the film, where the teal shard changes reality instead of opening a vortex.
 - Series canon worth using: Dan has time-echo visions when touching temporal
   artifacts (fits the Memory Fragments collectible); the Violinist never
   explains himself; comedy is situational, never quippy; minimal dialogue.
 
 ## Open (recommended defaults in brackets)
-- Tomorrowland has no story shard in the film [the rocket plays that role:
-  the shard count fuels it/opens the launch gate].
+- Tomorrowland has no story shard in the film, but now needs one to open its
+  vortex [a game-only shard; the rocket launches and flies into the vortex in
+  space, which leads to the Moon].

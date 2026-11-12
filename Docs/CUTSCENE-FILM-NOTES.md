@@ -91,6 +91,27 @@ look. Outfits follow the game's concept sheets, not the clips.
 - 95–110: he lies flat on the deck in the green light, then sits up grinning.
 - 110–117: Abi laughing; Dan with the **green** shard on his necklace.
 
+## 06-Steampunk_Arrival.mp4 (25 s)
+- 0–14 s: night exterior of a steampunk industrial city (domes, chimneys, pipes, lit windows), a giant brass gear
+  wheel in the foreground puffing steam. A teal ribbon streaks across the sky and winds into a big flat teal spiral
+  vortex above the factory.
+- 14–18 s: pushes in over the domes toward the factory.
+- 18–25 s: inside, a gear wall with a chain conveyor and steam vents above a copper bucket full of bolts. The four
+  (Abi, Dan, Muscle Man, mechanical Kira) drop out of the vortex onto the chain line with arms up, then land in the
+  bolt bucket, which a press arm lifts and carries along the chain. (Stills: `Worlds/06-Steampunk/bucket-arrival.png`,
+  `bolt-bucket.png`.)
+
+## 06-Steampunk_MuscleManHero.mp4 (12 s)
+- 0–7 s: the bucket has tipped them onto a blue-roller conveyor. Abi, Dan and Kira tumble along it, flat on their
+  bellies; Dan and Abi cover their heads; Muscle Man falls in behind.
+- 7–10 s: the big brass dome press comes down over the belt. Muscle Man stands under it and holds it up with both arms;
+  alarms flash red, cables snap, sparks.
+- 10–12 s: he heaves it off: the press dome flies through the factory wall and window, glass bursting, the hall full
+  of dust and smoke (`factory-broken-wall.png`). This is his real hero moment (he finally saves Dan, not the reverse).
+
+Note: the film's city exterior is night; the street stills are daytime. The game can do the factory at night and the
+streets at dawn/day after the escape.
+
 ## What the game should change (for the cutscene redo round)
 1. `ActOne`: follow the clip: decorating together, Dan fumbles the bauble, the glow / crack / shard burst, the
    rainbow spiral, holding hands, then the fall from the blue vortex over the Ice Age.

@@ -303,3 +303,20 @@ Suno prompt (instrumental):
 
 Style tags: `christmas, gentle, cozy, music box, celesta, sleigh bells, magical, whimsical, harp, swell, instrumental`.
 Exclude: `epic, orchestral, cinematic, dramatic, dark, drums, rock, vocals, whistling`.
+
+## Victorian Steampunk theme (Suno, for Dan) — planning chat, 2026-11-12
+
+Plays in the factory and the streets of steampunk London. Whimsical and cartoony, its own palette: tuba and brass band,
+ticking clockwork percussion, music box, honky-tonk piano and accordion. About 3:00, loops. Save as
+`Assets/Resources/Music/steampunk.mp3`.
+
+Suno prompt (instrumental):
+
+> Whimsical, bouncy cartoon music for a funny animated adventure in a steampunk Victorian city full of gears, steam and
+> clockwork machines. A cheeky oompah tuba bass line and a playful brass band melody, ticking clockwork percussion,
+> ratchets, little anvil hits and puffs of steam as rhythm, a twinkling music box, a bright honky-tonk piano and a
+> jaunty accordion. Lively and mischievous, like clever machines dancing, with a short tick-tock breakdown before the
+> main tune comes back. Light and silly, never serious or epic. No vocals.
+
+Style tags: `whimsical, cartoony, steampunk, playful, bouncy, oompah, tuba, brass band, music box, clockwork, ticking, honky-tonk piano, accordion, instrumental`.
+Exclude: `epic, orchestral, cinematic, dramatic, dark, serious, industrial, metal, rock, vocals, whistling`.

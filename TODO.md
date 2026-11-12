@@ -24,8 +24,84 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round: none. Fix 10.1 is delivered (below); the next round is for the planning chat to write.
-Fix 10.1's plan is in `TODO-ARCHIVE.md`.
+Current round — Round 11: Victorian Steampunk (target 0.11.0)
+Fix 10.1 is delivered (below). Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice,
+Dan can overrule after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a
+window in front of Dan); rule 12 (never stuck), the Fix 8.1 floor / platform / reach checks, the Fix 10.1 minimum-player
+check and T-pose sweep apply. Don't end your turn until 0.11.0 is published unless truly blocked (say so).
+
+**Dan's decisions (2026-11-12):** Steampunk and Tomorrowland are **two separate worlds, each ending in a vortex** (the
+film's "reality changes" is dropped; `Docs/Design/design-decisions.md`). The cutscenes stay as they are for now (no
+quality pass, no film clips in game); focus on the game.
+
+**Inputs, all in (Dan, 2026-11-12):** the 10 concept sheets S1–S10 in `SourceArt/Concepts/` (`dan_steampunk`,
+`abi_steampunk`, `muscleman_steampunk`, `kira_mechanical`, `violinist_steampunk`, `factory_worker`, `clockwork_horse`,
+`steam_carriage`, `street_clock`, `steam_press`), film art in `SourceArt/Reference/Worlds/06-Steampunk/` and
+`Characters/*/…steampunk…`, `Kira/kira-mechanical-film.png`, two clips `Clips/06-Steampunk_Arrival.mp4` (25 s) and
+`Clips/06-Steampunk_MuscleManHero.mp4` (12 s) with notes in `Docs/CUTSCENE-FILM-NOTES.md`, and the song
+`Music/steampunk.mp3` (2:59). Notes on the sheets: Abi has a thin necklace and fishnet stockings (fine, keep them; it's
+not Dan's shard necklace); Muscle Man grins with teeth (fine, as before); the street clock has an empty gear socket in
+its face for the teal shard; mechanical Kira passes the lock (folded ears, gunmetal, amber eyes, no white).
+
+0. **The Theater bug first (Dan):** the Theater plays one scene, then refuses to play another until the game is
+   restarted. Fix it (state left over after the first scene?) and add to the `theater` check: play three scenes in a row
+   from the title and two from the pause menu, each one actually playing.
+1. **Mixamo first (Dan wants it early):** Meshy → clean-up (closed meshes) → Mixamo upload files for `dan_steampunk`,
+   `abi_steampunk`, `muscleman_steampunk`, `violinist_steampunk`, `factory_worker`, then **stop at once and tell Dan
+   exactly what to upload and download** (shared clips reused; Muscle Man needs holding something heavy overhead and a
+   big throw for the press, and lifting someone up for the clock; ask only for what isn't already in his folders).
+   Then carry on with everything else in the same turn; import Dan's rigs when they arrive. (Still open from Round 10:
+   Muscle Man's Drowning / Getting Up / Jumping Down: remind Dan in the same list.)
+2. **The other models:** mechanical Kira (Code's rig, no ear bones, Kira lock check), the clockwork horse (Code's
+   rig: walk, idle, head toss, steam puff), the steam carriage, the street clock, the steam press (top plate moves; can
+   break apart for the scene). Props by script: the factory hall (conveyors with blue rollers, the bolt bucket on its
+   chain line, gear walls, chains, pipes, steam vents, small stampers, control panels, catwalks, the wall the press
+   breaks through), the city (cobbles with rail tracks, red brick and cream buildings, gear doors and the great gear
+   gate, teal lamp posts, chimneys, rooftops, barrels), the teal gear story shard, the steampunk violin (gears set in,
+   its own playing clip).
+3. **Two areas (DEFAULT):** **the factory at night** (blue-violet haze, warm brass lamps, red alarm light while the
+   press runs) and **the streets of steampunk London by day** (warm golden morning, red brick, teal lamps, steam),
+   about 30 shards each, the same song (`steampunk.mp3`). One world for the vortex and the story shard. The hole the
+   press smashes is the way from the factory to the streets (and back).
+4. **`SteampunkArrival`** (from Dan's clip): night over the factory city, a giant brass gear puffing steam, a teal
+   streak winding into a flat teal spiral vortex; push in over the domes; inside, the four drop onto the chain line and
+   land in the copper bolt bucket, which is carried along and tips them onto a blue-roller conveyor. Side-by-side sheet
+   against the clip as in Round 9.
+5. **The belt run, then `MuscleManHero`** (from Dan's second clip): a short playable stretch on the moving conveyor
+   (30–40 s: run against the belt, hop small stampers and steam jets; it can't be escaped, it carries you to the great
+   press; no damage that sends you back, falling off just puts you back on). Then the scene: Dan, Abi and Kira flat on
+   the belt, covering their heads, the dome press coming down; Muscle Man stands under it and holds it up, red alarms,
+   snapping cables, sparks; he heaves it off and it smashes out through the wall and window. This is his hero moment
+   (he saves Dan this time). Then the factory is free to explore (the press gone, steam everywhere), and the streets lie
+   through the hole.
+6. **Mechanical Kira (DEFAULT):** a) **wind-up**: she stands on gear sockets (brass plates) and powers machines: lifts,
+   moving catwalks, gear doors, a carriage turntable; b) **magnet paws**: she walks up iron beams and pillars marked
+   with rivet strips. Both open shards in both areas.
+7. **New move: Abi's wall jump**, taught by the Violinist as a street musician with the steampunk violin (on a corner
+   of the main square). Jump into a wall, jump again off it; chimneys and narrow alleys here. Opens the earlier worlds'
+   wall-jump gates (the Medieval village chimney and any others): check one.
+8. **Muscle Man the companion:** jobs here: bends bars and pipes aside, lifts heavy machinery and crates, holds a
+   stamper up while the others pass, boosts Dan. Comic beat in the streets (DEFAULT): he tries to pet a clockwork horse
+   and it puffs steam in his face.
+9. **Enemies:** goofy factory workers (chase on their own floor; slip on oil patches or get a face of steam: harmless
+   for a moment). Hazards: stampers, steam jets, moving carriages on the rails (a bump, not a kill; their roofs are
+   moving platforms: the Fix 8.1 moving-platform check applies). Clockwork horses are friendly. No boss (DEFAULT).
+10. **Shards (Fix 10.1 rule):** about 60 (30 + 30) + 2 hearts; threshold **150** (Pirate Seas 125 + 25) and at least
+   15 from here; the minimum-player simulation and the `minplayer` check extended to this world. Report the numbers.
+11. **The finale (film):** the necklace wakes and leads to the great street clock in the main square; the teal gear
+   shard sits in its face, too high to reach; `ClockShard` (new, skippable): Kira spots it, Muscle Man proudly lifts Dan
+   up, Dan takes it; **then the teal vortex opens (the game's change)** and takes all four → the vortex space
+   (Home: 6 of 8; the Tomorrowland path "to be continued").
+12. **Look:** as in 3. Frame rate checked on both settings (steam particles and the factory's many moving parts are
+   the risk).
+13. **Sound:** ElevenLabs: factory clanks, the chain line, the bolt bucket's rattle and tip, conveyor rollers, the
+   press's thump and groan, alarms, cables snapping, the wall smash, steam hiss, gears ticking, the clock's chime,
+   clockwork horse hooves and puffs, carriage rolling, workers' grumbles, Kira's metal steps and wind-up whirr, the
+   violin tune; Muscle Man's grunts and laughs reused. No music made by Code.
+14. Build, check (a full run: … Pirate Seas → vortex → Steampunk → arrival → belt run → the press → the factory → the
+   streets → the necklace → the clock → vortex; plus a wall-jump gate in an earlier world; rule 12 stuck check here;
+   T-pose sweep incl. the new people), publish 0.11.0, update `TODO.md` / `CLAUDE.md`, clean up.
+
 
 ---------------------------------------------------------------------------
 Last deliveries

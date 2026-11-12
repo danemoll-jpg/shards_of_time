@@ -1,5 +1,101 @@
 # Shards of Time — models needed
 
+## Round 11 (2026-11-12): Victorian Steampunk — images needed from Dan (prompts by the planning chat)
+
+Film art: `SourceArt/Reference/Characters/*/…-steampunk-film.png`, `Kira/kira-mechanical-film.png`,
+`Violinist/violinist-steampunk-violin-film.png`, `Others/steampunk-lineup-greenscreen.png`, the world in
+`Worlds/06-Steampunk/` (factory: bolt bucket, conveyor, dome press, press frame with workers, broken wall; street:
+cobbles with rail tracks, brick and cream buildings, gear doors and the gear gate, copper clockwork horses, brass steam
+carriage, teal lamps). Concept sheets override film stills (Abi keeps her brown hair and green eyes; the Violinist stays
+the older gray-haired man; Kira's ears stay folded even where a film frame shows them up). Same rules and negative
+prompt as before. People: front view, A-pose, empty hands. Animals: strict side profile. Save in `SourceArt/Concepts/`.
+
+### S1. Dan, steampunk — `dan_steampunk.png`
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead.
+> Steampunk clothes: a long open reddish-brown leather coat reaching below the knees, decorated with small copper and
+> brass gears, sleeves rolled up to the forearms with buckled straps; a dark charcoal shirt with a faint gear pattern;
+> a brown leather belt with a brass buckle; dark trousers; laced brown leather boots with brass trim. No necklace or
+> pendant. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### S2. Abi, steampunk — `abi_steampunk.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair,
+> green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not
+> touching the body, feet shoulder-width apart, mouth closed with a confident smile, hair falling behind her shoulders.
+> A steampunk adventurer outfit: brass aviator goggles pushed up on her head, small earrings, a laced brown leather
+> corset top with thin straps, leather arm bands, a layered jagged brown skirt with a belt decorated with small copper
+> gears, black fingerless gloves, tall brown leather boots with brass buckles and gear details. Plain light gray
+> background, soft even light, no shadow, whole body in frame.
+
+### S3. Muscle Man, steampunk — `muscleman_steampunk.png`
+> Pixar-style 3D character render of Muscle Man, the same huge, extremely muscular, cheerful man as in his other
+> character sheets (brown hair swept back into a small ponytail, a short brown beard). Full body, front view, A-pose:
+> arms about 45 degrees out from the body, hands open and not touching the body, feet shoulder-width apart, mouth
+> closed in a big grin. A steampunk strongman-worker outfit: a riveted dark leather sleeveless vest decorated with
+> copper gears, riveted copper shoulder armor, brown leather straps over the shoulders, a wide belt with a big copper
+> gear buckle, worn dark brown trousers with patched knees, tall cuffed brown boots. Plain light gray background, soft
+> even light, no shadow, whole body in frame.
+
+### S4. Kira, mechanical cat — `kira_mechanical.png`
+> Pixar-style 3D render of Kira, a tiny Scottish Fold kitten transformed into a cute clockwork mechanical cat made of
+> polished gunmetal-gray metal. Full body, strict side profile: the whole body and the head seen exactly from the side,
+> head level and in line with the body, nose pointing at the left edge of the image, only one eye visible, not looking
+> at the camera. Standing on four slim jointed metal legs with round metal paws, a sleek segmented metal body with small
+> brass rivets and a few little brass gears at the hip, a long curved metal tail. A round cat face with a small nose
+> and whiskers, folded-down metal ears that lie flat and forward, never raised. Every surface is gunmetal gray or brass,
+> with absolutely no white anywhere. Golden-amber eyes. Mouth closed. Plain light gray background, soft even light, no
+> shadow, whole body in frame with every paw and the tail visible.
+
+### S5. The Violinist, steampunk — `violinist_steampunk.png`
+> Pixar-style 3D character render of the Violinist, the same older gray-haired, gray-bearded man as in his other
+> character sheets (same face and hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands
+> open and not touching the body, feet shoulder-width apart, mouth closed with a calm knowing smile. A steampunk street
+> musician outfit: brass aviator goggles pushed up on his forehead, a loose cream shirt with rolled sleeves, a worn
+> dark brown vest with brass buttons, a colorful patchwork sash at the waist under a leather belt, faded brown and cream
+> striped trousers, a beaded bracelet, tall brown boots. Holding nothing (no instrument). Plain light gray background,
+> soft even light, no shadow, whole body in frame.
+
+### S6. Factory worker (enemy) — `factory_worker.png`
+> Pixar-style 3D character render of a goofy cartoon factory worker for a family video game, not scary: big and burly
+> with a round belly, a brown leather cap with a little brass knob on top, a sleeveless gray work vest, brown leather
+> straps crossed over the chest, one dented metal shoulder pad, a wide belt, baggy brown trousers, heavy boots, a
+> bushy mustache. Full body, front view, A-pose: arms about 45 degrees out, hands open and empty, feet apart, mouth
+> closed, a grumpy frown. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### S7. Clockwork horse — `clockwork_horse.png`
+> Pixar-style 3D render of a friendly cartoon clockwork horse made of polished copper plates and brass gears, with
+> visible rivets, a small brass chimney on its back puffing a little steam, a short dark mane and tail, and a leather
+> harness. Strict side profile: the whole body and the head seen exactly from the side, head level and in line with
+> the neck, only one eye visible, not looking at the camera, standing still on four straight legs. Plain light gray
+> background, soft even light, no shadow, whole body in frame with all four hooves visible.
+
+### S8. Brass steam carriage — `steam_carriage.png`
+> 3D render of a cartoon Victorian steampunk carriage made of shiny brass and gold, with large spoked wheels, big glass
+> windows, a rounded roof with a small copper chimney, rivets and gear details, no horse attached, no people. Three-
+> quarter view from the front left, the whole carriage in frame. Plain light gray background, soft even light, no
+> shadow.
+
+### S9. The great street clock — `street_clock.png`
+> 3D render of a tall cartoon Victorian steampunk street clock: a dark green cast-iron column with ornate bands, topped
+> by a big round four-sided brass clock head with a cream clock face, black hands and Roman numerals, visible brass
+> gears turning behind glass, teal glass lamps at the corners, and an empty round gear-shaped socket in the middle of
+> the face. Front view, standing upright, the whole clock from base to top in frame. Plain light gray background, soft
+> even light, no shadow.
+
+### S10. The steam press — `steam_press.png`
+> 3D render of a huge cartoon steampunk factory press machine: a giant rounded brass dome on top with big bolts,
+> heavy dark iron rings and a wide flat press plate underneath, on two thick iron pillars with chains and pipes, a
+> small brass control panel with dials and red buttons beside it. Front view, the whole machine in frame. Plain light
+> gray background, soft even light, no shadow.
+
+Built by Code, no image: the factory hall (conveyor belts with blue rollers, the bolt bucket, gear walls, chains, pipes,
+steam vents, control panels, the wall the press breaks through), the city streets (cobbles, rail tracks, brick and
+cream buildings, gear doors and the gear gate, teal lamp posts, barrels), the teal gear story shard, the steampunk
+violin (brass gears set into the body).
+Mixamo after Meshy: `dan_steampunk`, `abi_steampunk`, `muscleman_steampunk`, `violinist_steampunk`,
+`factory_worker`. Mechanical Kira and the clockwork horse are Code's rigs (no Mixamo).
+
 ## Round 10 (2026-11-11): Mixamo for the Pirate Seas — rigs DONE (same night); 3 Muscle Man clips still open
 
 **In:** all five T-poses (Dan 41 bones, Abi 65, Muscle Man 41, the Violinist 65, the deckhand 49); renders `Data/screenshots/round10/mixamo/`;
