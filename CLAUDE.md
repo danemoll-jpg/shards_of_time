@@ -62,7 +62,7 @@ Design sources (read these when a round touches story, worlds or characters):
    many small shards per world, but the player has **one total** across all worlds (every small shard ever
    collected, never spent), plus one colored story shard per world. Each world's necklace wakes when **both**
    are true: the **total** reaches that world's threshold = **the previous world's + 25** (Ice Age 25, Egypt 50,
-   Bethlehem 75, Medieval 100, Pirate Seas 125, next 150 ...), **and** at least **15 shards from this world**
+   Bethlehem 75, Medieval 100, Pirate Seas 125, Steampunk 150, next 175 ...), **and** at least **15 shards from this world**
    (`AreaData.fromHere`). A minimum player needs exactly 25 per world, always from shards reachable before that
    world's necklace wakes; rule 2's report proves it for the minimum player and the completionist. A world that
    is already awake never relocks. Once the first vortex is open, **Pause > Return to the vortex** works in every
@@ -224,7 +224,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 10.1: `minplayer` (the minimum player from New game to the Pirate Seas' green shard, with Pause > Return to the vortex and Pause > Theater mid-Pirate, ~25 min, `--minutes 60`), `tpose` (every animated character in every world and every cutscene vs its bind pose), `sails` (the see-through sails view), `theater` (the title's Theater; with `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"` it also proves an old save fills in what it has seen), `fix101` = minplayer + tpose + sails. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 10.1: `minplayer` (the minimum player from New game to the Pirate Seas' green shard, with Pause > Return to the vortex and Pause > Theater mid-Pirate, ~25 min, `--minutes 60`), `tpose` (every animated character in every world and every cutscene vs its bind pose), `sails` (the see-through sails view), `theater` (the title's Theater; with `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"` it also proves an old save fills in what it has seen), `fix101` = minplayer + tpose + sails. Round 11: `steampunk` (from the vortex with five worlds done to the teal shard, ~12 min, `--minutes 30`), `stucksteam`, `fix81steam`, `perfsteam`, `steamdiag`, `walljump`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 10.1: `game-1001`, previous `Builds/LauncherRelease-1001`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 11: `game-1100`, previous `Builds/LauncherRelease-1100`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,41 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 11 delivered: 0.11.0 (build 1100), 2026-11-12.** Victorian Steampunk, the sixth world: the factory at night (the arrival in the
+bolt bucket, the belt run, `MuscleManHero`, then catwalks, wind-up machines, riveted pillars, Muscle Man's jobs, workers) and the streets by day
+(the avenue, the square with the great clock, carriages, clockwork horses, the gear gate); mechanical Kira (wind-up, magnet paws), Abi's wall jump,
+`ClockShard` and the teal vortex; the Theater bug fixed. 60 shards / threshold 150. Published: `game-1100`. Report and "For Dan to check": `TODO.md`.
+**Waiting on Dan:** the steampunk rigs (Dan, Abi, Muscle Man) + Muscle Man's clips; Meshy or Tripo API credits for the Violinist, the worker,
+mechanical Kira, the clockwork horse, the carriage, the clock, the press (stand-ins until then).
+
+Standing facts from Round 11:
+- Worlds: `Game.InSteampunk` (`WorldData.Steampunk` = "Steampunk"); `World/Steampunk.cs` builds it on flat ground at 0 (the factory hall x -36..36,
+  z 0..96, roof 18, the catwalk ring at 7 with stairs east (z 22 -> 10) and west (z 74 -> 86); the belt x -2..2, top 3.0, z 8..88; the press over
+  z 84; the north wall's hole x -5..5 at z 96; the yard z 96..112; the avenue z 112..176; the square x -40..40, z 178..222, the clock at (0, 200),
+  its gear at (0, 6.4, 198.75); the west street to x -100, the east street and the gear gate at x 70.5 to the clockmaker's yard x 72..98).
+  Pieces in `World/SteampunkWorld.cs` (Conveyor, Stamper, SteamJet, OilPatch, GearSocket + WindUpMachine: WindLift / WindBridge / WindGearDoor /
+  WindTurntable, MagnetPillar, BendJob, Carriage, ClockReach, HorseGag, HorseWalk, Spin). Props `Tools/Blender/steampunk_world.py` ->
+  `steampunk_terrain.fbx`, `steampunk_props.fbx`; colliders on the named parts in `Steampunk.SolidParts` (some part words name different things:
+  Gear, Pipe, Socket, Wheel, Trim; see the script's report). `Steampunk.asset` from `WorldData.SteampunkDefaults()`.
+- Story flow: the arrival (`SP-arrived`) -> `Steampunk.StartBeltRun` (also on Continue / a vortex return before the press) -> `Game.PressScene`
+  (`Steampunk.PrepareScene` hides the world's dome / patch / screens; `SP-press`; `Steampunk.SetPressGone`) -> the factory free -> the necklace ->
+  `ClockReach` -> `Game.ClockFinale` -> the vortex. The story pickup sits in the clock face, radius 0.01 (the necklace points at it).
+  `Look.SetNight` by z (< 96.6 = the factory); `Look.ApplyWorld` resets night when the world changes; `Music.SetAmbience` (factory / city).
+- Moves: `Abilities.WindUp`, `MagnetPaws` (`KiraForm.Mechanical`; a form whose model isn't in yet shows home Kira), `Abilities.WallJump` (Abi;
+  `CharacterMotor.CanWallJump`, `TouchingWall`, `WallNormal`, `WallJumpsAll`; off the wall at the jump's height x1.08, pushed 5.2 m/s, her double
+  jump back). `CharacterMotor.Belt` (a Conveyor under the feet). `Outfits.Steampunk` falls back to pirate, then medieval models.
+- Vortex: eight paths 18 deg apart (Ice Age -63, Egypt -45, Bethlehem -27, Medieval -9, Pirate Seas 9, Steampunk 27, Tomorrowland 45 "to be
+  continued" until the teal shard, Home 63).
+- Enemies: `Enemy.Kind.Worker` (`Combat/EnemySteampunk.cs`; `factory_worker` model, the deckhand's until it's in; `Slip`, `SlipsAll`).
+- Cutscenes `Assets/Editor/CutsceneAuthoring.Steampunk.cs` (SteampunkArrival, MuscleManHero, ClockShard, NecklaceWakesSteampunk,
+  ViolinistTeachesSteampunk); `film_sheet.py` MATCH has both film scenes. Muscle Man's `mm_hold` / `mm_throw` (fallbacks mm_lift / mm_boost).
+- `Violinist.M` also finds Blender's suffixed markers ("M_Chin.001": the SteamViolin, the harp, the lute). Medieval: the chimney's ledge
+  (J01 at z -125.7, on it).
+- Exe check modes: `steampunk` (~12 min), `stucksteam`, `fix81steam`, `perfsteam`, `steamdiag`, `walljump`; `stuck`, `fix81`, `minplayer` (now to
+  Steampunk's teal shard, ~40 min) and `tpose` include Steampunk. `theater` plays several scenes in a row.
+- Models: `Tools/tripo_generate.py` (Tripo API, key `TRIPO_API_KEY` from the user environment, writes into `SourceArt/Meshy/<name>/` like Meshy;
+  sends a User-Agent: Cloudflare blocks Python's). Both Meshy and the Tripo API account were out of credits this round.
+
 **Fix 10.1 delivered: 0.10.1 (build 1001), 2026-11-11.** Never shard-locked (stepped thresholds +25 / 15 from here, the
 minimum-player check, Pause > Return to the vortex), the deckhands animate (and a T-pose sweep of every character), PirateArrival's
 fall into the barrels and look-at in the cutscenes, see-through sails and rigging, the Theater. Published: `game-1001`. Report and

@@ -183,7 +183,7 @@ namespace ShardsOfTime
             "LiftDeck", "Shaft", "Bridge", "GearDoor", "GearGate", "Frame", "Machine", "Bars", "HouseWall", "Roof", "Parapet", "Chimney", "Post", "Bench", "Base",
             "Column", "ClockHead", "Carriage", "CarriageRoof", "Turntable", "YardWall", "Coping", "PipeFence", "Crate", "Barrel", "Panel", "Console",
             "Vent", "Cornice", "Trim", "Plinth", "Lintel", "Pilaster", "PillarBase", "GuardPane", "Cradle", "PressFoot", "BeamCap", "PressPiston", "BridgeBeam",
-            "LiftFrame", "Teeth", "Voussoir", "Keystone", "BarFrame", "Pier", "BaseCap", "ColumnRing", "Chassis", "Hoop", "ChuteLip", "Rim" };
+            "Teeth", "Voussoir", "Keystone", "BarFrame", "Pier", "BaseCap", "ColumnRing", "Chassis", "Hoop", "ChuteLip", "Rim" };
         static void MeshSolid(GameObject go)
         {
             if (!go) return;

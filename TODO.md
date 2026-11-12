@@ -43,11 +43,7 @@ quality pass, no film clips in game); focus on the game.
 not Dan's shard necklace); Muscle Man grins with teeth (fine, as before); the street clock has an empty gear socket in
 its face for the teal shard; mechanical Kira passes the lock (folded ears, gunmetal, amber eyes, no white).
 
-**Round 11 progress (resume note, Code, 2026-11-12):** done and checked in the exe: item 0 (Theater: `theater` passed), the world
-(factory + streets), belt run + press, wind-up / magnet paws / wall jump, jobs, horse gag, carriages, clock finale, vortex 8 paths
-(`steampunk` all passed, `stucksteam` all passed), the Medieval chimney ledge (J01 was on the ground). Mixamo: 3 upload files ready,
-Meshy out of credits for the other 7. Still to do: `fix81steam`, `perfsteam` (+ Steam Deck), rebuild with the cutscene fixes (press scene
-hides the world's press; Dan/Abi lie flat), render + side-by-side sheets, `minplayer`, `tpose`, publish 0.11.0, TODO/CLAUDE report.
+**Delivered as 0.11.0 (build 1100), 2026-11-12: report under "Last deliveries".**
 
 0. **The Theater bug first (Dan):** the Theater plays one scene, then refuses to play another until the game is
    restarted. Fix it (state left over after the first scene?) and add to the `theater` check: play three scenes in a row
@@ -112,6 +108,57 @@ hides the world's press; Dan/Abi lie flat), render + side-by-side sheets, `minpl
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 11: Victorian Steampunk (0.11.0, build 1100, 2026-11-12)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or
+in front): `local/round11/{steampunkF,theater,stucksteam,fix81steam2,perfsteam,perfdeck,minplayer2,tposeF}`. Evidence: `Data/screenshots/round11/`.
+0. Theater bug: **done.** The cause: after a scene from the title the world was rebuilt while the game still counted as "playing", so a necklace
+   ready to wake started its story on the title screen and held Busy for ever (every later pick did nothing; Continue then played the wake twice).
+   Now the title comes back before the rebuild, and a wake never waits on the title. `theater`: three scenes in a row from the title (on a save
+   whose necklace is ready but asleep, the bug's state), Continue (the wake once), two from the pause menu: all played.
+1. Mixamo first: **partly.** Meshy ran out of credits after three models: Dan, Abi, Muscle Man cleaned up, upload files ready, Dan told (plus Muscle
+   Man's two new clips and the three still open from Round 10; `Docs/MODELS-NEEDED.md`). **Not done:** the rigs (waiting on Dan); the Violinist's
+   and the worker's upload files (Meshy 402; Tripo tried: `Tools/tripo_generate.py` works but the API account's balance is 0).
+2. The other models: **deferred (no credits).** Stand-ins: home Kira for mechanical Kira, the Medieval pony tinted copper for the clockwork horse,
+   the deckhand model for the workers, the pirate fiddler for the Violinist; the carriage, the clock, the press are Blender props. **Done:** every
+   prop by script (`Tools/Blender/steampunk_world.py`: the factory hall, belt, stampers, press frame / dome / wreck, bolt bucket, chain line, gear
+   doors and the great gear gate, sockets, riveted pillars, houses, lamps, the clock with its gear socket, the teal gear shard, carriages, the
+   turntable) and the steampunk violin (`instruments.py` SteamViolin).
+3. Two areas: **done.** The factory at night (blue-violet through the skylights, brass lamps) and the streets by day (golden morning), 30 + 30
+   shards, Dan's `steampunk.mp3`, the ambience switches factory / city. The hole the press makes joins them.
+4. `SteampunkArrival` (23 s): **done.** The gear and the teal streak, the flat teal spiral, over the roof, the gear wall, the chain line, the
+   bucket of bolts carried along, tipped onto the belt. Sheet `round11/SteampunkArrival.jpg`, `Recordings/SteampunkArrival.mp4`.
+5. Belt run + `MuscleManHero` (14 s): **done.** Carried toward the press at 2.4 m/s between screens, stampers (a bonk pushes you on, never back)
+   and steam jets (a hop), the gate opens at 30 s: the bot took 33 s, no heart lost. The scene: flat on the belt, the dome comes down, he holds it
+   up (red alarms, cables, sparks), heaves it out through the wall. Sheet `round11/MuscleManHero.jpg`.
+6. Mechanical Kira: **done.** Wind-up from brass sockets: the lift to the crane deck, the gantry's bridge, the boiler room's gear door, the great
+   gear gate, the carriage turntable; magnet paws up riveted pillars (two in the factory, two in the streets; Dan can't).
+7. Abi's wall jump: **done.** The Violinist (street musician, brass violin) teaches it; the bot wall-jumped up the narrow alley (11 jumps) and the
+   factory's brick shaft. Earlier gate checked: the Medieval village chimney (its ledge had been lost in a comment since Fix 8.1: J01 lay on the
+   ground; now on a ledge, reached by 4 wall jumps).
+8. Muscle Man: **done.** Bends the cage's bars and the alley's pipes, lifts the machine and the crates, holds the big stamper up, boosts onto a
+   roof; the horse gag (steam in his face) plays once.
+9. Enemies: **done.** Goofy workers (chase on their floor, slip on oil, reel from steam); stampers, steam jets, carriages (a bump; their roofs
+   ride: the moving-platform check passed). Horses friendly. No boss.
+10. Shards: **done.** 60 + 2 hearts; threshold 150 and 15 from here. Minimum player: arrives with 125, 58 of 60 reachable before the wake (needs
+   25); `minplayer` from New game: asleep at 149, wakes at 150. Completionist fine.
+11. The finale: **done.** The necklace leads to the great clock; `ClockShard` (Kira spots it, Muscle Man lifts Dan, he takes it), the teal vortex
+   -> the vortex (Home 6 of 8; Tomorrowland "to be continued"; eight paths 18 deg apart).
+12. Look and frame rate: **done.** 184 fps at the slowest place at 1080p (need 60), 206 on the Steam Deck setting (need 40). Known: a first-view
+   hitch of 250-360 ms (shaders warming up).
+13. Sound: **done.** 26 ElevenLabs effects (factory and city ambience, chain, bucket, belt, stampers, press thump / groan, alarm, cables, wall
+   smash, steam, gears, clock chime, horse hooves / puff, carriage, workers, Kira's metal steps / wind-up / magnet, bars, the violin tune, the
+   teal vortex). No music made by Code.
+14. Build / checks / publish: **done.** `steampunk`, `theater`, `stucksteam` (rule 12), `fix81steam`, `perfsteam`, `minplayer`, `tpose` (156
+   characters, none in its rest pose) passed; 0.11.0 published as `game-1100`. The Round 1 starter install in `local/sc` updated itself from GitHub to build
+   1100 and started (ready signal). Disk: 13.0 GB -> 12.5 GB.
+
+Decisions Code made (Dan can overrule): stampers on the belt bonk you forward (the round's "nothing sends you back"); the belt's gate opens at
+30 s; the clock's shard is taken by walking to the clock's foot once the necklace is awake; the necklace-wake scene and the finale are in the
+square; a carriage turntable that spins once wound (a toy, a shard on it).
+**For Dan to check:** the belt run and the press from the vortex path; the two sheets and MP4s; the streets by day; Abi's wall jump up the narrow
+alley; the Theater several times in a row. **Waiting on Dan:** the three rigs + Muscle Man's clips (Mixamo), Meshy or Tripo API credits for the
+other seven models.
+
 ### Fix 10.1: never shard-locked, the deckhands, the arrival, the sails, a theater (0.10.1, build 1001, 2026-11-12)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever
 visible or in front): `local/fix101/{minplayer,tpose,sails,theater}`, all passed. Evidence: `Data/screenshots/fix101/`.
@@ -157,7 +204,6 @@ it rebuilds the world after a scene (enemies reset). The deckhand's trip got lon
 at once if you have 15 from the ship); Pause > Return to the vortex and back; the deckhands chasing and tripping; walking the deck and
 climbing the rigging (sails fading); `Recordings/PirateArrival.mp4` and the two sheets; Pause > Theater. Known: transparent sails can
 sort oddly against each other for a frame; the look-at is procedural (heads turn, eyes don't move separately).
-
 
 ### Round 10: the Pirate Seas (0.10.0, build 1000, 2026-11-11)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round10/final` (new mode `pirate`: from the vortex with four
@@ -214,7 +260,6 @@ Muscle Man's boost; air bubbles from vents give Dan and Abi their breath; the ar
 by the rope nets, the plank, the crow's nest; otter Kira's belly-slide on the wet deck; the music switching as you dive and surface; the
 sounds (Code doesn't play sound on your PC). Known: the first view of the reef / the deck stutters once (250-420 ms, shaders warming up);
 the wreck reads as a ribbed box; the island's grass edge is still a little stepped; Muscle Man's three clips (above).
-
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

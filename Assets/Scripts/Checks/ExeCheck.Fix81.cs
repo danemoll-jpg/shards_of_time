@@ -414,11 +414,11 @@ namespace ShardsOfTime
             // a: plenty from here, the total short
             SetHere(25); var ia0 = s.World(WorldData.IceAge); ia0.shards.Clear(); SetTotal(area.requirement - 10);
             yield return Wait(1.2f);
-            Ok(!prog.necklaceAwake && Hud.UnderTotal == $"Next: {area.requirement} (this world: 20 / 20)", $"{s.Total} in all ({Game.I.AreaShards(area.id)} from here): asleep; the HUD under the total: \"{Hud.UnderTotal}\"");
+            Ok(!prog.necklaceAwake && Hud.UnderTotal == $"Next: {area.requirement} (this world: {area.fromHere} / {area.fromHere})", $"{s.Total} in all ({Game.I.AreaShards(area.id)} from here): asleep; the HUD under the total: \"{Hud.UnderTotal}\"");
             // b: the total reached, only 12 from here (the "I only needed like 3" case)
             SetHere(12); SetTotal(area.requirement + 30);
             yield return Wait(1.2f);
-            Ok(!prog.necklaceAwake && Hud.UnderTotal == $"Next: {area.requirement} (this world: 12 / 20)", $"{s.Total} in all, {Game.I.AreaShards(area.id)} from here: still asleep; HUD \"{Hud.UnderTotal}\"");
+            Ok(!prog.necklaceAwake && Hud.UnderTotal == $"Next: {area.requirement} (this world: 12 / {area.fromHere})", $"{s.Total} in all, {Game.I.AreaShards(area.id)} from here: still asleep; HUD \"{Hud.UnderTotal}\"");
             yield return Shot("81_hud_next_this_world");
             // c: the 20th shard from here wakes it
             SetHere(20); SetTotal(area.requirement + 30);

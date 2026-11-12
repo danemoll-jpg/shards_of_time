@@ -265,7 +265,12 @@ namespace ShardsOfTime
                 int before = seen.Count;
                 yield return SweepNow(null, "play in " + wid, rest, seen);
                 Log($"  {wid}: {seen.Count - before} animated characters sampled");
+                if (wid == WorldData.Pirate) yield return DeckhandsAnimate();   // Round 11: while the Pirate Seas are built (Steampunk comes after)
             }
+            yield return TPoseCutscenes(rest, seen);
+        }
+        IEnumerator DeckhandsAnimate()
+        {
             // the deckhands by name: they were the T-pose (Dan, 0.10.0)
             var deck = Object.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Where(e => e.name.StartsWith("Deckhand")).ToList();
             Ok(deck.Count > 0 && deck.All(e => e.Anim && e.Anim.ClipCount > 10 && e.Anim.Humanoid), $"{deck.Count} deckhands animate (humanoid, {(deck.Count > 0 && deck[0].Anim ? deck[0].Anim.ClipCount : 0)} clips; state {(deck.Count > 0 && deck[0].Anim ? deck[0].Anim.State : "-")})");
@@ -275,6 +280,9 @@ namespace ShardsOfTime
                 Tp(e.transform.position + e.transform.forward * 3.2f + Vector3.up * .2f, e.transform.eulerAngles.y + 180f); yield return Wait(.3f);
                 CameraRig.I.SnapBehind(); yield return Wait(1.0f); yield return Shot("tpose_deckhand_" + (e.Anim ? e.Anim.State : "x"));
             }
+        }
+        IEnumerator TPoseCutscenes(Dictionary<string, string> rest, Dictionary<string, int> seen)
+        {
             foreach (var name in Game.TheaterList.SelectMany(x => x.names))
             {
                 if (!Cutscenes.Load(name)) { Log($"  (no cutscene {name})"); continue; }

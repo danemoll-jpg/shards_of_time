@@ -37,11 +37,14 @@ namespace ShardsOfTime
             // the city at night (0-12.5): the giant brass gear in front puffing steam, domes and chimneys, the factory behind; a teal streak
             // across the sky that winds into a big flat teal spiral over the factory (the clip, 0-14 s)
             var city = k.Holder("City", new Vector3(0, -3.05f, -10f), 0);
-            var gear = PropFrom("steampunk_props", "BigGear", city.transform, new Vector3(-17f, 11f, -40f), 25f, 8f);
-            if (gear) { gear.name = "Giant gear"; k.Key(city, "Giant gear", "m_LocalRotation", 0f, Vector3.zero); }
+            var gear = PropFrom("steampunk_props", "BigGear", city.transform, new Vector3(-27f, 11f, -42f), 25f, 8f);
+            if (gear) gear.name = "Giant gear";
+            // the ground out there (the factory city's yards at night), blocks of houses with lit windows behind the domes
+            Placeholders.Prim(PrimitiveType.Cube, city.transform, new Vector3(0, -.5f, -40f), new Vector3(260f, 1f, 160f), Placeholders.Mat(new Color(.1f, .1f, .14f)), name: "Ground");
+            for (int i = 0; i < 9; i++) Placeholders.Prim(PrimitiveType.Cube, city.transform, new Vector3(-60f + i * 15f, 6f + (i % 3) * 3f, -2f - (i % 2) * 10f), new Vector3(11f, 12f + (i % 3) * 6f, 9f), Placeholders.Mat(new Color(.16f, .13f, .2f)), name: "Block");
             for (int i = 0; i < 6; i++)
             {
-                var d = Placeholders.Prim(PrimitiveType.Sphere, city.transform, new Vector3(-40f + i * 16f, 4f, -18f + (i % 2) * 8f), new Vector3(10f, 9f, 10f), Placeholders.Mat(new Color(.12f, .3f, .3f)), name: "Dome");
+                var d = Placeholders.Prim(PrimitiveType.Sphere, city.transform, new Vector3(-40f + i * 16f, 1.5f, -18f + (i % 2) * 8f), new Vector3(10f, 9f, 10f), Placeholders.Mat(new Color(.12f, .3f, .3f)), name: "Dome");
                 Placeholders.Prim(PrimitiveType.Cylinder, city.transform, new Vector3(-34f + i * 15f, 10f, -12f), new Vector3(1.6f, 10f, 1.6f), Placeholders.Mat(new Color(.18f, .15f, .14f)), name: "Chimney");
                 _ = d;
             }
@@ -58,6 +61,14 @@ namespace ShardsOfTime
             k.Shot("Over the domes", 9f, 12.5f, new Vector3(-8f, 22f, -40f), new Vector3(0, 14f, 30f), 50f, new Vector3(-2f, 20f, -10f), new Vector3(0, 10f, 40f));
             // inside (12.5-23): the gear wall, the chain line with the copper bucket of bolts; the four drop out of a small teal swirl under the
             // roof onto the chain (arms up), into the bucket; it is carried along to the belt and tips them out onto the blue rollers
+            var wall = k.Holder("Gear wall", new Vector3(-8f, 8f, 2.6f), 0);
+            Placeholders.Prim(PrimitiveType.Cube, wall.transform, Vector3.zero, new Vector3(30f, 9f, .4f), Placeholders.Mat(new Color(.3f, .2f, .14f)), name: "Panel");
+            for (int i = 0; i < 9; i++)
+            {
+                var gr = Placeholders.Prim(PrimitiveType.Cylinder, wall.transform, new Vector3(-13f + i * 3.3f, (i % 2 == 0 ? -1.6f : 1.4f), -.35f), new Vector3(2.6f + (i % 3) * .5f, .15f, 2.6f + (i % 3) * .5f), WorldArt.Mat("Brass"), name: "Gear " + i);
+                gr.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            }
+            k.Show(wall, 12.4f, L);
             var line = k.Holder("Chain line", new Vector3(-6f, 9.6f, -.2f), 0);
             PropFrom("steampunk_props", "ChainLine", line.transform, Vector3.zero, 0);
             k.Show(line, 12.4f, L);
@@ -93,9 +104,9 @@ namespace ShardsOfTime
             for (int i = 0; i < 3; i++) Burst(k, "Steam vent " + i, new Vector3(-10f + i * 5f, 7.5f, 1.2f), new Color(.9f, .92f, .98f), 13f + i * 1.7f, 1.4f, 6, 1.4f, 1.2f, "Lit");
             Burst(k, "Bolts", new Vector3(0, .6f, 2f), new Color(.45f, .47f, .52f), 20.4f, 1.6f, 14, .8f, .3f, "Lit", true);
             if (k.Necklaces.ContainsKey(dan)) PulseFrom(k, dan, 21.2f, L, L);
-            k.Shot("The gear wall", 12.5f, 15.6f, new Vector3(-14f, 8.6f, -9f), new Vector3(-14f, 9.4f, 0), 50f, new Vector3(-13.5f, 8.4f, -8.4f));
-            k.Shot("Carried along", 15.6f, 19.4f, new Vector3(-7f, 6.5f, -8.5f), new Vector3(-12f, 6.4f, 0), 50f, new Vector3(-1f, 6.2f, -8.5f), new Vector3(-1f, 6.2f, 0));
-            k.Shot("Tipped onto the belt", 19.4f, L, new Vector3(1.6f, 2.4f, 8.5f), new Vector3(0, .5f, 2.4f), 52f, new Vector3(1.2f, 2.0f, 7.6f));
+            k.Shot("The gear wall", 12.5f, 15.6f, new Vector3(-14f, 7.6f, -6.5f), new Vector3(-14f, 8.4f, 0), 52f, new Vector3(-14f, 7.4f, -5.8f));
+            k.Shot("Carried along", 15.6f, 19.4f, new Vector3(-12f, 6.8f, -6f), new Vector3(-13f, 6.6f, 0), 52f, new Vector3(-1.5f, 6.6f, -6f), new Vector3(-1f, 6.4f, 0));
+            k.Shot("Tipped onto the belt", 19.4f, L, new Vector3(1.5f, 2.6f, 6.8f), new Vector3(0, .8f, 2.2f), 56f, new Vector3(1.4f, 2.2f, 6.2f));
             TintC(k, new Color(.3f, 1f, .9f), (0f, 0f), (5f, .06f), (12.4f, .12f), (12.6f, .05f), (L, 0f));
             k.Sound("portal", 3.5f, .4f); k.Sound("chain_line", 15.6f, .6f); k.Sound("bucket_rattle", 15.0f, .7f); k.Sound("bucket_tip", 20.2f, .8f); k.Sound("belt_loop", 21f, .4f); k.Sound("necklace", 21.4f, .5f);
             Look(k, dan, abi, 21.6f, L); Look(k, abi, dan, 21.7f, L);
@@ -140,13 +151,13 @@ namespace ShardsOfTime
             Burst(k, "Glass", new Vector3(0, 5f, 12f), new Color(.6f, .8f, 1f), 10.5f, 3.2f, 16, 1.2f, .6f, "Glow", true);
             Burst(k, "Bricks", new Vector3(0, 3f, 12f), new Color(.62f, .25f, .18f), 10.55f, 3.5f, 16, 1.4f, .4f, "Lit", true);
             for (int i = 0; i < 2; i++) Burst(k, "Dust " + i, new Vector3(-1f + i * 2f, 1.5f, 8f + i * 2f), new Color(.9f, .88f, .86f), 10.7f + i * .3f, 3f, 5, 2.2f, .8f, "Lit");
-            TintC(k, new Color(1f, .15f, .1f), (0f, 0f), (6.3f, 0f), (6.6f, .25f), (7.2f, .1f), (7.8f, .25f), (8.4f, .1f), (9f, .25f), (10.5f, .15f), (11.5f, .05f), (L, 0f));
+            TintC(k, new Color(1f, .15f, .1f), (0f, 0f), (6.3f, 0f), (6.6f, .16f), (7.2f, .06f), (7.8f, .16f), (8.4f, .06f), (9f, .16f), (10.5f, .1f), (11.5f, .05f), (L, 0f));
             if (k.Necklaces.ContainsKey(dan)) PulseFrom(k, dan, 12f, L, L);
             // shots, the clip's order
-            k.Shot("Tumbling along the belt", 0f, 3.8f, new Vector3(-.4f, 1.6f, -.5f), new Vector3(0, .4f, -7f), 50f, new Vector3(-.3f, 1.3f, -1.2f));
+            k.Shot("Tumbling along the belt", 0f, 3.8f, new Vector3(-.3f, 1.1f, -2.6f), new Vector3(0, .35f, -7.5f), 52f, new Vector3(-.2f, .9f, -1.2f), new Vector3(0, .3f, -2.5f));
             k.Shot("Here it comes", 3.8f, 6.4f, new Vector3(0, 1.4f, -12f), new Vector3(0, 4.5f, 0), 50f);
-            k.Shot("Heads down", 6.4f, 7.4f, new Vector3(0, .6f, 2.4f), new Vector3(0, .3f, -1.4f), 52f);
-            k.Shot("He holds it up", 7.4f, 9.6f, new Vector3(0, 1.4f, -9f), new Vector3(0, 3.6f, 0), 48f, new Vector3(0, 1.3f, -7.6f));
+            k.Shot("Heads down", 6.4f, 7.4f, new Vector3(1.7f, .5f, -.5f), new Vector3(-.3f, .3f, -1.6f), 52f);
+            k.Shot("He holds it up", 7.4f, 9.6f, new Vector3(0, 1.0f, -6f), new Vector3(0, 2.9f, 0), 56f, new Vector3(0, 1.0f, -5.2f));
             k.Shot("He heaves it off", 9.6f, 11f, new Vector3(-3.5f, 1.8f, -6f), new Vector3(0, 4f, 6f), 54f);
             k.Shot("Out through the wall", 11f, L, new Vector3(4f, 3.5f, -3f), new Vector3(0, 3f, 12f), 55f, new Vector3(3.5f, 3.2f, -1.5f));
             k.Sound("belt_loop", 0f, .5f); k.Sound("press_thump", 4.4f, .6f); k.Sound("alarm", 6.4f, .7f); k.Sound("press_groan", 6.6f, .8f); k.Sound("cable_snap", 7.0f, .8f);
