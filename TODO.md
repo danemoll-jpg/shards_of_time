@@ -24,8 +24,54 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — none (Round 10 delivered: see below). The planning chat writes the next round here.
-Round 10's plan (as written) is in `TODO-ARCHIVE.md`.
+Current round — Fix 10.1: never shard-locked, the deckhands, the arrival, the sails, a cutscene theater (target 0.10.1)
+Round 10 is delivered (below). Dan played 0.10.0 (2026-11-11). Report per item: done / not done / deferred, and why.
+Testing rules as always; rule 12 and the Fix 8.1 checks apply. Don't end your turn until 0.10.1 is published unless
+truly blocked (say so).
+
+1. **Shard-locked in the Pirate Seas (Dan: "I got all I could on this level and still don't have enough, and I can't
+   go back to the vortex to get more").** Two faults:
+   a. **The threshold is unreachable for a normal player.** 225 = 75% of all 300, but the under-sea half only opens
+      after the necklace wakes, so before the wake a player has only the ship's 30 plus whatever they kept from earlier
+      worlds; a player who didn't nearly complete every earlier world is stuck. Rule 2 checked "everything reachable",
+      not a real player.
+   b. **No way back to the vortex** until the story shard is taken, so a short player can't fetch shards elsewhere.
+   **New rule (DEFAULT, replaces Fix 8.1's 75% rule; Dan can tune):**
+   - **Stepped thresholds:** each world's threshold = the previous world's threshold **+ 25**, and **at least 15**
+     from this world. So a player who only ever collected the minimum needs 25 here (always reachable before the
+     wake), and one who collected extras still needs 15 here. Recompute every world in order (Ice Age 25; Egypt 50,
+     Bethlehem 75, Medieval 100, Pirate 125, …; check Ice Age's first value against its pre-wake shards).
+   - **Rule 2, rewritten (the check must prove it):** simulate the **minimum player**: in each world, they collect only
+     the threshold's need, using only shards reachable **before that world's necklace wakes** with the moves they hold
+     then. Every world must be completable that way. Also simulate the completionist (all reachable) to confirm the
+     15-from-this-world floor makes sense. Report both per world.
+   - **Always a way out:** from the moment the first vortex has been opened, **Pause → Return to the vortex** is
+     available in every world (the party's spot is saved; worlds already unlocked stay open; the current world's path
+     stays open too). So a player who's short can always go back to an earlier world to collect more.
+   - Existing saves: recompute; nothing already woken relocks.
+   Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md`.
+2. **The pirate deckhands stand in a T-pose.** Their animator isn't wired (Dan's Mixamo files for `pirate` are in):
+   idle, walk / run (chase), trip (the peg-leg gag), hit, recover. Then check **every animated character in every
+   world** for a T-pose or bind pose in play and in cutscenes (a check that samples each character's pose and flags
+   any still in the rest pose).
+3. **`PirateArrival` skips the fall.** Dan: they just climb out of the barrels; it misses that they happen to fall into
+   them. Follow the clip from the vortex: the green vortex over the ship, the three tumble out of it, each drops
+   **into a barrel** (a shot of each landing: splash / thud, the barrel wobbles), then they pop out; then Muscle Man
+   through the sails. Re-render and re-sheet against the clip.
+   **Muscle Man didn't look at Dan when he said "My hero!".** Whenever a character speaks or reacts to someone in a
+   cutscene, they turn their head (and body if needed) to that person: add look-at (head / eyes / upper body) to the
+   cutscene tooling and use it in every scene with a line or reaction (`TheStone`, `PirateArrival`, `SphinxGag`,
+   `WiseMenArrive`, the arrivals). Check each with a close-up frame.
+4. **The sails often block the view.** The camera must never sit behind a sail, net or rigging: thin cloth and rope
+   don't push the camera in; instead, anything between the camera and the player **fades to see-through** (sails,
+   nets, ropes, masts, also the Medieval banners and similar). Check from the player's view walking the whole deck
+   and rigging.
+5. **"How can I watch the other cutscenes?"** Add a **Theater** to the title screen and the pause menu: every
+   cutscene the player has seen so far (saved), grouped by world in story order, play any of them (skippable, with
+   its music). A New game save starts with none; Dan's current save fills in what he's seen.
+6. Build, check (a minimum-player play-through from New game to the Pirate Seas' green shard; Return to the vortex
+   from mid-Pirate and back; the T-pose sweep; the arrival sheet; the sails view), publish 0.10.1, update `TODO.md` /
+   `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
