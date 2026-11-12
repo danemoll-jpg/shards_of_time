@@ -6,13 +6,16 @@
 `Data/screenshots/round11/models/`). Waiting on a Meshy top-up: the Violinist, the factory worker, mechanical Kira, the clockwork
 horse, the steam carriage, the street clock, the steam press. Code retries Meshy during the round; when the Violinist and the worker
 come through, their upload files appear here too (same steps).
+**The Tripo website works too:** Dan made the Violinist there (`SourceArt/Tripo/violinist_steampunk.glb`, 1.9M triangles); Code decimates it
+(`Tools/Blender/decimate_glb.py`, 25k) and cleans it up. Save any of the others the same way (`SourceArt/Tripo/<name>.glb`: factory_worker,
+kira_mechanical, clockwork_horse, steam_carriage, street_clock, steam_press) and tell Code.
 
 | Model | Upload this (mixamo.com > Upload Character) | Height |
 |---|---|---|
 | Dan, steampunk | `SourceArt/Mixamo/dan_steampunk/upload/dan_steampunk.fbx` | 1.8 m |
 | Abi, steampunk | `SourceArt/Mixamo/abi_steampunk/upload/abi_steampunk.fbx` | 1.65 m |
 | Muscle Man, steampunk | `SourceArt/Mixamo/muscleman_steampunk/upload/muscleman_steampunk.fbx` | 2.0 m |
-| (later) The Violinist, street musician | `SourceArt/Mixamo/violinist_steampunk/upload/violinist_steampunk.fbx` | 1.85 m |
+| The Violinist, street musician (Dan's Tripo model, decimated to 25k) | `SourceArt/Mixamo/violinist_steampunk/upload/violinist_steampunk.fbx` | 1.85 m |
 | (later) Factory worker | `SourceArt/Mixamo/factory_worker/upload/factory_worker.fbx` | 1.8 m |
 
 For **each**:

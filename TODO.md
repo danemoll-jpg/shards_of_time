@@ -117,7 +117,8 @@ in front): `local/round11/{steampunkF,theater,stucksteam,fix81steam2,perfsteam,p
    whose necklace is ready but asleep, the bug's state), Continue (the wake once), two from the pause menu: all played.
 1. Mixamo first: **partly.** Meshy ran out of credits after three models: Dan, Abi, Muscle Man cleaned up, upload files ready, Dan told (plus Muscle
    Man's two new clips and the three still open from Round 10; `Docs/MODELS-NEEDED.md`). **Not done:** the rigs (waiting on Dan); the Violinist's
-   and the worker's upload files (Meshy 402; Tripo tried: `Tools/tripo_generate.py` works but the API account's balance is 0).
+   and the worker's upload files (Meshy 402; Tripo tried: `Tools/tripo_generate.py` works but the API account's balance is 0). After the
+   release Dan made the Violinist on the Tripo website: decimated to 25k (`Tools/Blender/decimate_glb.py`), his upload file is ready too.
 2. The other models: **deferred (no credits).** Stand-ins: home Kira for mechanical Kira, the Medieval pony tinted copper for the clockwork horse,
    the deckhand model for the workers, the pirate fiddler for the Violinist; the carriage, the clock, the press are Blender props. **Done:** every
    prop by script (`Tools/Blender/steampunk_world.py`: the factory hall, belt, stampers, press frame / dome / wreck, bolt bucket, chain line, gear
