@@ -35,6 +35,8 @@ the most flailing **Swim**), `Getting Up.fbx` (**Getting Up**, else **Stand Up**
 
 That's **5 T-poses** (Dan, Abi, Muscle Man, the Violinist, the factory worker) + 2 Muscle Man clips (+3 from Round 10). Tell Code when they're in.
 
+**Fix 11.2 (2026-11-12): all five rigs are in.** Heavy Throw and Drowning weren't on Mixamo: Muscle Man's `Overhead Squat` is both his hold and his heave (Dan's idea); his struggle stays Treading Water. Getting Up and Jumping Down are in.
+
 **Fix 11.1 (2026-11-12): all seven Tripo models are in.** The Violinist and the worker are the uploads above. Code rigged mechanical Kira (23 bones, no ear bones) and the clockwork horse (Code's four-legged rig, 9 clips each); the street clock, the carriage and the press are static models (`Tools/Blender/static_export.py`). Previews: `Data/screenshots/round11/models/`, rigs `round11/rig/`.
 
 ## Round 11 (2026-11-12): Victorian Steampunk — images needed from Dan (prompts by the planning chat)

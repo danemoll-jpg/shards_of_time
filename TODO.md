@@ -108,6 +108,20 @@ its face for the teal shard; mechanical Kira passes the lock (folded ears, gunme
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 11.2: Dan's Steampunk rigs and Muscle Man's clips (0.11.2, build 1102, 2026-11-12)
+1. The five Mixamo rigs: **done.** `dan_steampunk`, `abi_steampunk` (closed by `close_person.py`: 0 open edges), `muscleman_steampunk`,
+   `violinist_steampunk`, `factory_worker` replace their stand-ins (player's view: `local/fix112/steampunk/440_street_musician.png` Dan, Abi,
+   Muscle Man and the Violinist in their Steampunk looks; `413` a worker on the avenue).
+2. Muscle Man's hold / throw: **done, one clip for both (Dan's idea).** Mixamo had no Heavy Throw; Dan's `Overhead Squat` is trimmed into
+   `mm_hold` (frames 1-15: the dip under the weight, held) and `mm_throw` (15-57: the drive back up that heaves the press off). Shots
+   `412d_he_holds_it`, `412e_heave`.
+3. Round 10's leftovers: `Getting Up` (mm_getup) and `Jumping Down` (mm_leap) **in**; **Drowning / a flailing swim: not on Mixamo**, his
+   struggle stays Treading Water (not needed again).
+4. Checks (exe, muted 0.000 RMS, no windows): `steampunk` passed, `tpose` passed (all worlds and cutscenes, Steampunk 8 characters).
+   Cutscenes rebuilt (`CutsceneAuthoring.Version` 31). Published `game-1102`; `local/sc` updated itself to 1102 and reported ready.
+
+For Dan to check: MuscleManHero (the dip under the press, the heave); the Violinist holding his steam violin on the new rig.
+
 ### Fix 11.1: Dan's seven Tripo models in the game (0.11.1, build 1101, 2026-11-12)
 1. Import: **done.** All seven from `SourceArt/Tripo/` (~1.9M triangles each) decimated (`Tools/Blender/decimate_glb.py`: people 25k / 15k,
    animals 15k, clock 12k, carriage 15k, press 20k), textures pulled out of the GLBs (`Tools/glb_textures.py`), cleaned up (`meshy_cleanup.py`;
@@ -177,53 +191,6 @@ square; a carriage turntable that spins once wound (a toy, a shard on it).
 **For Dan to check:** the belt run and the press from the vortex path; the two sheets and MP4s; the streets by day; Abi's wall jump up the narrow
 alley; the Theater several times in a row. **Waiting on Dan:** the three rigs + Muscle Man's clips (Mixamo), Meshy or Tripo API credits for the
 other seven models.
-
-### Fix 10.1: never shard-locked, the deckhands, the arrival, the sails, a theater (0.10.1, build 1001, 2026-11-12)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever
-visible or in front): `local/fix101/{minplayer,tpose,sails,theater}`, all passed. Evidence: `Data/screenshots/fix101/`.
-1. Never shard-locked: **done.** a. Stepped thresholds: Ice Age 25, Egypt 50, Bethlehem 75, Medieval 100, Pirate Seas 125 (each +25),
-   and 15 from each world (defaults and the five world assets). Rule 2's report now simulates both players: the minimum player
-   (arrives with the previous threshold, only shards reachable before this necklace wakes) needs 25 here and has 43 / 50 / 48 / 50 / 30;
-   the completionist is fine everywhere. New check `minplayer`: New game -> every world taking exactly 25 pre-wake shards -> the green
-   shard: in every world the necklace still sleeps at 24 and wakes at 25 (125 in the Pirate Seas); arrivals skipped with the pad.
-   b. Pause > **Return to the vortex** (once the Ice Age's vortex is open, every world): checked mid-Pirate with the pad: in the vortex
-   with 110 shards, earlier paths open, back by the Pirate Seas path to the very spot (0.0 m), checkpoint kept. Saves: thresholds come
-   from the world data, so existing saves just see the new numbers; nothing awake relocks. `CLAUDE.md` rule 2 / 3 and the design doc updated.
-2. The deckhands: **done.** The cause: the `pirate` model imported as a Generic rig (its name was missing from the importer's list of
-   people), so no human clip could play. Now Humanoid with the shared clips: idle, walk / run (chase), cheer ("Arr!"), punch, hit (hurt),
-   the trip = Fall Flat (mm_fall) then picking himself up (Hard Landing), 2.9 s harmless; stunned = dazed. Dan's `pirate` folder had only
-   the T-pose rig, so no per-deckhand clips were needed. **T-pose sweep** (new check `tpose`): every skinned character in all five worlds
-   and every cutscene at five moments, against its bind pose: 135 characters; it found one (sabertooth Kira between her snarls in
-   IceAgeArrival: a one-shot shorter than its slot left the rig in its bind pose). Fixed in the cutscene kit for every scene (a one-shot
-   now holds its last frame); the sweep then passed.
-3. PirateArrival and look-at: **done.** The fall from the clip (87-89 s): out of the green vortex, tumbling past the sails, an overhead
-   of the three upright barrels, then a close shot of each landing (feet first, thud, splash, the barrel wobbles); at the cut the barrels
-   lie on their sides and they crawl out as before. Dan, Abi and Kira now turn to Muscle Man after his crash (the clip's 97-102 s); he
-   looks at Dan as Abi laughs; Dan glances at Abi. Look-at (head, neck, chest, after the clips: `CutsceneLookAt`) is in TheStone
-   (Muscle Man at Dan for "your turn" and "My hero!", Dan at him), PirateArrival, SphinxGag (up at the Sphinx, then Dan and Kira's look),
-   WiseMenArrive (the Wise Men stare at Dan), and the Ice Age, Egypt, Bethlehem and Medieval arrivals. Re-rendered from the exe; sheet
-   `fix101/PirateArrival.jpg`, close-ups `fix101/looks.jpg`. (The first look sheet showed bent necks: the head's forward was measured
-   on a falling first frame; now taken from the bind pose, tilt capped at 30 deg; re-rendered.)
-4. The sails: **done.** Sails, ropes, nets, masts, yards and flags (and the Medieval banners, bunting, pennants) fade to see-through when
-   they are between the camera and the player, and masts no longer pull the camera in (thin cloth never did: it has no collider). The
-   merged meshes are split per sail / rope at load, so only the one in the way fades. Check `sails`: the deck walked three ways plus the
-   main top, crow's nest, fore top and quarterdeck: parts faded where in the way; nothing thin pulled the camera in (only the hull's
-   walls and the bulkhead did, as before).
-5. The Theater: **done.** Title screen and pause menu: the scenes seen so far, by world in story order, any of them played (skippable,
-   with its music), then back where you were. A New game starts with none; an old save fills in what its progress shows (checked with
-   the 0.6.0 save: 10 scenes). Checked from the pause menu mid-Pirate (IceAgeArrival, back on deck 0.0 m away) and from the title.
-6. Build, check, publish: **done.** 0.10.1 published as `game-1001`. The Round 1 starter install in `local/sc` updated itself from GitHub to build 1001 and
-   started (ready signal).
-
-Decisions Code made (Dan can overrule): Return to the vortex appears once the Ice Age's vortex is open; coming back by the same world's
-path puts you where you left (another world's path doesn't); the Theater lists the 23 story scenes (not PortalOpens, the test area's);
-it rebuilds the world after a scene (enemies reset). The deckhand's trip got longer (1.6 -> 2.9 s) so the fall and get-up both play.
-
-**For Dan to check:** the Pirate Seas from your save (the HUD now says "Next: 125 (this world: n / 15)"; you should wake the necklace
-at once if you have 15 from the ship); Pause > Return to the vortex and back; the deckhands chasing and tripping; walking the deck and
-climbing the rigging (sails fading); `Recordings/PirateArrival.mp4` and the two sheets; Pause > Theater. Known: transparent sails can
-sort oddly against each other for a frame; the look-at is procedural (heads turn, eyes don't move separately).
-
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

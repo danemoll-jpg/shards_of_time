@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 11.1: `game-1101`, previous `Builds/LauncherRelease-1101`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 11.2: `game-1102`, previous `Builds/LauncherRelease-1102`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,10 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 11.2 delivered: 0.11.2 (build 1102), 2026-11-12.** Dan's five Steampunk Mixamo rigs in (Dan, Abi closed, Muscle Man, the Violinist,
+the factory worker); Muscle Man's `mm_hold` / `mm_throw` are both Dan's `Overhead Squat` (trimmed in `CharacterImport.PeopleClips`: 1-15 / 15-57);
+`mm_getup`, `mm_leap` in; no Drowning clip on Mixamo (Treading Water stays). Nothing waits on Dan for Steampunk. Published `game-1102`.
+
 **Fix 11.1 delivered: 0.11.1 (build 1101), 2026-11-12.** Dan's seven Tripo models: mechanical Kira and the clockwork horse rigged by
 Code (Kira lock OK), the street clock, carriage and press as static models; the Violinist's and the worker's Mixamo uploads ready.
 Standing facts from Fix 11.1:
@@ -295,8 +299,7 @@ Standing facts from Fix 11.1:
 bolt bucket, the belt run, `MuscleManHero`, then catwalks, wind-up machines, riveted pillars, Muscle Man's jobs, workers) and the streets by day
 (the avenue, the square with the great clock, carriages, clockwork horses, the gear gate); mechanical Kira (wind-up, magnet paws), Abi's wall jump,
 `ClockShard` and the teal vortex; the Theater bug fixed. 60 shards / threshold 150. Published: `game-1100`. Report and "For Dan to check": `TODO.md`.
-**Waiting on Dan:** the steampunk rigs (Dan, Abi, Muscle Man) + Muscle Man's clips; Meshy or Tripo API credits for the Violinist, the worker,
-mechanical Kira, the clockwork horse, the carriage, the clock, the press (stand-ins until then).
+(Waiting on Dan then: all delivered by Fix 11.1 / 11.2.)
 
 Standing facts from Round 11:
 - Worlds: `Game.InSteampunk` (`WorldData.Steampunk` = "Steampunk"); `World/Steampunk.cs` builds it on flat ground at 0 (the factory hall x -36..36,

@@ -59,6 +59,9 @@ namespace ShardsOfTime
             ["mm_flex"] = new ClipSpec(), ["mm_taunt"] = new ClipSpec(), ["mm_lift"] = new ClipSpec(), ["mm_push"] = new ClipSpec { loop = true, bakeXZ = false },
             ["mm_heave"] = new ClipSpec { loop = true, bakeXZ = false }, ["mm_fall"] = new ClipSpec(), ["mm_cheer"] = new ClipSpec(), ["mm_boost"] = new ClipSpec(),
             ["mm_kneel"] = new ClipSpec(),
+            // Fix 11.2: Dan's Overhead Squat, frames 1-57: standing arms up, squat to 29, back up; the hold = the dip under the weight,
+            // the throw = the drive back up that heaves it off
+            ["mm_hold"] = new ClipSpec { first = 1, last = 15 }, ["mm_throw"] = new ClipSpec { first = 15, last = 57 },
             ["knight_idle"] = new ClipSpec { loop = true }, ["knight_walk"] = new ClipSpec { loop = true }, ["knight_run_slow"] = new ClipSpec { loop = true },
             ["knight_run"] = new ClipSpec { loop = true }, ["knight_punch"] = new ClipSpec(), ["block"] = new ClipSpec { loop = true },
             ["draw"] = new ClipSpec(), ["aim"] = new ClipSpec { loop = true }, ["shoot"] = new ClipSpec(), ["nervous"] = new ClipSpec { loop = true },
