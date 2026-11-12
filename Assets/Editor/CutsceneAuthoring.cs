@@ -22,7 +22,8 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 25;   // Round 9: the eight film scenes redone from Dan's clips (CutsceneAuthoring.Film.cs)
+        public const int Version = 30;   // Fix 10.1: look-at in every scene with a line or reaction; PirateArrival's fall into the barrels
+        //   // Round 9: the eight film scenes redone from Dan's clips (CutsceneAuthoring.Film.cs)
         public const int OldVersion = 19;   // Round 8: the Medieval cutscenes   // Fix 7.1: the Wise Men, Dan and Abi in their Bethlehem models   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
         static readonly (string name, System.Action build)[] All =
         {
@@ -166,8 +167,18 @@ namespace ShardsOfTime
                 {
                     if (!list[i].clip) continue;
                     float end = i + 1 < list.Length ? list[i + 1].start + .25f : duration;
-                    var c = tr.CreateClip(list[i].clip); c.start = list[i].start; c.duration = Mathf.Max(.1f, end - list[i].start);
+                    var src = list[i].clip;
+                    var c = tr.CreateClip(src); c.start = list[i].start; c.duration = Mathf.Max(.1f, end - list[i].start);
                     ((AnimationPlayableAsset)c.asset).removeStartOffset = true;
+                    // Fix 10.1, item 2 (the T-pose sweep): a one-shot shorter than its slot left the rig in its bind pose after its last frame
+                    // (sabertooth Kira between her snarls). It now holds its last frame until the next clip takes over.
+                    if (!src.isLooping && src.length + .05f < end - list[i].start)
+                    {
+                        c.duration = src.length;
+                        var h = tr.CreateClip(src); h.start = list[i].start + src.length; h.duration = Mathf.Max(.05f, end - (float)h.start);
+                        h.clipIn = Mathf.Max(0f, src.length - 1f / 30f); h.timeScale = .0001; h.displayName = src.name + " (held)";
+                        ((AnimationPlayableAsset)h.asset).removeStartOffset = true;
+                    }
                 }
                 dir.SetGenericBinding(tr, anim);
             }
@@ -225,6 +236,17 @@ namespace ShardsOfTime
                 }
             }
             public void KeyYaw(GameObject holder, string path, float t, float yaw) => KeyQ(holder, path, t, Quaternion.Euler(0, yaw, 0));
+            // Fix 10.1: a float on a component (CutsceneLookAt's weight / which); step = held until the next key
+            public void KeyF(GameObject holder, string path, System.Type type, string prop, float t, float v, bool step = false)
+            {
+                var c = ClipFor(holder);
+                var b = EditorCurveBinding.FloatCurve(path, type, prop);
+                var curve = AnimationUtility.GetEditorCurve(c, b) ?? new AnimationCurve();
+                int i = curve.AddKey(new Keyframe(t, v));
+                if (i < 0) { for (int j = 0; j < curve.length; j++) if (Mathf.Abs(curve[j].time - t) < 1e-4f) { curve.MoveKey(j, new Keyframe(t, v)); i = j; break; } }
+                if (step) for (int j = 0; j < curve.length; j++) { AnimationUtility.SetKeyLeftTangentMode(curve, j, AnimationUtility.TangentMode.Constant); AnimationUtility.SetKeyRightTangentMode(curve, j, AnimationUtility.TangentMode.Constant); }
+                AnimationUtility.SetEditorCurve(c, b, curve);
+            }
 
             // Round 5: a sound effect (Resources/Sounds/<name>) at t on the cutscene's audio track (plays in game; the MP4 has no audio)
             AudioTrack audio;

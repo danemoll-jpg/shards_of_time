@@ -29,15 +29,21 @@ changed for gameplay.
 - **Shards:** each world has many small shards plus one colored story shard.
   **The small shards are universal (Dan, 2026-11-10):** one total across all
   worlds, never spent. **A world's necklace wakes when both are true (Dan,
-  2026-11-11, Fix 8.1):** the total reaches the world's cumulative threshold
-  (about 75% of all shards in the worlds so far: DEFAULT Ice Age 40, Egypt 90,
-  Bethlehem 135, Medieval 180; the Ice Age is 40, not 45, because only 43 of
-  its 60 are reachable on arrival), **and at least 20 shards come from this
-  world.** So someone who hunted everything earlier still collects 20 here, and
-  someone who skipped a lot needs more. HUD: "Next: 180 (this world: 12 / 20)".
-  A world that is already awake never relocks. The awake necklace leads to the
-  story shard, and the story shard opens the vortex. Extra shards anywhere
-  count toward later worlds, which is what makes them worth hunting.
+  2026-11-11, Fix 10.1, replacing Fix 8.1's 75% rule):** the total reaches the
+  world's **stepped threshold** (the previous world's threshold **+ 25**:
+  DEFAULT Ice Age 25, Egypt 50, Bethlehem 75, Medieval 100, Pirate Seas 125,
+  and so on), **and at least 15 shards come from this world.** So a player who
+  only ever took the minimum needs 25 here, always reachable before this
+  world's necklace wakes; one who collected extras still takes 15 here. Rule 2
+  is proven for the **minimum player** (arrives with the previous threshold,
+  may use only shards reachable before the wake with the moves held then) and
+  the completionist (`WorldData.RequirementReport` reports both).
+  HUD: "Next: 125 (this world: 12 / 15)". A world that is already awake never
+  relocks. The awake necklace leads to the story shard, and the story shard
+  opens the vortex. Extra shards anywhere count toward later worlds.
+  **Always a way out (Fix 10.1):** once the first vortex is open, Pause >
+  "Return to the vortex" works in every world (the spot is kept for coming
+  back), so a player who is short can fetch shards from an earlier world.
   (Framing: the shards charge Dan's necklace; at the threshold it wakes up and
   leads to the story shard.)
 - **All cutscenes are remade in-engine.** Film clips are not reused (Grok

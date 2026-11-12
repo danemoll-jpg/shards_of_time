@@ -79,6 +79,7 @@ namespace ShardsOfTime
                 Pickup.HealHeart((h.y < 0 ? h : OnGround(h.x, h.z)) + Vector3.up * 1f, root);
             Enemies();
             new GameObject("Pirate watch").AddComponent<PirateWatch>().transform.SetParent(root, false);
+            SeeThrough.Register(root, SeeThrough.PirateParts);   // Fix 10.1, item 4
             return root;
         }
 

@@ -13,7 +13,7 @@ namespace ShardsOfTime
         public bool Puffed { get; private set; }
         public int Puffs { get; private set; }
         public int Trips { get; private set; }
-        float puffT, tripUntil, nextTrip = 6f, arrAt = -10f; Transform puffBody; Vector3 puffHome; float puffBase = 1f;
+        float puffT, tripUntil, recoverAt = -1f, nextTrip = 6f, arrAt = -10f; Transform puffBody; Vector3 puffHome; float puffBase = 1f;
 
         Vector3 PirateMove(Vector3 player, Vector3 pos)
         {
@@ -22,11 +22,13 @@ namespace ShardsOfTime
             {
                 case Kind.Deckhand:
                 {
+                    // Fix 10.1, item 2: the trip falls flat (mm_fall), then he picks himself up (the hard landing's rise)
+                    if (recoverAt > 0 && Time.time >= recoverAt) { recoverAt = -1f; if (Anim) Anim.Trigger("land_hard"); }
                     if (Time.time < tripUntil) { Chasing = false; return Vector3.zero; }
                     bool was = Chasing; var m = PatrolMove(Mathf.Abs(player.y - pos.y) > 1.5f ? player + Vector3.up * 500f : player, pos);   // only someone on his own deck
                     if (Chasing && !was && Time.time > arrAt + 5f) { arrAt = Time.time; Sfx.Play("pirate_arr", .5f, Random.Range(.9f, 1.1f)); if (Anim) Anim.Trigger("cheer"); }
                     nextTrip -= Time.deltaTime;
-                    if (Chasing && nextTrip <= 0) { nextTrip = Random.Range(7f, 11f); tripUntil = Time.time + 1.6f; Trips++; if (Anim) Anim.Trigger("hurt"); Sfx.Play("barrel_thud", .4f, 1.3f); PlayLog.Line($"a deckhand trips over his peg leg ({name})"); }
+                    if (Chasing && nextTrip <= 0) { nextTrip = Random.Range(7f, 11f); tripUntil = Time.time + 2.9f; recoverAt = Time.time + 2.05f; Trips++; if (Anim) Anim.Trigger("mm_fall"); Sfx.Play("barrel_thud", .4f, 1.3f); PlayLog.Line($"a deckhand trips over his peg leg ({name})"); }
                     if (Chasing && dist < 2.0f && Time.time > swingAt + 1.6f) { swingAt = Time.time; if (Anim) Anim.Trigger("attack"); }
                     if (Chasing && dist < 1.3f) return Vector3.zero;
                     return m;
@@ -68,7 +70,7 @@ namespace ShardsOfTime
             Placeholders.Prim(PrimitiveType.Sphere, t, new Vector3(0, 1.45f, 0), new Vector3(.45f, .45f, .45f), Placeholders.Mat(new Color(.9f, .7f, .55f)), name: "Head");
             Placeholders.Prim(PrimitiveType.Sphere, t, new Vector3(0, 1.6f, 0), new Vector3(.47f, .2f, .47f), Placeholders.Mat(new Color(.2f, .35f, .8f)), name: "Bandana");
             e.Anim = CharacterModel.Creature(e.transform, "pirate", 1.2f, 2.8f);
-            if (e.Anim) e.Anim.Drive = () => (e.stun > 0 || Time.time < e.tripUntil ? "dazed" : null, e.speedNow);
+            if (e.Anim) e.Anim.Drive = () => (e.stun > 0 ? "dazed" : Time.time < e.tripUntil ? "idle" : null, e.speedNow);
             return e;
         }
 

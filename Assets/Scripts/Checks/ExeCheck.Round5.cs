@@ -241,7 +241,7 @@ namespace ShardsOfTime
                $"the cracked rock wall holds (Dan's charged punch, later): \"{Hud.LastMessage}\"");
             var gates = Game.World.gates;
             Ok(gates.Count >= 10 && gates.Select(g => g.needs).Distinct().Count() >= 5, $"gates as data: {gates.Count} ({string.Join(", ", gates.GroupBy(g => g.kind).Select(g => $"{g.Count()} {g.Key}"))})");
-            Ok(Game.World.shards.Count == 60 && Game.World.areas[0].requirement == 35, $"{Game.World.shards.Count} shards, {Game.World.areas[0].requirement} wake the necklace");
+            Ok(Game.World.shards.Count == 60 && Game.World.areas[0].requirement == 25, $"{Game.World.shards.Count} shards, {Game.World.areas[0].requirement} wake the necklace");
             yield return Go(XZ(40, 460), .8f, 10f);
         }
     }

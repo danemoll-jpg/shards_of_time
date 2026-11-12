@@ -72,6 +72,7 @@ namespace ShardsOfTime
                 Pickup.HealHeart(OnGround(h.x, h.z, h.x > 300 ? 3f : 30f) + Vector3.up * 1f, root);
             Enemies();
             StarDome.Make(root);
+            SeeThrough.Register(root, SeeThrough.MedievalParts);   // Fix 10.1, item 4
             return root;
         }
 

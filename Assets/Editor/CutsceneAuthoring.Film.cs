@@ -42,6 +42,24 @@ namespace ShardsOfTime
             }
         }
 
+        // Fix 10.1, item 3: `a` turns its head (neck, chest) to `target` from t0 to t1 (eased in and out over `ease` s). Several windows per
+        // actor, to different people, are fine. target: another actor (its head is found at play time) or any marker in the set.
+        public static readonly List<(string scene, string actor, string target, float t0, float t1)> Looks = new List<(string, string, string, float, float)>();
+        static void Look(Kit k, GameObject a, GameObject target, float t0, float t1, float ease = .35f)
+        {
+            var body = a ? a.transform.Find("Body") : null; if (!body || !target) return;
+            var la = body.GetComponent<CutsceneLookAt>() ?? body.gameObject.AddComponent<CutsceneLookAt>();
+            var tt = target.transform.Find("Body") ?? target.transform;
+            int idx = System.Array.IndexOf(la.targets, tt);
+            if (idx < 0) { var l = new List<Transform>(la.targets) { tt }; la.targets = l.ToArray(); idx = la.targets.Length - 1; }
+            float s0 = Mathf.Max(0f, t0 - ease);
+            k.KeyF(a, "Body", typeof(CutsceneLookAt), "weight", 0f, 0f);
+            k.KeyF(a, "Body", typeof(CutsceneLookAt), "weight", s0, 0f); k.KeyF(a, "Body", typeof(CutsceneLookAt), "weight", t0, 1f);
+            k.KeyF(a, "Body", typeof(CutsceneLookAt), "weight", t1, 1f); k.KeyF(a, "Body", typeof(CutsceneLookAt), "weight", t1 + ease, 0f);
+            k.KeyF(a, "Body", typeof(CutsceneLookAt), "which", s0, idx, true);
+            Looks.Add((k.name, a.name, target.name, t0, t1));
+        }
+
         // an actor made at its set's origin; Path moves it
         static GameObject Cast0(Kit k, string hero, string model) => k.Actor(hero, model, Vector3.zero, 0);
 
@@ -462,6 +480,9 @@ namespace ShardsOfTime
             k.Shot("Kira on his chest", 13.6f, 18f, chest + new Vector3(.2f, 2.2f, 1.45f), chest + new Vector3(.2f, .15f, -.25f), 44f, chest + new Vector3(.18f, 2.05f, 1.3f));
             k.Shot("Relief", 18f, 20f, danAt + new Vector3(.4f, 1.6f, 2.6f), danAt + new Vector3(0, 1.45f, 0), 40f);
             k.Shot("The shard in his hand", 20f, ArrivalLength, danAt + new Vector3(.9f, 1.75f, 1.2f), danAt + new Vector3(.2f, 1.6f, .25f), 38f, danAt + new Vector3(.7f, 1.7f, .95f));
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            Look(k, dan, kira, 2.4f, 12.1f); Look(k, abi, kira, 2.5f, 12.1f);
+            Look(k, kira, dan, 13.8f, 17.8f); Look(k, abi, dan, 18.0f, ArrivalLength);
             k.Save();
         }
 
@@ -540,6 +561,9 @@ namespace ShardsOfTime
             k.Shot("A hug", 30.4f, EgyptArrivalLength, new Vector3(-.2f, .95f, -2.0f), abiAt + new Vector3(.2f, .6f, -.25f), 44f);
             k.under = null;
             k.Sound("camel_snort", 3.0f, .5f); k.Sound("shard", 6.4f, .5f); k.Sound("sand_sink", 12.05f, .9f); k.Sound("sand_sink", 18.3f, .5f); k.Sound("sand_sink", 28.45f, .5f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            Look(k, dan, abi, 21.3f, 23.4f); Look(k, abi, dan, 21.4f, 23.4f);
+            Look(k, dan, kira, 28.5f, EgyptArrivalLength); Look(k, abi, kira, 28.6f, EgyptArrivalLength);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }
@@ -573,6 +597,9 @@ namespace ShardsOfTime
             k.Shot("Innocent", 12f, 14.6f, kiraAt + new Vector3(.05f, .38f, -.66f), kiraAt + new Vector3(0, .36f, 0), 36f);
             k.Shot("The look", 14.6f, SphinxGagLength, new Vector3(-.05f, 1.5f, -1.55f), new Vector3(0, 1.38f, 0), 40f);
             k.Sound("camel_snort", 16.6f, .0f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            // (the clip: they react to the camera with level heads; no look up at the Sphinx)
+            Look(k, dan, kira, 8.6f, SphinxGagLength); Look(k, abi, kira, 9.2f, 14.4f); Look(k, abi, dan, 15.2f, SphinxGagLength); Look(k, kira, dan, 12.0f, SphinxGagLength);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }
@@ -643,6 +670,8 @@ namespace ShardsOfTime
             Lamp(k, "Hay light", hay + new Vector3(1.2f, 2f, -.8f), new Color(1f, .78f, .4f), 6f, 2.5f, 17.5f, BethlehemArrivalLength);
             k.Shot("Inside", 17.5f, BethlehemArrivalLength, new Vector3(.6f, 1.35f, -3.0f), new Vector3(-1.5f, .65f, -.6f), 50f);
             k.Sound("necklace", 1.8f, .4f); k.Sound("roof_crash", 15.2f, .8f); k.Sound("hay_rustle", 18.2f, .6f); k.Sound("sheep_bleat", 19f, .5f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            Look(k, abi, dan, 18.0f, BethlehemArrivalLength); Look(k, kira, abi, 18.2f, BethlehemArrivalLength);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }
@@ -718,6 +747,9 @@ namespace ShardsOfTime
             k.Shot("A hug", 13.4f, 14.3f, new Vector3(.2f, 1.15f, .6f), new Vector3(0, .75f, 2.6f), 46f);
             k.Shot("The hay tornado", 14.3f, WiseMenLength, new Vector3(2.4f, 1.6f, -2.8f), manger + new Vector3(0, 2.6f, 0), 58f);
             k.Sound("choir_hallelujah", 4.6f, .8f); k.Sound("necklace", 14.3f, .6f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            for (int i = 0; i < 3; i++) { var wm = System.Array.Find(k.root.GetComponentsInChildren<Transform>(true), t => t.name == "Wise Man " + i); if (!wm) continue;
+                Look(k, wm.gameObject, dan, 5.8f, 11.2f); if (i == 1) { Look(k, dan, wm.gameObject, 6.0f, 11.3f); Look(k, abi, wm.gameObject, 6.1f, 11.3f); } }
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }
@@ -834,6 +866,11 @@ namespace ShardsOfTime
             Lamp(k, "Walk light", new Vector3(3.9f, 3f, 3f), new Color(1f, .7f, .4f), 10f, 2.5f, 36f, L);
             k.Sound("shard", 4.6f, .5f); k.Sound("hay_rustle", 10.45f, .7f); k.Sound("hay_rustle", 13f, .5f); k.Sound("hay_rustle", 15.9f, .5f); k.Sound("fire_puff", 21f, .7f); k.Sound("hay_fire", 21.4f, .6f);
             k.Sound("horse_neigh", 27f, .6f); k.Sound("wagon_blast", 31.0f, .85f); k.Sound("wings_flap", 36.3f, .5f); k.Sound("wings_flap", 38.5f, .5f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            Look(k, dan, abi, 15.8f, 19.2f); Look(k, abi, dan, 15.9f, 19.2f);
+            Look(k, dan, kira, 19.9f, 25.4f); Look(k, abi, kira, 20.0f, 25.4f);
+            Look(k, dan, wagon, 27.3f, 33.2f); Look(k, abi, wagon, 27.4f, 33.2f);
+            Look(k, abi, kira, 36.2f, MedievalArrivalLength); Look(k, kira, abi, 37.0f, MedievalArrivalLength);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }
@@ -938,6 +975,9 @@ namespace ShardsOfTime
             Lamp(k, "Torch glow", new Vector3(.3f, 2.6f, -1.8f), new Color(1f, .66f, .35f), 10f, 2.6f, 0f, 47f);
             k.Sound("mm_grunt", .6f, .7f); k.Sound("mm_grunt", 2.2f, .8f); k.Sound("mm_grunt", 3.8f, .9f); k.Sound("mm_laugh", 10.4f, .7f);
             k.Sound("necklace", 17f, .6f); k.Sound("shard_slide", 26.3f, .8f); k.Sound("mm_laugh", 29.9f, .7f); k.Sound("mm_my_hero", 34.3f, .9f); k.Sound("shard", 56f, .6f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt)
+            Look(k, mm, dan, 8.9f, 14.4f); Look(k, dan, mm, 10.2f, 14.6f);
+            Look(k, mm, dan, 29.9f, 37.6f); Look(k, dan, mm, 30.4f, 37.6f); Look(k, abi, mm, 36.7f, 38.3f);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }

@@ -107,6 +107,7 @@ namespace ShardsOfTime
             var p = new Menu.Page { title = "" };
             p.rows.Add(new Menu.Row { label = "Continue", enabled = () => SaveGame.Exists, submit = () => StartGame(false) });
             p.rows.Add(new Menu.Row { label = "New game", submit = () => { if (SaveGame.Exists) Menu.I.Push(ConfirmNewGame()); else StartGame(true); } });
+            p.rows.Add(new Menu.Row { label = "Theater", enabled = () => SaveGame.Exists && SaveGame.Current.seen.Count > 0, submit = () => Menu.I.Push(TheaterPage(true)) });   // Fix 10.1
             p.rows.Add(new Menu.Row { label = "Settings", submit = () => Menu.I.Push(Menu.SettingsPage()) });
             p.rows.Add(new Menu.Row { label = "Controls", submit = () => Menu.I.Push(Menu.ControlsPage()) });
             p.rows.Add(new Menu.Row { label = "Credits", submit = () => Menu.I.Push(Menu.CreditsPage()) });
@@ -196,6 +197,9 @@ namespace ShardsOfTime
             p.rows.Add(new Menu.Row { label = "Controls", submit = () => Menu.I.Push(Menu.ControlsPage()) });
             // Fix 7.2, item 3: back to the last checkpoint with the party (no heart lost, shards kept), in every world and the vortex
             p.rows.Add(new Menu.Row { label = "Return to checkpoint", enabled = () => !Busy, submit = () => { Resume(); StartCoroutine(ReturnToCheckpoint()); } });
+            // Fix 10.1, item 1: once the first vortex is open, back to the vortex from anywhere (the spot is kept for coming back)
+            if (!TestArea) p.rows.Add(new Menu.Row { label = "Return to the vortex", enabled = () => CanReturnToVortex, submit = () => { Resume(); StartCoroutine(ReturnToVortex()); } });
+            if (!TestArea) p.rows.Add(new Menu.Row { label = "Theater", enabled = () => !Busy && SaveGame.Current.seen.Count > 0, submit = () => Menu.I.Push(TheaterPage(false)) });
             if (TestArea) p.rows.Add(new Menu.Row { label = "Leave the test area", submit = () => { Menu.I.Close(); ToTitle(); } });
             else p.rows.Add(new Menu.Row { label = "Quit to title", submit = () => { SaveGame.Save("quit to title"); Menu.I.Close(); ToTitle(); } });
             p.rows.Add(new Menu.Row { label = "Quit game", submit = Quit });
@@ -215,6 +219,92 @@ namespace ShardsOfTime
             yield return null;
             for (float t = 1; t > 0f; t -= Time.deltaTime / .35f) { Hud.SetFade(t); yield return null; }
             Hud.SetFade(0f); Party.I.Frozen = false; Busy = false;
+            OnAreaChanged();
+        }
+
+        // ---- Fix 10.1, item 1: Pause > Return to the vortex
+        public bool CanReturnToVortex => !Busy && !TestArea && SaveGame.Current.World(WorldData.IceAge).storyShard && Party.I && !Vortex.Inside(Party.I.Player.transform.position);
+        public int VortexReturns { get; private set; }
+        public IEnumerator ReturnToVortex()
+        {
+            if (!CanReturnToVortex) yield break;
+            Busy = true; Party.I.Frozen = true;
+            var pl = Party.I.Player; var m = pl.Motor;
+            // the spot to come back to: where they stand (on the ground or swimming), else the checkpoint's
+            var s = SaveGame.Current;
+            s.returnWorld = World.worldId; s.returnCp = s.checkpoint;
+            bool here = m.Grounded || m.Mode == MoveMode.Swim;
+            s.returnSpot = here ? pl.transform.position : Vector3.zero; s.returnYaw = pl.transform.eulerAngles.y;
+            Sfx.Play("portal", .6f);
+            for (float t = 0; t < 1f; t += Time.deltaTime / .5f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(1f);
+            s.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
+            VortexReturns++;
+            SaveGame.Save("return to the vortex");
+            PlayLog.Line($"returned to the vortex from {World.worldId} (spot {(here ? s.returnSpot.ToString("F1") : "the checkpoint " + s.returnCp)})");
+            yield return null;
+            for (float t = 1; t > 0f; t -= Time.deltaTime / .5f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f); Party.I.Frozen = false; Busy = false;
+            Hud.Message("The vortex: walk a path to choose where it takes you. Your spot is kept.", 5f);
+        }
+
+        // ---- Fix 10.1, item 5: the Theater. Every cutscene seen so far (SaveGame.seen), by world in story order; plays with its music.
+        public static readonly (string world, string[] names)[] TheaterList =
+        {
+            (WorldData.IceAge, new[] { "ActOne", "IceAgeArrival", "ViolinistTeaches", "NecklaceWakes", "VortexOpens" }),
+            (WorldData.Egypt, new[] { "EgyptArrival", "SphinxGag", "ViolinistTeachesEgypt", "NecklaceWakesEgypt", "VortexOpensEgypt" }),
+            (WorldData.Bethlehem, new[] { "BethlehemArrival", "ViolinistTeachesBethlehem", "NecklaceWakesBethlehem", "WiseMenArrive" }),
+            (WorldData.Medieval, new[] { "MedievalArrival", "ViolinistTeachesMedieval", "NecklaceWakesMedieval", "TheStone" }),
+            (WorldData.Pirate, new[] { "PirateArrival", "ViolinistTeachesPirate", "NecklaceWakesPirate", "ShardOverboard", "SeaVortex" }),
+        };
+        public static string TheaterLabel(string n) =>
+            n == "ActOne" ? "Act I: the living room" : n.EndsWith("Arrival") ? "The arrival" : n.StartsWith("ViolinistTeaches") ? "The Violinist" :
+            n.StartsWith("NecklaceWakes") ? "The necklace wakes" : n.StartsWith("VortexOpens") ? "The vortex opens" : n == "SphinxGag" ? "The Sphinx" :
+            n == "WiseMenArrive" ? "The Wise Men" : n == "TheStone" ? "The stone" : n == "ShardOverboard" ? "Overboard!" : n == "SeaVortex" ? "The sea vortex" : n;
+        public Menu.Page TheaterPage(bool fromTitle)
+        {
+            var p = new Menu.Page { title = "Theater" };
+            p.body = () => "\nThe cutscenes you have seen, world by world.";
+            foreach (var (w, names) in TheaterList)
+            {
+                int n = names.Count(SaveGame.Current.seen.Contains); if (n == 0) continue;
+                var d = WorldData.Load(w); var nn = names; var dn = d.displayName;
+                p.rows.Add(new Menu.Row { label = $"{dn} ({n})", submit = () => Menu.I.Push(TheaterWorldPage(dn, nn, fromTitle)) });
+            }
+            p.rows.Add(new Menu.Row { label = "Back", submit = () => Menu.I.Back() });
+            return p;
+        }
+        public Menu.Page TheaterWorldPage(string title, string[] names, bool fromTitle)
+        {
+            var p = new Menu.Page { title = title };
+            p.body = () => $"\nHold {Controls.Btn(Controls.Act.Skip)} to skip.";
+            foreach (var n in names) { if (!SaveGame.Current.seen.Contains(n)) continue; var nm = n; p.rows.Add(new Menu.Row { label = TheaterLabel(n), submit = () => StartCoroutine(Theater(nm, fromTitle)) }); }
+            p.rows.Add(new Menu.Row { label = "Back", submit = () => Menu.I.Back() });
+            return p;
+        }
+        public int TheaterPlays { get; private set; }
+        public string TheaterLast { get; private set; }
+        public IEnumerator Theater(string name, bool fromTitle)
+        {
+            if (Busy) yield break;
+            TheaterPlays++; TheaterLast = name;
+            PlayLog.Line($"theater: {name}");
+            Vector3 spot = Vector3.zero; float yaw = 0;
+            if (!fromTitle) { SaveGame.Save("theater"); spot = Party.I.Player.transform.position; yaw = Party.I.Player.transform.eulerAngles.y; }
+            Time.timeScale = 1f;
+            Hud.SetFade(1f);
+            yield return Film(name, true);
+            // back as it was: the save reloaded, its world rebuilt (the film may have opened things), the party where it stood
+            Hud.SetFade(1f);
+            SaveGame.Disabled = false; Cutscenes.AllowSkip = true; Busy = false;
+            SaveGame.Load();
+            World = WorldData.Load(SavedWorld); BuildWorld();
+            if (fromTitle) { yield return null; Hud.SetFade(0f); ToTitle(); Menu.I.Push(TheaterPage(true)); yield break; }
+            Party.I.PlaceAll(spot, Quaternion.Euler(0, yaw, 0)); CameraRig.I.SnapBehind();
+            State = Mode.Playing;
+            yield return null;
+            for (float t = 1; t > 0f; t -= Time.deltaTime / .4f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f);
             OnAreaChanged();
         }
 
@@ -568,6 +658,7 @@ namespace ShardsOfTime
 
         // Round 6: the vortex takes the party to another world: fade, build it, set them down (Egypt's first time: its arrival)
         public int WorldLoads { get; private set; }
+        public int VortexComebacks { get; private set; }
         IEnumerator GoToWorld(string world, string checkpoint, bool arrival)
         {
             Busy = true; Party.I.Frozen = true;
@@ -575,8 +666,18 @@ namespace ShardsOfTime
             for (float t = 0; t < 1f; t += Time.deltaTime / .6f) { Hud.SetFade(t); yield return null; }
             Hud.SetFade(1f);
             SaveGame.Current.currentWorld = world; SaveGame.Current.checkpoint = checkpoint;
+            var sv = SaveGame.Current;   // Fix 10.1: back where Pause > Return to the vortex left this world
+            bool back = !arrival && sv.returnWorld == world;
+            if (back && !string.IsNullOrEmpty(sv.returnCp)) SaveGame.Current.checkpoint = sv.returnCp;
             if (World.worldId != world) { World = WorldData.Load(world); BuildWorld(); WorldLoads++; }
             else Checkpoint.RespawnParty();
+            if (back)
+            {
+                if (sv.returnSpot != Vector3.zero) Party.I.PlaceAll(sv.returnSpot + Vector3.up * .1f, Quaternion.Euler(0, sv.returnYaw, 0));
+                PlayLog.Line($"back where the party left for the vortex: {(sv.returnSpot != Vector3.zero ? sv.returnSpot.ToString("F1") : "")} (checkpoint {sv.checkpoint})");
+                VortexComebacks++;
+            }
+            if (!arrival) sv.returnWorld = "";
             CameraRig.I.SnapBehind();
             SaveGame.Save("vortex to " + world);
             PlayLog.Line($"the vortex: to {world} (checkpoint {checkpoint})");
@@ -705,9 +806,9 @@ namespace ShardsOfTime
         public void OnAreaChanged() { var a = Area; Hud.Message(a != null ? a.name : "The vortex", 2.5f); PlayLog.Line("area " + (a != null ? a.id : "vortex")); }
 
         // ---- the editor's film render (Editor/CutsceneRender.cs): play one cutscene without touching the save
-        public IEnumerator Film(string name)
+        public IEnumerator Film(string name, bool theater = false)
         {
-            SaveGame.Disabled = true; Cutscenes.AllowSkip = false; Busy = true;   // Busy: the world's own triggers (the Sphinx gag) stay quiet while filming
+            SaveGame.Disabled = true; Cutscenes.AllowSkip = theater; Busy = true;   // Busy: the world's own triggers (the Sphinx gag) stay quiet while filming
             Menu.I.Close(); titleCam.Priority = -10; State = Mode.Playing;
             bool egypt = name == "EgyptArrival" || name == "SphinxGag" || name.EndsWith("Egypt");   // Round 6: Egypt's cutscenes in Egypt
             bool beth = name == "BethlehemArrival" || name == "WiseMenArrive" || name.EndsWith("Bethlehem");   // Round 7
@@ -739,7 +840,8 @@ namespace ShardsOfTime
             else { at = OnGround(a.spawn.x, a.spawn.z); facing = Quaternion.Euler(0, a.spawnYaw, 0); }
             Party.I.PlaceAll(at, facing); CameraRig.I.SnapBehind();
             if (name == "TheStone" && Medieval.StuckShard) Medieval.StuckShard.SetActive(false);   // Round 9: as in the game, the necklace has taken it by then
-            yield return new WaitForSeconds(.5f);
+            if (!theater) yield return new WaitForSeconds(.5f);
+            else { yield return null; Hud.SetFade(0f); }
             yield return Cutscenes.Play(name, at, facing);
         }
     }

@@ -39,7 +39,7 @@ MATCH = {
                                                                (34.2, 34.5, 'My hero!'), (37.8, 38, 'stones stir'), (41.4, 41.5, 'they swirl'), (46.8, 47, 'whirlpool'), (50.4, 50, 'pulled in'),
                                                                (54, 54, 'Muscle Man too'), (59.4, 58, 'the tunnel')]),
     # Round 10: the Pirate Seas (the arrival is the second half of the TheStone clip; the overboard clip is in the world's folder)
-    'PirateArrival': ('04-Medieval_TheStone_05-Pirate_Arrival.mp4', [(71, 1.5, 'tunnel'), (77, 5, 'ship at night'), (83, 10.5, 'green vortex'), (89, 14, 'barrels'),
+    'PirateArrival': ('04-Medieval_TheStone_05-Pirate_Arrival.mp4', [(71, 1.5, 'tunnel'), (77, 5, 'ship at night'), (83, 9.5, 'green vortex'), (87, 11.3, 'past the sails'), (88, 12.0, 'onto the deck'), (88.5, 12.55, 'into a barrel'), (89, 14, 'barrels'),
                                                                     (90.5, 15.6, 'pop out'), (92, 17.6, 'feet, otter'), (93.5, 18.8, 'standing'), (95, 20.4, 'through the sails'),
                                                                     (96.5, 22.5, 'the crash'), (101, 25, 'lying there'), (105.5, 26.8, 'flat'), (110, 29.6, 'the grin'),
                                                                     (114.5, 31.3, 'Abi laughs'), (116, 33.3, 'green shard')]),
@@ -47,7 +47,7 @@ MATCH = {
                        [(0.3, 3.8, 'held up'), (1.0, 5.4, 'it slips'), (1.5, 6.0, 'it falls'), (2.5, 7.4, 'it rolls'), (3.5, 8.6, 'rolling'), (4.5, 10.1, 'to the edge'),
                         (5.0, 11.0, 'over the side'), (5.5, 11.8, 'into the sea')]),
 }
-ROUND = {'PirateArrival': 'round10', 'ShardOverboard': 'round10'}
+ROUND = {'PirateArrival': 'fix101', 'ShardOverboard': 'round10'}
 
 
 def ffmpeg():

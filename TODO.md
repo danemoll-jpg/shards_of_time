@@ -24,57 +24,59 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Fix 10.1: never shard-locked, the deckhands, the arrival, the sails, a cutscene theater (target 0.10.1)
-Round 10 is delivered (below). Dan played 0.10.0 (2026-11-11). Report per item: done / not done / deferred, and why.
-Testing rules as always; rule 12 and the Fix 8.1 checks apply. Don't end your turn until 0.10.1 is published unless
-truly blocked (say so).
+Current round: none. Fix 10.1 is delivered (below); the next round is for the planning chat to write.
+Fix 10.1's plan is in `TODO-ARCHIVE.md`.
 
-1. **Shard-locked in the Pirate Seas (Dan: "I got all I could on this level and still don't have enough, and I can't
-   go back to the vortex to get more").** Two faults:
-   a. **The threshold is unreachable for a normal player.** 225 = 75% of all 300, but the under-sea half only opens
-      after the necklace wakes, so before the wake a player has only the ship's 30 plus whatever they kept from earlier
-      worlds; a player who didn't nearly complete every earlier world is stuck. Rule 2 checked "everything reachable",
-      not a real player.
-   b. **No way back to the vortex** until the story shard is taken, so a short player can't fetch shards elsewhere.
-   **New rule (DEFAULT, replaces Fix 8.1's 75% rule; Dan can tune):**
-   - **Stepped thresholds:** each world's threshold = the previous world's threshold **+ 25**, and **at least 15**
-     from this world. So a player who only ever collected the minimum needs 25 here (always reachable before the
-     wake), and one who collected extras still needs 15 here. Recompute every world in order (Ice Age 25; Egypt 50,
-     Bethlehem 75, Medieval 100, Pirate 125, …; check Ice Age's first value against its pre-wake shards).
-   - **Rule 2, rewritten (the check must prove it):** simulate the **minimum player**: in each world, they collect only
-     the threshold's need, using only shards reachable **before that world's necklace wakes** with the moves they hold
-     then. Every world must be completable that way. Also simulate the completionist (all reachable) to confirm the
-     15-from-this-world floor makes sense. Report both per world.
-   - **Always a way out:** from the moment the first vortex has been opened, **Pause → Return to the vortex** is
-     available in every world (the party's spot is saved; worlds already unlocked stay open; the current world's path
-     stays open too). So a player who's short can always go back to an earlier world to collect more.
-   - Existing saves: recompute; nothing already woken relocks.
-   Update `CLAUDE.md` rule 3 and `Docs/Design/design-decisions.md`.
-2. **The pirate deckhands stand in a T-pose.** Their animator isn't wired (Dan's Mixamo files for `pirate` are in):
-   idle, walk / run (chase), trip (the peg-leg gag), hit, recover. Then check **every animated character in every
-   world** for a T-pose or bind pose in play and in cutscenes (a check that samples each character's pose and flags
-   any still in the rest pose).
-3. **`PirateArrival` skips the fall.** Dan: they just climb out of the barrels; it misses that they happen to fall into
-   them. Follow the clip from the vortex: the green vortex over the ship, the three tumble out of it, each drops
-   **into a barrel** (a shot of each landing: splash / thud, the barrel wobbles), then they pop out; then Muscle Man
-   through the sails. Re-render and re-sheet against the clip.
-   **Muscle Man didn't look at Dan when he said "My hero!".** Whenever a character speaks or reacts to someone in a
-   cutscene, they turn their head (and body if needed) to that person: add look-at (head / eyes / upper body) to the
-   cutscene tooling and use it in every scene with a line or reaction (`TheStone`, `PirateArrival`, `SphinxGag`,
-   `WiseMenArrive`, the arrivals). Check each with a close-up frame.
-4. **The sails often block the view.** The camera must never sit behind a sail, net or rigging: thin cloth and rope
-   don't push the camera in; instead, anything between the camera and the player **fades to see-through** (sails,
-   nets, ropes, masts, also the Medieval banners and similar). Check from the player's view walking the whole deck
-   and rigging.
-5. **"How can I watch the other cutscenes?"** Add a **Theater** to the title screen and the pause menu: every
-   cutscene the player has seen so far (saved), grouped by world in story order, play any of them (skippable, with
-   its music). A New game save starts with none; Dan's current save fills in what he's seen.
-6. Build, check (a minimum-player play-through from New game to the Pirate Seas' green shard; Return to the vortex
-   from mid-Pirate and back; the T-pose sweep; the arrival sheet; the sails view), publish 0.10.1, update `TODO.md` /
-   `CLAUDE.md`, clean up.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 10.1: never shard-locked, the deckhands, the arrival, the sails, a theater (0.10.1, build 1001, 2026-11-12)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever
+visible or in front): `local/fix101/{minplayer,tpose,sails,theater}`, all passed. Evidence: `Data/screenshots/fix101/`.
+1. Never shard-locked: **done.** a. Stepped thresholds: Ice Age 25, Egypt 50, Bethlehem 75, Medieval 100, Pirate Seas 125 (each +25),
+   and 15 from each world (defaults and the five world assets). Rule 2's report now simulates both players: the minimum player
+   (arrives with the previous threshold, only shards reachable before this necklace wakes) needs 25 here and has 43 / 50 / 48 / 50 / 30;
+   the completionist is fine everywhere. New check `minplayer`: New game -> every world taking exactly 25 pre-wake shards -> the green
+   shard: in every world the necklace still sleeps at 24 and wakes at 25 (125 in the Pirate Seas); arrivals skipped with the pad.
+   b. Pause > **Return to the vortex** (once the Ice Age's vortex is open, every world): checked mid-Pirate with the pad: in the vortex
+   with 110 shards, earlier paths open, back by the Pirate Seas path to the very spot (0.0 m), checkpoint kept. Saves: thresholds come
+   from the world data, so existing saves just see the new numbers; nothing awake relocks. `CLAUDE.md` rule 2 / 3 and the design doc updated.
+2. The deckhands: **done.** The cause: the `pirate` model imported as a Generic rig (its name was missing from the importer's list of
+   people), so no human clip could play. Now Humanoid with the shared clips: idle, walk / run (chase), cheer ("Arr!"), punch, hit (hurt),
+   the trip = Fall Flat (mm_fall) then picking himself up (Hard Landing), 2.9 s harmless; stunned = dazed. Dan's `pirate` folder had only
+   the T-pose rig, so no per-deckhand clips were needed. **T-pose sweep** (new check `tpose`): every skinned character in all five worlds
+   and every cutscene at five moments, against its bind pose: 135 characters; it found one (sabertooth Kira between her snarls in
+   IceAgeArrival: a one-shot shorter than its slot left the rig in its bind pose). Fixed in the cutscene kit for every scene (a one-shot
+   now holds its last frame); the sweep then passed.
+3. PirateArrival and look-at: **done.** The fall from the clip (87-89 s): out of the green vortex, tumbling past the sails, an overhead
+   of the three upright barrels, then a close shot of each landing (feet first, thud, splash, the barrel wobbles); at the cut the barrels
+   lie on their sides and they crawl out as before. Dan, Abi and Kira now turn to Muscle Man after his crash (the clip's 97-102 s); he
+   looks at Dan as Abi laughs; Dan glances at Abi. Look-at (head, neck, chest, after the clips: `CutsceneLookAt`) is in TheStone
+   (Muscle Man at Dan for "your turn" and "My hero!", Dan at him), PirateArrival, SphinxGag (up at the Sphinx, then Dan and Kira's look),
+   WiseMenArrive (the Wise Men stare at Dan), and the Ice Age, Egypt, Bethlehem and Medieval arrivals. Re-rendered from the exe; sheet
+   `fix101/PirateArrival.jpg`, close-ups `fix101/looks.jpg`. (The first look sheet showed bent necks: the head's forward was measured
+   on a falling first frame; now taken from the bind pose, tilt capped at 30 deg; re-rendered.)
+4. The sails: **done.** Sails, ropes, nets, masts, yards and flags (and the Medieval banners, bunting, pennants) fade to see-through when
+   they are between the camera and the player, and masts no longer pull the camera in (thin cloth never did: it has no collider). The
+   merged meshes are split per sail / rope at load, so only the one in the way fades. Check `sails`: the deck walked three ways plus the
+   main top, crow's nest, fore top and quarterdeck: parts faded where in the way; nothing thin pulled the camera in (only the hull's
+   walls and the bulkhead did, as before).
+5. The Theater: **done.** Title screen and pause menu: the scenes seen so far, by world in story order, any of them played (skippable,
+   with its music), then back where you were. A New game starts with none; an old save fills in what its progress shows (checked with
+   the 0.6.0 save: 10 scenes). Checked from the pause menu mid-Pirate (IceAgeArrival, back on deck 0.0 m away) and from the title.
+6. Build, check, publish: **done.** 0.10.1 published as `game-1001`. The Round 1 starter install in `local/sc` updated itself from GitHub to build 1001 and
+   started (ready signal).
+
+Decisions Code made (Dan can overrule): Return to the vortex appears once the Ice Age's vortex is open; coming back by the same world's
+path puts you where you left (another world's path doesn't); the Theater lists the 23 story scenes (not PortalOpens, the test area's);
+it rebuilds the world after a scene (enemies reset). The deckhand's trip got longer (1.6 -> 2.9 s) so the fall and get-up both play.
+
+**For Dan to check:** the Pirate Seas from your save (the HUD now says "Next: 125 (this world: n / 15)"; you should wake the necklace
+at once if you have 15 from the ship); Pause > Return to the vortex and back; the deckhands chasing and tripping; walking the deck and
+climbing the rigging (sails fading); `Recordings/PirateArrival.mp4` and the two sheets; Pause > Theater. Known: transparent sails can
+sort oddly against each other for a frame; the look-at is procedural (heads turn, eyes don't move separately).
+
+
 ### Round 10: the Pirate Seas (0.10.0, build 1000, 2026-11-11)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): `local/round10/final` (new mode `pirate`: from the vortex with four
 worlds done -> PirateArrival -> the ship, the rigging, Muscle Man's jobs, the fiddler, the island and cove -> the necklace -> the chest ->
@@ -185,60 +187,12 @@ WiseMenArrive,MedievalArrival,TheStone}.jpg` and the eight videos `Recordings/<s
 your song from New game (does it land on your beats?); listen to `Assets/Resources/Sounds/mm_my_hero.mp3` and `stone_whirl.mp3`
 (Code doesn't play sound on your PC).
 
-### Fix 8.1: Medieval fixes + shard thresholds (0.8.1, build 801, 2026-11-11)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad): new modes `fix81` (all four worlds, ~45 min), `fix81med`,
-`floors`, `platforms`, `reach`, `rule81` (`Checks/ExeCheck.Fix81.cs`: a probe collider is made from every visible mesh and compared
-with what the heroes stand on and bump into). `local/round81/final_med` (`fix81med`): all passed; `local/round81/final` (`fix81`, all
-worlds): 2 left, both reported below; `stuckmed` (rule 12): all passed; `medieval` (Round 8's play-through, regression): all passed,
-112 ok. Audio 0.000 RMS in every run, the builds and Blender; window watcher: no window, never in the foreground. Evidence:
-`Data/screenshots/round81/`.
-1. Wading in Muscle Man's room: **done.** Cause: the keep's stone plinth (`medieval_world.py`) was one solid block over the whole
-   keep, 0.8 m tall, so in the great hall (where the rival Muscle Man lifts his barrel) the floor you saw was its top while you walked
-   on the flagstones under it. Now a ring outside the walls only. The audit (every walkable collider top vs the visible surface, per
-   area) also found and fixed: the keep door's three steps had no collider; the feast table's collider was commented out (and 11 cm
-   too high) and its benches' colliders sat 45 cm off the benches; the flower pots, the arcade deck's end and its edge lip, the hearth.
-   Medieval now: 0 sunk points in the courtyard, hall, field, village and dungeon (2 stray points at 11 cm on the walls / moat); feet
-   at Muscle Man's spots +-3 cm for all three heroes (`81_feet_*`). Spot-check of the other worlds: no floor anyone walks sinks; listed
-   only (props whose look reaches past their collider: Egypt's 30 cm roof parapets, a 4-point patch at a far pyramid's foot).
-2. The drawbridge: **done.** Cause: its deck collider line had slipped into a `//` comment in Round 8. Now a child of the drawbridge
-   that sits exactly on the seen planks (measured at build time: x -4..4, z -18..-3, top 0.00) and moves with it (raised 80 deg its top
-   is at 15 m; lowered again 0). Every moving platform in every world, every hero (`platforms`): the drawbridge, both chandeliers, the
-   Ice Age's two mammoths, Egypt's 12 (boats, shuttle stone, hauled stones, carts, the lift, the turning bridge, the tomb's sliding
-   blocks; the camel is ridden, checked by `camel`): every hero stood on each, none fell through. Bethlehem has none.
-3. The invisible wall by the village: **done.** Cause: the village's back alley (shard V06, behind the brambles) was boxed by three
-   hidden 7 m walls with nothing drawn there, and the three bramble bushes (2 m across) had 4.6 m colliders turned with each bush, so
-   the gaps between bushes were invisible walls too; the chimney's walls were hidden as well. Now seen stone walls, bushes scaled to
-   fill the alley with unturned colliders. The new scan (every hidden solid's open sides: anything drawn there?) also found the yard
-   boulder's collider 1.9 m up in the air (the ground was found after its own new collider; a gap under it into the walled yard), the
-   round towers' colliders 1.4 m inside the drawn towers (now a 5 m cylinder), the north wall walks without a parapet (feet in the
-   merlons) and the hall's north gallery rail with no collider (you walked through it, and onto the east ledge without the
-   chandeliers). Medieval: 0 invisible colliders left (the gate arch over the passage is out of reach). Reachability (`reach`): the
-   bot walks to every shard from up to three open sides, with the moves taught so far and gates opened as their move would (jumping
-   gaps, skipping cutscenes): Ice Age 49, Egypt 48, Bethlehem 51, Medieval 53 walked, **0 not reached**; not walked: later-move shards
-   and shards under water (the never-stuck water checks cover those).
-4. The new shard rule: **done** (DEFAULT, Dan can tune). The necklace wakes when the total reaches ~75 % of all shards so far
-   **and** 20 come from this world (`AreaData.fromHere`). Thresholds: Ice Age **40** (not 45: only 43 of its 60 are reachable on
-   arrival, rule 2), Egypt 90, Bethlehem 135, Medieval 180. Rule 2 with both parts: Ice Age 43 >= 40 (43 here), Egypt 93 >= 90 (50 here),
-   Bethlehem 141 >= 135 (48 here), Medieval 191 >= 180 (50 here). In the exe: 170 in all + 25 here: asleep ("Next: 180 (this world:
-   20 / 20)"); 210 + 12 here: asleep ("Next: 180 (this world: 12 / 20)", `81_hud_next_this_world.png`); the 20th from here wakes it;
-   an awake world with 5 from here stays awake. CLAUDE.md rule 3 and `design-decisions.md` updated; hints and messages say both parts.
-5. Build / check / publish: **done.** 0.8.1 published as `game-801`; the Round 1 starter install in `local/sc` updated itself from
-   GitHub to build 801 and started. Disk: 9.8 GB -> 9.3 GB.
-
-Decisions Code made (Dan can overrule): the Ice Age threshold 40 instead of 45 (rule 2); the bramble bushes drawn 2.2x bigger so the
-alley looks closed where it is closed; the hall's north rail now blocks walking onto the east ledge (the chandeliers are the way, as
-designed); the old Round 8 check jumps onto the feast table for G01 (it sat inside the table before, with no collider under it).
-
-**For Dan to check:** the great hall (floor, steps, benches, table); the drawbridge both ways; the village alley and its brambles (do
-they read as "burn me"?); the round towers and wall walks (no walking into stone); the necklace pace with the new rule (HUD line).
-Known, not changed: Egypt's flat-roof parapets have no colliders (feet 30 cm into the lip at a roof's edge); the village houses'
-collider tops (7 m) cut through their pitched roofs (only a gliding Kira could get there).
 
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)
 ---------------------------------------------------------------------------
-- **Code's notes for Round 11 (the planning chat decides):** Dan's notes on 0.10.0 first; Muscle Man's three Pirate clips (Drowning,
+- **Code's notes for Round 11 (the planning chat decides):** Dan's notes on 0.10.0 and 0.10.1 first; Muscle Man's three Pirate clips (Drowning,
   Getting Up, Jumping Down: drop them in `SourceArt/Mixamo/muscleman_pirate/`, see `Docs/MODELS-NEEDED.md`); the vortex's Victorian
   Steampunk path is in ("to be continued" until now: open after the green shard); its move roadmap entry is Abi's wall jump (the Medieval
   village chimney and the Ice Age gates wait for it); the deep dive now opens every earlier world's deep water (checked: the Medieval moat's

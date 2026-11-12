@@ -49,12 +49,13 @@ namespace ShardsOfTime
             var comp = cmGo.AddComponent<CinemachineRotationComposer>(); comp.Damping = new Vector2(.15f, .15f);
             comp.Composition.ScreenPosition = new Vector2(0, .08f);
             r.Deoccluder = cmGo.AddComponent<CinemachineDeoccluder>();
-            r.Deoccluder.CollideAgainst = ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << Hero.EnemyLayer) | (1 << 4) | (1 << 2) | (1 << 5));
+            r.Deoccluder.CollideAgainst = ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << Hero.EnemyLayer) | (1 << 4) | (1 << 2) | (1 << 5) | (1 << SeeThrough.SolidLayer));   // Fix 10.1: masts fade instead
             r.Deoccluder.MinimumDistanceFromTarget = .4f;
             var av = r.Deoccluder.AvoidObstacles; av.Enabled = true; av.CameraRadius = .25f; av.Strategy = CinemachineDeoccluder.ObstacleAvoidance.ResolutionStrategy.PullCameraForward;
             av.Damping = .3f; av.DampingWhenOccluded = 0f; av.SmoothingTime = .1f; av.DistanceLimit = 0; av.MaximumEffort = 4;
             r.Deoccluder.AvoidObstacles = av;
             TestRun.SetupHeadless(r.Cam);
+            r.gameObject.AddComponent<SeeThrough>();   // Fix 10.1, item 4
             return r;
         }
 

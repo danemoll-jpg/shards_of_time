@@ -32,6 +32,9 @@ namespace ShardsOfTime
         public string currentWorld = WorldData.IceAge;
         public string checkpoint = "";
         public string savedAt = "";
+        public List<string> seen = new List<string>();      // Fix 10.1: the cutscenes the player has seen (the Theater)
+        public string returnWorld = "";                     // Fix 10.1: Pause > Return to the vortex left this world from returnSpot
+        public Vector3 returnSpot; public float returnYaw; public string returnCp = "";
 
         public static SaveGame Current { get; private set; } = new SaveGame();
         public static string Slot = "";   // Round 4: "testarea" = the graybox playground (a debug option), in its own file
@@ -54,6 +57,24 @@ namespace ShardsOfTime
             try { if (Exists) Current = JsonUtility.FromJson<SaveGame>(File.ReadAllText(FilePath)) ?? new SaveGame(); }
             catch (Exception e) { Debug.LogWarning("[Save] save.json unreadable, starting fresh: " + e.Message); Current = new SaveGame(); }
             Current.maxHearts = Mathf.Clamp(Current.maxHearts, Health.StartHearts, Health.MaxHeartsCap);
+            if (Exists) Current.FillSeen();
+        }
+
+        // Fix 10.1, item 5: a save from before the Theater gets the cutscenes its progress shows were seen
+        public void FillSeen()
+        {
+            if (seen == null) seen = new List<string>();
+            void S(bool b, string n) { if (b && !seen.Contains(n)) seen.Add(n); }
+            WorldProgress P(string w) { foreach (var x in worlds) if (x.world == w) return x; return new WorldProgress { world = w }; }
+            var ia = P(WorldData.IceAge); var eg = P(WorldData.Egypt); var be = P(WorldData.Bethlehem); var me = P(WorldData.Medieval); var ps = P(WorldData.Pirate);
+            S(true, "ActOne"); S(true, "IceAgeArrival");
+            S(Has(Abilities.GroundPound), "ViolinistTeaches"); S(ia.necklaceAwake || ia.storyShard, "NecklaceWakes"); S(ia.storyShard, "VortexOpens");
+            S(eg.opened.Contains("EG-arrived"), "EgyptArrival"); S(eg.opened.Contains("EG-sphinx-gag"), "SphinxGag"); S(Has(Abilities.DoubleJump), "ViolinistTeachesEgypt");
+            S(eg.necklaceAwake || eg.storyShard, "NecklaceWakesEgypt"); S(eg.storyShard, "VortexOpensEgypt");
+            S(be.opened.Contains("BE-arrived"), "BethlehemArrival"); S(Has(Abilities.Pounce), "ViolinistTeachesBethlehem"); S(be.necklaceAwake || be.storyShard, "NecklaceWakesBethlehem"); S(be.storyShard, "WiseMenArrive");
+            S(me.opened.Contains("ME-arrived"), "MedievalArrival"); S(Has(Abilities.ChargedPunch), "ViolinistTeachesMedieval"); S(me.necklaceAwake || me.storyShard, "NecklaceWakesMedieval"); S(me.storyShard, "TheStone");
+            S(ps.opened.Contains("PS-arrived"), "PirateArrival"); S(Has(Abilities.DeepDive), "ViolinistTeachesPirate"); S(ps.necklaceAwake || ps.storyShard, "NecklaceWakesPirate");
+            S(ps.opened.Contains("PS-overboard"), "ShardOverboard"); S(ps.storyShard, "SeaVortex");
         }
 
         public static void NewGame()

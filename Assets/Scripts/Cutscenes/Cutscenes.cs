@@ -45,6 +45,7 @@ namespace ShardsOfTime
             if (mood) Look.Mood(mood);
             PlayLog.Line($"cutscene {name} starts ({dir.duration:0.0} s)");
             float start = Time.time;
+            if (!SaveGame.Disabled && !SaveGame.Current.seen.Contains(name)) SaveGame.Current.seen.Add(name);   // Fix 10.1: the Theater
             Started?.Invoke(name);
             dir.Play();
             bool skipArmed = !Controls.Skip.IsPressed();   // a held button from before doesn't count

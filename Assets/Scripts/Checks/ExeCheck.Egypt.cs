@@ -74,7 +74,7 @@ namespace ShardsOfTime
             yield return Shot("81_plaza_pyramids");
             Log("  " + Game.World.RequirementReport("E").detail);
             var rr = Game.World.RequirementReport("E");
-            Ok(rr.ok && Game.World.shards.Count == 60 && rr.requirement == 75, $"rule 2 (Fix 6.1, universal total): {rr.reachable} available on arrival (Ice Age + Egypt first visit), threshold {rr.requirement}");
+            Ok(rr.ok && Game.World.shards.Count == 60 && rr.requirement == 50, $"rule 2 (Fix 6.1, universal total): {rr.reachable} available on arrival (Ice Age + Egypt first visit), threshold {rr.requirement}");
             Log($"  arrival message: \"{Hud.LastMessage}\"");
             Ok(Hud.TotalShown == SaveGame.Current.Total.ToString() && Hud.UnderTotal == $"Next: {NeedEG}", $"HUD on arrival: the big number {Hud.TotalShown} (the total), under it \"{Hud.UnderTotal}\"");
 

@@ -1,0 +1,20 @@
+Shards of Time exe check 2026-11-11 23:44, version 0.10.1; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 77824 samples); master volume 0.00
+
+== Fix 10.1, item 4: sails, nets, ropes and masts fade between the camera and the player
+  ok    115 see-through parts on the ship
+  screenshot sails_2_starboard_side.png
+  (starboard side: faded now: Sail__SailPink piece 1 )
+  main_top: camera 6.5 m back, faded: Rope__Rope.001 piece 70 
+  screenshot sails_main_top.png
+  crows_nest: camera 6.5 m back, faded: none
+  screenshot sails_crows_nest.png
+  fore_top: camera 6.5 m back, faded: Sail__SailPink piece 4 
+  screenshot sails_fore_top.png
+  quarterdeck: camera 6.5 m back, faded: Mast__Wood piece 0 Rope__Rope.001 piece 87 Sail__SailPink piece 5 
+  screenshot sails_quarterdeck.png
+  ok    parts faded on the walk (12 fades; 229 of 4614 walking frames had something faded)
+  ok    no sail, rope or mast pulled the camera in (nearest 0.8 m; what did: Hull__ShipRed x1915, Bulkhead__ShipRed x24)
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 4855808 samples); master volume 0.00

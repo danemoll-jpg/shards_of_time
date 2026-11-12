@@ -45,17 +45,51 @@ namespace ShardsOfTime
             var vortexAt = new Vector3(0, 30f, 4f);
             Spiral(k, "Green vortex", vortexAt, Quaternion.Euler(-90, 0, 0), GreenSwirl, 18f, 8f, 11f, 23f, 90f, new Color(.15f, .6f, .3f), 5, true, 21.5f);
             Lamp(k, "Vortex light", new Vector3(0, 16f, 4f), new Color(.35f, 1f, .5f), 60f, 3.2f, 8.5f, L);
-            // three barrels lying on their sides, mouths to the camera (-z): Dan's, Kira's, Abi's
+            // Fix 10.1, item 3 (the clip, 87-89 s): the three fall out of the vortex past the sails and each drops into an upright barrel (a shot
+            // of each landing: thud, splash, the barrel wobbles); from the cut at 13.6 the barrels lie on their sides, mouths to the camera (-z),
+            // and they crawl out: Dan's, Kira's, Abi's
             var barrels = k.Holder("Barrels", Vector3.zero, 0);
-            float[] bx = { -1.0f, .2f, 1.4f };
+            float[] bx = { -1.0f, .2f, 1.4f }; float[] landT = { 12.5f, 12.95f, 13.35f }; const float upZ = 3.1f, cut = 13.6f;
             for (int i = 0; i < 3; i++)
             {
                 var b = PropFrom("pirate_props", "Barrel", barrels.transform, new Vector3(bx[i], .45f, 2.0f), 0);
-                if (b) { b.name = "Barrel" + i; b.transform.localRotation = Quaternion.Euler(90, 0, 0) * b.transform.localRotation; b.transform.localPosition = new Vector3(bx[i], .45f, 2.55f); }
+                if (b)
+                {
+                    b.name = "Barrel" + i; var up = b.transform.localRotation; var lying = Quaternion.Euler(90, 0, 0) * up;
+                    if (Quaternion.Dot(up, lying) < 0) lying = new Quaternion(-lying.x, -lying.y, -lying.z, -lying.w);
+                    b.transform.localRotation = lying; b.transform.localPosition = new Vector3(bx[i], .45f, 2.55f);
+                    string bp = "Barrel" + i; var upPos = new Vector3(bx[i], 0, upZ); float lt = landT[i];
+                    k.Key(barrels, bp, "m_LocalPosition", 0f, upPos); k.Key(barrels, bp, "m_LocalPosition", cut - .02f, upPos);
+                    k.KeyQ(barrels, bp, 0f, up);
+                    foreach (var (dt, tilt) in new[] { (.06f, 7f), (.16f, -5f), (.26f, 3f), (.36f, 0f) }) k.KeyQ(barrels, bp, lt + dt, Quaternion.Euler(0, 0, tilt) * up);
+                    k.KeyQ(barrels, bp, cut - .02f, up); k.KeyQ(barrels, bp, cut, lying);
+                    Burst(k, "Thud " + i, new Vector3(bx[i], 1.15f, upZ), new Color(.62f, .44f, .26f), lt, .55f, 7, .7f, .5f, "Lit", true);
+                    Burst(k, "Splash " + i, new Vector3(bx[i], 1.2f, upZ), new Color(.85f, .95f, 1f), lt + .02f, .7f, 8, .6f, .9f);
+                }
                 else Placeholders.Prim(PrimitiveType.Cylinder, barrels.transform, new Vector3(bx[i], .45f, 2.0f), new Vector3(.9f, .55f, .9f), Placeholders.Mat(new Color(.5f, .32f, .18f)), name: "Barrel" + i).transform.localRotation = Quaternion.Euler(90, 0, 0);
                 // a wobble as someone lands inside
                 string p = "Barrel" + i; var home = new Vector3(bx[i], .45f, b ? 2.55f : 2.0f);
                 foreach (var (t, dx) in new[] { (13.6f + i * .3f, 0f), (13.75f + i * .3f, .08f), (13.9f + i * .3f, -.06f), (14.1f + i * .3f, 0f) }) k.Key(barrels, p, "m_LocalPosition", t, home + new Vector3(dx, 0, 0));
+            }
+            // the three falling out of the vortex (10.6), tumbling past the sails, straightening and dropping feet first into their barrels
+            var fd = Cast0(k, "Dan falling", c.dan); var fk = Cast0(k, "Kira falling", c.kira); var fa = Cast0(k, "Abi falling", c.abi);
+            var fallers = new[] { fd, fk, fa };
+            for (int i = 0; i < 3; i++)
+            {
+                var a = fallers[i]; float lt = landT[i], ph = i * 1.7f;
+                var top = new Vector3(bx[i] + (i - 1) * .9f, 27f, 4.4f); var mid = new Vector3(bx[i], 8.5f, upZ + .3f);
+                for (float t = 10.6f; t <= 11.8f + .001f; t += .2f)
+                {
+                    float f = Mathf.InverseLerp(10.6f, 11.8f, t);
+                    k.Key(a, "Body", "m_LocalPosition", t, Vector3.Lerp(top, mid, f * f * .4f + f * .6f) + new Vector3(Mathf.Sin(f * 7f + ph) * .35f, 0, 0));
+                    KeyRot(k, a, "Body", t, Quaternion.Euler(50f * Mathf.Sin(f * 6f + ph), ph * 40f + f * 300f, 40f * Mathf.Cos(f * 5f + ph)));
+                }
+                k.Key(a, "Body", "m_LocalPosition", lt - .55f, new Vector3(bx[i], 4.2f, upZ)); KeyRot(k, a, "Body", lt - .55f, Quaternion.Euler(10f, 180f, 0));
+                k.Key(a, "Body", "m_LocalPosition", lt, new Vector3(bx[i], i == 1 ? 1.0f : .85f, upZ)); KeyRot(k, a, "Body", lt, Quaternion.Euler(0, 180f, 0));
+                k.Key(a, "Body", "m_LocalPosition", lt + .13f, new Vector3(bx[i], .15f, upZ));   // down into it (hidden by its staves)
+                Appear(k, a, 10.6f, lt + .14f, L);
+                if (i == 1) k.Clips(a, (KiraClip("fall", c.kira), 0f));
+                else k.Clips(a, (PeopleClip("fall"), 0f), (PeopleClip("jump") ?? PeopleClip("idle"), lt - .6f));   // feet first for the drop (the skydive clip hit the barrel flat)
             }
             // a broken barrel where Muscle Man crashes (staves scattered), shown from the crash
             var wreck = k.Holder("Smashed barrel", new Vector3(1.6f, 0, 4.4f), 0);
@@ -63,13 +97,13 @@ namespace ShardsOfTime
             k.Show(wreck, 21.8f, L);
             // Dan and otter Kira pop out of their barrels (15 s), Abi out of hers off to the right and walks in (16.5)
             var dan = Cast0(k, "Dan", c.dan); var abi = Cast0(k, "Abi", c.abi); var kira = Cast0(k, "Kira", c.kira);
-            Path(k, dan, (0f, new Vector3(-1f, .05f, 2.6f), 180f), (15f, new Vector3(-1f, .05f, 2.6f), 180f), (15.9f, new Vector3(-1f, 0, 1.2f), 180f), (16.6f, new Vector3(-.55f, 0, .8f), 180f), (L, new Vector3(-.55f, 0, .8f), 180f));
+            Path(k, dan, (0f, new Vector3(-1f, .05f, 2.6f), 180f), (15f, new Vector3(-1f, .05f, 2.6f), 180f), (15.9f, new Vector3(-1f, 0, 1.2f), 180f), (16.6f, new Vector3(-.55f, 0, .8f), 180f), (21.7f, new Vector3(-.55f, 0, .8f), 180f), (22.2f, new Vector3(-.55f, 0, .8f), 28f), (30.0f, new Vector3(-.55f, 0, .8f), 28f), (30.45f, new Vector3(-.55f, 0, .8f), 180f), (L, new Vector3(-.55f, 0, .8f), 180f));
             Appear(k, dan, 14.95f, L, L);
             k.Clips(dan, (PeopleClip("idle"), 0f), (PeopleClip("walk"), 15f), (PeopleClip("look"), 16.6f), (PeopleClip("surprised"), 21.6f), (PeopleClip("idle"), 23.5f), (PeopleClip("hold_up"), 30.6f));
-            Path(k, kira, (0f, new Vector3(.2f, 0, 2.6f), 180f), (15.3f, new Vector3(.2f, 0, 2.6f), 180f), (16.2f, new Vector3(.25f, 0, .5f), 180f), (L, new Vector3(.25f, 0, .5f), 180f));
+            Path(k, kira, (0f, new Vector3(.2f, 0, 2.6f), 180f), (15.3f, new Vector3(.2f, 0, 2.6f), 180f), (16.2f, new Vector3(.25f, 0, .5f), 180f), (21.9f, new Vector3(.25f, 0, .5f), 180f), (22.4f, new Vector3(.25f, 0, .5f), 18f), (29.9f, new Vector3(.25f, 0, .5f), 18f), (30.4f, new Vector3(.25f, 0, .5f), 180f), (L, new Vector3(.25f, 0, .5f), 180f));
             Appear(k, kira, 15.25f, L, L);
             k.Clips(kira, (KiraClip("idle", c.kira), 0f), (KiraClip("walk", c.kira), 15.3f), (KiraClip("idle", c.kira), 16.2f), (KiraClip("jump", c.kira), 21.7f), (KiraClip("idle", c.kira), 22.3f));
-            Path(k, abi, (0f, new Vector3(2.8f, 0, 1.6f), 250f), (16.5f, new Vector3(2.8f, 0, 1.6f), 250f), (17.8f, new Vector3(.95f, 0, .85f), 180f), (L, new Vector3(.95f, 0, .85f), 180f));
+            Path(k, abi, (0f, new Vector3(2.8f, 0, 1.6f), 250f), (16.5f, new Vector3(2.8f, 0, 1.6f), 250f), (17.8f, new Vector3(.95f, 0, .85f), 180f), (21.8f, new Vector3(.95f, 0, .85f), 180f), (22.3f, new Vector3(.95f, 0, .85f), 10f), (30.0f, new Vector3(.95f, 0, .85f), 10f), (30.45f, new Vector3(.95f, 0, .85f), 180f), (L, new Vector3(.95f, 0, .85f), 180f));
             Appear(k, abi, 16.45f, L, L);
             k.Clips(abi, (PeopleClip("idle"), 0f), (PeopleClip("walk"), 16.5f), (PeopleClip("idle"), 17.8f), (PeopleClip("surprised"), 21.6f), (PeopleClip("idle"), 23.5f), (PeopleClip("laugh"), 30.5f));
             if (k.Necklaces.ContainsKey(dan)) PulseFrom(k, dan, 30.6f, L, L);
@@ -86,8 +120,11 @@ namespace ShardsOfTime
             // shots, the film's order
             var shipSide = new Vector3(0, 4f, 4f);
             k.Shot("The ship at night", 3.2f, 8f, new Vector3(-58f, 3f, 12f), shipSide, 40f, new Vector3(-54f, 3.5f, 8f));
-            k.Shot("The green vortex", 8f, 12.6f, new Vector3(-52f, 6f, 2f), new Vector3(0, 13f, 4f), 52f, new Vector3(-48f, 7f, 3f), new Vector3(0, 16f, 4f));
-            k.Shot("On deck", 12.6f, 13.6f, new Vector3(-.6f, 7f, -9f), new Vector3(0, 0, 2.5f), 55f);
+            k.Shot("The green vortex", 8f, 10.6f, new Vector3(-52f, 6f, 2f), new Vector3(0, 13f, 4f), 52f, new Vector3(-49f, 6.8f, 3f), new Vector3(0, 15f, 4f));
+            k.Shot("Falling past the sails", 10.6f, 11.8f, new Vector3(-4.5f, 1.2f, -3.5f), new Vector3(.2f, 15f, 4.2f), 62f, null, new Vector3(.2f, 10f, 4f));
+            k.Shot("Down onto the deck", 11.8f, 12.3f, new Vector3(-3.0f, 5.2f, upZ - .6f), new Vector3(.4f, .9f, upZ), 60f);   // from the side, inboard of the shrouds: between the main and fore sails
+            for (int i = 0; i < 3; i++)   // a shot of each landing
+                k.Shot("Into barrel " + i, i == 0 ? 12.3f : landT[i - 1] + .23f, i == 2 ? cut : landT[i] + .23f, new Vector3(bx[i] + .5f, 2.3f, upZ - 2.3f), new Vector3(bx[i], 1.0f, upZ), 50f);
             k.Shot("The barrels", 13.6f, 17f, new Vector3(.1f, .55f, -1.4f), new Vector3(.1f, .45f, 2.4f), 50f, new Vector3(.1f, .6f, -1.1f));
             k.Shot("Feet and the otter", 17f, 18.2f, new Vector3(.3f, .35f, -.6f), new Vector3(.3f, .3f, 1.2f), 55f);
             k.Shot("Standing", 18.2f, 19.5f, new Vector3(.2f, 1.6f, -3.4f), new Vector3(.2f, 1f, 1.2f), 48f);
@@ -98,8 +135,12 @@ namespace ShardsOfTime
             k.Shot("Abi laughs", 30.5f, 32.4f, new Vector3(.25f, 1.55f, -1.5f), new Vector3(.25f, 1.45f, .8f), 46f);
             k.Shot("The green shard", 32.4f, L, new Vector3(-.2f, 1.45f, -1.0f), new Vector3(-.55f, 1.3f, .8f), 40f);
             TintC(k, new Color(.35f, 1f, .5f), (0f, 0f), (9f, 0f), (12f, .18f), (21.5f, .2f), (23f, .08f), (L, .08f));
-            k.Sound("portal", 3.0f, .5f); k.Sound("barrel_thud", 13.6f, .7f); k.Sound("barrel_thud", 13.9f, .7f); k.Sound("barrel_thud", 14.2f, .7f);
+            k.Sound("portal", 3.0f, .5f); for (int i = 0; i < 3; i++) { k.Sound("barrel_thud", landT[i], .8f); k.Sound("splash", landT[i] + .03f, .35f); }
             k.Sound("sail_rip", 20.6f, .8f); k.Sound("wood_crash", 21.6f, .9f); k.Sound("mm_grunt", 27.6f, .7f); k.Sound("mm_laugh", 29.4f, .7f); k.Sound("necklace", 30.8f, .6f);
+            // Fix 10.1, item 3: who looks at whom (CutsceneLookAt): all three at Muscle Man after his crash; he looks at Dan as Abi laughs;
+            // Dan glances at Abi (the clip's last shot)
+            Look(k, dan, mm, 22.2f, 29.9f); Look(k, abi, mm, 22.3f, 29.9f); Look(k, kira, mm, 22.4f, 29.8f);
+            Look(k, mm, dan, 30.6f, L); Look(k, dan, abi, 30.9f, 32.3f);
             k.Save();
             NecklaceModel.Tint = IceAgeCast.shard;
         }

@@ -53,24 +53,22 @@ Design sources (read these when a round touches story, worlds or characters):
    portal's shard requirement may need an ability or companion the player
    doesn't have yet at that point in the story. Every world's level data lists
    which shards are reachable with which abilities, and a check proves the
-   threshold is met with the shards available on arrival: every earlier world
-   with the moves the party has by then, plus this world's first-visit shards
-   (`WorldData.RequirementReport`; Egypt: Ice Age 43 + Egypt 50 = 93 >= 90,
-   and 50 >= 20 from Egypt itself; the Pirate Seas: 231 >= 225, 30 >= 20).
-3. **Shards are universal (Dan, 2026-11-10; Fix 6.1), plus 20 from each world
-   (Dan, 2026-11-11; Fix 8.1):** many small shards per world, but the player
-   has **one total** across all worlds (every small shard ever collected,
-   never spent), plus one colored story shard per world. Each world's necklace
-   wakes when **both** are true: the **total** reaches that world's cumulative
-   threshold (about **75%** of all shards that exist up to it: Ice Age 40,
-   Egypt 90, Bethlehem 135, Medieval 180; the Ice Age stays at 40 because only
-   43 of its 60 are reachable on arrival), **and** at least **20 shards from
-   this world** (`AreaData.fromHere`) are collected. Extra shards from any world
-   still count toward later thresholds; a world that is already awake never
-   relocks. Rule 2's report checks both parts. The necklace leads to the story
-   shard; the story shard opens the vortex. HUD: the total, "Next: 180 (this
-   world: 12 / 20)" under it; per-world counts in the pause menu. Pirate Seas 225 (Round 10). Tomorrowland
-   has no story shard: the rocket plays that role.
+   threshold is met for the **minimum player** (Fix 10.1: arrives with exactly
+   the previous world's threshold and may use only shards reachable before this
+   world's necklace wakes, with the moves held then) and for the completionist
+   (`WorldData.RequirementReport` reports both; the exe check `minplayer` plays it
+   from New game to the Pirate Seas' green shard).
+3. **Shards are universal (Dan, 2026-11-10; Fix 6.1); stepped thresholds (Dan, 2026-11-11; Fix 10.1):**
+   many small shards per world, but the player has **one total** across all worlds (every small shard ever
+   collected, never spent), plus one colored story shard per world. Each world's necklace wakes when **both**
+   are true: the **total** reaches that world's threshold = **the previous world's + 25** (Ice Age 25, Egypt 50,
+   Bethlehem 75, Medieval 100, Pirate Seas 125, next 150 ...), **and** at least **15 shards from this world**
+   (`AreaData.fromHere`). A minimum player needs exactly 25 per world, always from shards reachable before that
+   world's necklace wakes; rule 2's report proves it for the minimum player and the completionist. A world that
+   is already awake never relocks. Once the first vortex is open, **Pause > Return to the vortex** works in every
+   world (the spot is kept). The necklace leads to the story shard; the story shard opens the vortex. HUD: the
+   total, "Next: 125 (this world: 12 / 15)" under it; per-world counts in the pause menu. Tomorrowland has no
+   story shard: the rocket plays that role.
 4. **All characters are visible.** The two inactive heroes (and Muscle Man from
    Medieval on) follow the player. A follower that falls behind, falls off, or
    can't make a move warps in just behind the player out of camera view. No
@@ -226,7 +224,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 10.1: `minplayer` (the minimum player from New game to the Pirate Seas' green shard, with Pause > Return to the vortex and Pause > Theater mid-Pirate, ~25 min, `--minutes 60`), `tpose` (every animated character in every world and every cutscene vs its bind pose), `sails` (the see-through sails view), `theater` (the title's Theater; with `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"` it also proves an old save fills in what it has seen), `fix101` = minplayer + tpose + sails. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -275,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 10: `game-1000`, previous `Builds/LauncherRelease-1000`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 10.1: `game-1001`, previous `Builds/LauncherRelease-1001`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -284,6 +282,30 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 10.1 delivered: 0.10.1 (build 1001), 2026-11-11.** Never shard-locked (stepped thresholds +25 / 15 from here, the
+minimum-player check, Pause > Return to the vortex), the deckhands animate (and a T-pose sweep of every character), PirateArrival's
+fall into the barrels and look-at in the cutscenes, see-through sails and rigging, the Theater. Published: `game-1001`. Report and
+"For Dan to check": `TODO.md`.
+
+Standing facts from Fix 10.1:
+- Thresholds: `requirement` = previous world's + 25 (25, 50, 75, 100, 125), `fromHere` 15 (defaults and the assets). New world: +25
+  and 15; `RequirementReport` simulates the minimum player (arrives with the previous threshold, only shards whose `requires` are in
+  `firstVisit`) and the completionist; `ok` needs both.
+- `Game.ReturnToVortex` (pause row once the Ice Age's story shard is taken; `SaveGame.returnWorld / returnSpot / returnYaw / returnCp`;
+  `GoToWorld` puts the party back there when they take that world's path; `VortexReturns`, `VortexComebacks`).
+- Theater: `SaveGame.seen` (added in `Cutscenes.Play` unless `SaveGame.Disabled`; `SaveGame.FillSeen` fills old saves from their flags);
+  `Game.TheaterList` (worlds in story order, add new scenes there), `Game.Theater(name, fromTitle)` plays through `Film(name, true)`
+  (skippable), then reloads the save and rebuilds the world (from pause: the party where it stood).
+- The deckhand model `pirate` is a person (`CharacterImport.IsPerson`): Humanoid, the shared clips; trip = `mm_fall` then `land_hard`.
+  Any new Mixamo person must be in `IsPerson` or it imports Generic and stands in a T-pose. `CutsceneAuthoring.Kit.Clips`: a one-shot
+  shorter than its slot holds its last frame (a held copy at timeScale 0.0001); `CutsceneAuthoring.Version` 27.
+- Look-at: `Cutscenes/CutsceneLookAt.cs` on an actor's Body (keyed `weight`, `which`; head / neck / chest after the clips);
+  author with `Look(k, actor, target, t0, t1)` in `CutsceneAuthoring.Film.cs` (any GameObject as a target, e.g. the Sphinx's face).
+  `Tools/look_sheet.py` -> `Data/screenshots/fix101/looks.jpg`.
+- See-through: `Camera/SeeThrough.cs` (on the camera rig). `SeeThrough.Register(root, parts)` from a world builder (Pirate: sails,
+  ropes, masts, yards, flags; Medieval: banners, bunting, pennants); merged parts are split into islands; probe colliders live in a
+  physics scene of their own (no other query hits them); solid ones (masts) move to layer 29, which the camera's deoccluder ignores.
+
 **Round 10 delivered: 0.10.0 (build 1000), 2026-11-11.** The Pirate Seas, the fifth world, in two parts: the ship at sunset (decks,
 rigging nets, crow's nest, hold, cabin, locker) + the tropical island and cove (`pirate.mp3`), and under the sea (reef, shipwreck, sea
 cave and grotto; `underwater.mp3`). `PirateArrival` and `ShardOverboard` from Dan's clips (sheets in `Data/screenshots/round10/`),
