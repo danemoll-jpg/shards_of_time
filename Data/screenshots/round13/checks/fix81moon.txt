@@ -1,0 +1,43 @@
+Shards of Time exe check 2026-11-13 01:17, version 0.13.0; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 79872 samples); master volume 0.00
+  (probe: 548 visible meshes as probe colliders in The Moon; 0 not readable, skipped)
+
+== Fix 8.1, item 1: feet vs the visible floor in The Moon (every walkable collider top compared with the visible surface at it)
+  ok    The Moon / The Moon: 89380 floor points, feet sunk > 10 cm at 0 (worst 0 cm; patches of 4+: 0); floating > 10 cm at 49 (worst 83 cm), nothing visible under 0 (listed, not failed); a prop's look over its collider at 35 (not a floor: not failed)
+  (The Moon: 0 patch(es) in all)
+
+== Fix 8.1, item 3: invisible walls in The Moon (every solid collider's open sides: is anything visible there?)
+  ok    The Moon: 3 hidden solid colliders scanned, 0 with nothing visible on them (world-edge walls listed apart: 0)
+
+== Fix 8.1, item 2: walk across every moving platform in The Moon (0), every hero
+  (The Moon has no moving platforms)
+
+== Fix 8.1, item 3: the bot walks to every shard in The Moon from its open sides (with the moves taught so far; gates opened as their move would)
+  note  The Moon R01 (the ridge's foot): reached by Dan from 1 of 2 sides; blocked from (-26.5, 1.3, -60.0) got within 4.5 m, stopped at (-27.0, 0.6, -55.0)
+  ok    The Moon: 53 shards walked to, 0 not reached, 1 reached from some sides only; 7 not walked (listed)
+      not walked: F01 (a float pillar's top (space Kira floats up)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F02 (a float pillar's top (space Kira)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F03 (a float pillar's top (space Kira)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F04 (a float pillar's top (space Kira)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F05 (a float pillar's top (space Kira)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: F06 (a float pillar's top (space Kira)): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+      not walked: R04 (up the ridge): no open level ground within 4 m (a ledge, a pillar top, a narrow spot)
+
+== Fix 8.1, item 4: a world's necklace wakes at its total threshold AND 20 shards from the world itself
+  ok    rule 2: area V (The Ice Age): threshold 25 and 15 from here; minimum player: arrives with 0, needs 25 here, 43 reachable before the wake: ok; completionist: available on arrival The Ice Age 43 of 60 = 43 with [Dan, Abi, Kira, ClawIce]: ok; locked here: R08 needs DoubleJump, C06 needs GroundPound, C07 needs GroundPound, H05 needs DoubleJump, T03 needs MuscleMan, T04 needs GroundPound, T05 needs DoubleJump, L06 needs DeepDive, L07 needs DeepDive, L08 needs MuscleMan, G06 needs WallJump, G07 needs WallJump, G08 needs DoubleJump, P01 needs ChargedPunch, P02 needs ChargedPunch, P03 needs ChargedPunch, P04 needs ChargedPunch
+  ok    rule 2: area E (Ancient Egypt): threshold 50 and 15 from here; minimum player: arrives with 25, needs 25 here, 50 reachable before the wake: ok; completionist: available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 = 93 with [Dan, Abi, Kira, MummyHush]: ok; locked here: E14 needs Pounce, E15 needs Pounce, E16 needs DoubleJump, E24 needs MuscleMan, E25 needs MuscleMan, E42 needs DoubleJump, E48 needs DeepDive, E49 needs DeepDive, E59 needs ChargedPunch, E60 needs WallJump
+  ok    rule 2: area BE (Bethlehem): threshold 75 and 15 from here; minimum player: arrives with 50, needs 25 here, 48 reachable before the wake: ok; completionist: available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 + Bethlehem 48 of 60 = 141 with [Dan, Abi, Kira, FlockHide, WoolBounce]: ok; locked here: P01 needs Pounce, P03 needs Pounce, P04 needs Pounce, W01 needs DeepDive, W02 needs DeepDive, M01 needs MuscleMan, M02 needs MuscleMan, C01 needs ChargedPunch, C02 needs ChargedPunch, J01 needs WallJump, D01 needs DoubleJump, D02 needs DoubleJump
+  ok    rule 2: area ME (The Medieval Kingdom): threshold 100 and 15 from here; minimum player: arrives with 75, needs 25 here, 50 reachable before the wake: ok; completionist: available on arrival The Ice Age 43 of 60 + Ancient Egypt 50 of 60 + Bethlehem 48 of 60 + The Medieval Kingdom 50 of 60 = 191 with [Dan, Abi, Kira, Glide, FirePuff]: ok; locked here: B01 needs MuscleMan, B02 needs MuscleMan, A01 needs MuscleMan, A02 needs MuscleMan, K01 needs ChargedPunch, K02 needs ChargedPunch, J01 needs WallJump, X01 needs DoubleJump, DD1 needs DeepDive, DD2 needs DeepDive
+  ok    rule 2: area PS (The Pirate Seas): threshold 125 and 15 from here; minimum player: arrives with 100, needs 25 here, 30 reachable before the wake: ok; completionist: available on arrival The Ice Age 45 of 60 + Ancient Egypt 52 of 60 + Bethlehem 50 of 60 + The Medieval Kingdom 54 of 60 + The Pirate Seas 30 of 60 = 231 with [Dan, Abi, Kira, OtterSwim, BellySlide, MuscleMan]: ok; locked here: U01 needs Overboard, U02 needs Overboard, U03 needs Overboard, U04 needs Overboard, U05 needs Overboard, U06 needs Overboard, U07 needs Overboard, U08 needs Overboard, U09 needs Overboard, U10 needs Overboard, U11 needs Overboard, U12 needs Overboard, U13 needs Overboard, U14 needs Overboard, U15 needs Overboard+Kira, U16 needs Overboard+Kira, U17 needs Overboard+Kira, U18 needs Overboard+Kira, U19 needs Overboard+Kira, U20 needs Overboard+Kira, U21 needs Overboard+Kira, U22 needs Overboard+Kira, U23 needs Overboard+Kira, U24 needs Overboard, U25 needs Overboard, U26 needs Overboard, U27 needs Overboard+Kira, U28 needs Overboard+Kira, U29 needs Overboard, U30 needs Overboard
+  ok    rule 2: area SP (Victorian Steampunk): threshold 150 and 15 from here; minimum player: arrives with 125, needs 25 here, 58 reachable before the wake: ok; completionist: available on arrival The Ice Age 45 of 60 + Ancient Egypt 52 of 60 + Bethlehem 50 of 60 + The Medieval Kingdom 54 of 60 + The Pirate Seas 30 of 60 + Victorian Steampunk 58 of 61 = 289 with [Dan, Abi, Kira, WindUp, MagnetPaws, MuscleMan, PressDone]: ok; locked here: F18 needs WallJump, S10 needs WallJump, S31 needs AirDash
+  ok    rule 2: area TL (Tomorrowland): threshold 175 and 15 from here; minimum player: arrives with 150, needs 25 here, 57 reachable before the wake: ok; completionist: available on arrival The Ice Age 45 of 60 + Ancient Egypt 52 of 60 + Bethlehem 50 of 60 + The Medieval Kingdom 54 of 60 + The Pirate Seas 30 of 60 + Victorian Steampunk 58 of 61 + Tomorrowland 57 of 60 = 346 with [Dan, Abi, Kira, PlugIn, WheelDash, MuscleMan]: ok; locked here: R09 needs WallJump, X01 needs AirDash, X02 needs AirDash
+  ok    rule 2: area MO (The Moon): threshold 200 and 15 from here; minimum player: arrives with 175, needs 25 here, 60 reachable before the wake: ok; completionist: available on arrival The Ice Age 45 of 60 + Ancient Egypt 52 of 60 + Bethlehem 50 of 60 + The Medieval Kingdom 54 of 60 + The Pirate Seas 30 of 60 + Victorian Steampunk 58 of 61 + Tomorrowland 57 of 60 + The Moon 60 of 60 = 406 with [Dan, Abi, Kira, Float, MuscleMan, Rocket]: ok
+  ok    90 in all (25 from here): asleep; the HUD under the total: "Next: 100 (this world: 15 / 15)"
+  ok    130 in all, 12 from here: still asleep; HUD "Next: 100 (this world: 12 / 15)"
+  screenshot 81_hud_next_this_world.png
+  ok    130 in all, 20 from here: the necklace wakes
+  ok    after waking: HUD "Follow the necklace"
+  ok    an awake world with 5 from here and 60 in all stays awake (HUD "Follow the necklace")
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 15728640 samples); master volume 0.00

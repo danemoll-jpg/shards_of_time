@@ -684,9 +684,9 @@ namespace ShardsOfTime
             S("D01", 100, 0, 20, "the deep crater's floor"); S("D02", 94, 0, 14, "the deep crater"); S("D03", 106, 0, 26, "the deep crater"); S("D04", 100, 0, 10, "the deep crater");
             S("D05", 92, 0, 25, "the deep crater"); S("D06", 108, 0, 15, "the deep crater");
             // the float pillars (space Kira)
-            S("F01", 109.6f, 7.6f, 70, "a float pillar's top (space Kira floats up)", K, FL); S("F02", 110.4f, 7.6f, 70, "a float pillar's top (space Kira)", K, FL);
-            S("F03", 149.6f, 7.6f, 10, "a float pillar's top (space Kira)", K, FL); S("F04", 150.4f, 7.6f, 10, "a float pillar's top (space Kira)", K, FL);
-            S("F05", 69.6f, 7.6f, -70, "a float pillar's top (space Kira)", K, FL); S("F06", 70.4f, 7.6f, -70, "a float pillar's top (space Kira)", K, FL);
+            S("F01", 108.85f, 7.6f, 70, "a float pillar's top (space Kira floats up)", K, FL); S("F02", 111.15f, 7.6f, 70, "a float pillar's top (space Kira)", K, FL);
+            S("F03", 148.85f, 7.6f, 10, "a float pillar's top (space Kira)", K, FL); S("F04", 151.15f, 7.6f, 10, "a float pillar's top (space Kira)", K, FL);
+            S("F05", 68.85f, 7.6f, -70, "a float pillar's top (space Kira)", K, FL); S("F06", 71.15f, 7.6f, -70, "a float pillar's top (space Kira)", K, FL);
             // the caves behind the moon boulders, the mesa
             S("B01", 150.5f, 0, -58, "cave A behind its moon boulder (Muscle Man)", MM); S("B02", 151, 0, -62, "cave A (Muscle Man)", MM);
             S("B03", -20, 0, 98.5f, "cave B behind its moon boulder (Muscle Man)", MM); S("B04", -18.5f, 0, 100.5f, "cave B (Muscle Man)", MM);

@@ -871,8 +871,71 @@ namespace ShardsOfTime
             Busy = false;
         }
 
-        // Round 13: the Moon's arrival (MoonLanding): placeholder until Round 13
-        IEnumerator ArriveOnMoon() { yield break; }
+        // Round 13, item 2: the Moon's arrival (MoonLanding, skippable; continues RocketLaunch): the rocket comes down on its flame and touches
+        // down in a puff of dust; inside, helmets click on; the hatch opens; the four bounce down the ladder in slow motion; Earth rises huge
+        // behind them; Muscle Man does a big slow jump and laughs. The Moon's path in the vortex is open from now on.
+        IEnumerator ArriveOnMoon()
+        {
+            Busy = true;
+            var a = World.areas[0]; var face = Quaternion.Euler(0, a.spawnYaw, 0);
+            var at = Moon.OnGround(Moon.ArriveAt.x, Moon.ArriveAt.z);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            if (Moon.LandedRocket) Moon.LandedRocket.SetActive(false);
+            yield return Cutscenes.Play("MoonLanding", Moon.RocketGround, Quaternion.identity);
+            if (Moon.LandedRocket) Moon.LandedRocket.SetActive(true);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            var prog = SaveGame.Current.World(WorldData.Moon); if (!prog.opened.Contains(Moon.ArrivedFlag)) prog.opened.Add(Moon.ArrivedFlag);
+            if (!SaveGame.Current.worldsReached.Contains(WorldData.Moon)) SaveGame.Current.worldsReached.Add(WorldData.Moon);
+            SaveGame.Current.checkpoint = Moon.Start; SaveGame.Save("landed on the Moon");
+            Hud.Message($"The Moon! Everything floats: jumps go high and slow. Kira is in her little spacesuit: hold {Controls.Btn(Controls.Act.Jump)} in the air and she floats up. At {RuleText(a)}, the white glow on Dan's necklace wakes ({Progress(a)}).", 9f);
+            Busy = false;
+        }
+
+        // Round 13, item 4: KiraFloats (the film's gag, short, skippable): on the way to the rover Kira takes a little leap and keeps floating up,
+        // paddling her paws; Abi catches her by the ankle and pulls her back down. Once.
+        public int FloatScenes { get; private set; }
+        public IEnumerator KiraFloatsScene(Vector3 at)
+        {
+            if (Busy) yield break;
+            Busy = true; FloatScenes++;
+            var prog = SaveGame.Current.World(World.worldId); if (!prog.opened.Contains(Moon.FloatsFlag)) prog.opened.Add(Moon.FloatsFlag);
+            var face = Quaternion.Euler(0, 225, 0);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            yield return Cutscenes.Play("KiraFloats", at, face);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            SaveGame.Save("Kira floats");
+            Hud.Message($"Space Kira floats! Hold {Controls.Btn(Controls.Act.Jump)} in the air: she drifts up a long way (the tall rock columns).", 6f);
+            Busy = false;
+        }
+
+        // Round 13, item 10: the light puzzle solved: WhiteShard (the shard answers, every shard in Dan's necklace lights up together, brilliant
+        // light fills the Moon: the ornament is ready to be restored) -> the vortex with the Home path open (Acts X / XI: to be continued)
+        public IEnumerator WhiteShardFinale()
+        {
+            if (Busy) yield break;
+            Busy = true; Finales++;
+            var prog = SaveGame.Current.World(World.worldId); prog.storyShard = true;
+            if (!prog.opened.Contains(Moon.PuzzleFlag)) prog.opened.Add(Moon.PuzzleFlag);
+            StoryBeam.SetActive(false); StoryShard.gameObject.SetActive(false);
+            if (!SaveGame.Current.portals.Contains(Moon.Gate.id)) SaveGame.Current.portals.Add(Moon.Gate.id);
+            SaveGame.Save("story shard");
+            yield return new WaitForSeconds(.3f);
+            var at = new Vector3(Moon.PanelAt.x, Moon.PlateauY, Moon.PanelAt.z);
+            Party.I.PlaceAll(at + new Vector3(0, .1f, 2.4f), Quaternion.Euler(0, 180, 0)); CameraRig.I.SnapBehind();
+            yield return Cutscenes.Play("WhiteShard", at, Quaternion.Euler(0, 180, 0));
+            Moon.Gate.gameObject.SetActive(true);
+            foreach (var h in Party.I.Heroes) h.Cheer();
+            PlayLog.Line("the white shard: every shard lights up; into the vortex (Home open)");
+            for (float t = 0; t < 1f; t += Time.deltaTime / .5f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(1f);
+            SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
+            SaveGame.Save("vortex");
+            yield return null;
+            for (float t = 1; t > 0; t -= Time.deltaTime / .6f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f);
+            Hud.Message($"The white shard! All {SaveGame.Current.StoryShards} story shards: the ornament can be made whole. The way Home is open.", 7f);
+            Busy = false;
+        }
 
         // Round 12, item 5: the pink shard taken from the Skyline Tower's roof: it is the rocket's missing fuel cell (carried to the socket)
         public int PinkShards { get; private set; }

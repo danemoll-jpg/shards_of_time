@@ -1,0 +1,282 @@
+Shards of Time exe check 2026-11-13 01:42, version 0.13.0; 1920x1080 off-screen; GPU NVIDIA GeForce GTX 1660 Ti; Steam Deck setting off
+window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 73728 samples); master volume 0.00
+
+== Fix 7.2, item 2: never stuck in The Ice Age (12 spots listed in its world data)
+  ok    The Ice Age lists its low / enclosed spots
+  ok    water 'Pond water' (x 9..35, z 42..68) has a spot on the list
+  ok    water 'River' (x -75..75, z 243..261) has a spot on the list
+  ok    water 'Lake water' (x -142..-94, z 58..192) has a spot on the list
+  ok    water 'Lake deep water' (x -134..-102, z 117..149) has a spot on the list
+  (moves held: []; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_IA-pond_Dan_in.png
+  ok    IA-pond (the half-frozen pond): Dan out in 3.6 s at (7.2, 0.1, 55.6)
+  ok    IA-pond (the half-frozen pond): Abi out in 3.1 s at (8.0, 0.0, 55.8)
+  ok    IA-pond (the half-frozen pond): Kira out in 2.9 s at (9.4, -0.3, 56.2)
+  screenshot 72_IA-river_Dan_in.png
+  ok    IA-river (the river in the gorge (out up the ramp, x 44..54)): Dan out in 13.9 s at (49.0, -0.6, 227.3)
+  ok    IA-river (the river in the gorge (out up the ramp, x 44..54)): Abi out in 12.9 s at (48.9, -0.7, 227.4)
+  ok    IA-river (the river in the gorge (out up the ramp, x 44..54)): Kira out in 11.7 s at (49.0, -0.8, 227.7)
+  screenshot 72_IA-cave-pit_Dan_in.png
+  ok    IA-cave-pit (the cave's pit under the cracked ice (steps up the east side)): Dan out in 1.9 s at (-24.7, 0.0, 342.6)
+  ok    IA-cave-pit (the cave's pit under the cracked ice (steps up the east side)): Abi out in 1.4 s at (-24.9, 0.0, 342.6)
+  ok    IA-cave-pit (the cave's pit under the cracked ice (steps up the east side)): Kira out in 1.8 s at (-25.0, 0.0, 342.6)
+  screenshot 72_IA-well_Dan_in.png
+  ok    IA-well (the frozen well (steps up the east side)): Dan out in 1.2 s at (23.0, 0.0, 478.0)
+  ok    IA-well (the frozen well (steps up the east side)): Abi out in 1.4 s at (25.8, 0.0, 478.0)
+  ok    IA-well (the frozen well (steps up the east side)): Kira out in 2.5 s at (26.4, 0.0, 478.1)
+  screenshot 72_IA-lake-near_Dan_in.png
+  ok    IA-lake-near (the frozen lake's near hole): Dan out in 3.9 s at (-112.9, 0.1, 84.0) (climbed out)
+  ok    IA-lake-near (the frozen lake's near hole): Abi out in 3.8 s at (-112.4, 0.1, 84.0) (climbed out)
+  ok    IA-lake-near (the frozen lake's near hole): Kira out in 2.6 s at (-112.7, 0.1, 84.0) (climbed out)
+  screenshot 72_IA-lake-mid_Dan_in.png
+  ok    IA-lake-mid (the frozen lake's exit hole): Dan out in 3.9 s at (-112.9, 0.1, 108.0) (climbed out)
+  ok    IA-lake-mid (the frozen lake's exit hole): Abi out in 3.8 s at (-112.3, 0.1, 108.0) (climbed out)
+  ok    IA-lake-mid (the frozen lake's exit hole): Kira out in 2.6 s at (-112.7, 0.1, 108.0) (climbed out)
+  screenshot 72_IA-lake-deep_Dan_in.png
+  ok    IA-lake-deep (the hole over the lake's deep part): Dan out in 3.9 s at (-112.9, 0.1, 133.0) (climbed out)
+  ok    IA-lake-deep (the hole over the lake's deep part): Abi out in 3.8 s at (-112.4, 0.1, 133.0) (climbed out)
+  ok    IA-lake-deep (the hole over the lake's deep part): Kira out in 2.6 s at (-112.8, 0.1, 133.0) (climbed out)
+  screenshot 72_IA-lake-far_Dan_in.png
+  ok    IA-lake-far (the frozen lake's far hole): Dan out in 3.9 s at (-101.0, 0.1, 165.2) (climbed out)
+  ok    IA-lake-far (the frozen lake's far hole): Abi out in 3.8 s at (-101.0, 0.1, 165.5) (climbed out)
+  ok    IA-lake-far (the frozen lake's far hole): Kira out in 2.6 s at (-101.0, 0.1, 165.4) (climbed out)
+  ok    IA-crawl (Kira's crawl chamber in the cave): Kira out in 2.0 s at (-41.6, 0.0, 320.0)
+  ok    IA-grotto (the hot-spring grotto (behind the cracked rock)): Dan out in 2.0 s at (58.2, 0.0, 463.0)
+  ok    IA-grotto (the hot-spring grotto (behind the cracked rock)): Abi out in 1.4 s at (62.8, 0.0, 461.9)
+  ok    IA-grotto (the hot-spring grotto (behind the cracked rock)): Kira out in 2.0 s at (58.2, 0.0, 463.0)
+  ok    IA-grotto-boulder (the grotto behind the boulder): Dan out in 1.5 s at (-40.9, -0.2, 484.0)
+  ok    IA-grotto-boulder (the grotto behind the boulder): Abi out in 1.1 s at (-42.6, -0.2, 484.0)
+  ok    IA-grotto-boulder (the grotto behind the boulder): Kira out in 1.4 s at (-40.4, -0.2, 484.0)
+  ok    IA-lake-hollow (the ice hollow behind the boulder): Dan out in 1.5 s at (-145.9, 0.0, 124.0)
+  ok    IA-lake-hollow (the ice hollow behind the boulder): Abi out in 1.1 s at (-147.5, 0.0, 124.0)
+  ok    IA-lake-hollow (the ice hollow behind the boulder): Kira out in 1.4 s at (-145.4, 0.0, 124.0)
+
+== Fix 7.2, item 2: never stuck in Ancient Egypt (7 spots listed in its world data)
+  ok    Ancient Egypt lists its low / enclosed spots
+  ok    water 'Nile' (x -150..-105, z -76..344) has a spot on the list
+  ok    water 'Nile deep pool' (x -136..-120, z 69..85) has a spot on the list
+  (moves held: []; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_EG-nile_Dan_in.png
+  ok    EG-nile (the Nile (out onto the east bank)): Dan out in 6.8 s at (-98.6, -1.4, 130.0)
+  ok    EG-nile (the Nile (out onto the east bank)): Abi out in 6.2 s at (-97.4, -0.7, 130.1)
+  ok    EG-nile (the Nile (out onto the east bank)): Kira out in 5.0 s at (-98.6, -1.5, 130.0)
+  screenshot 72_EG-nile-deep_Dan_in.png
+  ok    EG-nile-deep (the Nile's deep pool): Dan out in 7.4 s at (-96.9, -0.6, 77.1)
+  ok    EG-nile-deep (the Nile's deep pool): Abi out in 6.2 s at (-97.4, -0.7, 77.1)
+  ok    EG-nile-deep (the Nile's deep pool): Kira out in 5.0 s at (-98.6, -1.5, 77.0)
+  screenshot 72_EG-quicksand_Dan_in.png
+  ok    EG-quicksand (the quicksand pit (sinking sand sends you back)): Dan out in 2.5 s at (56.4, 0.0, 164.1)
+  ok    EG-quicksand (the quicksand pit (sinking sand sends you back)): Abi out in 2.1 s at (56.0, 0.0, 163.3)
+  ok    EG-quicksand (the quicksand pit (sinking sand sends you back)): Kira out in 2.5 s at (57.0, 0.0, 165.3)
+  screenshot 72_EG-tomb-sand_Dan_in.png
+  ok    EG-tomb-sand (the tomb's sand-pit hall (sinking sand)): Dan out in 1.9 s at (500.0, 60.0, 43.1)
+  ok    EG-tomb-sand (the tomb's sand-pit hall (sinking sand)): Abi out in 2.0 s at (500.0, 60.1, 43.0)
+  ok    EG-tomb-sand (the tomb's sand-pit hall (sinking sand)): Kira out in 1.8 s at (499.8, 60.0, 42.7)
+  screenshot 72_EG-tomb-pit_Dan_in.png
+  ok    EG-tomb-pit (the turning room's pit (falls send you back)): Dan out in 1.1 s at (499.3, 60.1, 90.0)
+  ok    EG-tomb-pit (the turning room's pit (falls send you back)): Abi out in 0.3 s at (500.0, 60.1, 90.0)
+  ok    EG-tomb-pit (the turning room's pit (falls send you back)): Kira out in 0.3 s at (500.0, 60.1, 90.0)
+  ok    EG-quarry (the quarry behind the huge block): Dan out in 1.5 s at (83.9, 0.0, 61.0)
+  ok    EG-quarry (the quarry behind the huge block): Abi out in 1.1 s at (85.5, 0.0, 61.0)
+  ok    EG-quarry (the quarry behind the huge block): Kira out in 1.4 s at (83.5, 0.0, 61.0)
+  ok    EG-secret-room (the secret room behind the cracked wall): Dan out in 1.5 s at (508.0, 60.0, 122.0)
+  ok    EG-secret-room (the secret room behind the cracked wall): Abi out in 1.1 s at (509.5, 60.0, 122.0)
+  ok    EG-secret-room (the secret room behind the cracked wall): Kira out in 1.4 s at (507.4, 60.0, 122.0)
+
+== Fix 7.2, item 2: never stuck in Bethlehem (3 spots listed in its world data)
+  ok    Bethlehem lists its low / enclosed spots
+  ok    water 'Well water' (x 106..110, z 70..74) has a spot on the list
+  (moves held: []; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_BE-well_Dan_in.png
+  ok    BE-well (the well (the rope climbs out)): Dan out in 3.1 s at (108.0, 0.5, 78.0) (climbed out)
+  ok    BE-well (the well (the rope climbs out)): Abi out in 3.0 s at (108.0, 0.5, 77.8) (climbed out)
+  ok    BE-well (the well (the rope climbs out)): Kira out in 2.9 s at (108.0, 0.5, 77.8) (climbed out)
+  ok    BE-barn (inside the barn (the door is south)): Dan out in 2.1 s at (0.0, 0.0, 22.0)
+  ok    BE-barn (inside the barn (the door is south)): Abi out in 1.4 s at (0.0, 0.0, 25.5)
+  ok    BE-barn (inside the barn (the door is south)): Kira out in 2.0 s at (0.0, 0.0, 20.8)
+  ok    BE-cave (the shepherds' cave behind the boulder): Dan out in 1.5 s at (181.9, 0.0, 60.0)
+  ok    BE-cave (the shepherds' cave behind the boulder): Abi out in 1.1 s at (183.5, 0.0, 60.0)
+  ok    BE-cave (the shepherds' cave behind the boulder): Kira out in 1.4 s at (181.4, 0.0, 60.0)
+
+== Fix 7.2, item 2: never stuck in The Medieval Kingdom (10 spots listed in its world data)
+  ok    The Medieval Kingdom lists its low / enclosed spots
+  ok    water 'Moat W' (x -48..-36, z -18..102) has a spot on the list
+  ok    water 'Moat E' (x 36..48, z -18..102) has a spot on the list
+  ok    water 'Moat S' (x -36..36, z -18..-6) has a spot on the list
+  ok    water 'Moat N' (x -36..36, z 90..102) has a spot on the list
+  ok    water 'Moat deep pit' (x -48..-36, z 90..102) has a spot on the list
+  (moves held: []; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_ME-moat-west_Dan_in.png
+  ok    ME-moat-west (the moat, west side (out onto the outer bank)): Dan out in 3.7 s at (-53.5, 0.0, 40.0)
+  ok    ME-moat-west (the moat, west side (out onto the outer bank)): Abi out in 3.2 s at (-55.0, 0.0, 40.0)
+  ok    ME-moat-west (the moat, west side (out onto the outer bank)): Kira out in 2.5 s at (-51.0, 0.0, 40.0)
+  screenshot 72_ME-moat-north_Dan_in.png
+  ok    ME-moat-north (the moat, north side): Dan out in 3.7 s at (0.0, 0.0, 107.5)
+  ok    ME-moat-north (the moat, north side): Abi out in 3.7 s at (0.0, 0.1, 109.1)
+  ok    ME-moat-north (the moat, north side): Kira out in 2.5 s at (0.0, 0.0, 104.7)
+  screenshot 72_ME-moat-east_Dan_in.png
+  ok    ME-moat-east (the moat, east side): Dan out in 3.7 s at (53.5, 0.0, 30.0)
+  ok    ME-moat-east (the moat, east side): Abi out in 3.7 s at (55.1, 0.1, 30.0)
+  ok    ME-moat-east (the moat, east side): Kira out in 2.5 s at (50.7, 0.0, 30.0)
+  screenshot 72_ME-moat-south_Dan_in.png
+  ok    ME-moat-south (the moat, south side (by the drawbridge)): Dan out in 3.7 s at (24.0, 0.0, -23.5)
+  ok    ME-moat-south (the moat, south side (by the drawbridge)): Abi out in 3.7 s at (24.0, 0.1, -25.1)
+  ok    ME-moat-south (the moat, south side (by the drawbridge)): Kira out in 2.5 s at (24.0, 0.0, -20.9)
+  screenshot 72_ME-moat-deep_Dan_in.png
+  ok    ME-moat-deep (over the moat's deep pit (NW corner)): Dan out in 5.3 s at (-52.5, 0.0, 96.0)
+  ok    ME-moat-deep (over the moat's deep pit (NW corner)): Abi out in 4.8 s at (-53.0, 0.1, 96.0)
+  ok    ME-moat-deep (over the moat's deep pit (NW corner)): Kira out in 2.6 s at (-52.0, 0.0, 96.0)
+  ok    ME-dungeon (the dungeon (its stair door back to the courtyard)): Dan out in 4.6 s at (-23.0, 0.0, 44.0) (sent back to the checkpoint)
+  ok    ME-dungeon (the dungeon (its stair door back to the courtyard)): Abi out in 4.0 s at (-23.0, 0.0, 44.0) (sent back to the checkpoint)
+  ok    ME-dungeon (the dungeon (its stair door back to the courtyard)): Kira out in 4.2 s at (-23.0, 0.0, 44.0) (sent back to the checkpoint)
+  ok    ME-hall (the great hall (the door is south)): Dan out in 2.1 s at (0.3, 0.5, 61.7)
+  ok    ME-hall (the great hall (the door is south)): Abi out in 2.1 s at (0.2, 0.2, 59.1)
+  ok    ME-hall (the great hall (the door is south)): Kira out in 2.3 s at (0.2, 0.0, 58.8)
+  ok    ME-yard (the walled yard behind the boulder): Dan out in 1.5 s at (-17.0, 0.0, 7.6)
+  ok    ME-yard (the walled yard behind the boulder): Abi out in 1.1 s at (-18.5, 0.0, 7.5)
+  ok    ME-yard (the walled yard behind the boulder): Kira out in 1.3 s at (-18.1, 0.0, 7.5)
+  ok    ME-armory (the armory behind the portcullis): Dan out in 1.5 s at (22.0, 0.0, 12.1)
+  ok    ME-armory (the armory behind the portcullis): Abi out in 1.2 s at (22.0, 0.0, 10.5)
+  ok    ME-armory (the armory behind the portcullis): Kira out in 1.3 s at (22.0, 0.0, 10.9)
+  ok    ME-store (the store room behind the cracked wall): Dan out in 1.5 s at (-17.9, 0.0, 56.0)
+  ok    ME-store (the store room behind the cracked wall): Abi out in 1.1 s at (-19.5, 0.0, 56.0)
+  ok    ME-store (the store room behind the cracked wall): Kira out in 1.3 s at (-19.1, 0.0, 56.0)
+
+== Fix 7.2, item 2: never stuck in The Pirate Seas (13 spots listed in its world data)
+  ok    The Pirate Seas lists its low / enclosed spots
+  ok    water 'Sea' (x -200..200, z -150..200) has a spot on the list
+  (moves held: [MuscleMan]; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_PS-sea-port_Dan_in.png
+  ok    PS-sea-port (the sea by the ship's port side (the rope ladder up the hull)): Dan out in 2.8 s at (-4.6, 3.5, -6.0) (climbed out)
+  ok    PS-sea-port (the sea by the ship's port side (the rope ladder up the hull)): Abi out in 2.7 s at (-4.5, 3.5, -5.8) (climbed out)
+  ok    PS-sea-port (the sea by the ship's port side (the rope ladder up the hull)): Kira out in 2.2 s at (-4.5, 3.5, -5.9) (climbed out)
+  screenshot 72_PS-sea-east_Dan_in.png
+  ok    PS-sea-east (the sea between the ship and the island (swim to the beach)): Dan out in 3.6 s at (32.8, 0.9, 20.0)
+  ok    PS-sea-east (the sea between the ship and the island (swim to the beach)): Abi out in 3.2 s at (32.8, 0.9, 20.0)
+  ok    PS-sea-east (the sea between the ship and the island (swim to the beach)): Kira out in 2.5 s at (31.1, 0.6, 20.0)
+  screenshot 72_PS-sea-south_Dan_in.png
+  ok    PS-sea-south (the sea south of the ship (the beach)): Dan out in 7.5 s at (32.9, 0.0, -21.6)
+  ok    PS-sea-south (the sea south of the ship (the beach)): Abi out in 6.4 s at (32.6, 0.1, -21.7)
+  ok    PS-sea-south (the sea south of the ship (the beach)): Kira out in 4.8 s at (32.6, 0.0, -21.7)
+  screenshot 72_PS-sea-north_Dan_in.png
+  ok    PS-sea-north (the sea north of the ship (the beach)): Dan out in 6.9 s at (32.9, 0.1, 40.6)
+  ok    PS-sea-north (the sea north of the ship (the beach)): Abi out in 5.8 s at (30.9, 0.1, 40.8)
+  ok    PS-sea-north (the sea north of the ship (the beach)): Kira out in 4.2 s at (31.3, 0.0, 40.8)
+  screenshot 72_PS-sea-west_Dan_in.png
+  ok    PS-sea-west (the open sea west of the ship (back to its rope ladder)): Dan out in 9.1 s at (-4.6, 3.5, -6.0) (climbed out)
+  ok    PS-sea-west (the open sea west of the ship (back to its rope ladder)): Abi out in 8.0 s at (-4.5, 3.5, -5.9) (climbed out)
+  ok    PS-sea-west (the open sea west of the ship (back to its rope ladder)): Kira out in 5.5 s at (-4.5, 3.5, -5.9) (climbed out)
+  screenshot 72_PS-cove_Dan_in.png
+  ok    PS-cove (the island's cove (out onto its bank)): Dan out in 3.5 s at (82.0, 1.3, 49.6)
+  ok    PS-cove (the island's cove (out onto its bank)): Abi out in 3.4 s at (82.0, 1.6, 49.2)
+  ok    PS-cove (the island's cove (out onto its bank)): Kira out in 2.4 s at (82.0, 1.2, 49.6)
+  ok    PS-hold (the ship's hold (up the ramp to the deck)): Dan out in 2.0 s at (0.0, 3.5, 9.8)
+  ok    PS-hold (the ship's hold (up the ramp to the deck)): Abi out in 1.4 s at (0.0, 3.5, 8.5)
+  ok    PS-hold (the ship's hold (up the ramp to the deck)): Kira out in 1.4 s at (0.0, 3.5, 8.1)
+  ok    PS-hold-back (the hold's back room behind the crates): Dan out in 4.0 s at (0.2, 3.2, 6.0)
+  ok    PS-hold-back (the hold's back room behind the crates): Abi out in 3.5 s at (0.2, 3.6, 6.8)
+  ok    PS-hold-back (the hold's back room behind the crates): Kira out in 3.4 s at (0.2, 3.3, 6.3)
+  ok    PS-cabin (the captain's cabin behind the cannon): Dan out in 1.3 s at (0.0, 3.5, -11.1)
+  ok    PS-cabin (the captain's cabin behind the cannon): Abi out in 1.1 s at (0.0, 3.5, -11.1)
+  ok    PS-cabin (the captain's cabin behind the cannon): Kira out in 2.0 s at (0.0, 3.5, -8.3)
+  ok    PS-locker (the bosun's locker behind the anchor): Dan out in 1.3 s at (0.0, 3.5, 13.1)
+  ok    PS-locker (the bosun's locker behind the anchor): Abi out in 1.1 s at (0.0, 3.5, 13.0)
+  ok    PS-locker (the bosun's locker behind the anchor): Kira out in 1.4 s at (0.0, 3.5, 12.6)
+  screenshot 72_PS-cave_Dan_in.png
+  ok    PS-cave (the sea cave (out of its mouth)): Dan out in 2.4 s at (-115.7, -14.0, 0.0) (swam out)
+  ok    PS-cave (the sea cave (out of its mouth)): Abi out in 4.8 s at (-117.4, -14.5, 0.0) (swam out)
+  ok    PS-cave (the sea cave (out of its mouth)): Kira out in 2.4 s at (-115.7, -14.0, 0.0) (swam out)
+  ok    PS-grotto (the cave's little grotto (back through the narrow gap)): Kira out in 2.2 s at (-135.8, -15.9, 11.1) (swam out)
+  screenshot 72_PS-wreck_Dan_in.png
+  ok    PS-wreck (inside the shipwreck (out through its broken side or deck)): Dan out in 4.6 s at (-70.0, -10.3, 102.5) (swam out)
+  ok    PS-wreck (inside the shipwreck (out through its broken side or deck)): Abi out in 4.2 s at (-70.0, -10.3, 102.4) (swam out)
+  ok    PS-wreck (inside the shipwreck (out through its broken side or deck)): Kira out in 2.3 s at (-70.0, -10.6, 100.6) (swam out)
+
+== Fix 7.2, item 2: never stuck in Victorian Steampunk (10 spots listed in its world data)
+  ok    Victorian Steampunk lists its low / enclosed spots
+  (moves held: [MuscleMan]; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_SP-belt_Dan_in.png
+  ok    SP-belt (on the conveyor belt (after the press: down its side stairs)): Dan out in 1.5 s at (0.0, 3.0, 48.1)
+  ok    SP-belt (on the conveyor belt (after the press: down its side stairs)): Abi out in 1.2 s at (0.0, 3.0, 47.5)
+  ok    SP-belt (on the conveyor belt (after the press: down its side stairs)): Kira out in 1.4 s at (0.0, 3.0, 48.6)
+  ok    SP-boiler-room (the boiler room behind the gear door (mechanical Kira winds it open)): Dan out in 1.5 s at (-21.9, 0.0, 6.0)
+  ok    SP-boiler-room (the boiler room behind the gear door (mechanical Kira winds it open)): Abi out in 1.1 s at (-23.6, 0.0, 6.0)
+  ok    SP-boiler-room (the boiler room behind the gear door (mechanical Kira winds it open)): Kira out in 1.4 s at (-21.4, 0.0, 6.0)
+  ok    SP-cage (the store cage behind the bars (Muscle Man bends them)): Dan out in 1.5 s at (23.9, 0.0, 44.0)
+  ok    SP-cage (the store cage behind the bars (Muscle Man bends them)): Abi out in 1.2 s at (25.5, 0.0, 44.0)
+  ok    SP-cage (the store cage behind the bars (Muscle Man bends them)): Kira out in 1.4 s at (23.5, 0.0, 44.0)
+  ok    SP-nook (the tool nook behind the machine (Muscle Man lifts it)): Dan out in 1.5 s at (-25.5, 0.0, 33.0)
+  ok    SP-nook (the tool nook behind the machine (Muscle Man lifts it)): Abi out in 1.3 s at (-27.5, 0.0, 33.0)
+  ok    SP-nook (the tool nook behind the machine (Muscle Man lifts it)): Kira out in 1.4 s at (-24.4, 0.0, 33.0)
+  ok    SP-lane (the end of the stamper lane (Muscle Man holds the big stamper up)): Dan out in 2.2 s at (20.0, 0.0, 48.0)
+  ok    SP-lane (the end of the stamper lane (Muscle Man holds the big stamper up)): Abi out in 2.3 s at (20.0, 0.0, 46.6)
+  ok    SP-lane (the end of the stamper lane (Muscle Man holds the big stamper up)): Kira out in 1.7 s at (20.0, 0.0, 54.1)
+  screenshot 72_SP-chimney_Dan_in.png
+  ok    SP-chimney (the brick stack's shaft by the north wall (walk out the front)): Dan out in 1.5 s at (27.2, 0.0, 84.9)
+  ok    SP-chimney (the brick stack's shaft by the north wall (walk out the front)): Abi out in 1.1 s at (27.2, 0.0, 86.5)
+  ok    SP-chimney (the brick stack's shaft by the north wall (walk out the front)): Kira out in 1.4 s at (27.2, 0.0, 84.4)
+  screenshot 72_SP-alley-west_Dan_in.png
+  ok    SP-alley-west (the narrow alley between the tall houses (walk out to the avenue)): Dan out in 1.5 s at (-5.9, 0.0, 139.2)
+  ok    SP-alley-west (the narrow alley between the tall houses (walk out to the avenue)): Abi out in 1.2 s at (-6.5, 0.0, 139.2)
+  ok    SP-alley-west (the narrow alley between the tall houses (walk out to the avenue)): Kira out in 1.4 s at (-5.5, 0.0, 139.2)
+  ok    SP-alley-pipes (the alley behind the pipes (Muscle Man bends them)): Dan out in 1.5 s at (5.9, 0.0, 143.5)
+  ok    SP-alley-pipes (the alley behind the pipes (Muscle Man bends them)): Abi out in 1.2 s at (6.5, 0.0, 143.5)
+  ok    SP-alley-pipes (the alley behind the pipes (Muscle Man bends them)): Kira out in 1.4 s at (5.4, 0.0, 143.5)
+  ok    SP-passage (the passage behind the crates (Muscle Man lifts them)): Dan out in 1.5 s at (-28.5, 0.0, 229.9)
+  ok    SP-passage (the passage behind the crates (Muscle Man lifts them)): Abi out in 1.2 s at (-28.5, 0.0, 230.6)
+  ok    SP-passage (the passage behind the crates (Muscle Man lifts them)): Kira out in 1.4 s at (-28.5, 0.0, 229.4)
+  ok    SP-gear-yard (the clockmaker's yard behind the great gear gate (mechanical Kira winds it open)): Dan out in 2.5 s at (71.6, 0.0, 200.0)
+  ok    SP-gear-yard (the clockmaker's yard behind the great gear gate (mechanical Kira winds it open)): Abi out in 2.1 s at (71.1, 0.0, 200.0)
+  ok    SP-gear-yard (the clockmaker's yard behind the great gear gate (mechanical Kira winds it open)): Kira out in 2.5 s at (69.0, 0.0, 200.0)
+
+== Fix 7.2, item 2: never stuck in Tomorrowland (6 spots listed in its world data)
+  ok    Tomorrowland lists its low / enclosed spots
+  (moves held: [MuscleMan]; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_TL-pit_Dan_in.png
+  ok    TL-pit (the maintenance pit under the parked car (steps up its south side)): Dan out in 1.3 s at (-4.0, 0.0, 43.2)
+  ok    TL-pit (the maintenance pit under the parked car (steps up its south side)): Abi out in 1.4 s at (-4.0, 0.1, 40.2)
+  ok    TL-pit (the maintenance pit under the parked car (steps up its south side)): Kira out in 1.4 s at (-4.2, 0.0, 43.7)
+  ok    TL-courtyard (the courtyard behind the vending machine (out through the alley)): Dan out in 2.1 s at (-17.9, 0.0, 117.8)
+  ok    TL-courtyard (the courtyard behind the vending machine (out through the alley)): Abi out in 1.4 s at (-21.5, 0.0, 117.8)
+  ok    TL-courtyard (the courtyard behind the vending machine (out through the alley)): Kira out in 2.0 s at (-16.8, 0.0, 117.8)
+  ok    TL-nook (the nook behind the chrome bars): Dan out in 1.5 s at (18.9, 0.0, 104.5)
+  ok    TL-nook (the nook behind the chrome bars): Abi out in 1.1 s at (20.5, 0.0, 104.5)
+  ok    TL-nook (the nook behind the chrome bars): Kira out in 1.4 s at (18.4, 0.0, 104.5)
+  ok    TL-diner (inside the Atomic Diner (out of its door, west)): Dan out in 2.1 s at (24.0, 0.1, 186.0)
+  ok    TL-diner (inside the Atomic Diner (out of its door, west)): Abi out in 1.4 s at (27.5, 0.0, 186.0)
+  ok    TL-diner (inside the Atomic Diner (out of its door, west)): Kira out in 2.0 s at (22.8, 0.0, 186.0)
+  screenshot 72_TL-shaft_Dan_in.png
+  ok    TL-shaft (the narrow gap between the two tall shops (walk out the front)): Dan out in 1.4 s at (-11.1, 0.3, 63.2)
+  ok    TL-shaft (the narrow gap between the two tall shops (walk out the front)): Abi out in 1.1 s at (-12.5, 0.3, 63.2)
+  ok    TL-shaft (the narrow gap between the two tall shops (walk out the front)): Kira out in 1.4 s at (-10.6, 0.3, 63.1)
+  ok    TL-hall (the launch hall (out through its south door)): Dan out in 5.3 s at (-0.8, 0.1, 266.0)
+  ok    TL-hall (the launch hall (out through its south door)): Abi out in 4.3 s at (-1.4, 0.1, 268.3)
+  ok    TL-hall (the launch hall (out through its south door)): Kira out in 4.7 s at (-1.2, 0.1, 267.4)
+
+== Fix 7.2, item 2: never stuck in The Moon (6 spots listed in its world data)
+  ok    The Moon lists its low / enclosed spots
+  (moves held: [MuscleMan, Rocket]; each spot is tried with only these plus what it takes to get in)
+  screenshot 72_MO-crater-deep_Dan_in.png
+  ok    MO-crater-deep (the deep crater (walk up its sides)): Dan out in 1.3 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  ok    MO-crater-deep (the deep crater (walk up its sides)): Abi out in 1.4 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  ok    MO-crater-deep (the deep crater (walk up its sides)): Kira out in 7.1 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  screenshot 72_MO-crater-a_Dan_in.png
+  ok    MO-crater-a (a small crater by the landing site (walk out)): Dan out in 1.6 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  ok    MO-crater-a (a small crater by the landing site (walk out)): Abi out in 1.6 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  ok    MO-crater-a (a small crater by the landing site (walk out)): Kira out in 5.7 s at (60.0, 0.0, -46.0)
+  screenshot 72_MO-crater-b_Dan_in.png
+  ok    MO-crater-b (a crater in the field (walk out)): Dan out in 1.5 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  ok    MO-crater-b (a crater in the field (walk out)): Abi out in 1.6 s at (0.0, 0.0, 9.0) (sent back to the checkpoint)
+  ok    MO-crater-b (a crater in the field (walk out)): Kira out in 5.6 s at (80.0, 0.0, 78.2)
+  ok    MO-base (the moon base (out through the airlock)): Dan out in 3.5 s at (-90.0, 0.2, 59.6)
+  ok    MO-base (the moon base (out through the airlock)): Abi out in 2.8 s at (-90.0, 0.2, 59.5)
+  ok    MO-base (the moon base (out through the airlock)): Kira out in 6.5 s at (-90.0, 0.0, 47.4)
+  ok    MO-cave-a (cave A (out of its mouth, west)): Dan out in 2.6 s at (136.0, 0.7, -59.9)
+  ok    MO-cave-a (cave A (out of its mouth, west)): Abi out in 1.6 s at (139.3, 0.2, -60.0)
+  ok    MO-cave-a (cave A (out of its mouth, west)): Kira out in 7.0 s at (137.0, 0.6, -60.0)
+  ok    MO-cave-b (cave B (out of its mouth, north)): Dan out in 2.6 s at (-20.0, 0.8, 114.2)
+  ok    MO-cave-b (cave B (out of its mouth, north)): Abi out in 1.7 s at (-20.0, 0.1, 110.8)
+  ok    MO-cave-b (cave B (out of its mouth, north)): Kira out in 6.9 s at (-20.0, 0.6, 112.9)
+
+RESULT: all checks passed
+end: window: none (batch mode), view 1920x1080 off-screen; sound: muted from the first frame; measured output level 0.000 RMS, peak 0.000 (the game produced 0.000 RMS, peak 0.000, zeroed before the speakers; 71675904 samples); master volume 0.00

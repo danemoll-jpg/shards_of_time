@@ -24,8 +24,8 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 13: the Moon (target 0.13.0); Round 12 delivered as 0.12.0 (below)
-Round 11, Fixes 11.1 / 11.2 and Round 12 are delivered. Do Round 12, publish 0.12.0, then go straight on to Round 13 and
+Rounds 12 (0.12.0) and 13 (0.13.0) are delivered (below). Next: Acts X / XI and the credits, and the big clean-up round (Dan, 2026-11-12).
+The round texts below are kept for reference until the planning chat writes the next round. Do Round 12, publish 0.12.0, then go straight on to Round 13 and
 publish 0.13.0. Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can overrule
 after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in front of
 Dan); rule 12 (never stuck), the Fix 8.1 floor / platform / reach checks, the Fix 10.1 minimum-player check and the
@@ -153,6 +153,40 @@ there rather than fixing it piecemeal, unless it blocks play.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 13: the Moon (0.13.0, build 1300, 2026-11-13)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
+front): `local/round13/{moon,tomorrowland,stuck,fix81moon,perfmoon,perfdeck,prompts,tpose,minplayer}`; logs and sheets in `Data/screenshots/round13/`.
+1. Models: **done.** Space Kira (Code's rig, 23 bones, no ear bones; Kira lock OK: grey 43%, white 0.4%, amber 0.05%); the moon critter (static,
+   wobbling eye stalks), the lunar rover (static, its panel's lights blink), the bubble helmets (`Characters/Helmet.cs`: see-through, on the head
+   bone of every Moon character in play and in every Moon cutscene: round for Dan / Abi / Muscle Man, the Violinist's on a brass ring, Kira's small and
+   silver-rimmed); Dan's four Moon rigs. The Moon built in code (`World/Moon.cs`: a 600 m cratered heightfield, Earth, stars), the landed rocket (the
+   Tomorrowland model), the moon base, the white story shard; the Violinist's chrome violin again.
+2. `MoonLanding` (17 s): **done.** RocketLaunch flies straight on (no vortex): the descent on its flame, the dust, helmets click on in the cabin, the
+   hatch, the four bound down in slow motion, Earth behind them, Muscle Man's big slow jump and laugh. The Moon's path in the vortex opens on landing.
+3. Low gravity: **done.** One `LowGravityVolume` (gravity x0.35, take-off x0.8): Dan's jump 2.9 m and 1.5 s (on Earth 1.6 m, 0.6 s); shard reach and the
+   stuck check re-run with it.
+4. `KiraFloats` + space Kira's float: **done.** The gag plays once at the ridge's foot; hold Jump in the air: up at 2 m/s for 2.8 s (`CharacterMotor`
+   `Float`): she reaches the 7.6 m float pillars; Abi's double jump tops out at 3.8 m there.
+5. Layout: **done.** The landing site, the crater field (glowing bouncy rims, the deep crater, cave A), the moon base (airlock, hub, garden, lab,
+   corridors; solid domes), cave B, the mesa, the ridge and the rover's plateau. 60 shards, 2 hearts.
+6. The Violinist: **done.** In his cream spacesuit on a rock by the base; a slow floaty tune (no move left), its hint at the light puzzle.
+7. Muscle Man: **done.** Carries the jammed airlock door aside, lifts the moon boulders off both caves, boosts onto the mesa; big floaty jumps.
+8. Enemies: **done.** Moon critters hop at you (a bump: knocked back, no heart lost); bopped, they curl up and roll away. No boss.
+9. Shards: **done.** 60 + 2 hearts; threshold 200 and 15 from here; minimum player: arrives with 175, all 60 reachable before the wake.
+10. The finale: **done.** The necklace leads to the rover; Dan / Muscle Man / Kira puzzle over the panel ("Switch to Abi"); Abi: three rounds (4, 6, 8
+   lights) on the stick, a wrong press plays the pattern again (her `offer` clip on each press: no Button Pushing on Mixamo); `WhiteShard`: the shard
+   answers, all eight shards light round Dan's necklace, light fills the Moon -> the vortex with Home open ("to be continued": Acts X / XI next).
+11. Look and frame rate: **done.** Stark white sun, deep blue starry sky, Earth; 216 fps at the slowest place at 1080p (need 60), Steam Deck below.
+12. Sound: **done.** In Round 12's batch: dust steps, helmet clicks, breathing, radio, the landing, the airlock, critter boings and rolls, four panel
+   tones and a soft wrong buzz, the shard's chime, the WhiteShard swell, the floaty violin tune, the Moon's hush. No music made by Code.
+13. Build / checks / publish: **done.** `moon`, `tomorrowland` (the launch now goes on to the Moon), `stuck` (all eight worlds), `fix81moon`, `perfmoon` (+
+   Steam Deck), `prompts` (eight worlds), `tpose` (201 characters), `minplayer` (New game to the white shard). Published `game-1300`.
+
+Decisions Code made (Dan can overrule): the puzzle's lights are answered with the stick (up, right, down, left = left to right); the patterns are the
+same every time; low gravity everywhere on the Moon (inside the base too); the critters never cost a heart.
+**For Dan to check:** MoonLanding and WhiteShard (MP4s in `Recordings/`); the light puzzle as Abi; Kira floating up a pillar; the helmets (sizes are
+guesses on the new rigs); the base through the airlock.
+
 ### Round 12: Tomorrowland (0.12.0, build 1200, 2026-11-12)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
 front): `local/round12/{tomorrowland2,stuck2,prompts2,fix81tl,perftl,perfdeck,tpose,minplayer}`; logs and sheets in `Data/screenshots/round12/checks/`.
@@ -220,24 +254,6 @@ two MP4s; Egyptian Abi from low angles.
    Cutscenes rebuilt (`CutsceneAuthoring.Version` 31). Published `game-1102`; `local/sc` updated itself to 1102 and reported ready.
 
 For Dan to check: MuscleManHero (the dip under the press, the heave); the Violinist holding his steam violin on the new rig.
-
-### Fix 11.1: Dan's seven Tripo models in the game (0.11.1, build 1101, 2026-11-12)
-1. Import: **done.** All seven from `SourceArt/Tripo/` (~1.9M triangles each) decimated (`Tools/Blender/decimate_glb.py`: people 25k / 15k,
-   animals 15k, clock 12k, carriage 15k, press 20k), textures pulled out of the GLBs (`Tools/glb_textures.py`), cleaned up (`meshy_cleanup.py`;
-   Kira and the horse turned 90 deg: Tripo's side profiles face -X).
-2. Mechanical Kira: **done.** Code's rig (23 bones, no ear bones, 9 clips), now her model in the game. **Kira lock OK:** ear bones 0, grey 35%,
-   white 0.0%, amber eyes 0.31%. (Tripo's plates were a rusty brown-grey, 4% grey: moved to home Kira's grey with `match_fur.py`; the lock takes
-   25% grey for her, as 20% for the mummy: brass gears and rivets are her design.) Clockwork horse: Code's rig, in the square.
-3. Static models: **done.** Dan's clock is the great clock (the teal gear moved into its face at 5.85 m), his carriage stands on the turntable
-   and parked in the yard and the streets, his press as two smaller presses in the factory (box colliders). The rideable carriages on the rail
-   loop and the press that breaks apart in `MuscleManHero` stay the Blender ones (Tripo's are one solid mesh each, with a domed roof).
-4. Mixamo: **done.** The Violinist's and the factory worker's upload files are in `Docs/MODELS-NEEDED.md` with Dan, Abi and Muscle Man (5).
-5. Checks / publish: **done.** On the 0.11.1 exe: `steampunk`, `fix81steam` (the small presses and parked carriages are solid as drawn: their
-   own meshes), `stucksteam`, `tpose` (156 characters, none in its rest pose) all passed, audio 0.000 RMS, no window. Published `game-1101`; the
-   starter install in `local/sc` updated itself to build 1101 and started. Disk 13.3 -> 12.9 GB. (One build stopped half-way when Unity's licence
-   client dropped its connection: built again.)
-**For Dan to check:** mechanical Kira in the factory (wind a socket, climb a riveted pillar), the clockwork horses in the square, the great
-clock's teal gear; the five Mixamo uploads in `Docs/MODELS-NEEDED.md`.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

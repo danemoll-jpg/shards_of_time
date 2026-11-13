@@ -277,7 +277,7 @@ namespace ShardsOfTime
             yield return EnsurePlaying(false);
             if (!P.Companion) P.AddCompanion(Player.transform.position + Vector3.back * 3f, Quaternion.identity);
             var rest = new Dictionary<string, string>(); var seen = new Dictionary<string, int>();
-            foreach (var (wid, cp) in new[] { (WorldData.IceAge, "IA-vortex"), (WorldData.Egypt, Egypt.VortexCp), (WorldData.Bethlehem, Bethlehem.VortexCp), (WorldData.Medieval, Medieval.VortexCp), (WorldData.Pirate, Pirate.VortexCp), (WorldData.Steampunk, Steampunk.FactoryCp), (WorldData.Tomorrowland, Tomorrowland.Start) })
+            foreach (var (wid, cp) in new[] { (WorldData.IceAge, "IA-vortex"), (WorldData.Egypt, Egypt.VortexCp), (WorldData.Bethlehem, Bethlehem.VortexCp), (WorldData.Medieval, Medieval.VortexCp), (WorldData.Pirate, Pirate.VortexCp), (WorldData.Steampunk, Steampunk.FactoryCp), (WorldData.Tomorrowland, Tomorrowland.Start), (WorldData.Moon, Moon.Start) })
             {
                 SaveGame.Current.checkpoint = cp;
                 if (Game.World.worldId != wid) yield return ToWorld(wid, cp);

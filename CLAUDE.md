@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 12: `game-1200`, previous `Builds/LauncherRelease-1200`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 13: `game-1300`, previous `Builds/LauncherRelease-1300`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,30 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 13 delivered: 0.13.0 (build 1300), 2026-11-13.** The Moon, the eighth world: the rocket flies straight on from Tomorrowland
+(`MoonLanding`), low gravity everywhere, space Kira's float and `KiraFloats`, the crater field, the moon base, the rover's light puzzle (only Abi)
+and `WhiteShard` -> all eight story shards, Home open ("to be continued": Acts X / XI next). Published `game-1300`. Report: `TODO.md`.
+
+Standing facts from Round 13:
+- Worlds: `Game.InMoon` (`WorldData.Moon` = "Moon"); `World/Moon.cs` builds it in code: `Moon.Height(x, z)` (a 600 x 600 m heightfield, 2.5 m
+  cells: craters (the deep one (100, 20) r 22, 8 deep), the rover's plateau (-60, -90) at 16 with a walkable ridge to the north-east, the mesa
+  (30, -90) at 10), Earth (260, 620, 1700), stars; the landed rocket at (0, 24) (`Moon.RocketGround`: never raycast there, it hits the rocket's
+  top); the base: hub (-90, 80) r 12, garden (-90, 114), lab (-60, 80), the airlock z 57..69 (`MO-airlock`), floors at 0.15 (the motor steps 0.35);
+  caves A (150, -60), B (-20, 100); float pillars 7.6 m; the panel (-60, 16, -83.6). One `LowGravityVolume` (gravity x0.35, take-off x0.8).
+  Pieces in `World/MoonWorld.cs` (MoonBounce, FloatsZone, RoverPanel). `Moon.asset` from `WorldData.MoonDefaults()`; `Moon.Real` (false = the
+  launch ends in the vortex, the Moon "to be continued").
+- Story flow: `RocketFinale` -> `GoToWorld(Moon)` -> `ArriveOnMoon` (`MO-arrived`, `MoonLanding`) -> `FloatsZone` -> `Game.KiraFloatsScene`
+  (`MO-floats`) -> the necklace -> `RoverPanel` (Abi; stick flicks; `Lengths` 4/6/8; patterns seeded) -> `Game.WhiteShardFinale` (`MO-puzzle`)
+  -> the vortex; Home opens at 8 story shards (it still says "to be continued").
+- Moves: `Abilities.Float` (`KiraForm.Space`; `CharacterMotor.CanFloat`, `FloatRise` 2, `FloatTime` 2.8, once per air while Jump is held);
+  `Abilities.MoonTune` (not a move: the Violinist's tune, learner "*").
+- Helmets: `Characters/Helmet.cs` `Attach(model, kind)` on the head bone (outfit Moon, Kira's Space form, the Violinist in the Moon, every actor of
+  a cutscene played in the Moon: `Cutscenes.Play`).
+- Cutscenes `Assets/Editor/CutsceneAuthoring.Moon.cs` (MoonLanding, KiraFloats, WhiteShard, NecklaceWakesMoon, ViolinistPlaysMoon);
+  `CutsceneAuthoring.Version` 37.
+- Exe check modes: `moon` (~7 min, from Tomorrowland's socket), `stuckmoon`, `fix81moon`, `perfmoon`, `moondiag`; `stuck`, `fix81`, `prompts`,
+  `tpose`, `minplayer` (now to the white shard, ~90 min, `--minutes 100`) include the Moon.
+
 **Round 12 delivered: 0.12.0 (build 1200), 2026-11-12.** Tomorrowland, the seventh world, built in code: the neon avenue at dusk, the sky (towers,
 flying cars), the square, the Rocket Terminal; robot Kira (plug-in terminals, wheel dash), Abi's air dash, the cleanbots, the greeter, the pink
 shard and `RocketLaunch`; Egyptian Abi's legs and the Muscle Man prompt rule (item 0). Published `game-1200`. Report and "For Dan to check": `TODO.md`.

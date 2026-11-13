@@ -30,7 +30,7 @@ namespace ShardsOfTime
             foreach (var (w, cp) in ExtraPromptWorlds) yield return PromptWorld(w, cp);
         }
         // Round 12 / 13 add their worlds here
-        static readonly List<(string, string)> ExtraPromptWorlds = new List<(string, string)> { (WorldData.Tomorrowland, Tomorrowland.Start) };
+        static readonly List<(string, string)> ExtraPromptWorlds = new List<(string, string)> { (WorldData.Tomorrowland, Tomorrowland.Start), (WorldData.Moon, Moon.Start) };
 
         bool PromptUp(MuscleJob j) => Hud.LastMessage == j.Prompt && MuscleJob.Prompting == j;
 

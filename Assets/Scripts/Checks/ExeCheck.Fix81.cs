@@ -17,7 +17,7 @@ namespace ShardsOfTime
         static int SolidMask => ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << Hero.EnemyLayer) | (1 << 4) | (1 << 2) | (1 << VisLayer));
         readonly List<GameObject> vis = new List<GameObject>();
 
-        static readonly (string world, string cp)[] Fix81Worlds = { (WorldData.IceAge, IceAge.Start), (WorldData.Egypt, Egypt.Start), (WorldData.Bethlehem, Bethlehem.Start), (WorldData.Medieval, Medieval.Start), (WorldData.Pirate, Pirate.Start), (WorldData.Steampunk, Steampunk.FactoryCp), (WorldData.Tomorrowland, Tomorrowland.Start) };   // Round 12   // Round 10; Round 11
+        static readonly (string world, string cp)[] Fix81Worlds = { (WorldData.IceAge, IceAge.Start), (WorldData.Egypt, Egypt.Start), (WorldData.Bethlehem, Bethlehem.Start), (WorldData.Medieval, Medieval.Start), (WorldData.Pirate, Pirate.Start), (WorldData.Steampunk, Steampunk.FactoryCp), (WorldData.Tomorrowland, Tomorrowland.Start), (WorldData.Moon, Moon.Start) };   // Round 12; Round 13   // Round 10; Round 11
 
         IEnumerator Fix81() => Fix81Run(true, true, true, true);
         IEnumerator Floors81() => Fix81Run(true, false, false, false);
@@ -28,6 +28,7 @@ namespace ShardsOfTime
         IEnumerator Fix81Pirate() => Fix81Run(true, true, true, true, WorldData.Pirate);   // Round 10
         IEnumerator Fix81Steam() => Fix81Run(true, true, true, true, WorldData.Steampunk);   // Round 11
         IEnumerator Fix81TL() => Fix81Run(true, true, true, true, WorldData.Tomorrowland);   // Round 12
+        IEnumerator Fix81Moon() => Fix81Run(true, true, true, true, WorldData.Moon);   // Round 13
 
         IEnumerator Fix81Run(bool floors, bool platforms, bool reach, bool rule, string only = null)
         {

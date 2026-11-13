@@ -134,6 +134,7 @@ namespace ShardsOfTime
             if (e == "aim") { squash = .22f; if (Anim) Anim.Trigger("land"); }
             if (e == "pounce") { squash = -.2f; if (IsPlayer) Sfx.Play("jump", .6f, 1.5f); if (Anim) Anim.Trigger("jump"); PlayLog.Line($"{Stats.displayName}: pounce from {transform.position}"); }
             // Round 7, item 6: lamb Kira lands on hay or wool: a high springy bounce (anyone else just lands)
+            if (e == "land" && Motor.GroundCollider && Motor.GroundCollider.GetComponent<MoonBounce>() is MoonBounce mb) mb.Bounce(this);   // Round 13: a bouncy crater rim
             if (e == "land" && HasAbility(Abilities.WoolBounce) && Motor.GroundCollider && Motor.GroundCollider.GetComponentInParent<BouncePad>() is BouncePad pad && !Motor.Aiming)
                 pad.Bounce(this);
         }

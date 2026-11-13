@@ -30,6 +30,7 @@ namespace ShardsOfTime
             yield return PirateEnter(Pirate.Start); yield return StuckWorld(WorldData.Pirate, null);   // Round 10
             yield return SteamEnter(Steampunk.FactoryCp); yield return StuckWorld(WorldData.Steampunk, null);   // Round 11
             yield return TLEnter(Tomorrowland.Start); yield return StuckWorld(WorldData.Tomorrowland, null);   // Round 12
+            yield return MoonEnter(Moon.Start); yield return StuckWorld(WorldData.Moon, null);   // Round 13 (low gravity)
         }
 
         IEnumerator StuckMedieval() { yield return EnsurePlaying(false); yield return StuckWorld(WorldData.Medieval, Medieval.Start); }   // Round 8
@@ -45,7 +46,7 @@ namespace ShardsOfTime
         IEnumerator ToWorld(string world, string cp)
         {
             if (Game.World.worldId == world) yield break;
-            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : world == WorldData.Tomorrowland ? Tomorrowland.ArrivedFlag : null;
+            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : world == WorldData.Tomorrowland ? Tomorrowland.ArrivedFlag : world == WorldData.Moon ? Moon.ArrivedFlag : null;
             if (flag != null && !SaveGame.Current.World(world).opened.Contains(flag)) SaveGame.Current.World(world).opened.Add(flag);
             if (world == WorldData.Steampunk && !SaveGame.Current.World(world).opened.Contains(Steampunk.PressFlag)) SaveGame.Current.World(world).opened.Add(Steampunk.PressFlag);   // Round 11: past the press
             SaveGame.Current.checkpoint = cp; yield return StartWorld(world); yield return WaitFor(() => !Game.I.Busy, 10f);

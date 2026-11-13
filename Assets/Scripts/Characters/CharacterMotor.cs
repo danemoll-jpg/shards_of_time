@@ -272,7 +272,7 @@ namespace ShardsOfTime
             if (vy <= 0) rising = false;
 
             // Round 13: space Kira's float: Jump held once the jump stops rising: up slowly for a while
-            bool fl = CanFloat && !Grounded && input.jumpHeld && vy <= .5f && floatLeft > 0 && !Pounding;
+            bool fl = CanFloat && !Grounded && input.jumpHeld && (Floating || vy <= .5f) && floatLeft > 0 && !Pounding;   // (once floating it goes on while Jump is held)
             if (fl && !Floating) { Floating = true; Floats++; Event?.Invoke("float"); if (CompareTag("Player")) PlayLog.Line($"Kira floats up from {transform.position}"); }
             else if (!fl) Floating = false;
             if (Floating) { floatLeft -= dt; vy = FloatRise; hv = Vector3.MoveTowards(hv, Vector3.ClampMagnitude(input.move, 1f) * 2.4f, 6f * dt); }

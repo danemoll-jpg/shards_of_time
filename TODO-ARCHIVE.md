@@ -2083,3 +2083,21 @@ square; a carriage turntable that spins once wound (a toy, a shard on it).
 **For Dan to check:** the belt run and the press from the vortex path; the two sheets and MP4s; the streets by day; Abi's wall jump up the narrow
 alley; the Theater several times in a row. **Waiting on Dan:** the three rigs + Muscle Man's clips (Mixamo), Meshy or Tripo API credits for the
 other seven models.
+
+### Fix 11.1: Dan's seven Tripo models in the game (0.11.1, build 1101, 2026-11-12)
+1. Import: **done.** All seven from `SourceArt/Tripo/` (~1.9M triangles each) decimated (`Tools/Blender/decimate_glb.py`: people 25k / 15k,
+   animals 15k, clock 12k, carriage 15k, press 20k), textures pulled out of the GLBs (`Tools/glb_textures.py`), cleaned up (`meshy_cleanup.py`;
+   Kira and the horse turned 90 deg: Tripo's side profiles face -X).
+2. Mechanical Kira: **done.** Code's rig (23 bones, no ear bones, 9 clips), now her model in the game. **Kira lock OK:** ear bones 0, grey 35%,
+   white 0.0%, amber eyes 0.31%. (Tripo's plates were a rusty brown-grey, 4% grey: moved to home Kira's grey with `match_fur.py`; the lock takes
+   25% grey for her, as 20% for the mummy: brass gears and rivets are her design.) Clockwork horse: Code's rig, in the square.
+3. Static models: **done.** Dan's clock is the great clock (the teal gear moved into its face at 5.85 m), his carriage stands on the turntable
+   and parked in the yard and the streets, his press as two smaller presses in the factory (box colliders). The rideable carriages on the rail
+   loop and the press that breaks apart in `MuscleManHero` stay the Blender ones (Tripo's are one solid mesh each, with a domed roof).
+4. Mixamo: **done.** The Violinist's and the factory worker's upload files are in `Docs/MODELS-NEEDED.md` with Dan, Abi and Muscle Man (5).
+5. Checks / publish: **done.** On the 0.11.1 exe: `steampunk`, `fix81steam` (the small presses and parked carriages are solid as drawn: their
+   own meshes), `stucksteam`, `tpose` (156 characters, none in its rest pose) all passed, audio 0.000 RMS, no window. Published `game-1101`; the
+   starter install in `local/sc` updated itself to build 1101 and started. Disk 13.3 -> 12.9 GB. (One build stopped half-way when Unity's licence
+   client dropped its connection: built again.)
+**For Dan to check:** mechanical Kira in the factory (wind a socket, climb a riveted pillar), the clockwork horses in the square, the great
+clock's teal gear; the five Mixamo uploads in `Docs/MODELS-NEEDED.md`.
