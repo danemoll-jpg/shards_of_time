@@ -24,7 +24,7 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Rounds 12 (0.12.0) and 13 (0.13.0) are delivered (below). Next: Acts X / XI and the credits, and the big clean-up round (Dan, 2026-11-12).
+Rounds 12 (0.12.0) and 13 (0.13.0) and Fix 13.1 (0.13.1) are delivered (below). Next: Acts X / XI and the credits, and the big clean-up round (Dan, 2026-11-12).
 The round texts below are kept for reference until the planning chat writes the next round. Do Round 12, publish 0.12.0, then go straight on to Round 13 and
 publish 0.13.0. Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can overrule
 after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in front of
@@ -153,6 +153,17 @@ there rather than fixing it piecemeal, unless it blocks play.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Fix 13.1: Abi's Button Pushing and Muscle Man's air hug (0.13.1, build 1301, 2026-11-13)
+1. Abi at the rover panel: **done.** Dan's `Button Pushing.fbx` was in `SourceArt/Mixamo/` itself, not `abi_moon/` (Code only looked
+   there in Round 13). Imported as `Clips/button` (frames 25-58: her hand at the panel, 1.1 s), played once on each press. Round 13's
+   stand-in never played at all: `offer` was not a one-shot, so `Trigger("offer")` was skipped. Check `moon`: "Abi presses the light with
+   Dan's Button Pushing clip (playing: button)", passed (`local/fix131/moon`, shot `652b_abi_presses`: from behind, her arm is hidden).
+2. Muscle Man's air hug (the greeter gag): **done.** The same skipped `offer`: he cheered and stepped in but never hugged the air. `offer`
+   is a one-shot now, cut to 1.8 s (`CreatureAnimator.Trigger(clip, maxSeconds)`). Check `tomorrowland`: "he hugs the air (playing: offer)".
+3. Checks muted (0.000 RMS), no windows. Published `game-1301`.
+
+For Dan to check: Abi at the rover's panel; Muscle Man's hug in the avenue.
+
 ### Round 13: the Moon (0.13.0, build 1300, 2026-11-13)
 Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
 front): `local/round13/{moon,tomorrowland,stuck,fix81moon,perfmoon,perfdeck,prompts,tpose,minplayer}`; logs and sheets in `Data/screenshots/round13/`.
@@ -174,7 +185,7 @@ front): `local/round13/{moon,tomorrowland,stuck,fix81moon,perfmoon,perfdeck,prom
 8. Enemies: **done.** Moon critters hop at you (a bump: knocked back, no heart lost); bopped, they curl up and roll away. No boss.
 9. Shards: **done.** 60 + 2 hearts; threshold 200 and 15 from here; minimum player: arrives with 175, all 60 reachable before the wake.
 10. The finale: **done.** The necklace leads to the rover; Dan / Muscle Man / Kira puzzle over the panel ("Switch to Abi"); Abi: three rounds (4, 6, 8
-   lights) on the stick, a wrong press plays the pattern again (her `offer` clip on each press: no Button Pushing on Mixamo); `WhiteShard`: the shard
+   lights) on the stick, a wrong press plays the pattern again (Fix 13.1: Dan's Button Pushing on each press); `WhiteShard`: the shard
    answers, all eight shards light round Dan's necklace, light fills the Moon -> the vortex with Home open ("to be continued": Acts X / XI next).
 11. Look and frame rate: **done.** Stark white sun, deep blue starry sky, Earth; 216 fps at the slowest place at 1080p (need 60), Steam Deck below.
 12. Sound: **done.** In Round 12's batch: dust steps, helmet clicks, breathing, radio, the landing, the airlock, critter boings and rolls, four panel
@@ -240,20 +251,6 @@ pattern); the cleanbots stop vacuuming for 6 s after a cough; the roof gaps cove
 base's domes solid (no jumping in over the walls).
 **For Dan to check:** the avenue at dusk and the escalator; robot Kira's terminals and the boost ramp; Abi's air dash to the far pad; the hug gag; the
 two MP4s; Egyptian Abi from low angles.
-
-### Fix 11.2: Dan's Steampunk rigs and Muscle Man's clips (0.11.2, build 1102, 2026-11-12)
-1. The five Mixamo rigs: **done.** `dan_steampunk`, `abi_steampunk` (closed by `close_person.py`: 0 open edges), `muscleman_steampunk`,
-   `violinist_steampunk`, `factory_worker` replace their stand-ins (player's view: `local/fix112/steampunk/440_street_musician.png` Dan, Abi,
-   Muscle Man and the Violinist in their Steampunk looks; `413` a worker on the avenue).
-2. Muscle Man's hold / throw: **done, one clip for both (Dan's idea).** Mixamo had no Heavy Throw; Dan's `Overhead Squat` is trimmed into
-   `mm_hold` (frames 1-15: the dip under the weight, held) and `mm_throw` (15-57: the drive back up that heaves the press off). Shots
-   `412d_he_holds_it`, `412e_heave`.
-3. Round 10's leftovers: `Getting Up` (mm_getup) and `Jumping Down` (mm_leap) **in**; **Drowning / a flailing swim: not on Mixamo**, his
-   struggle stays Treading Water (not needed again).
-4. Checks (exe, muted 0.000 RMS, no windows): `steampunk` passed, `tpose` passed (all worlds and cutscenes, Steampunk 8 characters).
-   Cutscenes rebuilt (`CutsceneAuthoring.Version` 31). Published `game-1102`; `local/sc` updated itself to 1102 and reported ready.
-
-For Dan to check: MuscleManHero (the dip under the press, the heave); the Violinist holding his steam violin on the new rig.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

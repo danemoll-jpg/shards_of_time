@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Round 13: `game-1300`, previous `Builds/LauncherRelease-1300`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Fix 13.1: `game-1301`, previous `Builds/LauncherRelease-1301`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,11 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Fix 13.1 delivered: 0.13.1 (build 1301), 2026-11-13.** Abi plays Dan's Button Pushing (`Clips/button`, frames 25-58) on each press at the
+rover's panel; Muscle Man's air hug plays (`offer`, cut to 1.8 s). `CreatureAnimator.Trigger` only plays clips in its `OneShots` list (others are
+skipped silently): add a new triggered clip there; `Trigger(clip, maxSeconds)` cuts a long one short. Dan sometimes saves Mixamo clips in
+`SourceArt/Mixamo/` itself: look there too. Published `game-1301`.
+
 **Round 13 delivered: 0.13.0 (build 1300), 2026-11-13.** The Moon, the eighth world: the rocket flies straight on from Tomorrowland
 (`MoonLanding`), low gravity everywhere, space Kira's float and `KiraFloats`, the crater field, the moon base, the rover's light puzzle (only Abi)
 and `WhiteShard` -> all eight story shards, Home open ("to be continued": Acts X / XI next). Published `game-1300`. Report: `TODO.md`.

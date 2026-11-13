@@ -24,9 +24,10 @@ namespace ShardsOfTime
             "mm_flex", "mm_taunt", "mm_lift", "mm_push", "mm_heave", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel",
             "block", "draw", "aim", "shoot", "nervous", "dazed", "limp",
             // Round 10 (Dan's Mixamo downloads): Muscle Man's struggling swim, getting up after his crash, his leap overboard
-            "mm_struggle", "mm_getup", "mm_leap", "mm_hold", "mm_throw" };   // Round 11
+            "mm_struggle", "mm_getup", "mm_leap", "mm_hold", "mm_throw",   // Round 11
+            "button" };   // Fix 13.1: Abi at the rover panel
         static readonly HashSet<string> OneShots = new HashSet<string> { "jump", "land", "land_hard", "attack", "punch", "kick", "hurt", "cheer", "yell", "surprised",
-            "mm_flex", "mm_taunt", "mm_lift", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel", "draw", "shoot" };   // Round 8
+            "mm_flex", "mm_taunt", "mm_lift", "mm_fall", "mm_cheer", "mm_boost", "mm_kneel", "draw", "shoot", "button", "offer" };   // Round 8; Fix 13.1 (offer: the hug gag's air hug; before, Trigger skipped it)
         static readonly HashSet<string> UpperBody = new HashSet<string> { "punch", "cheer", "hurt" };
         static readonly HashSet<string> CancelOnMove = new HashSet<string> { "land", "land_hard", "cheer", "mm_lift", "mm_boost", "mm_flex", "mm_taunt", "mm_cheer" };   // Round 8: Muscle Man stops a show-off to follow
         static readonly Dictionary<string, float> Rate = new Dictionary<string, float> { ["punch"] = 1.4f, ["kick"] = 1.5f };
@@ -137,7 +138,7 @@ namespace ShardsOfTime
         public bool Has(string clip) => index.ContainsKey(clip == "attack" ? AttackClip : clip);
 
         // a one-shot clip now (attack, hurt, jump, land, cheer); the loop comes back when it ends
-        public void Trigger(string clip)
+        public void Trigger(string clip, float maxSeconds = 0)   // Fix 13.1: maxSeconds > 0 cuts a long clip (offer, 10 s) short
         {
             if (clip == "attack") clip = AttackClip;
             if (clip == "land_hard" && !index.ContainsKey(clip)) clip = "land";
@@ -148,6 +149,7 @@ namespace ShardsOfTime
             oneShot = clip; oneShotUpper = upper; oneShotStart = Time.time;
             var c = upper ? upperClips[upperIndex[clip]] : clips[index[clip]];
             oneShotEnd = Time.time + c.length / rate * .95f;
+            if (maxSeconds > 0) oneShotEnd = Mathf.Min(oneShotEnd, Time.time + maxSeconds);
             var p = upper ? upperMix.GetInput(upperIndex[clip]) : baseMix.GetInput(index[clip]);
             p.SetTime(0); p.SetSpeed(rate);
         }

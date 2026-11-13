@@ -72,6 +72,7 @@ EXTRA_CLIPS = {"sit": ("wisemen", "Sitting Idle"), "argue": ("wisemen", "Arguing
                "mm_struggle": ("muscleman_pirate", "Drowning|Struggling|Treading Water"), "mm_getup": ("muscleman_pirate", "Getting Up|Stand Up"),
                "mm_leap": ("muscleman_pirate", "Jumping Down|Jump"),
                # Round 11: holding the press up / lifting Dan to the clock; heaving the press off
+               "button": ("abi_moon", "Button Pushing"),   # Fix 13.1: Abi at the rover panel (Dan saved it in the Mixamo root)
                "mm_hold": ("muscleman_steampunk", "Overhead Hold|Overhead Squat|Overhead"), "mm_throw": ("muscleman_steampunk", "Heavy Throw|Overhead Squat")}   # Fix 11.2: Dan's Overhead Squat is both (CharacterImport trims it: the dip under the weight, the drive up that heaves it off)   # Fix 7.1: a|b = any of these Mixamo names (Dan saved them in the Mixamo root)
 # Round 6: the mummy's own Mixamo clips (SourceArt/Mixamo/mummy/<Mixamo name>.fbx -> Clips/mummy_<clip>.fbx), played on it instead of
 # the people's clip of the same name (CreatureAnimator)

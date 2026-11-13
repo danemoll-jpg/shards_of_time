@@ -103,7 +103,9 @@ namespace ShardsOfTime
             Ok(gr.Said > 0, $"the greeter: \"{gr.line}\" ({Hud.LastMessage})");
             yield return Shot("503_greeter_line");
             int h0 = Greeter.Hugs; if (P.Companion) P.Companion.Motor.Teleport(gr.transform.position + Vector3.left * 1.6f, Quaternion.identity);
-            yield return WaitFor(() => Greeter.Hugs > h0, 4f); yield return Wait(.8f); yield return Shot("504_hug_beep");
+            yield return WaitFor(() => Greeter.Hugs > h0, 4f); yield return Wait(.8f);
+            if (P.Companion && P.Companion.Anim) Ok(P.Companion.Anim.State == "offer", $"Fix 13.1: he hugs the air (playing: {P.Companion.Anim.State})");
+            yield return Shot("504_hug_beep");
             Ok(Greeter.Hugs > h0, "Muscle Man tries to hug the greeter robot; it beeps in alarm and rolls off");
             yield return TpSettle(new Vector3(11.25f, .35f, 40f), 0); var w0 = Player.transform.position; yield return Wait(2f);
             Ok(Player.transform.position.z - w0.z > 3f, $"the east walkway carries you north ({Player.transform.position.z - w0.z:0.0} m in 2 s, no input)");

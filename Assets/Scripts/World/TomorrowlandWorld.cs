@@ -172,7 +172,7 @@ namespace ShardsOfTime
             if (Game.Playing) Hud.Message("Muscle Man: \"Aww, come here, little buddy!\"   Robot: \"BEEP BEEP! PERSONAL SPACE!\"", 3.5f);
             for (float t = 0; t < .6f; t += Time.deltaTime) { mm.Motor.Cc.Move(away * 1.4f * Time.deltaTime + Vector3.down * .05f); yield return null; }   // he steps in
             Sfx.Play("robot_alarm", .7f); if (parts) parts.wave = 3f;
-            if (mm.Anim) mm.Anim.Trigger(mm.Anim.Has("offer") ? "offer" : "cheer");   // ... and hugs the air
+            if (mm.Anim) mm.Anim.Trigger(mm.Anim.Has("offer") ? "offer" : "cheer", 1.8f);   // ... and hugs the air (Fix 13.1: offer is a one-shot now)
             for (float t = 0; t < 1.2f; t += Time.deltaTime) { transform.position += away * 3.2f * Time.deltaTime; if (parts) parts.roll = 900f; yield return null; }
             yield return new WaitForSeconds(.6f);
             mm.Follower.enabled = follow; if (follow) mm.Follower.ResetTimers();

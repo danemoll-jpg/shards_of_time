@@ -153,7 +153,14 @@ namespace ShardsOfTime
                     Ok(Moon.Panel.Wrongs > w0, "a wrong press: the panel buzzes and plays the pattern again"); wrongDone = true;
                     yield return WaitFor(() => Moon.Panel.Showing, 2f); yield return WaitFor(() => !Moon.Panel.Showing, 12f); yield return Wait(.3f);
                 }
-                foreach (var kk in pat) yield return Flick(kk);
+                if (round == 0)
+                {   // Fix 13.1: Dan's Button Pushing on each press (her hand at the panel)
+                    yield return Flick(pat[0]); yield return Wait(.25f);
+                    Ok(Player.Anim && Player.Anim.State == "button", $"Abi presses the light with Dan's Button Pushing clip (playing: {(Player.Anim ? Player.Anim.State : "-")})");
+                    yield return Shot("652b_abi_presses");
+                    for (int i = 1; i < pat.Length; i++) yield return Flick(pat[i]);
+                }
+                else foreach (var kk in pat) yield return Flick(kk);
                 Log($"  round {round + 1}: {pat.Length} lights repeated ({string.Join(" ", pat)})");
                 if (round == 2) break;
             }

@@ -46,6 +46,8 @@ namespace ShardsOfTime
         public int[] Pattern { get; private set; }
         public int Step { get; private set; }
         public static int Solved { get; private set; }
+        public static int Presses;   // Fix 13.1
+        static IEnumerator LogClip(Hero abi) { yield return null; yield return null; PlayLog.Line($"Abi presses the panel (clip {abi.Anim.State})"); }
         float hintAt = -10; bool released = true;
 
         void Update()
@@ -104,8 +106,8 @@ namespace ShardsOfTime
         void Press(int k)
         {
             StartCoroutine(Blink(k));
-            var abi = Party.I ? Party.I.Player : null;   // Dan, 2026-11-12: no Button Pushing on Mixamo: her offer clip (both hands reach forward) on each press
-            if (abi && abi.Anim && abi.Anim.Has("offer")) abi.Anim.Trigger("offer");
+            var abi = Party.I ? Party.I.Player : null;   // Fix 13.1: Dan's Button Pushing (Clips/button) on each press
+            if (abi && abi.Anim && abi.Anim.Has("button")) { abi.Anim.Trigger("button"); if (Presses++ == 0) StartCoroutine(LogClip(abi)); }
             if (k != Pattern[Step]) { Wrongs++; Sfx.Play("rover_wrong", .6f); PlayLog.Line($"wrong light ({k}, wanted {Pattern[Step]}): the pattern again"); Step = 0; StartCoroutine(Show()); return; }
             Sfx.Play("rover_tone_" + (k + 1), .7f); Step++;
             if (Step < Pattern.Length) return;

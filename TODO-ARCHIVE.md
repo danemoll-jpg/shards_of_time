@@ -2101,3 +2101,17 @@ other seven models.
    client dropped its connection: built again.)
 **For Dan to check:** mechanical Kira in the factory (wind a socket, climb a riveted pillar), the clockwork horses in the square, the great
 clock's teal gear; the five Mixamo uploads in `Docs/MODELS-NEEDED.md`.
+
+### Fix 11.2: Dan's Steampunk rigs and Muscle Man's clips (0.11.2, build 1102, 2026-11-12)
+1. The five Mixamo rigs: **done.** `dan_steampunk`, `abi_steampunk` (closed by `close_person.py`: 0 open edges), `muscleman_steampunk`,
+   `violinist_steampunk`, `factory_worker` replace their stand-ins (player's view: `local/fix112/steampunk/440_street_musician.png` Dan, Abi,
+   Muscle Man and the Violinist in their Steampunk looks; `413` a worker on the avenue).
+2. Muscle Man's hold / throw: **done, one clip for both (Dan's idea).** Mixamo had no Heavy Throw; Dan's `Overhead Squat` is trimmed into
+   `mm_hold` (frames 1-15: the dip under the weight, held) and `mm_throw` (15-57: the drive back up that heaves the press off). Shots
+   `412d_he_holds_it`, `412e_heave`.
+3. Round 10's leftovers: `Getting Up` (mm_getup) and `Jumping Down` (mm_leap) **in**; **Drowning / a flailing swim: not on Mixamo**, his
+   struggle stays Treading Water (not needed again).
+4. Checks (exe, muted 0.000 RMS, no windows): `steampunk` passed, `tpose` passed (all worlds and cutscenes, Steampunk 8 characters).
+   Cutscenes rebuilt (`CutsceneAuthoring.Version` 31). Published `game-1102`; `local/sc` updated itself to 1102 and reported ready.
+
+For Dan to check: MuscleManHero (the dip under the press, the heave); the Violinist holding his steam violin on the new rig.
