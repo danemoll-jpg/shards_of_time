@@ -1,5 +1,162 @@
 # Shards of Time — models needed
 
+## Round 12 (2026-11-12): Tomorrowland — images needed from Dan (prompts by the planning chat)
+
+Make them in the Tripo web app as before (Image to 3D, then Texture Gen with the sheet), GLBs to `SourceArt/Tripo/`.
+Film art: `SourceArt/Reference/Characters/*/…-tomorrowland-film.png`, `Kira/kira-robot-film.png`, the world in
+`Worlds/07-Tomorrowland/` (the pink neon street with chrome towers and flying cars, the "Rocket Terminal" street, the
+launch), the clip `Clips/07-Tomorrowland_RocketLaunch.mp4` (6 s). Concept sheets override film stills (Abi keeps her
+brown hair and green eyes; Dan his auburn-brown hair; Kira's ears stay folded). Same rules and negative prompt as
+before. People: front view, A-pose, empty hands. Animals: strict side profile. Save in `SourceArt/Concepts/`.
+(The Moon's prompts L1–L7 are in the next section; Dan makes both worlds in one batch.)
+
+### T1. Dan, retro-future — `dan_tomorrowland.png`
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead. A
+> 1950s retro-futuristic outfit: a fitted white one-piece jumpsuit with a high collar, a zip down the front, thin silver
+> piping, ribbed silver shoulder pads, silver cuffs, a silver belt with a square buckle, shiny silver boots with gold
+> laces. No necklace or pendant. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### T2. Abi, retro-future — `abi_tomorrowland.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair,
+> green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open and not
+> touching the body, feet shoulder-width apart, mouth closed with a confident smile, hair falling behind her shoulders.
+> A 1950s retro-futuristic outfit: a shiny silver dress with a fitted bodice and a full flared knee-length skirt, round
+> puffed silver shoulder pieces, a white belt with a square buckle, long pink gloves, small earrings, a thin silver visor
+> headband, short silver ankle boots. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### T3. Muscle Man, retro-future — `muscleman_tomorrowland.png`
+> Pixar-style 3D character render of Muscle Man, the same huge, extremely muscular, cheerful man as in his other
+> character sheets (brown hair swept back into a small ponytail, a short brown beard). Full body, front view, A-pose:
+> arms about 45 degrees out from the body, hands open and not touching the body, feet shoulder-width apart, mouth
+> closed in a big grin. A 1950s retro-futuristic outfit: a sleeveless shiny silver top with a tall pointed stand-up
+> collar, teal piping and an atom emblem on the chest, silver shoulder armor, a white belt with a big square buckle,
+> navy blue trousers with teal piping, tall white boots. Plain light gray background, soft even light, no shadow, whole
+> body in frame.
+
+### T4. Kira, robot cat — `kira_robot.png`
+> Pixar-style 3D render of Kira, a tiny Scottish Fold kitten transformed into a cute shiny 1950s-style robot cat made of
+> smooth polished gunmetal-gray metal. Full body, strict side profile: the whole body and the head seen exactly from the
+> side, head level and in line with the body, nose pointing at the left edge of the image, only one eye visible, not
+> looking at the camera. Standing on four slim jointed robot legs, each ending in a small round wheel, a sleek rounded
+> body of smooth panels with a few small glowing blue lights at the joints (no gears), a long smooth curved metal tail.
+> A round cat face with a small nose and whiskers, folded-down metal ears that lie flat and forward, never raised.
+> Every surface is gunmetal gray or silver, with absolutely no white anywhere. Golden-amber eyes. Mouth closed. Plain
+> light gray background, soft even light, no shadow, whole body in frame with every leg and the tail visible.
+
+### T5. The Violinist, retro-future — `violinist_tomorrowland.png`
+> Pixar-style 3D character render of the Violinist, the same older gray-haired, gray-bearded man as in his other
+> character sheets (same face and hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands
+> open and not touching the body, feet shoulder-width apart, mouth closed with a calm knowing smile. A 1950s
+> retro-futuristic lounge musician's outfit: a short teal jacket with a high round collar and silver piping over a
+> white shirt, a thin silver bow tie, slim charcoal trousers, shiny silver shoes. Holding nothing (no instrument). Plain
+> light gray background, soft even light, no shadow, whole body in frame.
+
+### T6. The friendly robot — `robot_greeter.png`
+> Pixar-style 3D render of a friendly cartoon 1950s tin-toy robot for a family video game: a round chrome body like a
+> barrel, a dome head with a clear glass bubble top and a little spinning antenna, two round glowing teal eyes and a
+> smiling speaker-grille mouth, a red bow tie, short accordion-hose arms with simple three-finger hands, rolling on one
+> wheel under a skirt-like base. Front view, arms out to the sides, hands empty. Plain light gray background, soft even
+> light, no shadow, whole body in frame.
+
+### T7. Runaway cleaning robot (enemy) — `cleanbot.png`
+> Pixar-style 3D render of a goofy cartoon 1950s cleaning robot for a family video game, not scary: a squat round
+> pastel-pink and chrome body like a vacuum cleaner, two bulging googly eyes on short stalks, a spinning brush underneath,
+> a nozzle arm sticking out at the front, a little flashing red light on top, a grumpy face. Front view, standing on its
+> base. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### T8. Flying car — `flying_car.png`
+> 3D render of a cartoon 1950s flying car: a rounded pastel pink and cream body with big tail fins, lots of chrome trim,
+> a clear glass bubble canopy over two seats, no wheels, two small glowing jet pods underneath, no people. Three-quarter
+> view from the front left, the whole car in frame. Plain light gray background, soft even light, no shadow.
+
+**T8 note for Code (Dan, 2026-11-12):** Tripo turned the clear glass canopy into a solid half-dome covering the
+left seat (the right side open). Cut the solid dome off in the clean-up and add the canopy as its own see-through glass
+dome on the chrome arch (as with the bubble helmets). If it can't be cut cleanly, say so and Dan will remake the car
+from an open-top sheet.
+
+### T9. The rocket — `rocket.png`
+> 3D render of a tall cartoon 1950s retro rocket ship: a sleek polished silver body with a pointed nose, a dark band
+> around the middle, a row of round porthole windows, three big swept-back curved fins with small engine pods at their
+> tips, a main engine nozzle at the bottom, standing upright on its fins. Front view, the whole rocket from nose to fins
+> in frame. Plain light gray background, soft even light, no shadow.
+
+Built by Code, no image: the city (the pink neon avenue, chrome towers with ring tops, bubble domes, brick shopfronts
+with teal glass, neon signs and arrows, lamp posts, moving walkways, the Rocket Terminal and its golden launch hall),
+the neon pink story shard, the Violinist's instrument (DEFAULT a sleek chrome electric violin with teal light strips).
+Mixamo after Tripo: `dan_tomorrowland`, `abi_tomorrowland`, `muscleman_tomorrowland`, `violinist_tomorrowland`. Robot Kira,
+the greeter robot and the cleaning robot are Code's rigs (no Mixamo).
+
+## Round 13 (2026-11-12): the Moon — images needed from Dan (prompts by the planning chat; made in the same batch as Tomorrowland)
+
+Tripo web app as before, GLBs to `SourceArt/Tripo/`. Film art: `Worlds/08-Moon/moon-group-earth.png` (the four on the
+gray surface, Earth huge in a deep blue sky), `Characters/*/…-space-film.png`, `Kira/kira-space-film.png`. **Helmets are
+left off the sheets on purpose:** clear glass bubbles don't survive image-to-3D; Code adds each bubble helmet as its own
+see-through model (Dan's, Abi's and Muscle Man's round bubbles; Kira's silver-rimmed one). Kira on the Moon wears a
+spacesuit as in the film art (not the robot body). Concept sheets override film stills as always.
+
+### L1. Dan, spacesuit — `dan_moon.png` (rewritten 2026-11-12: Dan wants it as different from his Tomorrowland suit as Abi's and Muscle Man's are)
+> Pixar-style 3D character render of Dan, the same young man as in his other character sheets (short swept-back
+> auburn-brown hair, friendly face). Full body, front view, A-pose: arms about 45 degrees out from the body, hands open
+> and not touching the body, feet shoulder-width apart, mouth closed with a gentle smile, looking straight ahead. A
+> bulky padded 1950s retro-futuristic spacesuit: white with bold royal-blue panels on the chest, shoulders and shins,
+> padded quilted sleeves and legs with round blue knee pads, a chunky silver control box with colored dials on the
+> chest, a silver metal neck ring for a helmet (no helmet), an orange-red stripe down each arm, a silver air pack with
+> two tanks on his back, a wide gray utility belt with pouches, thick blue gloves, chunky white moon boots with blue
+> soles. No necklace or pendant. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### L2. Abi, spacesuit — `abi_moon.png`
+> Pixar-style 3D character render of Abi, the same young woman as in her other character sheets (long wavy brown hair
+> tied back in a ponytail, green eyes, warm smile). Full body, front view, A-pose: arms about 45 degrees out from the
+> body, hands open and not touching the body, feet shoulder-width apart, mouth closed with a confident smile. A sleek
+> 1950s retro-futuristic white spacesuit with soft mint-teal panels on the chest and knees, gray bands on the arms, a
+> small control box on the chest, a silver metal neck ring for a helmet (no helmet), a small silver air pack on her
+> back, white gloves, chunky white moon boots. Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### L3. Muscle Man, spacesuit — `muscleman_moon.png`
+> Pixar-style 3D character render of Muscle Man, the same huge, extremely muscular, cheerful man as in his other
+> character sheets (brown hair swept back into a small ponytail, a short brown beard). Full body, front view, A-pose:
+> arms about 45 degrees out from the body, hands open and not touching the body, feet shoulder-width apart, mouth
+> closed in a big grin. A bulky 1950s retro-futuristic spacesuit: a shiny chrome chest plate with teal piping, chrome
+> shoulder armor, white padded sleeves and legs with knee pads, a white belt with a big square buckle, a silver metal
+> neck ring for a helmet (no helmet), a hot-pink and silver jet pack on his back, teal gloves, chunky white moon boots.
+> Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### L4. Kira, space cat — `kira_moon.png`
+> Pixar-style 3D render of Kira, a tiny Scottish Fold kitten in a cute shiny silver spacesuit. Full body, strict side
+> profile: the whole body and the head seen exactly from the side, head level and in line with the body, nose pointing
+> at the left edge of the image, only one eye visible, not looking at the camera. Standing on all four legs in little
+> silver moon boots, a smooth silver suit covering her body and legs, a small silver air tank on her back, a
+> silver collar ring around her neck (no helmet), a long tail in a silver sleeve. Her head is uncovered: a round cat face
+> with soft solid gray fur, a small nose and whiskers, folded-down ears that lie flat and forward, never raised.
+> Absolutely no white fur or markings anywhere. Golden-amber eyes. Mouth closed. Plain light gray background, soft even
+> light, no shadow, whole body in frame with every paw and the tail visible.
+
+### L5. The Violinist, spacesuit — `violinist_moon.png`
+> Pixar-style 3D character render of the Violinist, the same older gray-haired, gray-bearded man as in his other
+> character sheets (same face and hair). Full body, front view, A-pose: arms about 45 degrees out from the body, hands
+> open and not touching the body, feet shoulder-width apart, mouth closed with a calm knowing smile. A slightly
+> old-fashioned 1950s retro spacesuit in cream with faded brass trim, a colorful patchwork scarf knotted at the neck over
+> a brass helmet ring (no helmet), a worn leather belt, cream gloves, chunky cream moon boots. Holding nothing (no
+> instrument). Plain light gray background, soft even light, no shadow, whole body in frame.
+
+### L6. The lunar rover — `lunar_rover.png`
+> 3D render of a cartoon 1950s retro-futuristic lunar rover: a rounded silver and white body with chrome trim, six big
+> wire-mesh wheels, an open two-seat cab, a radar dish and a little antenna, and on the back a slanted control panel
+> with a grid of round colored lights and big buttons, no people. Three-quarter view from the front left, the whole
+> rover in frame. Plain light gray background, soft even light, no shadow.
+
+### L7. Moon critter (enemy) — `moon_critter.png`
+> Pixar-style 3D render of a goofy little cartoon moon alien for a family video game, not scary: a round bouncy
+> lavender blob with a gray cratered back like a tiny moon, three wobbly eye stalks, a wide silly grin, four stubby
+> legs, about the size of a beach ball. Front view, standing on its legs. Plain light gray background, soft even light,
+> no shadow, whole body in frame.
+
+Built by Code, no image: the Moon (gray dust, craters, rocks, Earth in the sky, stars), the landed rocket (T9 reused),
+the bubble helmets, a small moon base (domes, tubes, an airlock), the white story shard, the Violinist's instrument here.
+Mixamo after Tripo: `dan_moon`, `abi_moon`, `muscleman_moon`, `violinist_moon`. Space Kira and the critter are Code's rigs.
+
 ## Round 11 (2026-11-12): Mixamo for Victorian Steampunk — what Dan uploads and downloads
 
 Dan, Abi and Muscle Man are Meshy models; the Violinist and the factory worker are Dan's Tripo models (`SourceArt/Tripo/`, decimated by

@@ -112,6 +112,13 @@ look. Outfits follow the game's concept sheets, not the clips.
 Note: the film's city exterior is night; the street stills are daytime. The game can do the factory at night and the
 streets at dawn/day after the escape.
 
+## 07-Tomorrowland_RocketLaunch.mp4 (6 s)
+- 0–1 s: a golden domed launch hall lined with light strips; the four (Abi in her silver dress, Dan, robot Kira, Muscle
+  Man) stand small in front of a huge silver rocket with three curved blue-silver fins.
+- 1–6 s: the rocket alone in the hall; the doors behind it glow warmer and warmer, then the engines ignite under it.
+- The still `Worlds/07-Tomorrowland/rocket-launch.png`: from below, the rocket rising into a starry dusk sky on a white
+  flame. Dan: the film's Tomorrowland was short; the rocket was the whole transition to the Moon.
+
 ## What the game should change (for the cutscene redo round)
 1. `ActOne`: follow the clip: decorating together, Dan fumbles the bauble, the glow / crack / shard burst, the
    rainbow spiral, holding hands, then the fall from the blue vortex over the Ice Age.

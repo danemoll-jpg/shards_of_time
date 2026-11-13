@@ -320,3 +320,96 @@ Suno prompt (instrumental):
 
 Style tags: `whimsical, cartoony, steampunk, playful, bouncy, oompah, tuba, brass band, music box, clockwork, ticking, honky-tonk piano, accordion, instrumental`.
 Exclude: `epic, orchestral, cinematic, dramatic, dark, serious, industrial, metal, rock, vocals, whistling`.
+
+## Tomorrowland theme (Suno, for Dan) — planning chat, 2026-11-12 (revised: space-age pop with vocalizations, Dan)
+
+The 1950s city of tomorrow: chrome, neon pink, flying cars, cheerful robots. **Space-age pop** (Dan): bouncy, bright,
+with a vocal group singing only sounds ("boom", "wah", "ooh", "bop", "zoom", "beep"). About 3:00, loops. Save as
+`Assets/Resources/Music/tomorrowland.mp3`.
+
+Style (Suno "Style of Music"):
+> 1950s space-age pop, whimsical cartoon, bouncy, upbeat, theremin, vibraphone, walking upright bass, muted trumpets,
+> bongos, finger snaps, doo-wop vocal group singing nonsense syllables, booms and wahs, playful, optimistic
+
+Lyrics (Suno "Lyrics"):
+```
+[Intro]
+Boom-boom... wah-wah-wahhh
+Beep beep! Zoom!
+
+[Verse]
+Bop-ba-doo, bop-ba-doo, ooh-wah
+Zoom zoom, zoom zoom, shoo-bee-doo-wah
+Boom! (wah-wah) Boom! (wah-wah)
+Ooh-ooh-ooh, ooh-wahhh
+
+[Chorus]
+Zoo-oo-oom, ba-boom, ba-boom!
+Wah-ooh-wah, ooh-wah-ooh
+Bop-bop-ba-doo-wahhh
+Zoom! Zoom! Ooh-wahhh!
+
+[Instrumental: theremin solo, beeping robots]
+
+[Verse]
+Ding-a-ling, ba-dop, ooh-wah
+Beep-bop, beep-bop, shoo-bee-doo
+Boom! (wah-wah) Boom! (wah-wah)
+Ooh-ooh-ooh, ooh-wahhh
+
+[Chorus]
+Zoo-oo-oom, ba-boom, ba-boom!
+Wah-ooh-wah, ooh-wah-ooh
+Bop-bop-ba-doo-wahhh
+Zoom! Zoom! Ooh-wahhh!
+
+[Outro]
+Boom... wah... beep!
+```
+Exclude: `epic, orchestral, cinematic, dramatic, dark, serious, synthwave, techno, EDM, rock, real words, whistling`.
+
+## The Moon theme (Suno, for Dan) — planning chat, 2026-11-12 (revised: space-age pop with vocalizations, Dan)
+
+The last world: low gravity, gray dust, Earth huge in the sky. **Space-age pop** like Tomorrowland, but slower and
+floatier, with wonder: a lounge tempo, dreamy "ooh"s and "wah"s, soft "boom"s like slow-motion hops. About 3:00, loops.
+Save as `Assets/Resources/Music/moon.mp3`.
+
+Style (Suno "Style of Music"):
+> 1950s space-age pop, dreamy, floaty, whimsical cartoon, slow lounge tempo, theremin, glass harmonica, celesta,
+> vibraphone, soft upright bass, brushed drums, airy vocal group singing nonsense syllables, oohs and wahs, wonder
+
+Lyrics (Suno "Lyrics"):
+```
+[Intro]
+Ooo-ooo-ooh... (boom)... wahhh
+
+[Verse]
+Floo-oo-oat, ooh-wah, ooh-wah
+Boo-oom... boo-oom... (wahhh)
+Ooh-la-ooh, la-ooh-wah
+Mmm-mmm, ooh-wahhh
+
+[Chorus]
+Ooo-ooo-ooh, ba-boom (ba-boom)
+Wah-ooh-wahhh, wah-ooh
+Shoo-bee-ooh, ooh-wah
+Ooo-ooo-ooh, boom... wahhh
+
+[Instrumental: theremin and glass harmonica, slow-motion hops]
+
+[Verse]
+Twin-kle, ooh-wah, ooh-wah
+Boo-oom... boo-oom... (wahhh)
+Ooh-la-ooh, la-ooh-wah
+Mmm-mmm, ooh-wahhh
+
+[Chorus]
+Ooo-ooo-ooh, ba-boom (ba-boom)
+Wah-ooh-wahhh, wah-ooh
+Shoo-bee-ooh, ooh-wah
+Ooo-ooo-ooh, boom... wahhh
+
+[Outro]
+Ooo-ooh... (boom)
+```
+Exclude: `epic, orchestral, cinematic, dramatic, dark, scary, synthwave, techno, EDM, heavy drums, real words, whistling`.

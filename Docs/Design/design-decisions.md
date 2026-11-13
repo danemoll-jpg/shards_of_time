@@ -97,11 +97,13 @@ Notes:
 - Dan's necklace shard pulses near shards: an in-fiction shard detector.
 - Muscle Man is in the party from Medieval through the Moon, then leaves.
 - **Steampunk and Tomorrowland are two separate levels, each ending in a vortex like every other world** (Dan, 2026-11-12). This changes the film, where the teal shard changes reality instead of opening a vortex.
+- **Tomorrowland → the Moon is the rocket, as in the film** (Dan, 2026-11-12): Tomorrowland's game-only story shard is
+  **neon pink**; finding it powers the rocket; the launch scene plays and the rocket flies **straight to the Moon** (no
+  vortex in between). Tomorrowland and the Moon still get their own paths in the vortex hub for travelling back
+  (the Moon's opens on landing). Tomorrowland and the Moon are each a full level (Dan: "pad this out").
 - Series canon worth using: Dan has time-echo visions when touching temporal
   artifacts (fits the Memory Fragments collectible); the Violinist never
   explains himself; comedy is situational, never quippy; minimal dialogue.
 
 ## Open (recommended defaults in brackets)
-- Tomorrowland has no story shard in the film, but now needs one to open its
-  vortex [a game-only shard; the rocket launches and flies into the vortex in
-  space, which leads to the Moon].
+- (Decided, see below: the rocket flies straight to the Moon.)

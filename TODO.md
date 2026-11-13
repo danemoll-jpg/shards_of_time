@@ -24,86 +24,131 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 11: Victorian Steampunk (target 0.11.0)
-Fix 10.1 is delivered (below). Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice,
-Dan can overrule after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a
-window in front of Dan); rule 12 (never stuck), the Fix 8.1 floor / platform / reach checks, the Fix 10.1 minimum-player
-check and T-pose sweep apply. Don't end your turn until 0.11.0 is published unless truly blocked (say so).
+Current round — Round 12: Tomorrowland (target 0.12.0), then Round 13: the Moon (target 0.13.0) in the same turn
+Round 11 and Fixes 11.1 / 11.2 are delivered (below). Do Round 12, publish 0.12.0, then go straight on to Round 13 and
+publish 0.13.0. Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can overrule
+after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in front of
+Dan); rule 12 (never stuck), the Fix 8.1 floor / platform / reach checks, the Fix 10.1 minimum-player check and the
+T-pose sweep apply to both worlds. Don't end your turn until 0.13.0 is published unless truly blocked (say so).
 
-**Dan's decisions (2026-11-12):** Steampunk and Tomorrowland are **two separate worlds, each ending in a vortex** (the
-film's "reality changes" is dropped; `Docs/Design/design-decisions.md`). The cutscenes stay as they are for now (no
-quality pass, no film clips in game); focus on the game.
+**Dan's decisions (2026-11-12, `Docs/Design/design-decisions.md`):** Tomorrowland and the Moon are each a full level
+("pad this out"). **Tomorrowland → the Moon is the rocket, as in the film:** Tomorrowland's game-only story shard is
+**neon pink**; finding it powers the rocket; the launch plays and the rocket flies **straight to the Moon** (no vortex
+in between). Both worlds still get vortex paths for travelling back (the Moon's opens on landing). Music for both is
+space-age pop with vocal "booms" and "wahs" (Dan's Suno songs, below).
 
-**Inputs, all in (Dan, 2026-11-12):** the 10 concept sheets S1–S10 in `SourceArt/Concepts/` (`dan_steampunk`,
-`abi_steampunk`, `muscleman_steampunk`, `kira_mechanical`, `violinist_steampunk`, `factory_worker`, `clockwork_horse`,
-`steam_carriage`, `street_clock`, `steam_press`), film art in `SourceArt/Reference/Worlds/06-Steampunk/` and
-`Characters/*/…steampunk…`, `Kira/kira-mechanical-film.png`, two clips `Clips/06-Steampunk_Arrival.mp4` (25 s) and
-`Clips/06-Steampunk_MuscleManHero.mp4` (12 s) with notes in `Docs/CUTSCENE-FILM-NOTES.md`, and the song
-`Music/steampunk.mp3` (2:59). Notes on the sheets: Abi has a thin necklace and fishnet stockings (fine, keep them; it's
-not Dan's shard necklace); Muscle Man grins with teeth (fine, as before); the street clock has an empty gear socket in
-its face for the teal shard; mechanical Kira passes the lock (folded ears, gunmetal, amber eyes, no white).
+**Inputs, all in (Dan, 2026-11-12):** 16 concept sheets in `SourceArt/Concepts/` and **16 textured Tripo GLBs in
+`SourceArt/Tripo/`** (made by hand, ~1.9M triangles each: decimate as in Fix 11.1). Tomorrowland: `dan_tomorrowland`,
+`abi_tomorrowland`, `muscleman_tomorrowland`, `kira_robot`, `violinist_tomorrowland`, `robot_greeter`, `cleanbot`,
+`flying_car`, `rocket`. The Moon: `dan_moon`, `abi_moon`, `muscleman_moon`, `kira_moon`, `violinist_moon`,
+`lunar_rover`, `moon_critter`. Film art in `SourceArt/Reference/Worlds/07-Tomorrowland/`, `08-Moon/` and
+`Characters/*/…-tomorrowland-film.png`, `…-space-film.png`, `Kira/kira-robot-film.png`, `kira-space-film.png`; Dan's
+clip `Clips/07-Tomorrowland_RocketLaunch.mp4` (6 s) with notes in `Docs/CUTSCENE-FILM-NOTES.md`. Songs
+`Music/tomorrowland.mp3` (3:00) and `Music/moon.mp3` (2:59). Notes on the models (`Docs/MODELS-NEEDED.md`):
+**the flying car's clear canopy came out as a solid half-dome over one seat: cut it off and add a see-through glass
+canopy on the chrome arch** (say so if it can't be cut cleanly); the Moon sheets have **no helmets on purpose**: add
+each bubble helmet as its own see-through model (Dan's, Abi's, Muscle Man's round bubbles; Kira's silver-rimmed one;
+the Violinist's on his brass ring); the greeter's propeller and the cleanbot's brush were drawn spinning (animate
+them; replace them if they came out as solid discs). Muscle Man grins with teeth (fine).
 
-**Delivered as 0.11.0 (build 1100), 2026-11-12: report under "Last deliveries".**
+### Round 12: Tomorrowland
 
-0. **The Theater bug first (Dan):** the Theater plays one scene, then refuses to play another until the game is
-   restarted. Fix it (state left over after the first scene?) and add to the `theater` check: play three scenes in a row
-   from the title and two from the pause menu, each one actually playing.
-1. **Mixamo first (Dan wants it early):** Meshy → clean-up (closed meshes) → Mixamo upload files for `dan_steampunk`,
-   `abi_steampunk`, `muscleman_steampunk`, `violinist_steampunk`, `factory_worker`, then **stop at once and tell Dan
-   exactly what to upload and download** (shared clips reused; Muscle Man needs holding something heavy overhead and a
-   big throw for the press, and lifting someone up for the clock; ask only for what isn't already in his folders).
-   Then carry on with everything else in the same turn; import Dan's rigs when they arrive. (Still open from Round 10:
-   Muscle Man's Drowning / Getting Up / Jumping Down: remind Dan in the same list.)
-2. **The other models:** mechanical Kira (Code's rig, no ear bones, Kira lock check), the clockwork horse (Code's
-   rig: walk, idle, head toss, steam puff), the steam carriage, the street clock, the steam press (top plate moves; can
-   break apart for the scene). Props by script: the factory hall (conveyors with blue rollers, the bolt bucket on its
-   chain line, gear walls, chains, pipes, steam vents, small stampers, control panels, catwalks, the wall the press
-   breaks through), the city (cobbles with rail tracks, red brick and cream buildings, gear doors and the great gear
-   gate, teal lamp posts, chimneys, rooftops, barrels), the teal gear story shard, the steampunk violin (gears set in,
-   its own playing clip).
-3. **Two areas (DEFAULT):** **the factory at night** (blue-violet haze, warm brass lamps, red alarm light while the
-   press runs) and **the streets of steampunk London by day** (warm golden morning, red brick, teal lamps, steam),
-   about 30 shards each, the same song (`steampunk.mp3`). One world for the vortex and the story shard. The hole the
-   press smashes is the way from the factory to the streets (and back).
-4. **`SteampunkArrival`** (from Dan's clip): night over the factory city, a giant brass gear puffing steam, a teal
-   streak winding into a flat teal spiral vortex; push in over the domes; inside, the four drop onto the chain line and
-   land in the copper bolt bucket, which is carried along and tips them onto a blue-roller conveyor. Side-by-side sheet
-   against the clip as in Round 9.
-5. **The belt run, then `MuscleManHero`** (from Dan's second clip): a short playable stretch on the moving conveyor
-   (30–40 s: run against the belt, hop small stampers and steam jets; it can't be escaped, it carries you to the great
-   press; no damage that sends you back, falling off just puts you back on). Then the scene: Dan, Abi and Kira flat on
-   the belt, covering their heads, the dome press coming down; Muscle Man stands under it and holds it up, red alarms,
-   snapping cables, sparks; he heaves it off and it smashes out through the wall and window. This is his hero moment
-   (he saves Dan this time). Then the factory is free to explore (the press gone, steam everywhere), and the streets lie
-   through the hole.
-6. **Mechanical Kira (DEFAULT):** a) **wind-up**: she stands on gear sockets (brass plates) and powers machines: lifts,
-   moving catwalks, gear doors, a carriage turntable; b) **magnet paws**: she walks up iron beams and pillars marked
-   with rivet strips. Both open shards in both areas.
-7. **New move: Abi's wall jump**, taught by the Violinist as a street musician with the steampunk violin (on a corner
-   of the main square). Jump into a wall, jump again off it; chimneys and narrow alleys here. Opens the earlier worlds'
-   wall-jump gates (the Medieval village chimney and any others): check one.
-8. **Muscle Man the companion:** jobs here: bends bars and pipes aside, lifts heavy machinery and crates, holds a
-   stamper up while the others pass, boosts Dan. Comic beat in the streets (DEFAULT): he tries to pet a clockwork horse
-   and it puffs steam in his face.
-9. **Enemies:** goofy factory workers (chase on their own floor; slip on oil patches or get a face of steam: harmless
-   for a moment). Hazards: stampers, steam jets, moving carriages on the rails (a bump, not a kill; their roofs are
-   moving platforms: the Fix 8.1 moving-platform check applies). Clockwork horses are friendly. No boss (DEFAULT).
-10. **Shards (Fix 10.1 rule):** about 60 (30 + 30) + 2 hearts; threshold **150** (Pirate Seas 125 + 25) and at least
-   15 from here; the minimum-player simulation and the `minplayer` check extended to this world. Report the numbers.
-11. **The finale (film):** the necklace wakes and leads to the great street clock in the main square; the teal gear
-   shard sits in its face, too high to reach; `ClockShard` (new, skippable): Kira spots it, Muscle Man proudly lifts Dan
-   up, Dan takes it; **then the teal vortex opens (the game's change)** and takes all four → the vortex space
-   (Home: 6 of 8; the Tomorrowland path "to be continued").
-12. **Look:** as in 3. Frame rate checked on both settings (steam particles and the factory's many moving parts are
-   the risk).
-13. **Sound:** ElevenLabs: factory clanks, the chain line, the bolt bucket's rattle and tip, conveyor rollers, the
-   press's thump and groan, alarms, cables snapping, the wall smash, steam hiss, gears ticking, the clock's chime,
-   clockwork horse hooves and puffs, carriage rolling, workers' grumbles, Kira's metal steps and wind-up whirr, the
-   violin tune; Muscle Man's grunts and laughs reused. No music made by Code.
-14. Build, check (a full run: … Pirate Seas → vortex → Steampunk → arrival → belt run → the press → the factory → the
-   streets → the necklace → the clock → vortex; plus a wall-jump gate in an earlier world; rule 12 stuck check here;
-   T-pose sweep incl. the new people), publish 0.11.0, update `TODO.md` / `CLAUDE.md`, clean up.
+0. **Carried from Fix 11.3 (Dan, 2026-11-12;** `Data/screenshots/dan/egypt-abi-legs-missing-boulder.png`):
+   a) something dark and spiky between Egyptian Abi's legs (and a pale woven shape at her feet): find it, fix it, then
+   check every skirt / dress / long coat from low front and side angles (Abi's new flared silver dress and Dan's
+   steampunk coat too); b) "Muscle Man rolls the boulder away" shown where there's no boulder (Egypt, a walled sand
+   room): find why, fix it, and add the check that every Muscle Man job prompt appears only with its object visible in
+   front of the player and disappears for good once done (also after a reload), in every world.
+1. **Mixamo first, for both worlds at once (Dan wants it early and only once):** decimate / clean up all 16, then the
+   Mixamo upload files for the eight people: `dan_tomorrowland`, `abi_tomorrowland`, `muscleman_tomorrowland`,
+   `violinist_tomorrowland`, `dan_moon`, `abi_moon`, `muscleman_moon`, `violinist_moon`; **stop at once and tell Dan
+   exactly what to upload and download** (shared clips reused; ask only for what's missing, e.g. a floaty low-gravity
+   jump if nothing shared fits, Muscle Man lifting a car). Then carry on with everything else; import the rigs when
+   they arrive. Code's rigs: robot Kira (wheels on her feet; no ear bones; Kira lock), space Kira (Round 13), the
+   greeter robot (one wheel, waving arms, spinning propeller), the cleanbot.
+2. **The other models and props:** the rocket (one model, reused on the Moon), the flying car (several colours by
+   tinting), the greeter, the cleanbot. By script: the city of tomorrow (the pink neon avenue, chrome towers with
+   glowing ring tops, bubble domes, brick shopfronts with teal glass, neon signs and arrows, lamp posts, moving
+   walkways, hover-car lanes and landing pads, the "Rocket Terminal" with its golden domed launch hall), the neon pink
+   story shard, and the Violinist's instrument (DEFAULT a sleek chrome electric violin with teal light strips, its own
+   playing clip).
+3. **Layout (DEFAULT):** **the neon avenue** (street level, shops, the square), **the sky** (tower tops and landing
+   pads, reached by flying cars on fixed routes as moving platforms: Fix 8.1 moving-platform check; lifts and moving
+   walkways), and **the Rocket Terminal** (the launch hall and its gantries). About 60 shards, two hearts.
+4. **`TomorrowlandArrival`** (new, the film has none): the teal vortex from Steampunk drops all four onto the neon
+   avenue at dusk; a shimmer and their outfits change to the retro-future ones, Kira's body turns to the robot;
+   Muscle Man gapes at a flying car going over, delighted; the **greeter robot** rolls up: "Your rocket is ready for
+   departure!" and points to the Rocket Terminal sign; Dan's necklace glows pink.
+5. **The rocket needs its pink shard (the world's goal):** in the launch hall the rocket's fuel socket is empty
+   (the greeter: "Fuel cell missing!"). Reaching the threshold wakes the necklace, which leads to the pink shard
+   (DEFAULT on top of the tallest ring tower).
+6. **Robot Kira (DEFAULT):** a) **plug-in**: she plugs into terminals and takes control of machines: reverses moving
+   walkways, calls a flying car, opens doors, switches a cleanbot to "friendly" for a while; b) **wheel dash**: she
+   rolls fast on smooth floors and up boost ramps. Both open shards.
+7. **New move: Abi's air dash**, taught by the Violinist (teal jacket, the chrome violin) in a corner of the square.
+   One quick dash in the air (any direction on the stick); opens the earlier worlds' air-dash gates (check one).
+8. **Muscle Man:** delighted by everything (comic: he tries to hug the greeter robot; it beeps in alarm). Jobs: lifts a
+   parked flying car off a hatch, pushes a vending machine, bends chrome bars, boosts Dan.
+9. **Enemies:** goofy **cleanbots** that chase and vacuum up loose shards (bop one and it coughs them back out);
+   hazards: hover-car lanes (a bump, not a kill), malfunctioning walkways. No boss (DEFAULT).
+10. **Shards (Fix 10.1 rule):** about 60 + 2 hearts; threshold **175** (Steampunk 150 + 25), at least 15 from here;
+   minimum-player simulation and `minplayer` extended. Report the numbers.
+11. **The finale: `RocketLaunch`** (from Dan's clip): Dan places the pink shard in the socket; the launch hall, the four
+   small in front of the huge silver rocket; they board; the rocket alone, the doors glow warmer, the engines ignite;
+   the shot from below as it rises into a starry dusk sky. It flies **straight to the Moon** (Round 13 picks up there).
+   Tomorrowland's path appears in the vortex (nine paths). Until Round 13 is in, the launch ends in the vortex with the
+   Moon "to be continued".
+12. **Look:** pink-lavender dusk, neon glow, chrome, teal glass; frame rate on both settings (neon, glass, many
+   moving cars are the risk).
+13. **Sound:** ElevenLabs: hover-car whooshes, robot beeps and the greeter's line ("Your rocket is ready for
+   departure!"), "Fuel cell missing!", the cleanbot's vacuum and cough, moving walkways, neon hum, Kira's plug-in and
+   wheel whirr, the air dash, the launch (countdown beeps, rumble, roar), the chrome violin tune. No music made by Code.
+14. Build, check (a full run … Steampunk → vortex → Tomorrowland → arrival → the pink shard → the launch; plus an
+   air-dash gate in an earlier world; the new prompt check (0b) in every world; rule 12 here), publish 0.12.0.
 
+### Round 13: the Moon (straight on, same turn)
+
+1. **Space Kira** (Code's rig; Kira lock: gray fur face, folded ears, amber eyes, no white) and the moon critter
+   (Code's rig: bounce, wobble eye stalks), the lunar rover (static; its control-panel lights animated), the bubble
+   helmets (see-through, on every Moon character in and out of cutscenes), Dan's / Abi's / Muscle Man's / the
+   Violinist's Moon rigs from item 1. By script: the Moon (gray dust, craters, rocks, ridges, Earth huge in a deep blue
+   sky, stars), the landed rocket (the Tomorrowland model), a small moon base (domes, tubes, an airlock), the white
+   story shard, the Violinist's instrument here (DEFAULT the chrome violin again).
+2. **`MoonLanding`** (new, continues `RocketLaunch`): the rocket descends on its flame and touches down in a puff of
+   dust; inside, helmets click on; the hatch opens; the four bounce down the ladder in slow motion; Earth rises huge
+   behind them; Muscle Man does a big slow jump and laughs. The Moon's path appears in the vortex.
+3. **Low gravity for everyone** (higher, slower, floatier jumps; a soft landing; dust puffs). Re-tune shard reach and
+   the stuck check for it.
+4. **`KiraFloats`** (the film's sweet gag, short, skippable, on the way to the rover): Kira takes a little leap, keeps
+   floating up paddling her paws; Abi catches her by the ankle and pulls her back down. Space Kira's ability (DEFAULT):
+   **float**: hold Jump in the air to drift upward slowly (limited, a little steering): reaches high ledges.
+5. **Layout (DEFAULT):** the landing site, the crater field (bouncy crater rims, a deep crater), the moon base
+   (inside the domes: airlock, corridors, a garden dome), the ridge with the rover. About 60 shards, two hearts.
+6. **The Violinist** (cream suit, on a rock by the base): plays a slow floaty tune (DEFAULT no new move: every move is
+   learned; his tune quietly hints at the rhythm of the rover's light puzzle).
+7. **Muscle Man:** loves the low gravity (huge jumps, comic); jobs: lifts moon boulders, carries the airlock door,
+   boosts.
+8. **Enemies:** goofy **moon critters** that bounce at you (a bump, harmless after a bop: they roll away like little
+   moons). No boss (DEFAULT).
+9. **Shards (Fix 10.1 rule):** about 60 + 2 hearts; threshold **200** (175 + 25), at least 15 from here.
+10. **The finale (film): the light puzzle.** The necklace leads to the white shard on the rover; it won't come loose;
+   its light flashes a pattern matching the rover's panel. **Only Abi can solve it** (as Dan / Muscle Man: they puzzle
+   over it: "Switch to Abi"): a Simon-says memory puzzle on the panel (DEFAULT three rounds, 4 → 6 → 8 lights, a wrong
+   press just replays the pattern). Then `WhiteShard` (new): the shard responds, all the shards in Dan's necklace light
+   up together, brilliant light fills the Moon: the ornament is ready to be restored → the vortex with **the Home path
+   open**. If Acts X / XI aren't in yet, Home shows "to be continued" (DEFAULT: Acts X / XI and the credits are the
+   next round, once Dan's film art for them is in).
+11. **Look:** stark white sun, black shadows, deep blue sky with stars, Earth glowing; frame rate on both settings.
+12. **Sound:** ElevenLabs: muffled footsteps in dust, helmet clicks and breathing, radio beeps, the landing, the
+   airlock hiss, critter boings, the rover panel's tones (one per light), the shard's chime, the WhiteShard swell, the
+   violin tune. No music made by Code.
+13. Build, check (a full run … Tomorrowland → launch → landing → the Moon → the rover puzzle → WhiteShard → vortex;
+   rule 12 with low gravity; T-pose sweep incl. the eight new people), publish 0.13.0, update `TODO.md` / `CLAUDE.md`,
+   clean up.
+
+Later: **a big clean-up round after the Moon** (Dan, 2026-11-12), especially the environments (all eight worlds: plain
+walls and floors like the Egypt room in Dan's screenshot, rough edges, empty corners). Note anything found on the way
+there rather than fixing it piecemeal, unless it blocks play.
 
 ---------------------------------------------------------------------------
 Last deliveries
