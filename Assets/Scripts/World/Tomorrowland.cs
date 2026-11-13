@@ -96,7 +96,7 @@ namespace ShardsOfTime
         {
             var go = new GameObject("Sign " + text); go.transform.SetParent(root, false); go.transform.SetPositionAndRotation(at, Quaternion.Euler(0, yaw, 0));
             var tm = go.AddComponent<TextMesh>(); tm.text = text; tm.font = UiKit.Font; tm.fontSize = 64; tm.characterSize = size; tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = c;
-            go.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
+            UiKit.WorldText(tm);
         }
         // a robot Kira terminal: a glowing pad on the ground and a little screen post
         static GearSocket Terminal(Vector3 at, WindUpMachine m, string what)
@@ -177,12 +177,17 @@ namespace ShardsOfTime
             var bs = boost.AddComponent<BoostSpot>(); bs.radius = 1.6f; bs.height = 9.5f; bs.landAt = new Vector3(-19f, RoofY + .05f, 98f);
             Box("Boost mark", new Vector3(-11.6f, .17f, 98f), new Vector3(1.4f, .02f, 1.4f), "NeonYellow", false);
             // the parked flying car on the maintenance hatch (Muscle Man lifts it off; the pit below has shards and steps out)
-            Box("Hatch", new Vector3(-4, .02f, 48), new Vector3(6.2f, .04f, 8.2f), "NeonYellow", false);
+            // Fix 13.2 item 1: the yellow hatch cover stayed over the open pit once the car was lifted off (a plate you fell through). Now the
+            // cover goes with the car's job, and the opened pit shows a neon rim (the hatch's frame)
+            var hatch = Box("Hatch", new Vector3(-4, .02f, 48), new Vector3(6.2f, .04f, 8.2f), "NeonYellow", false).gameObject;
+            var rim = new GameObject("Hatch rim (open)"); rim.transform.SetParent(root, false);
+            foreach (var (c, sz) in new[] { (new Vector3(-4, .03f, 43.6f), new Vector3(7.2f, .05f, .3f)), (new Vector3(-4, .03f, 52.4f), new Vector3(7.2f, .05f, .3f)), (new Vector3(-7.4f, .03f, 48), new Vector3(.3f, .05f, 9.1f)), (new Vector3(-.6f, .03f, 48), new Vector3(.3f, .05f, 9.1f)) })
+                Box("Hatch rim", c, sz, "NeonYellow", false).SetParent(rim.transform, true);
             var carJob = new GameObject("Parked car (Muscle Man)"); carJob.transform.SetParent(root, false); carJob.transform.position = new Vector3(-4, 0, 48);
             var pc = CarModel(carJob.transform, new Vector3(-4, 0, 48), 0, new Color(.9f, .88f, 1f));
             var lid = new GameObject("Hatch lid"); lid.transform.SetParent(carJob.transform, false); lid.transform.position = new Vector3(-4, -.1f, 48); lid.AddComponent<BoxCollider>().size = new Vector3(6f, .2f, 8f);
             var blk = new GameObject("Car block"); blk.transform.SetParent(carJob.transform, false); blk.transform.position = new Vector3(-4, .7f, 48); blk.AddComponent<BoxCollider>().size = new Vector3(2.4f, 1.4f, 3.4f);
-            var cb = carJob.AddComponent<Boulder>(); cb.id = "TL-car-hatch"; cb.lifts = true; cb.aside = new Vector3(4.5f, 0, 0); cb.verbText = "lifts the parked car off the hatch";
+            var cb = carJob.AddComponent<Boulder>(); cb.id = "TL-car-hatch"; cb.lifts = true; cb.aside = new Vector3(4.5f, 0, 0); cb.verbText = "lifts the parked car off the hatch"; cb.goneWhenMoved = new[] { hatch }; cb.shownWhenMoved = new[] { rim };
             _ = pc;
             // the vending machine at the west alley (z 116..119.5): Muscle Man pushes it aside; the alley leads to a little courtyard
             Slab("Courtyard wall", -36, -24, 104, 104.6f, 5, 0, "ShopCream"); Slab("Courtyard wall", -36, -24, 131.4f, 132, 5, 0, "ShopCream"); Slab("Courtyard wall", -36.6f, -36, 104, 132, 5, 0, "ShopCream");
@@ -251,6 +256,13 @@ namespace ShardsOfTime
             return g;
         }
 
+        // Fix 13.2: a car pad is a dark plate with a neon outline (the old solid yellow plate looked like a leftover when its car was away)
+        static void CarPad(string name, Vector3 c)
+        {
+            Box(name, c, new Vector3(4f, .05f, 5f), "ChromeDark", false);
+            foreach (var (o, sz) in new[] { (new Vector3(0, .01f, 2.4f), new Vector3(4f, .06f, .2f)), (new Vector3(0, .01f, -2.4f), new Vector3(4f, .06f, .2f)), (new Vector3(1.9f, .01f, 0), new Vector3(.2f, .06f, 5f)), (new Vector3(-1.9f, .01f, 0), new Vector3(.2f, .06f, 5f)) })
+                Box(name + " edge", c + o, sz, "NeonYellow", false);
+        }
         // a flying car that runs a route (a moving platform you ride: its seat deck is solid; the bubble is not)
         static MovingPlatform RouteCar(string name, Vector3[] path, float speed, Color tint, float start = 0)
         {
@@ -356,13 +368,13 @@ namespace ShardsOfTime
             Cyl("Sky deck", new Vector3(-40, 15.6f, 120), 8f, .4f, "ChromeDark");
             Ring("Sky deck ring", new Vector3(-40, 17.6f, 120), 8.2f, .3f, "NeonPink"); Ring("Ring Tower ring", new Vector3(-40, 22f, 120), 6f, .5f, "NeonTeal");
             Cyl("Sky deck rail post", new Vector3(-40, 16f, 120), .1f, .1f, "Chrome", false);
-            Box("Car pad (square)", new Vector3(-24, .04f, 168), new Vector3(4f, .05f, 5f), "NeonYellow", false);
+            CarPad("Car pad (square)", new Vector3(-24, .04f, 168));
             RouteCar("Sky car", new[] { new Vector3(-24, .3f, 168), new Vector3(-24, .3f, 162), new Vector3(-30, 9f, 140), new Vector3(-31.4f, 16.05f, 124), new Vector3(-31.4f, 16.05f, 116), new Vector3(-30, 9f, 140) }, 3.6f, new Color(1f, .93f, .97f));
             Hint(new Vector3(-24, 0, 170), 3f, () => "A flying car on its route: hop in for a ride up to the Ring Tower's sky deck.");
             // the Orbit Tower (60, 0, 200): roof at 24; the car robot Kira calls from the pad at (40, 172)
             Cyl("Orbit Tower", new Vector3(60, 0, 200), 5f, 23.6f, "Chrome");
             Cyl("Orbit roof", new Vector3(60, 23.6f, 200), 8f, .4f, "ChromeDark"); Ring("Orbit ring", new Vector3(60, 26f, 200), 9f, .45f, "NeonLilac");
-            Box("Car pad (Orbit)", new Vector3(44, .04f, 172), new Vector3(4f, .05f, 5f), "NeonYellow", false);
+            CarPad("Car pad (Orbit)", new Vector3(44, .04f, 172));
             var orbit = RouteCar("Orbit car", new[] { new Vector3(44, .3f, 172), new Vector3(44, .3f, 166), new Vector3(46, 12f, 180), new Vector3(51f, 24.05f, 196), new Vector3(51f, 24.05f, 204), new Vector3(46, 12f, 186) }, 0f, new Color(.86f, 1f, .97f));
             var call = new GameObject("Orbit car call").AddComponent<CallCar>(); call.transform.SetParent(root, false); call.id = "TL-call-orbit"; call.car = orbit; call.speed = 3.6f;
             Terminal(new Vector3(40, .02f, 170), call, "the Orbit car");

@@ -307,6 +307,7 @@ namespace ShardsOfTime
             foreach (var name in Game.TheaterList.SelectMany(x => x.names))
             {
                 if (!Cutscenes.Load(name)) { Log($"  (no cutscene {name})"); continue; }
+                Game.HomeAgainNoBackwards = name == "HomeAgain";   // Round 14: the waking scene itself (Act I backwards is ActOne's frames)
                 Game.I.StartCoroutine(Game.I.Film(name));
                 yield return WaitFor(() => Cutscenes.Director != null && Cutscenes.Playing == name, 20f);
                 var dir = Cutscenes.Director; if (!dir) { Fail($"{name} did not start"); continue; }

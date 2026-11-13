@@ -146,9 +146,11 @@ namespace ShardsOfTime
             takeoffY = apexY = transform.position.y; airTime = 0; JumpsThisAir = 1;
         }
 
+        public float LastStepTime { get; private set; } = -10f;   // Fix 13.2: a motor nobody steps (a frozen party, Muscle Man at a job) stands
         public void Step(MotorInput input, float dt)
         {
             if (dt <= 0) return;
+            LastStepTime = Time.time;
             if (Climbing) { ClimbStep(dt); Breathe(dt); return; }
             CarryWithPlatform();
             Water = WaterVolume.At(transform.position + Vector3.up * Stats.height * .45f);

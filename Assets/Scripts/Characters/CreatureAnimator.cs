@@ -133,9 +133,33 @@ namespace ShardsOfTime
 
         void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
 
-        float FlatSpeed { get { if (!motor) return Drive != null ? Drive().speed : 0; var v = motor.Velocity; v.y = 0; return v.magnitude; } }
-        bool Moving => motor && (FlatSpeed > 1f || (!motor.Grounded && motor.Mode != MoveMode.Swim));
+        // Fix 13.2 item 5 (nobody runs in place): the speed the clips follow is the motor's (or Drive's) speed, but never more than the
+        // body really moves (a frozen party kept its last velocity and ran on the spot; a follower against a wall too). A motor that
+        // hasn't been stepped for a moment (a cutscene, a held party, Muscle Man at a job) stands on the ground.
+        Vector3 lastPos; bool hasLast; float realSpeed;
+        bool Stepped => motor && Time.time - motor.LastStepTime < .15f;
+        float RawSpeed { get { if (!motor) return Drive != null ? Drive().speed : 0; if (!Stepped) return 0; var v = motor.Velocity; v.y = 0; return v.magnitude; } }
+        float FlatSpeed => Mathf.Min(RawSpeed, realSpeed + .1f);
+        bool Grounded => !motor || motor.Grounded || !Stepped;
+        bool Moving => motor && (FlatSpeed > 1f || (!Grounded && motor.Mode != MoveMode.Swim));
+        public float RealSpeed => realSpeed;
+        // the check: a walk / run clip on a body that doesn't move for more than half a second
+        public static int RunInPlaceCount { get; private set; }
+        public static string RunInPlaceLast = "";
+        float inPlaceFor;
         public bool Has(string clip) => index.ContainsKey(clip == "attack" ? AttackClip : clip);
+
+        // Fix 13.2 item 3: any clip (a loop too: pushing, pulling) held for a while, not cancelled by moving (Muscle Man's jobs); Release() ends it
+        bool forced;
+        public void Hold(string clip, float seconds)
+        {
+            if (!index.ContainsKey(clip)) return;
+            oneShot = clip; oneShotUpper = false; oneShotStart = Time.time; oneShotEnd = Time.time + seconds; forced = true;
+            PlayLog.Line($"[Anim] {name}: holds {clip} ({(isActiveAndEnabled ? "active" : "INACTIVE")})");
+            var p = baseMix.GetInput(index[clip]); p.SetTime(0); p.SetSpeed(1);
+        }
+        public void Release() { if (forced) { oneShot = null; forced = false; } }
+        void OnDisable() { if (forced) PlayLog.Line($"[Anim] {name}: disabled while holding {oneShot}"); }
 
         // a one-shot clip now (attack, hurt, jump, land, cheer); the loop comes back when it ends
         public void Trigger(string clip, float maxSeconds = 0)   // Fix 13.1: maxSeconds > 0 cuts a long clip (offer, 10 s) short
@@ -143,10 +167,12 @@ namespace ShardsOfTime
             if (clip == "attack") clip = AttackClip;
             if (clip == "land_hard" && !index.ContainsKey(clip)) clip = "land";
             if (!index.ContainsKey(clip) || !OneShots.Contains(clip)) return;
+            if (forced && (clip == "land" || clip == "land_hard" || clip == "jump" || clip == "hurt")) return;   // Fix 13.2: a held job clip isn't cut by a landing
             if ((clip == "land" || clip == "land_hard") && oneShot != null && (oneShot == AttackClip || oneShot == "hurt")) return;
             bool upper = Humanoid && UpperBody.Contains(clip) && Moving;
             Rate.TryGetValue(clip, out float rate); if (rate <= 0) rate = 1;
-            oneShot = clip; oneShotUpper = upper; oneShotStart = Time.time;
+            if (forced) PlayLog.Line($"[Anim] {name}: the held {oneShot} is replaced by {clip}");
+            oneShot = clip; oneShotUpper = upper; oneShotStart = Time.time; forced = false;
             var c = upper ? upperClips[upperIndex[clip]] : clips[index[clip]];
             oneShotEnd = Time.time + c.length / rate * .95f;
             if (maxSeconds > 0) oneShotEnd = Mathf.Min(oneShotEnd, Time.time + maxSeconds);
@@ -156,11 +182,12 @@ namespace ShardsOfTime
 
         string Loop(float s)
         {
-            if (!motor) { var d = Drive != null ? Drive().loop : null; return d ?? (s < .25f ? "idle" : "gait"); }
+            if (!motor) { var d = Drive != null ? Drive().loop : null; if (d != null && (d == "walk" || d == "run" || d == "run_slow") && s < .25f) d = null; return d ?? (s < .25f ? "idle" : "gait"); }
+            if (!Stepped) return "idle";
             if (motor.Mode == MoveMode.Swim && motor.Struggling && index.ContainsKey("mm_struggle")) return "mm_struggle";   // Round 10
             if (motor.Sliding && index.ContainsKey("slide")) return "slide";
             if (motor.Mode == MoveMode.Swim) return (s > .6f || Mathf.Abs(motor.Velocity.y) > 1f || !index.ContainsKey("tread")) ? "swim" : "tread";
-            if (!motor.Grounded) return "fall";
+            if (!Grounded) return "fall";
             if (Time.time - motor.LastPush < .2f && index.ContainsKey("push")) return "push";
             return s < .25f ? "idle" : "gait";
         }
@@ -168,13 +195,23 @@ namespace ShardsOfTime
         void Update()
         {
             if (!graph.IsValid() || clips.Count == 0) return;
-            float dt = Time.deltaTime, s = FlatSpeed;
+            float dt = Time.deltaTime;
+            // how fast the body really moves (smoothed; a teleport resets it)
+            var body = motor ? motor.transform : transform;
+            if (dt > 0)
+            {
+                var d = body.position - lastPos; d.y = 0;
+                if (!hasLast || d.magnitude > 4f) { realSpeed = RawSpeed; hasLast = true; }
+                else realSpeed = Mathf.Lerp(realSpeed, d.magnitude / dt, 1f - Mathf.Exp(-dt * 12f));
+                lastPos = body.position;
+            }
+            float s = FlatSpeed;
             if (oneShot != null)
             {
                 bool end = Time.time > oneShotEnd;
-                if (CancelOnMove.Contains(oneShot) && Time.time - oneShotStart > .15f && (s > 1.2f || (motor && !motor.Grounded))) end = true;
+                if (!forced && CancelOnMove.Contains(oneShot) && Time.time - oneShotStart > .15f && (s > 1.2f || !Grounded)) end = true;
                 if (oneShot == "jump" && motor && motor.Grounded && Time.time - oneShotStart > .1f) end = true;
-                if (end) oneShot = null;
+                if (end) { if (forced) PlayLog.Line($"[Anim] {name}: the held {oneShot} ends (time)"); oneShot = null; forced = false; }
             }
             string loop = Loop(s);
             for (int i = 0; i < target.Length; i++) target[i] = 0;
@@ -184,6 +221,9 @@ namespace ShardsOfTime
             else if (index.TryGetValue(loop, out int li)) target[li] = 1;
             else if (index.TryGetValue("idle", out li)) target[li] = 1;
             State = oneShot ?? state;
+            bool gaitClip = oneShot == null && (loop == "gait" || state == "walk" || state == "run" || state == "run_slow");
+            inPlaceFor = gaitClip && realSpeed < .15f ? inPlaceFor + dt : 0;
+            if (inPlaceFor > .5f && inPlaceFor - dt <= .5f) { RunInPlaceCount++; RunInPlaceLast = $"{(motor ? motor.name : name)} plays {state} at {realSpeed:0.00} m/s"; PlayLog.Line("[RunInPlace] " + RunInPlaceLast); }
             // crossfade, weights kept summing to 1
             float sum = 0, step = dt / Fade;
             for (int i = 0; i < w.Length; i++) { w[i] = Mathf.MoveTowards(w[i], target[i], step); sum += w[i]; }

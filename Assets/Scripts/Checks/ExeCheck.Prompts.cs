@@ -66,6 +66,7 @@ namespace ShardsOfTime
             if (world == WorldData.Pirate) Pirate.OpenDeepSea(true);
             if (!P.Companion) P.AddCompanion(Player.transform.position + Vector3.back * 3f, Quaternion.identity);
             yield return Wait(.5f);
+            if (jobLook) { Head($"Fix 13.2, item 5: {Game.World.displayName}, the party held still"); yield return StandStill(); }
             var jobs = MuscleJob.All.Where(j => j && j.isActiveAndEnabled && !string.IsNullOrEmpty(j.id)).ToList();
             Head($"Round 12, item 0b: Muscle Man's prompts in {Game.World.displayName} ({jobs.Count} jobs that stay done; boost spots can be used again and are checked for steps 1-3 only)");
             var all = MuscleJob.All.Where(j => j && j.isActiveAndEnabled).ToList();
@@ -104,7 +105,8 @@ namespace ShardsOfTime
                 if (string.IsNullOrEmpty(j.id)) continue;   // a boost spot: used any number of times
                 // 4. done
                 yield return TpSettle(at, yaw); yield return WaitFor(() => PromptUp(j), 4f);
-                yield return Press(AttackBtn); yield return WaitFor(() => Game.I.Busy, 3f); yield return WaitFor(() => !Game.I.Busy, 10f);
+                IEnumerator DoJob() { yield return Press(AttackBtn); yield return WaitFor(() => Game.I.Busy, 3f); yield return WaitFor(() => !Game.I.Busy, 10f); }
+                if (jobLook) yield return JobLook(j, name, DoJob); else yield return DoJob();
                 Ok(j.IsDone, $"{name}: Muscle Man does it with the attack button");
                 yield return TpSettle(at, yaw); yield return Wait(3.5f);
                 Ok(!PromptUp(j) && Hud.LastMessage != j.Prompt, $"{name}: once done, no prompt where it was ({Hud.LastMessage})");

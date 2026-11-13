@@ -27,17 +27,21 @@ namespace ShardsOfTime
 
         public static GameObject Load(string name) => Resources.Load<GameObject>("Cutscenes/" + name);
 
-        public static IEnumerator Play(string name, Vector3 at, Quaternion facing)
+        // Round 14: reverseFrom >= 0 plays the scene backwards from that time to reverseTo (HomeAgain: Act I backwards), named `label`
+        public static bool Reversed { get; private set; }
+        public static IEnumerator Play(string name, Vector3 at, Quaternion facing, float reverseFrom = -1f, float reverseTo = 0f, string label = null)
         {
             var prefab = Load(name);
+            bool back = reverseFrom >= 0f;
             if (!prefab) { Debug.LogWarning("[Cutscene] missing " + name); yield break; }
             var inst = UnityEngine.Object.Instantiate(prefab, at, facing);
             if (Game.InMoon) foreach (var an in inst.GetComponentsInChildren<Animator>(true))   // Round 13: every Moon actor in its bubble helmet
                 if (an.transform.parent && an.transform.parent.name == "Body") Helmet.Attach(an.gameObject, Helmet.KindFor(an.gameObject.name.ToLowerInvariant().Replace("model ", "")));
             inst.name = "Cutscene " + name;
+            UiKit.WorldTexts_In(inst);   // Fix 13.2: world text in a cutscene (the ornament's initials) is depth tested too
             var dir = inst.GetComponent<PlayableDirector>();
-            Director = dir; Playing = name; SkipHeld01 = 0; LastSkipped = false; Played++;
-            dir.timeUpdateMode = DirectorUpdateMode.GameTime; dir.extrapolationMode = DirectorWrapMode.None; dir.playOnAwake = false;
+            Director = dir; Playing = label ?? name; SkipHeld01 = 0; LastSkipped = false; Played++; Reversed = back;
+            dir.timeUpdateMode = back ? DirectorUpdateMode.Manual : DirectorUpdateMode.GameTime; dir.extrapolationMode = DirectorWrapMode.None; dir.playOnAwake = false;
             // the camera track drives the game's camera brain
             if (dir.playableAsset is TimelineAsset tl)
                 foreach (var t in tl.GetOutputTracks().OfType<CinemachineTrack>()) dir.SetGenericBinding(t, CameraRig.I.Brain);
@@ -45,14 +49,17 @@ namespace ShardsOfTime
             if (party) { party.Frozen = true; party.SetVisible(false); }
             var mood = inst.GetComponent<CutsceneMood>();   // Round 4: the cutscene's own light (the living room)
             if (mood) Look.Mood(mood);
-            PlayLog.Line($"cutscene {name} starts ({dir.duration:0.0} s)");
+            PlayLog.Line(back ? $"cutscene {name} starts BACKWARDS as {Playing} ({reverseFrom:0.0} -> {reverseTo:0.0} s)" : $"cutscene {name} starts ({dir.duration:0.0} s)");
             float start = Time.time;
-            if (!SaveGame.Disabled && !SaveGame.Current.seen.Contains(name)) SaveGame.Current.seen.Add(name);   // Fix 10.1: the Theater
-            Started?.Invoke(name);
+            if (!SaveGame.Disabled && !SaveGame.Current.seen.Contains(Playing)) SaveGame.Current.seen.Add(Playing);   // Fix 10.1: the Theater
+            Started?.Invoke(Playing);
             dir.Play();
+            double bt = reverseFrom;
+            if (back) { dir.time = bt; dir.Evaluate(); }
             bool skipArmed = !Controls.Skip.IsPressed();   // a held button from before doesn't count
-            while (dir.state == PlayState.Playing && dir.time < dir.duration - .001)
+            while (dir.state == PlayState.Playing && (back ? bt > reverseTo : dir.time < dir.duration - .001))
             {
+                if (back) { bt = System.Math.Max(reverseTo, bt - Time.deltaTime); dir.time = bt; dir.Evaluate(); }
                 if (!Controls.Skip.IsPressed()) skipArmed = true;
                 if (AllowSkip && skipArmed && Controls.Skip.IsPressed()) SkipHeld01 = Mathf.MoveTowards(SkipHeld01, 1f, Time.unscaledDeltaTime / SkipSeconds);
                 else SkipHeld01 = Mathf.MoveTowards(SkipHeld01, 0f, Time.unscaledDeltaTime * 3f);
@@ -60,14 +67,15 @@ namespace ShardsOfTime
                 yield return null;
             }
             LastDuration = Time.time - start;
-            dir.time = dir.duration; dir.Evaluate(); dir.Stop();
+            if (!back) { dir.time = dir.duration; dir.Evaluate(); }
+            dir.Stop(); Reversed = false;
             UnityEngine.Object.Destroy(inst);
             if (mood) Look.Mood(null);
             if (party) { party.SetVisible(true); party.Frozen = false; }
             CameraRig.I?.SnapBehind();
             Director = null; Playing = null; SkipHeld01 = 0;
-            PlayLog.Line($"cutscene {name} {(LastSkipped ? "skipped" : "ended")} after {LastDuration:0.0} s");
-            Finished?.Invoke(name);
+            PlayLog.Line($"cutscene {label ?? name} {(LastSkipped ? "skipped" : "ended")} after {LastDuration:0.0} s");
+            Finished?.Invoke(label ?? name);
         }
     }
 }

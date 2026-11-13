@@ -26,6 +26,7 @@ namespace ShardsOfTime
         bool IsFiddle => instrument == "Fiddle" || instrument == "SteamViolin" || instrument == "ChromeViolin";   // Round 12: the chrome electric violin too   // Round 11: the steampunk violin is held and bowed as the fiddle   // Round 6, item 4: per world (WorldData.violinistInstrument)
         public string playClip = "violinist_play";   // Fix 6.1, item 2: per world (WorldData.violinistPlayClip): the fiddle's or the lyre's
 
+        public bool serenade;   // Round 14: he plays outside the living-room window (HomeAgain)
         public static Violinist Make(Transform parent, Vector3 at, float yaw, string instrument = "Fiddle", string playClip = null)
         {
             var go = new GameObject("Violinist"); go.transform.SetParent(parent, false); go.transform.SetPositionAndRotation(at, Quaternion.Euler(0, yaw, 0));
@@ -318,7 +319,7 @@ namespace ShardsOfTime
         void Update()
         {
             // the tune: the bow arm saws, notes drift up (during his cutscene, and a slow idle sway otherwise)
-            bool play = Playing || (Cutscenes.Playing != null && Cutscenes.Playing.StartsWith("ViolinistTeaches"));
+            bool play = Playing || serenade || (Cutscenes.Playing != null && Cutscenes.Playing.StartsWith("ViolinistTeaches"));
             var em = notes.emission; em.rateOverTime = play ? 6f : 0f;
             var nl = play ? "play" : "idle"; if (nl != loop) PlayLog.Line($"the Violinist: {nl}"); loop = nl; Blend();
             if (bowArm) bowArm.localRotation = Quaternion.Euler(0, play ? Mathf.Sin(Time.time * 7f) * 25f : 0, play ? 0 : 10f);

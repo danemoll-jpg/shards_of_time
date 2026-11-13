@@ -8,6 +8,23 @@ namespace ShardsOfTime
     {
         static Font font;
         public static Font Font => font ? font : font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        // Fix 13.2 item 2: world text (signs, labels) is hidden by walls and shows only from its front (Shaders/WorldText)
+        static Material worldText; public static int WorldTexts { get; private set; }
+        public static Material WorldTextMat
+        {
+            get
+            {
+                if (worldText) return worldText;
+                var sh = Resources.Load<Shader>("Shaders/WorldText");
+                if (!sh) { Debug.LogWarning("WorldText shader missing: font material"); return Font.material; }
+                worldText = new Material(sh) { name = "World text", mainTexture = Font.material.mainTexture };
+                Font.textureRebuilt += f => { if (f == Font && worldText) worldText.mainTexture = Font.material.mainTexture; };
+                return worldText;
+            }
+        }
+        public static void WorldText(TextMesh tm) { if (!tm) return; tm.GetComponent<MeshRenderer>().sharedMaterial = WorldTextMat; WorldTexts++; }
+        public static void WorldTexts_In(GameObject root) { if (root) foreach (var tm in root.GetComponentsInChildren<TextMesh>(true)) WorldText(tm); }
+
         public static readonly Color Accent = new Color(1f, .78f, .3f), Dim = new Color(.8f, .84f, .9f), Ink = new Color(.97f, .98f, 1f), Panel = new Color(.08f, .1f, .18f, .82f);
 
         public static Canvas ScreenCanvas(string name, int order)

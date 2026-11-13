@@ -298,6 +298,19 @@ SOUNDS = [
      'A slow floating dreamy melody on a solo violin with a soft echo, four gentle notes then six then eight like a pattern, peaceful and spacey, solo instrument, music cue.'),
     ('moon_hush_loop', 12.0, 'loop', 'the Moon ambience under the music (loops)',
      'The deep calm of space on the Moon, a very soft low hum and faint distant radio static, continuous, no music.'),
+    # Round 14: the ending
+    ('king_chant', 5.0, 'sfx', 'the Medieval crowd chants for its new king (TheKing)',
+     'A big excited medieval village crowd chanting "King! King! King!" in rhythm, men and women shouting together, cheering and clapping between the chants, outdoors, no music.'),
+    ('crowd_gasp', 2.0, 'sfx', 'the crowd gasps as the sword comes out (TheKing)',
+     'A medieval village crowd gasping together in amazement, a big collective "ooh", outdoors, no music.'),
+    ('portal_whoosh', 2.0, 'sfx', 'Muscle Man falls out of the purple portal (TheKing)',
+     'A magical swirling portal whoosh ending in a heavy comic body thud on cobblestones, no music.'),
+    ('no_kira', 2.0, 'sfx', 'Dan: "No, Kira, no!" (HomeAgain, the last line of the film)',
+     'A young man shouting in comic panic the three words "No, Kira, no!", clear male voice, close, indoors, no music.'),
+    ('sword_draw', 1.5, 'sfx', 'the sword slides out of the stone',
+     'A long steel sword sliding out of a stone with a bright ringing metallic shing and a little grinding of rock, no music.'),
+    ('vortex_portals', 3.0, 'sfx', 'the portals to every era open around the vortex (Farewell)',
+     'Several magical portals opening one after another, shimmering whooshes and soft crystal chimes, wondrous, no music.'),
 ]
 
 

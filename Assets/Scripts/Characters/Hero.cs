@@ -16,6 +16,7 @@ namespace ShardsOfTime
         public Transform Graybox { get; private set; }
         public GameObject Model { get; private set; }
         public CreatureAnimator Anim { get; private set; }
+        public bool Working;   // Fix 13.2: Muscle Man doing a job (never hidden as a too-near follower)
         public KiraForm Form { get; private set; }          // Kira only (Round 2, item 7)
         public string Outfit { get; private set; }          // Dan and Abi (Round 3): "home", "iceage" -> model <name>_<outfit>
         public bool IsPerson => Stats.displayName != "Kira";
@@ -250,7 +251,7 @@ namespace ShardsOfTime
             squash = Mathf.MoveTowards(squash, 0, Time.deltaTime * 1.2f);
             // a follower right in front of the camera (walls pulled it in) hides, so it never blocks the view of the player
             if (!IsPlayer && CameraRig.I && !Game.InCutscene)
-                Body.gameObject.SetActive(Vector3.Distance(CameraRig.I.Cam.transform.position, Motor.Center) > Stats.height * .5f + 1.2f);
+                Body.gameObject.SetActive(Working || Vector3.Distance(CameraRig.I.Cam.transform.position, Motor.Center) > Stats.height * .5f + 1.2f);   // Fix 13.2: Muscle Man at a job stays seen
             else if (!Body.gameObject.activeSelf && !Game.InCutscene) Body.gameObject.SetActive(true);
             float s = Model ? 1f : 1f - squash;   // a real model has its own jump / land clips
             // swimming at the surface: a person's swim clip lies flat at hip height, so the model rises to put the back at the waterline

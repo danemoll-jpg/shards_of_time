@@ -64,7 +64,7 @@ namespace ShardsOfTime
             var tgo = new GameObject("Text"); tgo.transform.SetParent(go.transform, false); tgo.transform.localPosition = new Vector3(0, 0, -.02f);
             var tm = tgo.AddComponent<TextMesh>(); tm.text = text; tm.font = UiKit.Font; tm.fontSize = 48; tm.characterSize = .05f;
             tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = new Color(.2f, .15f, .1f);
-            tgo.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;   // TextMesh reads correctly from -z: the sign's front
+            UiKit.WorldText(tm);   // TextMesh reads correctly from -z: the sign's front
         }
 
         static void CheckpointAt(string id, Vector3 at, float yaw) => CheckpointHere(id, at, yaw, root);

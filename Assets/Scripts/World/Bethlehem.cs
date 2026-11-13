@@ -312,7 +312,7 @@ namespace ShardsOfTime
             var sign = Prop("Signpost", -148.4f, 90.5f, 0, 1.2f, false, 3.0f);
             var label = new GameObject("No room"); label.transform.SetParent(root, false); label.transform.position = new Vector3(-148.4f, 2.45f, 90.4f);
             var tm = label.AddComponent<TextMesh>(); tm.text = "NO ROOM"; tm.font = UiKit.Font; tm.fontSize = 64; tm.characterSize = .045f; tm.anchor = TextAnchor.MiddleCenter; tm.color = new Color(.25f, .12f, .06f);
-            label.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
+            UiKit.WorldText(tm);
             var door = new GameObject("Inn door"); door.transform.SetParent(root, false); door.transform.position = new Vector3(-150, 0, 90.5f); door.AddComponent<NoRoom>();
             PointLight("Inn light", new Vector3(-150, 2.2f, 89), 10, 2f, Warm);
             for (int i = 0; i < 10; i++) Slab("Inn stair", -144.6f, -143.2f, 89 + i, 90 + i, (i + 1) * .75f, 0, "Mudbrick");

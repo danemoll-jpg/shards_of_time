@@ -413,3 +413,11 @@ Ooo-ooo-ooh, boom... wahhh
 Ooo-ooh... (boom)
 ```
 Exclude: `epic, orchestral, cinematic, dramatic, dark, scary, synthwave, techno, EDM, heavy drums, real words, whistling`.
+
+## Credits song (optional, Suno, for Dan) — Round 14, 2026-11-13
+Save as **`Assets/Resources/Music/credits.mp3`**. Until it exists the credits play `title.mp3` (Dan's title theme). Plays once over the
+credits roll (about 62 s, stills from each world scrolling by), after Kira's leap and the cut to black; it doesn't need to loop. If the take is
+longer, the credits still end at 62 s (fade it out by then or keep it to about 60-65 s).
+- Length: about 60-65 s. Instrumental (soft "ooh" vocalizations fine, no real words).
+- Style text: `warm nostalgic Christmas adventure finale, gentle piano and music box, soft strings, sleigh bells, a light solo violin melody, cozy and hopeful, Pixar-like end credits, medium-slow tempo, builds gently then settles, instrumental`
+- Exclude: `epic trailer, dark, scary, heavy drums, EDM, rap, real words`

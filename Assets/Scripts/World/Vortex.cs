@@ -82,7 +82,7 @@ namespace ShardsOfTime
                 // TextMesh reads from its -z side: unturned, it faces the platform
                 var tm = label.AddComponent<TextMesh>(); tm.text = p.label; tm.font = UiKit.Font; tm.fontSize = 64; tm.characterSize = .09f;
                 tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = Color.Lerp(p.color, Color.white, .5f);
-                label.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
+                UiKit.WorldText(tm);
                 var d = door.AddComponent<VortexDoor>(); d.info = p; d.label = tm;
                 if (p.id == "Home" || p.id == "Bethlehem" || p.id == "Medieval" || p.id == "PirateSeas" || p.id == "Steampunk" || p.id == "Tomorrowland" || p.id == "Moon")
                 {

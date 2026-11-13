@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
 namespace ShardsOfTime
@@ -142,6 +143,13 @@ namespace ShardsOfTime
             yield return WaitFor(() => Moon.Panel.Active, 4f);
             Ok(Moon.Panel.Active, "Abi at the panel: the light puzzle starts");
             yield return Shot("652_abi_at_the_panel");
+            yield return WaitFor(() => Moon.Panel.Flashing >= 1 && Moon.Panel.Showing, 6f); yield return Wait(.15f);
+            { int fl = Moon.Panel.Flashing; int lit = Enumerable.Range(0, 4).Count(i => Moon.Panel.IsLit(i));
+              Ok(lit == 1 && Moon.Panel.IsLit(Moon.Panel.Pattern[fl]), $"the pattern flashes one button at a time (step {fl + 1}: {Moon.Panel.ShownLabels[Moon.Panel.Pattern[fl]]} lit)"); }
+            yield return Shot("652f_pattern_flashing");
+            if (Moon.Panel.Showing) { yield return Key(UnityEngine.InputSystem.Key.L); yield return Wait(.2f); }   // a key while the pattern plays (ignored): the panel switches to the keys
+            { var abi = Player; int idle = P.Everyone.Count(h => h && h.Anim && (h.Anim.State == "idle"));
+              Ok(P.Everyone.All(h => !h || !h.Anim || (h.Anim.State != "walk" && h.Anim.State != "run" && h.Anim.State != "run_slow")), $"while the pattern plays nobody runs in place ({string.Join(", ", P.Everyone.Where(h => h && h.Anim).Select(h => h.Stats.displayName + " " + h.Anim.State))})"); _ = abi; _ = idle; }
             bool wrongDone = false;
             for (int round = 0; round < 3; round++)
             {
@@ -151,14 +159,21 @@ namespace ShardsOfTime
                 {
                     int w0 = Moon.Panel.Wrongs; yield return Flick((pat[0] + 1) % 4); yield return WaitFor(() => Moon.Panel.Wrongs > w0, 1f);
                     Ok(Moon.Panel.Wrongs > w0, "a wrong press: the panel buzzes and plays the pattern again"); wrongDone = true;
+                    Ok(Moon.Panel.ShownStyle == Controls.PadStyle.Xbox && string.Join(" ", Moon.Panel.ShownLabels) == "A B X Y", $"on the pad the buttons show its letters ({string.Join(" ", Moon.Panel.ShownLabels)}; the diamond Y top, X left, B right, A bottom)");
+                    yield return Shot("652p_panel_pad_letters");
                     yield return WaitFor(() => Moon.Panel.Showing, 2f); yield return WaitFor(() => !Moon.Panel.Showing, 12f); yield return Wait(.3f);
                 }
                 if (round == 0)
-                {   // Fix 13.1: Dan's Button Pushing on each press (her hand at the panel)
+                {   // Fix 13.2: round 1 on the keyboard (I J K L in the pad's diamond), rounds 2 and 3 on the pad's face buttons
+                    panelKeys = true;
+                    Ok(Moon.Panel.ShownStyle == Controls.PadStyle.Keyboard && string.Join(" ", Moon.Panel.ShownLabels) == "K L J I", $"on the keyboard the buttons show the keys ({string.Join(" ", Moon.Panel.ShownLabels)}: A=K, B=L, X=J, Y=I)");
+                    yield return Shot("652k_panel_keyboard_letters");
+                    // Fix 13.1: Dan's Button Pushing on each press (her hand at the panel)
                     yield return Flick(pat[0]); yield return Wait(.25f);
                     Ok(Player.Anim && Player.Anim.State == "button", $"Abi presses the light with Dan's Button Pushing clip (playing: {(Player.Anim ? Player.Anim.State : "-")})");
                     yield return Shot("652b_abi_presses");
                     for (int i = 1; i < pat.Length; i++) yield return Flick(pat[i]);
+                    panelKeys = false;
                 }
                 else foreach (var kk in pat) yield return Flick(kk);
                 Log($"  round {round + 1}: {pat.Length} lights repeated ({string.Join(" ", pat)})");
@@ -175,17 +190,19 @@ namespace ShardsOfTime
             yield return Shot("654_vortex_home_open");
             yield return Go(VPath(Yaw("Home"), 4), .8f); yield return Go(VPath(Yaw("Home"), 19), .6f);
             int tb = Game.I.ToBeContinuedShown; yield return Go(VPath(Yaw("Home"), 24), .5f, 6f, 1f, () => Game.I.Busy);
-            yield return WaitFor(() => Game.I.ToBeContinuedShown > tb, 6f);
-            Ok(Game.I.ToBeContinuedShown > tb, "Home: to be continued (Acts X and XI and the credits are the next round)");
-            yield return WaitFor(() => !Game.I.Busy, 10f);
+            if (Game.EndingReal) { yield return WaitFor(() => Cutscenes.Playing == "Farewell", 8f); Ok(Cutscenes.Playing == "Farewell", "Home: the ending starts (Farewell; the rest: the check \"ending\")"); }
+            else { yield return WaitFor(() => Game.I.ToBeContinuedShown > tb, 6f); Ok(Game.I.ToBeContinuedShown > tb, "Home: to be continued (Acts X and XI and the credits are the next round)"); yield return WaitFor(() => !Game.I.Busy, 10f); }
             Log($"  the Moon from the launch to the vortex took the bot {(Time.time - t0) / 60f:0.0} min");
         }
 
-        // one stick flick at the rover's panel: 0 up, 1 right, 2 down, 3 left
+        // Fix 13.2: one press on the rover's panel: 0 A, 1 B, 2 X, 3 Y (the pad's face buttons), or on the keyboard K, L, J, I
+        static readonly GamepadButton[] FaceBtns = { GamepadButton.South, GamepadButton.East, GamepadButton.West, GamepadButton.North };
+        static readonly UnityEngine.InputSystem.Key[] FaceKeys = { UnityEngine.InputSystem.Key.K, UnityEngine.InputSystem.Key.L, UnityEngine.InputSystem.Key.J, UnityEngine.InputSystem.Key.I };
+        bool panelKeys;
         IEnumerator Flick(int k)
         {
-            var v = k == 0 ? new Vector2(0, 1) : k == 1 ? new Vector2(1, 0) : k == 2 ? new Vector2(0, -1) : new Vector2(-1, 0);
-            Stick(v); yield return null; yield return null; yield return null; Stick(Vector2.zero); yield return null; yield return null; yield return Wait(.12f);
+            if (panelKeys) yield return Key(FaceKeys[k]); else yield return Press(FaceBtns[k]);
+            yield return Wait(.15f);
         }
 
         IEnumerator MinOnMoon()

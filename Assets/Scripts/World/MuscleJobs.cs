@@ -16,9 +16,38 @@ namespace ShardsOfTime
         public int Done { get; protected set; }
         protected abstract string Verb { get; }
         protected abstract string Clip { get; }
+        protected virtual string Fallback => "mm_lift";
+        public static string LastClip = "";
         protected virtual bool Allowed(Hero player) => true;
         protected virtual Vector3 StandAt(Hero player) { var d = player.transform.position - transform.position; d.y = 0; return transform.position + (d.sqrMagnitude > .01f ? d.normalized : -transform.forward) * (Reach + .6f); }
         protected virtual float Reach => 2.2f;
+        protected virtual bool StandBeside => false;
+        public static string LastStand = "";
+        Vector3 Beside(Hero player, Vector3 front)
+        {
+            var mm = Party.I.Companion; var cam = CameraRig.I ? CameraRig.I.Cam : Camera.main;
+            var c = transform.position; var d = player.transform.position - c; d.y = 0; d = d.sqrMagnitude > .01f ? d.normalized : -transform.forward;
+            var side = Vector3.Cross(Vector3.up, d);
+            float r = Reach + .6f;
+            var tries = new[] { (c + side * r + d * .4f, "right side"), (c - side * r + d * .4f, "left side"), (c + side * r, "right"), (c - side * r, "left"),
+                (front + side * .95f, "in front, to the right"), (front - side * .95f, "in front, to the left"), (front + side * .6f + d * -.5f, "close in, to the right") };
+            float camMin = mm ? mm.Stats.height * .5f + 2.2f : 3f;
+            for (int pass = 0; pass < 2; pass++, camMin = 1.4f)   // (a narrow place: a second pass lets him nearer the camera)
+            foreach (var (p0, label) in tries)
+            {
+                var p = p0;
+                if (Physics.Raycast(new Vector3(p.x, player.transform.position.y + 1.2f, p.z), Vector3.down, out var h, 3.5f, ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << Hero.EnemyLayer) | (1 << 2) | (1 << 4)), QueryTriggerInteraction.Ignore) && !h.collider.transform.IsChildOf(transform)) p.y = h.point.y;
+                else continue;
+                if (Mathf.Abs(p.y - player.transform.position.y) > 1.0f || (mm && !Party.Fits(mm, p + Vector3.up * .05f))) continue;
+                if (cam)
+                {
+                    if (Vector3.Distance(cam.transform.position, p + Vector3.up * 1.1f) < camMin) continue;
+                    var vp = cam.WorldToViewportPoint(p + Vector3.up * 1.1f); if (vp.z < .2f || vp.x < .05f || vp.x > .95f) continue;
+                }
+                LastStand = label; return p;
+            }
+            LastStand = "in front (no free side)"; return front;
+        }
         protected abstract IEnumerator Work(Hero player, Hero mm);
         protected virtual void Opened() { }
         // done at once, no Muscle Man needed (the never-stuck check opens a gate before dropping a hero in behind it)
@@ -155,16 +184,27 @@ namespace ShardsOfTime
             Hud.ClearMessage(Prompt); if (Prompting == this) Prompting = null;
             Game.I.SetBusy(true); Jobs++; Done++;
             PlayLog.Line($"Muscle Man's job: {GetType().Name} {id} ({Verb})");
-            mm.Follower.enabled = false;
-            var at = StandAt(player); at.y = Game.OnGround(at.x, at.z).y;
+            mm.Follower.enabled = false; mm.Working = true;
+            // Fix 13.2: his spot on the player's own level (a ship's deck, a roof): the floor under it from just above the player's feet.
+            // A boulder-like job: beside the object where he fits, in view and not right by the camera (between the player and the object
+            // the close camera hid him as a too-near follower: in the ship's hold nobody saw him lift the crates)
+            var at = StandAt(player);
+            if (StandBeside) at = Beside(player, at);
+            if (Physics.Raycast(new Vector3(at.x, player.transform.position.y + 1.2f, at.z), Vector3.down, out var fh, 3.5f, ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << Hero.EnemyLayer) | (1 << 2) | (1 << 4)), QueryTriggerInteraction.Ignore) && !fh.collider.transform.IsChildOf(transform)) at.y = fh.point.y;
+            else at.y = Game.OnGround(at.x, at.z).y;
             var look = transform.position - at; look.y = 0;
             mm.Motor.Teleport(at + Vector3.up * .05f, Quaternion.LookRotation(look.sqrMagnitude > .01f ? look : Vector3.forward));
             Placeholders.Puff(at + Vector3.up * .5f, new Color(.9f, .85f, .7f));
-            if (mm.Anim && mm.Anim.Has(Clip)) mm.Anim.Trigger(Clip);
+            // Fix 13.2 item 3: his clip is held for the whole job (it was a one-shot cancelled at once: the teleport left him "in the air",
+            // so he played his fall loop, arms flailing like a swimmer; the bend job's loop was skipped altogether)
+            string clip = mm.Anim && mm.Anim.Has(Clip) ? Clip : mm.Anim && mm.Anim.Has(Fallback) ? Fallback : null;
+            if (clip != null) mm.Anim.Hold(clip, 12f);
+            LastClip = clip ?? "(none)"; PlayLog.Line($"Muscle Man's job clip: {LastClip}; he stands {(StandBeside ? LastStand : "at his spot")} {at}");
             Sfx.Play("mm_grunt", .7f, Random.Range(.92f, 1.05f));
             yield return Work(player, mm);
+            if (mm.Anim) mm.Anim.Release();
             if (!string.IsNullOrEmpty(id)) { var prog = SaveGame.Current.World(Game.World.worldId); if (!prog.opened.Contains(id)) prog.opened.Add(id); SaveGame.Save("Muscle Man: " + id); }
-            mm.Follower.enabled = true; mm.Follower.ResetTimers();
+            mm.Follower.enabled = true; mm.Follower.ResetTimers(); mm.Working = false;
             Game.I.SetBusy(false);
         }
     }
@@ -178,13 +218,20 @@ namespace ShardsOfTime
         public Vector3 aside;                    // where it ends up (world offset); zero = 3.5 m to its right
         public string verbText;                  // Round 10: "rolls the cannon aside", "lifts the crates aside", "lifts the anchor away"
         public bool lifts;                       // Round 10: lifted and set down (crates, a cannon, the anchor), not rolled
+        public GameObject[] goneWhenMoved, shownWhenMoved;   // Fix 13.2: what stays at the old spot (the car's hatch cover) goes; what it uncovers shows
         protected override string Verb => string.IsNullOrEmpty(verbText) ? "rolls the boulder away" : verbText;
-        protected override string Clip => "mm_lift";
+        protected override string Clip => lifts ? "mm_lift" : "mm_push";   // Fix 13.2: Lifting Object / Pushing
         protected override float Reach => Mathf.Max(1.8f, Mathf.Max(transform.lossyScale.x, transform.lossyScale.z) * .5f);
+        protected override bool StandBeside => true;
         public static event System.Action<Boulder, Hero> Tried;   // someone pushed it without Muscle Man (the rival laughs)
 
-        void Start() { if (IsDone) Opened(); }
-        protected override void Opened() { transform.position += Offset; Free(); }
+        void Start() { if (IsDone) Opened(); else Uncover(false); }
+        protected override void Opened() { transform.position += Offset; Free(); Uncover(true); }
+        void Uncover(bool moved)
+        {
+            if (goneWhenMoved != null) foreach (var g in goneWhenMoved) if (g) g.SetActive(!moved);
+            if (shownWhenMoved != null) foreach (var g in shownWhenMoved) if (g) g.SetActive(moved);
+        }
         Vector3 Offset => aside.sqrMagnitude > .01f ? aside : Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized * 3.5f;
         void Free() { foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false; }
 
@@ -209,7 +256,7 @@ namespace ShardsOfTime
                 transform.SetPositionAndRotation(Vector3.Lerp(from, to, e) + Vector3.up * Mathf.Sin(e * Mathf.PI) * (lifts ? 1.8f : .6f), lifts ? r0 : Quaternion.AngleAxis(e * 160f, axis) * r0);
                 yield return null;
             }
-            transform.position = to; Free();
+            transform.position = to; Free(); Uncover(true);
             Placeholders.Puff(to, new Color(.7f, .65f, .55f));
             mm.Cheer();
             Hud.Message(lifts ? "Muscle Man lifts it like a feather." : "Muscle Man rolls it away like a pebble.", 3f);
@@ -224,7 +271,7 @@ namespace ShardsOfTime
         public float lift = 3.4f;
         bool hinted; float hintAt = -10;
         protected override string Verb => "lifts the portcullis";
-        protected override string Clip => "mm_lift";
+        protected override string Clip => "mm_throw";   // Fix 13.2: the Overhead Squat's drive up: arms up under the bars
         protected override float Reach => 1.2f;
         protected override Vector3 StandAt(Hero player) { var side = Vector3.Dot(player.transform.position - transform.position, transform.forward) >= 0 ? 1 : -1; return transform.position + transform.forward * side * 1.2f; }
 

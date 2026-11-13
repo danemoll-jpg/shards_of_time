@@ -19,7 +19,26 @@ namespace ShardsOfTime
             string name = LauncherBridge.Argument("-film") ?? "IceAgeArrival";
             Head($"Film: {name} at {FilmFps} fps, {TestRun.View?.width}x{TestRun.View?.height}, drawn off-screen");
             var frames = Path.Combine(dir, "frames"); Directory.CreateDirectory(frames);
-            if (!Cutscenes.Load(name)) { Fail("no cutscene " + name); yield break; }
+            bool ending = name == "Farewell" || name == "TheKing" || name == "HomeAgain" || name == "Credits" || name == "Ending";   // Round 14: played by Game.FilmEnding (HomeAgain is two parts; the credits are no Timeline)
+            if (!ending && !Cutscenes.Load(name)) { Fail("no cutscene " + name); yield break; }
+            if (ending)
+            {
+                yield return Wait(1f);
+                Time.captureFramerate = FilmFps;
+                Game.I.StartCoroutine(Game.I.Film(name));
+                yield return null;
+                int k = 0;
+                while (Game.I.FilmBusy)
+                {
+                    yield return new WaitForEndOfFrame();
+                    TestRun.SaveView(CameraRig.I.Cam, Path.Combine(frames, $"{k:00000}.png"));
+                    k++; yield return null;
+                }
+                Time.captureFramerate = 0;
+                Ok(k > FilmFps * 10, $"{name}: {k} frames saved ({k / (float)FilmFps:0.00} s)");
+                Log("  " + TestRun.Report());
+                yield break;
+            }
             yield return Wait(1f);   // the world and the party are built
             Time.captureFramerate = FilmFps;
             Game.I.StartCoroutine(Game.I.Film(name));

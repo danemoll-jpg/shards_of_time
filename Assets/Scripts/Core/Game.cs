@@ -12,7 +12,7 @@ namespace ShardsOfTime
     // (Settings > Test area) with its own save file. Progression: the small-shard requirement wakes the necklace (NecklaceWakes), the
     // story shard opens the vortex gate (VortexOpens; the playground: PortalOpens and its portal); the vortex's paths lead to the
     // worlds unlocked so far, the next world (Egypt: to be continued) and Home (blocked until all eight story shards are rebuilt).
-    public sealed class Game : MonoBehaviour
+    public sealed partial class Game : MonoBehaviour
     {
         public enum Mode { Title, Playing, Paused }
         public static Game I { get; private set; }
@@ -266,11 +266,13 @@ namespace ShardsOfTime
             (WorldData.Steampunk, new[] { "SteampunkArrival", "MuscleManHero", "ViolinistTeachesSteampunk", "NecklaceWakesSteampunk", "ClockShard" }),   // Round 11
             (WorldData.Tomorrowland, new[] { "TomorrowlandArrival", "ViolinistTeachesTomorrowland", "NecklaceWakesTomorrowland", "RocketLaunch" }),   // Round 12
             (WorldData.Moon, new[] { "MoonLanding", "KiraFloats", "ViolinistPlaysMoon", "NecklaceWakesMoon", "WhiteShard" }),   // Round 13
+            (EndingGroup, new[] { "Farewell", "TheKing", "HomeAgain", "Credits" }),   // Round 14
         };
+        public const string EndingGroup = "Ending";
         public static string TheaterLabel(string n) =>
             n == "ActOne" ? "Act I: the living room" : n.EndsWith("Arrival") ? "The arrival" : n.StartsWith("ViolinistTeaches") ? "The Violinist" :
             n.StartsWith("NecklaceWakes") ? "The necklace wakes" : n.StartsWith("VortexOpens") ? "The vortex opens" : n == "SphinxGag" ? "The Sphinx" :
-            n == "WiseMenArrive" ? "The Wise Men" : n == "TheStone" ? "The stone" : n == "ShardOverboard" ? "Overboard!" : n == "SeaVortex" ? "The sea vortex" : n == "MuscleManHero" ? "Muscle Man the hero" : n == "ClockShard" ? "The great clock" : n == "RocketLaunch" ? "The launch" : n == "MoonLanding" ? "The landing" : n == "KiraFloats" ? "Kira floats" : n == "ViolinistPlaysMoon" ? "The Violinist" : n == "WhiteShard" ? "The white shard" : n;
+            n == "WiseMenArrive" ? "The Wise Men" : n == "TheStone" ? "The stone" : n == "ShardOverboard" ? "Overboard!" : n == "SeaVortex" ? "The sea vortex" : n == "MuscleManHero" ? "Muscle Man the hero" : n == "ClockShard" ? "The great clock" : n == "RocketLaunch" ? "The launch" : n == "MoonLanding" ? "The landing" : n == "KiraFloats" ? "Kira floats" : n == "ViolinistPlaysMoon" ? "The Violinist" : n == "WhiteShard" ? "The white shard" : n == "Farewell" ? "Farewell, Muscle Man" : n == "TheKing" ? "The king" : n == "HomeAgain" ? "Home again" : n == "Credits" ? "The credits" : n;
         public Menu.Page TheaterPage(bool fromTitle)
         {
             var p = new Menu.Page { title = "Theater" };
@@ -278,7 +280,7 @@ namespace ShardsOfTime
             foreach (var (w, names) in TheaterList)
             {
                 int n = names.Count(SaveGame.Current.seen.Contains); if (n == 0) continue;
-                var d = WorldData.Load(w); var nn = names; var dn = d.displayName;
+                var nn = names; var dn = w == EndingGroup ? "The ending" : WorldData.Load(w).displayName;
                 p.rows.Add(new Menu.Row { label = $"{dn} ({n})", submit = () => Menu.I.Push(TheaterWorldPage(dn, nn, fromTitle)) });
             }
             p.rows.Add(new Menu.Row { label = "Back", submit = () => Menu.I.Back() });
@@ -458,6 +460,10 @@ namespace ShardsOfTime
         {
             if (State == Mode.Title) { Music.Play(TestArea ? null : "title"); return; }
             if (TestArea) { Music.Play(null); return; }
+            if (CreditsRolling) { Music.Play(CreditsTrack, 1.2f); return; }   // Round 14: the credits on Dan's title song
+            if (Cutscenes.Playing == "HomeAgain") { Music.Play(Cutscenes.Reversed ? "act1_reversed" : null, Cutscenes.Reversed ? .2f : 1.2f); return; }   // Act I backwards, music too
+            if (Cutscenes.Playing == "Farewell") { Music.Play("vortex", .8f); return; }
+            if (Cutscenes.Playing == "TheKing") { Music.Play("medieval", .8f); return; }
             if (Cutscenes.Playing == "ActOne")
             {
                 if (Cutscenes.Director && Cutscenes.Director.time >= ActOneMusicFadeAt) { Music.Play(null, 2.2f); actOneFaded = true; }   // out by the full white-out
@@ -700,6 +706,7 @@ namespace ShardsOfTime
                 StartCoroutine(GoToWorld(world, cp, first));
                 return;
             }
+            if (path.id == "Home" && EndingReal) { StartCoroutine(Ending()); return; }   // Round 14: the ending (Game.Ending.cs)
             StartCoroutine(ToBeContinued(path));
         }
 
@@ -1055,6 +1062,7 @@ namespace ShardsOfTime
         // ---- the editor's film render (Editor/CutsceneRender.cs): play one cutscene without touching the save
         public IEnumerator Film(string name, bool theater = false)
         {
+            if (name == "Farewell" || name == "TheKing" || name == "HomeAgain" || name == "Credits" || name == "Ending") { yield return FilmEnding(name, theater); yield break; }   // Round 14
             SaveGame.Disabled = true; Cutscenes.AllowSkip = theater; Busy = true;   // Busy: the world's own triggers (the Sphinx gag) stay quiet while filming
             Menu.I.Close(); titleCam.Priority = -10; State = Mode.Playing;
             bool egypt = name == "EgyptArrival" || name == "SphinxGag" || name.EndsWith("Egypt");   // Round 6: Egypt's cutscenes in Egypt

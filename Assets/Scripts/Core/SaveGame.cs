@@ -33,6 +33,7 @@ namespace ShardsOfTime
         public string checkpoint = "";
         public string savedAt = "";
         public List<string> seen = new List<string>();      // Fix 10.1: the cutscenes the player has seen (the Theater)
+        public bool endingSeen;                             // Round 14: the ending and the credits have played (free roam)
         public string returnWorld = "";                     // Fix 10.1: Pause > Return to the vortex left this world from returnSpot
         public Vector3 returnSpot; public float returnYaw; public string returnCp = "";
 

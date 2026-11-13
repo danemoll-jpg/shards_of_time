@@ -299,15 +299,10 @@ namespace ShardsOfTime
             var top = Placeholders.Prim(PrimitiveType.Cube, panel.transform, new Vector3(0, 1.15f, .05f), new Vector3(2.4f, .08f, .9f), WorldArt.Mat("BaseWhite"), true, "Panel top");
             top.transform.localRotation = Quaternion.Euler(-28, 0, 0);
             Panel = panel.AddComponent<RoverPanel>();
-            var cols = new[] { new Color(1f, .3f, .3f), new Color(.3f, 1f, .45f), new Color(.35f, .55f, 1f), new Color(1f, .9f, .3f) };
-            for (int i = 0; i < 4; i++)
-            {
-                var l = Placeholders.Prim(PrimitiveType.Sphere, top.transform, new Vector3(-.75f + i * .5f, .9f, 0), new Vector3(.16f, 3f, .3f), Placeholders.Mat(cols[i] * .35f), false, "Light " + i);
-                Panel.lights[i] = l.GetComponent<Renderer>(); Panel.on[i] = Placeholders.Mat(cols[i], "Glow"); Panel.off[i] = Placeholders.Mat(cols[i] * .35f);
-            }
+            Panel.BuildBoard();   // Fix 13.2: the four face buttons
             // little blinking lights all over the panel's edge (animated, cosmetic)
             for (int i = 0; i < 8; i++) Placeholders.Prim(PrimitiveType.Cube, top.transform, new Vector3(-1.05f + i * .3f, .9f, -.38f), new Vector3(.08f, 1.6f, .06f), WorldArt.Mat(i % 2 == 0 ? "NeonTeal" : "NeonPink"), false, "Blink").AddComponent<NeonFlicker>();
-            Hint(new Vector3(-56, PlateauY, -80), 4f, () => "The lunar rover! Its control panel has four big round lights...");
+            Hint(new Vector3(-56, PlateauY, -80), 4f, () => "The lunar rover! Its control panel has four big buttons, lit like a game pad's...");
             // the mesa (30, -90): Muscle Man boosts Dan or Abi up
             var boost = new GameObject("Boost spot (mesa)"); boost.transform.SetParent(root, false); boost.transform.SetPositionAndRotation(OnGround(30, -78f), Quaternion.Euler(0, 180, 0));
             var bs = boost.AddComponent<BoostSpot>(); bs.radius = 1.6f; bs.height = MesaY + 2.4f; bs.landAt = new Vector3(30, MesaY + .05f, -86.5f);

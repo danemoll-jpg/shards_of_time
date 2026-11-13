@@ -41,6 +41,7 @@ namespace ShardsOfTime
             ("TomorrowlandArrival", TomorrowlandArrival), ("RocketLaunch", RocketLaunch), ("NecklaceWakesTomorrowland", NecklaceWakesTomorrowland),
             ("ViolinistTeachesTomorrowland", ViolinistTeachesTomorrowland),   // Round 12
             ("MoonLanding", MoonLanding), ("KiraFloats", KiraFloats), ("WhiteShard", WhiteShard), ("NecklaceWakesMoon", NecklaceWakesMoon), ("ViolinistPlaysMoon", ViolinistPlaysMoon),   // Round 13
+            ("Farewell", Farewell), ("TheKing", TheKing), ("HomeAgain", HomeAgain),   // Round 14: the ending
         };
 
         // Round 6: who plays in a world's story cutscenes (a model not in yet falls back: Dan's / Abi's home models, home Kira) and the

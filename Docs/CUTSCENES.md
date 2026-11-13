@@ -183,3 +183,19 @@ New pieces of the authoring kit (all reusable for films):
 **Side-by-side sheets:** `python Tools/film_sheet.py sheet <Name>` puts film frames over the game's (from `Recordings/<Name>.mp4`) at
 the matching moments listed in the script's `MATCH` -> `Data/screenshots/round9/<Name>.jpg`. `python Tools/film_sheet.py frames <clip>`
 makes a contact sheet of a clip for studying it. Both run ffmpeg through `Tools/quiet.py` and play nothing.
+
+## Round 14: the ending, and playing a scene backwards
+- `Assets/Editor/CutsceneAuthoring.Ending.cs`: `Farewell` (the vortex, root `Vortex.Centre`), `TheKing` (the Medieval courtyard, root the stone,
+  as `TheStone`; a sword in the stone and one parented to Muscle Man's right hand bone, placed from his finger bones in the bind pose:
+  `Sword in hand`), `HomeAgain` (the living room, root `Game.HomeAnchor`; the window's night backdrop is removed and a snowy garden
+  built outside; the real Violinist is placed there at play time by `Game.HomeAgainScene`, so his fiddle uses the game's IK).
+- **Backwards:** `Cutscenes.Play(name, at, facing, reverseFrom, reverseTo, label)` drives the director by hand (`DirectorUpdateMode.Manual`)
+  from `reverseFrom` down to `reverseTo`, under the name `label` (`Cutscenes.Reversed` is true meanwhile). Timeline audio does not play when
+  evaluated by hand, so the music comes from a reversed file: `Assets/Resources/Music/act1_reversed.mp3` = Dan's `act1.mp3` from 9.8 to
+  49 s, reversed (`ffmpeg -ss 9.8 -to 49 -i act1.mp3 -af areverse,afade=t=in:d=0.3 ...`, run through `Tools/quiet.py`). HomeAgain is
+  Act I from 49 s (the end of the warp tunnel) back to 9.8 s (just before Kira's leap), then the `HomeAgain` cutscene.
+- The game's ending (`Game.Ending.cs`): Farewell -> TheKing (the Medieval world is built for it, its enemies and the rival hidden) ->
+  HomeAgain -> the credits (`Game.Credits`: a uGUI roll over `Resources/Credits/*.jpg`, text `Resources/Data/Credits.txt`, Dan can edit
+  both; music `credits.mp3` if Dan makes one, else `title.mp3`) -> free roam. The Theater lists them under "The ending".
+- Render them like any other: `python Tools/render_cutscene.py Farewell TheKing HomeAgain Credits` (or `Ending` for all four in a row);
+  the film mode records until `Game.FilmBusy` ends for these.
