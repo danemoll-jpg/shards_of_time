@@ -32,12 +32,22 @@ HEIGHT = {'dan_home': 1.8, 'dan_iceage': 1.8, 'abi_home': 1.65, 'abi_iceage': 1.
           'kira_otter': 0.5, 'crab': 0.45, 'pufferfish': 0.6, 'fish': 0.3,
           # Round 11: Victorian Steampunk (the worker big and round; the horse to the top of its head; carriage / clock / press static props)
           'dan_steampunk': 1.8, 'abi_steampunk': 1.65, 'muscleman_steampunk': 2.0, 'violinist_steampunk': 1.85, 'factory_worker': 1.8,
-          'kira_mechanical': 0.5, 'clockwork_horse': 1.9, 'steam_carriage': 3.4, 'street_clock': 7.5, 'steam_press': 7.0}
+          'kira_mechanical': 0.5, 'clockwork_horse': 1.9, 'steam_carriage': 3.4, 'street_clock': 7.5, 'steam_press': 7.0,
+          # Rounds 12-13: Tomorrowland and the Moon (Dan's Tripo models; robots / car / rocket / rover to the top)
+          'dan_tomorrowland': 1.8, 'abi_tomorrowland': 1.65, 'muscleman_tomorrowland': 2.0, 'violinist_tomorrowland': 1.85,
+          'dan_moon': 1.8, 'abi_moon': 1.65, 'muscleman_moon': 2.0, 'violinist_moon': 1.85,
+          'kira_robot': 0.5, 'kira_moon': 0.5, 'robot_greeter': 1.35, 'cleanbot': 0.75, 'flying_car': 1.7, 'rocket': 24.0,
+          'lunar_rover': 2.6, 'moon_critter': 0.6}
 PEOPLE = {'dan_home', 'dan_iceage', 'abi_home', 'abi_iceage', 'violinist_iceage', 'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy',
           'dan_bethlehem', 'abi_bethlehem', 'violinist_bethlehem', 'wiseman_santa', 'wiseman_crown', 'wiseman_old', 'watchman',
           'dan_medieval', 'abi_medieval', 'muscleman_medieval', 'violinist_medieval', 'knight', 'archer', 'wagon_driver',
           'dan_pirate', 'abi_pirate', 'muscleman_pirate', 'violinist_pirate', 'pirate',
-          'dan_steampunk', 'abi_steampunk', 'muscleman_steampunk', 'violinist_steampunk', 'factory_worker'}
+          'dan_steampunk', 'abi_steampunk', 'muscleman_steampunk', 'violinist_steampunk', 'factory_worker',
+          'dan_tomorrowland', 'abi_tomorrowland', 'muscleman_tomorrowland', 'violinist_tomorrowland',
+          'dan_moon', 'abi_moon', 'muscleman_moon', 'violinist_moon'}
+ROUND12 = {'dan_tomorrowland', 'abi_tomorrowland', 'muscleman_tomorrowland', 'violinist_tomorrowland', 'dan_moon', 'abi_moon',
+           'muscleman_moon', 'violinist_moon', 'kira_robot', 'kira_moon', 'robot_greeter', 'cleanbot', 'flying_car', 'rocket',
+           'lunar_rover', 'moon_critter'}
 ROUND5 = {'violinist_iceage', 'wolf', 'snow_critter', 'mammoth'}
 ROUND6 = {'dan_egypt', 'abi_egypt', 'violinist_egypt', 'mummy', 'kira_mummy', 'camel', 'scarab', 'guardian', 'sphinx_kira'}
 ROUND7 = {'dan_bethlehem', 'abi_bethlehem', 'violinist_bethlehem', 'wiseman_santa', 'wiseman_crown', 'wiseman_old', 'watchman',
@@ -47,7 +57,7 @@ ROUND8 = {'dan_medieval', 'abi_medieval', 'muscleman_medieval', 'violinist_medie
 ROUND11 = {'dan_steampunk', 'abi_steampunk', 'muscleman_steampunk', 'violinist_steampunk', 'factory_worker', 'kira_mechanical',
            'clockwork_horse', 'steam_carriage', 'street_clock', 'steam_press'}
 ROUND10 = {'dan_pirate', 'abi_pirate', 'muscleman_pirate', 'violinist_pirate', 'pirate', 'kira_otter', 'crab', 'pufferfish', 'fish'}
-YAW = {'guardian': 90, 'kira_mechanical': 90, 'clockwork_horse': 90}   # Round 11: Tripo's side-profile models face -X   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
+YAW = {'guardian': 90, 'kira_mechanical': 90, 'clockwork_horse': 90, 'kira_robot': 90, 'kira_moon': 90}   # Round 11: Tripo's side-profile models face -X   # degrees about Z per model, nose to -Y (Round 2's sabertooth needed 90; Fix 3.1's Meshy model already faces front)
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'models')
 
 
@@ -113,7 +123,7 @@ def render(name):
     size = max(h, hi.x - lo.x, hi.y - lo.y)
     cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
     cam.data.type = 'ORTHO'; cam.data.ortho_scale = size * 1.15
-    shots = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'models') if name in ROUND5 else os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'models') if name in ROUND6 else os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'models') if name in ROUND7 else os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'models') if name in ROUND8 else os.path.join(ROOT, 'Data', 'screenshots', 'round10', 'models') if name in ROUND10 else os.path.join(ROOT, 'Data', 'screenshots', 'round11', 'models') if name in ROUND11 else SHOTS
+    shots = os.path.join(ROOT, 'Data', 'screenshots', 'round5', 'models') if name in ROUND5 else os.path.join(ROOT, 'Data', 'screenshots', 'round6', 'models') if name in ROUND6 else os.path.join(ROOT, 'Data', 'screenshots', 'round7', 'models') if name in ROUND7 else os.path.join(ROOT, 'Data', 'screenshots', 'round8', 'models') if name in ROUND8 else os.path.join(ROOT, 'Data', 'screenshots', 'round10', 'models') if name in ROUND10 else os.path.join(ROOT, 'Data', 'screenshots', 'round11', 'models') if name in ROUND11 else os.path.join(ROOT, 'Data', 'screenshots', 'round12', 'models') if name in ROUND12 else SHOTS
     os.makedirs(shots, exist_ok=True)
     for tag, ang in (('front', 0), ('side', 90), ('back', 180), ('34', 35)):
         a = math.radians(ang); r = 10

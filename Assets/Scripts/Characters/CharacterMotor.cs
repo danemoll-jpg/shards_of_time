@@ -70,6 +70,23 @@ namespace ShardsOfTime
         public Vector3 WallNormal => wallN;
         public const float WallJumpPush = 5.2f, WallGrace = .22f;
         float wallT; Vector3 wallN;
+        // Round 12, item 7: Abi's air dash (Tomorrowland's Violinist). In the air, Dive = one quick dash the way the stick points (or ahead):
+        // AirDashSpeed for AirDashTime, the fall held level, then it carries on like a throw. Once per time in the air (a wall jump gives it back).
+        public bool CanAirDash;
+        public bool Dashing => dashT > 0;
+        public int AirDashes { get; private set; }
+        public static int AirDashesAll { get; private set; }   // (checks)
+        public const float AirDashSpeed = 13.5f, AirDashTime = .24f;
+        float dashT; bool dashUsed;
+        // Round 12, item 6b: robot Kira's wheel dash: the belly-slide on wheels (faster, it keeps its speed on any floor while it lasts)
+        public bool Wheels;
+        public const float WheelSpeed = 13.5f, WheelTime = 1.5f;
+        // Round 13, item 4: space Kira's float: hold Jump in the air (once the jump stops rising) = drift up at FloatRise for up to FloatTime
+        public bool CanFloat;
+        public bool Floating { get; private set; }
+        public int Floats { get; private set; }
+        public const float FloatRise = 2.0f, FloatTime = 2.8f;   // Round 13: about 5.6 m on top of her low-gravity jump (Abi's double jump reaches ~6.8 m there; the float pillars are 7.6 m)
+        float floatLeft;
         // Round 11, item 5: a conveyor belt under the feet carries the character (Conveyor.Push, world m/s)
         public Conveyor Belt { get; private set; }
         public float BreathMax => Stats.breathSeconds * (DeepBreath ? 3f : 1f);
@@ -113,7 +130,7 @@ namespace ShardsOfTime
         {
             Cc.enabled = false; transform.SetPositionAndRotation(pos, rot); Cc.enabled = true;
             Velocity = Vector3.zero; platform = null; rising = false; buffer = 0; coyote = 0; Grounded = false; Pounding = false; Climbing = false; swimDeepest = 0; swimTime = 0;
-            aimT = 0; Pouncing = false; Gliding = false; keepAir = 0; Sliding = false;
+            aimT = 0; Pouncing = false; Gliding = false; keepAir = 0; Sliding = false; dashT = 0; Floating = false;
             if (!Stats.swimmer) Breath = BreathMax;
         }
 
@@ -174,6 +191,15 @@ namespace ShardsOfTime
                 Pounding = true; poundHang = PoundHang; rising = false; buffer = 0; Event?.Invoke("poundstart");
             }
             if (Pounding) { hv = Vector3.zero; input.jumpPressed = false; }
+            // Round 12: Abi's air dash
+            if (CanAirDash && !Grounded && !dashUsed && input.divePressed && !Pounding && coyote <= 0)
+            {
+                var dir = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.z).normalized : new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+                hv = dir * AirDashSpeed; hv0 = hv; dashT = AirDashTime; dashUsed = true; keepAir = AirDashTime + .25f; rising = false;
+                AirDashes++; AirDashesAll++; transform.rotation = Quaternion.LookRotation(dir);
+                Event?.Invoke("airdash"); if (CompareTag("Player")) PlayLog.Line($"air dash from {transform.position}");
+            }
+            if (dashT > 0) { dashT -= dt; vy = Mathf.Max(vy, 0f); }
             // Round 7: the pounce: aim on the ground, then leap
             if (CanPounce && aimT <= 0 && !Pouncing && Grounded && input.divePressed)
             {
@@ -201,7 +227,7 @@ namespace ShardsOfTime
             // Round 10: otter Kira's belly-slide
             if (CanBellySlide && Grounded && !Sliding && aimT <= 0 && input.divePressed)
             {
-                Sliding = true; Slides++; SlidesAll++; slideT = SlideTime; slideFrom = transform.position;
+                Sliding = true; Slides++; SlidesAll++; slideT = Wheels ? WheelTime : SlideTime; slideFrom = transform.position;
                 slideDir = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.z).normalized : new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
                 Event?.Invoke("slide"); if (CompareTag("Player")) PlayLog.Line($"belly-slide from {transform.position}");
             }
@@ -210,14 +236,16 @@ namespace ShardsOfTime
                 bool wet = WetDeck.At(transform.position + Vector3.up * .2f);
                 slideT -= dt;
                 if (input.move.sqrMagnitude > .04f) slideDir = Vector3.RotateTowards(slideDir, new Vector3(input.move.x, 0, input.move.z).normalized, 1.6f * dt, 0);
-                float sp = wet ? SlideSpeed : Mathf.Lerp(Stats.runSpeed * .6f, SlideSpeed, Mathf.Clamp01(slideT / SlideTime));
+                float sp = Wheels ? (slideT > 0 ? WheelSpeed : Mathf.Lerp(Stats.runSpeed, WheelSpeed, Mathf.Clamp01(1f + slideT / .4f))) : wet ? SlideSpeed : Mathf.Lerp(Stats.runSpeed * .6f, SlideSpeed, Mathf.Clamp01(slideT / SlideTime));   // Round 12: wheels keep their speed
+                if (Wheels && BoostRamp.At(transform.position + Vector3.up * .2f) is BoostRamp ramp && slideT > -.3f) { hv = slideDir * sp; Velocity = hv; keepAir = 1.4f; EndSlide(); Launch(ramp.height); ramp.Launched++; vy = Velocity.y; Event?.Invoke("boost"); if (CompareTag("Player")) PlayLog.Line($"boost ramp {ramp.name}: launched {ramp.height} m"); }
                 hv = slideDir * sp;
                 if (input.jumpPressed && (Grounded || coyote > 0)) { keepAir = 1.2f; EndSlide(); }
-                else if ((slideT <= 0 && !wet) || slideT < -2.5f ||   // (a wet slide keeps going, but not into a wall for ever)
+                else if (!Sliding) { }
+                else if ((slideT <= (Wheels ? -.4f : 0) && !wet) || slideT < -2.5f ||   // (a wet slide keeps going, but not into a wall for ever)
                           (!Grounded && coyote <= 0 && airTime > .3f)) { if (!Grounded) keepAir = 1.2f; EndSlide(); }
             }
             if (input.jumpPressed) buffer = JumpBuffer; else buffer -= dt;
-            if (Grounded) coyote = CoyoteTime; else coyote -= dt;
+            if (Grounded) { coyote = CoyoteTime; floatLeft = FloatTime; } else coyote -= dt;
             if (buffer > 0 && (Grounded || coyote > 0))
             {
                 vy = Mathf.Sqrt(2f * s.gravity * s.jumpHeight) * jumpScale;   // take-off speed as on normal ground: low gravity = higher, floatier
@@ -230,7 +258,7 @@ namespace ShardsOfTime
                 // Round 11: off the wall: up as a normal jump, pushed away from the wall (kept for a moment so air control doesn't eat it)
                 vy = Mathf.Sqrt(2f * s.gravity * s.jumpHeight * 1.08f) * jumpScale;
                 hv = wallN * WallJumpPush; keepAir = .3f; hv0 = hv;
-                buffer = 0; rising = true; JumpsThisAir = 1; wallT = 0; WallJumps++; WallJumpsAll++;
+                buffer = 0; rising = true; JumpsThisAir = 1; wallT = 0; WallJumps++; WallJumpsAll++; dashUsed = false;
                 transform.rotation = Quaternion.LookRotation(new Vector3(wallN.x, 0, wallN.z));
                 Event?.Invoke("walljump");
             }
@@ -243,6 +271,11 @@ namespace ShardsOfTime
             if (rising && !input.jumpHeld && vy > 0) { vy *= s.jumpCut; rising = false; }   // variable height: let go early, jump lower
             if (vy <= 0) rising = false;
 
+            // Round 13: space Kira's float: Jump held once the jump stops rising: up slowly for a while
+            bool fl = CanFloat && !Grounded && input.jumpHeld && vy <= .5f && floatLeft > 0 && !Pounding;
+            if (fl && !Floating) { Floating = true; Floats++; Event?.Invoke("float"); if (CompareTag("Player")) PlayLog.Line($"Kira floats up from {transform.position}"); }
+            else if (!fl) Floating = false;
+            if (Floating) { floatLeft -= dt; vy = FloatRise; hv = Vector3.MoveTowards(hv, Vector3.ClampMagnitude(input.move, 1f) * 2.4f, 6f * dt); }
             // Round 8: the glide (dragon Kira): Jump held while falling
             bool glide = CanGlide && !Grounded && input.jumpHeld && vy <= 0 && !Pounding && !Pouncing && !Updraft && coyote <= 0;
             if (glide && !Gliding) { Gliding = true; Glides++; glideFrom = transform.position; Event?.Invoke("glide"); }
@@ -252,8 +285,10 @@ namespace ShardsOfTime
                 var want = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.z).normalized * GlideSpeed : hv.normalized * Mathf.Min(hv.magnitude, GlideSpeed);
                 hv = Vector3.MoveTowards(hv, want, 14f * dt);
             }
-            if (Pounding) { if (poundHang > 0) { poundHang -= dt; vy = 0; } else vy = -PoundSpeed; }
+            if (Floating) { }
+            else if (Pounding) { if (poundHang > 0) { poundHang -= dt; vy = 0; } else vy = -PoundSpeed; }
             else if (Gliding) vy = Mathf.Max(vy - g * dt, -GlideFall);
+            else if (dashT > 0) vy = Mathf.Max(0f, vy - g * dt);   // Round 12: the dash holds the fall level
             else if (Updraft) { vy = Mathf.MoveTowards(vy, Updraft.lift, Updraft.accel * dt); rising = false; }   // steam: up to its lift speed
             else vy -= g * dt;
             if (Updraft && Grounded) { vy = Mathf.Max(vy, 1f); Grounded = false; }   // steam lifts you off the ground
@@ -283,7 +318,7 @@ namespace ShardsOfTime
             if (Grounded && !wasGrounded)
             {
                 if (Gliding) { Gliding = false; var gd = transform.position - glideFrom; gd.y = 0; GlideDistance = gd.magnitude; }
-                LastJumpHeight = apexY - takeoffY; LastAirTime = airTime; JumpsThisAir = 0; LandSpeed = -vyBefore;
+                LastJumpHeight = apexY - takeoffY; LastAirTime = airTime; JumpsThisAir = 0; LandSpeed = -vyBefore; dashUsed = false; dashT = 0; Floating = false;
                 if (Pounding) { Pounding = false; Pounds++; Event?.Invoke("pound"); }
                 if (Pouncing) { Pouncing = false; var d = transform.position - pounceFrom; d.y = 0; LastPounceDistance = d.magnitude; }
                 Event?.Invoke("land");

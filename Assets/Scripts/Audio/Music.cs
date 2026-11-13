@@ -14,7 +14,7 @@ namespace ShardsOfTime
         public static bool HasClip => I && I.clip;
         AudioSource[] src = new AudioSource[2]; AudioSource amb; int cur; AudioClip clip; float fadeT = -1, trackGain;
         // a world track's ambience (none under the title, Act I or the vortex)
-        static readonly System.Collections.Generic.Dictionary<string, string> Ambience = new System.Collections.Generic.Dictionary<string, string> { ["iceage"] = "wind_loop", ["pirate"] = "waves_loop", ["steampunk"] = "factory_loop" };   // Round 11: the factory's clanks (the streets: Steampunk.Watch swaps in the city)   // Round 10: the sea lapping at the ship
+        static readonly System.Collections.Generic.Dictionary<string, string> Ambience = new System.Collections.Generic.Dictionary<string, string> { ["iceage"] = "wind_loop", ["pirate"] = "waves_loop", ["steampunk"] = "factory_loop", ["tomorrowland"] = "neon_city_loop", ["moon"] = "moon_hush_loop" };   // Rounds 12-13   // Round 11: the factory's clanks (the streets: Steampunk.Watch swaps in the city)   // Round 10: the sea lapping at the ship
         float fadeLen = Crossfade;
 
         public static void Init(GameObject host)

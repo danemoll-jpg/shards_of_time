@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 11.2: `game-1102`, previous `Builds/LauncherRelease-1102`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 12: `game-1200`, previous `Builds/LauncherRelease-1200`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,40 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 12 delivered: 0.12.0 (build 1200), 2026-11-12.** Tomorrowland, the seventh world, built in code: the neon avenue at dusk, the sky (towers,
+flying cars), the square, the Rocket Terminal; robot Kira (plug-in terminals, wheel dash), Abi's air dash, the cleanbots, the greeter, the pink
+shard and `RocketLaunch`; Egyptian Abi's legs and the Muscle Man prompt rule (item 0). Published `game-1200`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 12:
+- Worlds: `Game.InTomorrowland` (`WorldData.Tomorrowland` = "Tomorrowland"); `World/Tomorrowland.cs` builds everything in code on flat ground at 0
+  (no Blender world): the avenue x -8..8 / sidewalks to +-14 / shops x +-14..+-24, z 0..150, roofs at 7 (gaps covered by roof bridges; the two
+  tall shops at the wall-jump gap z 62..64.4 are 12 m); the escalator z 84..90 to the roof landing x 23.6..26.5; the maintenance pit x -7..-1,
+  z 44..52 (its ramp up the south side); the hover-car lane z 154; the square z 158..232 (the diner (36, 186) r 8, the garden dome (-32, 186), the
+  air-dash pads A x -38..-33 / B x -53..-50.5 at 4 m, the Violinist (30, 224)); the Ring Tower's sky deck (-40, 16, 120), the Orbit Tower's roof
+  (60, 24, 200), the Skyline Tower (-70, 200) roof 46 and its lift at x -61.6; the terminal z 236..261, the hall centre (0, 290) r 30, the rocket
+  (0, 298), the socket (0, 286.5), the gantries x +-13. Pieces in `World/TomorrowlandWorld.cs` (BoostRamp, FlipWalkway, CallCar, SlideDoor,
+  FriendlySwitch, Malfunction, HoverLane, Greeter, ShardLift, RocketReach, NeonFlicker) and `World/RigidParts.cs`; `World/ProcMesh.cs` (Torus,
+  Dome (both faces; `collider: true` for the diner and the moon base), Heightfield). `Tomorrowland.asset` from `WorldData.TomorrowlandDefaults()`.
+- Story flow: arrival (`TL-arrived`, `TomorrowlandArrival`) -> the necklace lights the Skyline Tower's lift -> the pink shard (`Game.PinkShardTaken`,
+  `storyShard` = true, the beam moves over the socket) -> `RocketReach` -> `Game.RocketFinale` (`TL-launched`, `Abilities.Rocket`) -> `RocketLaunch`
+  -> the Moon (`GoToWorld(Moon, Moon.Start, arrival)`) once `Moon.Real`, else the vortex (to be continued).
+- Vortex: nine paths 16 deg apart (Ice Age -64 ... Tomorrowland 32, the Moon 48 (closed until `TL-launched`), Home 64).
+- Moves: `Abilities.PlugIn`, `WheelDash` (`KiraForm.Robot`; `CharacterMotor.Wheels`: the belly-slide at `WheelSpeed` 13.5 for 1.5 s; `BoostRamp`),
+  `AirDash` (Abi; `CanAirDash`, Dive in the air, 13.5 m/s for 0.24 s, once per air; `AirDashesAll`). Robot Kira's terminals are `GearSocket`s with
+  `ability` PlugIn (fields `ability`, `hint`, `doing`, `sound`, `cooldown`); a `WindUpMachine` with no id can be set off again.
+- Muscle Man's prompt (item 0b): `MuscleJob.WhyNot(player)` (null = offered): within `SurfaceReach` 2.6 m of the object's own colliders
+  (`ClosestPoint`), on the player's level, not behind them, on screen with a clear line from the camera (a hit within 0.7 m of the point is its own
+  trim); a boost spot: its centre and radius, its `landAt` ledge in front. `MuscleJob.Prompting`, `Hud.ClearMessage`. New world: run `prompts`.
+- Closed people: `close_person.py` `SPREAD` (the legs apart before the voxel solid; faces joining the ankles cut; below the knees one leg) for
+  `abi_egypt`, `abi_tomorrowland`, `abi_moon`; `Tools/Blender/skirt_check.py` (low views + the longest stretched edge); `fix_robe_weights.py` (robes
+  off the arms -> `rigged.fbx`: the Bethlehem Violinist, the three Wise Men).
+- Static models with moving parts: `Tools/Blender/static_parts.py` (`PARTS` table: boxes -> named children, pivots; "cut" deletes) + `RigidParts`.
+- Enemies `Combat/EnemyFuture.cs`: `Cleanbot` (vacuums shards it rolls over, `Cough()` on a hit, 6 s without vacuuming after; `CleanbotsFriendly`),
+  `MoonCritter` (Round 13). Cutscenes `Assets/Editor/CutsceneAuthoring.Tomorrowland.cs` (`StaticIn`: a static model in a cutscene with a saved
+  material; `HalfDome` mesh assets in `Resources/Cutscenes/`); `CutsceneAuthoring.Version` 35. `film_sheet.py` MATCH has RocketLaunch.
+- Exe check modes: `tomorrowland` (~25 min, `--minutes 45`), `stucktl`, `fix81tl`, `perftl`, `tldiag`, `dashgate`, `prompts` (every world, ~25 min);
+  `stuck`, `fix81`, `minplayer` (now to the launch), `tpose` include Tomorrowland. The stuck sweep also opens wind-up / plug-in doors (`opens`).
+
 **Fix 11.2 delivered: 0.11.2 (build 1102), 2026-11-12.** Dan's five Steampunk Mixamo rigs in (Dan, Abi closed, Muscle Man, the Violinist,
 the factory worker); Muscle Man's `mm_hold` / `mm_throw` are both Dan's `Overhead Squat` (trimmed in `CharacterImport.PeopleClips`: 1-15 / 15-57);
 `mm_getup`, `mm_leap` in; no Drowning clip on Mixamo (Treading Water stays). Nothing waits on Dan for Steampunk. Published `game-1102`.

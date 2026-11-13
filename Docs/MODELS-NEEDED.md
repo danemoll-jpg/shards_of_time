@@ -1,5 +1,46 @@
 # Shards of Time — models needed
 
+## Rounds 12-13 (2026-11-12): Mixamo for Tomorrowland AND the Moon — what Dan uploads and downloads (both worlds at once)
+
+Dan's 16 Tripo models are decimated (people 25k triangles) and cleaned up; fronts in `Data/screenshots/round12/models/_sheet_front.png`.
+**Upload these eight** (mixamo.com > Upload Character):
+
+| Model | Upload this | Height |
+|---|---|---|
+| Dan, retro-future | `SourceArt/Mixamo/dan_tomorrowland/upload/dan_tomorrowland.fbx` | 1.8 m |
+| Abi, retro-future (flared silver dress) | `SourceArt/Mixamo/abi_tomorrowland/upload/abi_tomorrowland.fbx` | 1.65 m |
+| Muscle Man, retro-future | `SourceArt/Mixamo/muscleman_tomorrowland/upload/muscleman_tomorrowland.fbx` | 2.0 m |
+| The Violinist, teal jacket | `SourceArt/Mixamo/violinist_tomorrowland/upload/violinist_tomorrowland.fbx` | 1.85 m |
+| Dan, spacesuit | `SourceArt/Mixamo/dan_moon/upload/dan_moon.fbx` | 1.8 m |
+| Abi, spacesuit | `SourceArt/Mixamo/abi_moon/upload/abi_moon.fbx` | 1.65 m |
+| Muscle Man, spacesuit (jet pack) | `SourceArt/Mixamo/muscleman_moon/upload/muscleman_moon.fbx` | 2.0 m |
+| The Violinist, cream spacesuit | `SourceArt/Mixamo/violinist_moon/upload/violinist_moon.fbx` | 1.85 m |
+
+For **each**:
+1. Upload, then the auto-rigger: markers on chin, wrists, elbows, knees, groin. **Skeleton LOD: Standard Skeleton (65)**.
+   (Abi's dress: knee markers on her knees, not the hem. The spacesuits: wrists at the glove cuffs.)
+2. Download the rigged character with no animation picked: **FBX for Unity (.fbx)**, **With Skin**, **T-pose**.
+   Save as `SourceArt/Mixamo/<model>/T-Pose.fbx` (next to `upload`, not inside it).
+
+Everything else is reused (the shared clips play on every person; low-gravity jumps are the shared Jump slowed down by the game;
+Muscle Man lifts a parked car with his Overhead Squat hold). **Two new clips** (FBX for Unity, 30 fps, Keyframe Reduction none,
+Without Skin, In Place ticked where offered; if the name isn't there take the closest that fits "For" and save it under this name):
+
+| Save as | Mixamo search | Folder | For |
+|---|---|---|---|
+| `Button Pushing.fbx` | **Button Pushing** (else **Typing** / **Pressing Button**) | `SourceArt/Mixamo/abi_moon/` | Abi at the rover's light panel (the Moon's finale) |
+| `Hug.fbx` | **Hug** (else **Hugging**) | `SourceArt/Mixamo/muscleman_tomorrowland/` | Muscle Man trying to hug the greeter robot |
+
+That's **8 T-poses + 2 clips**. Tell Code when they're in. Robot Kira, space Kira, the greeter robot, the cleanbot and the moon
+critter are Code's rigs; the flying car, the rocket and the rover are static models.
+
+**2026-11-12: all eight rigs are in.** Both Abis closed by `close_person.py` with the legs-apart step (0 open edges; nothing stretched
+between the legs from low angles). Mixamo had **no Hug and no Button Pushing** (Dan): Muscle Man's hug gag uses his cheer (arms
+wide), a step in, then `offer` (he hugs the air as the robot rolls back); Abi at the rover's panel plays `offer` (both hands reach
+forward) on each press. Robot Kira and space Kira: Code's rigs (23 bones, no ear bones, Kira lock OK). The greeter, the cleanbot and the
+moon critter are static models with moving parts (`Tools/Blender/static_parts.py`: propeller, arms, wheel; the cleanbot's top; the
+critter's eye stalks); the flying car's solid canopy was cut off and replaced by a see-through glass bubble on a chrome rim and arch.
+
 ## Round 12 (2026-11-12): Tomorrowland — images needed from Dan (prompts by the planning chat)
 
 Make them in the Tripo web app as before (Image to 3D, then Texture Gen with the sheet), GLBs to `SourceArt/Tripo/`.

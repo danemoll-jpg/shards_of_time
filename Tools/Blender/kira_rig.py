@@ -28,11 +28,11 @@ from mathutils.kdtree import KDTree
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SHOTS = os.path.join(ROOT, 'Data', 'screenshots', 'round2', 'kira_rig')
 COUNTER_TURN = {'kira', 'kira_mummy'}   # Round 6: mummy Kira's head measures 14 deg turned (home Kira 34)
-THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1, 'kira_dragon': 1, 'kira_otter': 1, 'kira_mechanical': 1}   # Round 11: mechanical Kira's wire whiskers   # Round 10: otter Kira's whiskers   # Round 6: mummy Kira's whiskers too
+THIN = {'kira': 1, 'kira_mummy': 1, 'kira_lamb': 1, 'kira_dragon': 1, 'kira_otter': 1, 'kira_mechanical': 1, 'kira_robot': 1, 'kira_moon': 1}   # Round 11: mechanical Kira's wire whiskers   # Round 10: otter Kira's whiskers   # Round 6: mummy Kira's whiskers too
 # Round 5, item 9: the Ice Age creatures get the same four-legged rig. Their real heights (metres): each is rigged at Kira's size
 # (0.5 m: every number here was tuned for her), then the armature is scaled back up for the export.
 CREATURES = {'wolf': 1.25, 'snow_critter': .8, 'mammoth': 4.4, 'camel': 2.3, 'guardian': 1.7, 'goat': 1.05, 'sheep': .95, 'guard_dog': .85, 'rat': .35, 'horse': 1.6, 'clockwork_horse': 1.9}   # Round 11: the clockwork horse   # Round 8: the dungeon rat, the wagon pony   # Round 7: Bethlehem's animals   # Round 6: Egypt's camel and temple guardian
-TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000, 'goat': 12000, 'sheep': 8000, 'guard_dog': 12000, 'kira_dragon': 16000, 'rat': 8000, 'horse': 15000, 'kira_mechanical': 15000, 'clockwork_horse': 15000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
+TRIS = {'wolf': 12000, 'snow_critter': 8000, 'mammoth': 15000, 'camel': 15000, 'guardian': 12000, 'kira_mummy': 20000, 'goat': 12000, 'sheep': 8000, 'guard_dog': 12000, 'kira_dragon': 16000, 'rat': 8000, 'horse': 15000, 'kira_mechanical': 15000, 'clockwork_horse': 15000, 'kira_robot': 15000, 'kira_moon': 15000}   # Meshy budgets (Kira: 20000)   # Round 5: home Kira's whiskers (thin strands) come off in the closed rebuild   # models whose head Meshy built turned (see 4. above)
 FPS = 30
 # Round 6: mummy Kira's cream bandages pass the eye colour test; her amber eyes are much more saturated
 EYE_RB = {'kira_mummy': .33}

@@ -529,6 +529,12 @@ namespace ShardsOfTime
         {
             foreach (var z in new[] { 245f, 255f, 265f, 275f, 285f, 295f }) { House(z % 20 == 5 ? "HouseCream" : "HouseBrick", -14, z, -90); House(z % 20 == 5 ? "HouseBrick" : "HouseCream", 14, z, 90); }
             Wall("North street end", -10, 10, 300, 300.6f, 4, "Brick");
+            // Round 12, item 7: an air-dash gap (Abi learns it in Tomorrowland): two lamp platforms 12.5 m apart over the street, the near one up
+            // a few crates; the far one holds S31
+            Wall("Dash platform (near)", -1.5f, 1.5f, 260.5f, 263.5f, 3.6f, "Iron", 3.2f); Wall("Dash platform (far)", -1.5f, 1.5f, 276f, 279f, 3.6f, "Iron", 3.2f);
+            foreach (var z in new[] { 262f, 277.5f }) Wall("Dash platform post", -.2f, .2f, z - .2f, z + .2f, 3.2f, "Iron");
+            Wall("Crate step", -4.6f, -2.6f, 261f, 263f, 1.2f, "Wood"); Wall("Crate step", -3.4f, -1.6f, 261.2f, 262.8f, 2.4f, "Wood");
+            Hint(new Vector3(0, 0, 268), 4f, () => SaveGame.Current.Has(Abilities.AirDash) ? "The far lamp platform: jump, double jump, then the air dash." : "Two lamp platforms over the street... the far one is out of reach even with a double jump.");
             for (int i = 0; i < 4; i++) { Lamp(-9.2f, 248 + i * 14); Lamp(9.2f, 255 + i * 14); }
         }
 

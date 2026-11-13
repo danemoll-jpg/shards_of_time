@@ -11,7 +11,7 @@ namespace ShardsOfTime
     public sealed partial class ExeCheck
     {
         // moves the story teaches by Bethlehem (a spot that needs one to get in is tested with it); anything else is a later move
-        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan, Abilities.DeepDive, Abilities.WallJump };   // Round 11: the wall jump (Steampunk)   // Round 10: the deep dive (the Pirate Seas)   // Round 8: the charged punch, Muscle Man
+        static readonly HashSet<string> TaughtSoFar = new HashSet<string> { Abilities.GroundPound, Abilities.DoubleJump, Abilities.Pounce, Abilities.ChargedPunch, Abilities.MuscleMan, Abilities.DeepDive, Abilities.WallJump, Abilities.AirDash, Abilities.WindUp, Abilities.PlugIn };   // Round 12: the air dash (Tomorrowland); the forms' plug-in and wind-up (Kira has them there)   // Round 11: the wall jump (Steampunk)   // Round 10: the deep dive (the Pirate Seas)   // Round 8: the charged punch, Muscle Man
 
         IEnumerator Fix72()
         {
@@ -29,6 +29,7 @@ namespace ShardsOfTime
             yield return StuckWorld(WorldData.Medieval, Medieval.Start);   // Round 8
             yield return PirateEnter(Pirate.Start); yield return StuckWorld(WorldData.Pirate, null);   // Round 10
             yield return SteamEnter(Steampunk.FactoryCp); yield return StuckWorld(WorldData.Steampunk, null);   // Round 11
+            yield return TLEnter(Tomorrowland.Start); yield return StuckWorld(WorldData.Tomorrowland, null);   // Round 12
         }
 
         IEnumerator StuckMedieval() { yield return EnsurePlaying(false); yield return StuckWorld(WorldData.Medieval, Medieval.Start); }   // Round 8
@@ -44,7 +45,7 @@ namespace ShardsOfTime
         IEnumerator ToWorld(string world, string cp)
         {
             if (Game.World.worldId == world) yield break;
-            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : null;
+            string flag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : world == WorldData.Tomorrowland ? Tomorrowland.ArrivedFlag : null;
             if (flag != null && !SaveGame.Current.World(world).opened.Contains(flag)) SaveGame.Current.World(world).opened.Add(flag);
             if (world == WorldData.Steampunk && !SaveGame.Current.World(world).opened.Contains(Steampunk.PressFlag)) SaveGame.Current.World(world).opened.Add(Steampunk.PressFlag);   // Round 11: past the press
             SaveGame.Current.checkpoint = cp; yield return StartWorld(world); yield return WaitFor(() => !Game.I.Busy, 10f);
@@ -81,6 +82,7 @@ namespace ShardsOfTime
                 // Round 8: a cracked wall, a boulder or a portcullis in front of it: opened first (as the charged punch / Muscle Man would)
                 if (!string.IsNullOrEmpty(s.opens)) { var rw = RockWall.All.FirstOrDefault(r => r.id == s.opens); if (rw) rw.Punch(P.Heroes[0], true); }
                 if (!string.IsNullOrEmpty(s.opens)) { var mj = MuscleJob.All.FirstOrDefault(j => j.id == s.opens); if (mj) mj.OpenNow(); }
+                if (!string.IsNullOrEmpty(s.opens)) { var wm = WindUpMachine.All.FirstOrDefault(w => w.id == s.opens); if (wm) { wm.OpenNow(); Physics.SyncTransforms(); } }   // Round 12: a wound-up / plugged-in door (Steampunk's gear door, Tomorrowland's diner)
                 for (int i = 0; i < P.Heroes.Count; i++)
                 {
                     string who = P.Heroes[i].Stats.displayName;

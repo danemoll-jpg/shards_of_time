@@ -104,3 +104,44 @@ one: generate it again (`--only <name> --force`) or drop your own file with the 
 | `bars_bend.mp3` | 2 s | sfx | Muscle Man bends iron bars or pipes aside | Thick iron bars being bent apart by hand, a long metallic creak and groan ending in a clank, no music. |
 | `steam_violin.mp3` | 6 s | sfx | the Violinist plays his steampunk violin as a street musician (Steampunk: he teaches the wall jump) | A short whimsical playful melody played on a solo violin with a tiny ticking music-box clockwork underneath, a few bright bouncy notes then a warm magical rising phrase, solo instrument, music cue. |
 | `teal_vortex.mp3` | 4 s | sfx | the teal vortex opens over the clock (the finale) | A magical swirling vortex opening in the sky, a rushing whirl with ticking clockwork, rising sparkling chimes and a deep whoosh, fairytale, no music. |
+| `hovercar_whoosh.mp3` | 1.5 s | sfx | a flying car zips past (the hover-car lane, the car routes) | A cartoon 1950s retro-futuristic flying car zooming past close by, a smooth electronic whoosh with a soft warbling jet hum, doppler, no music. |
+| `car_honk.mp3` | 1 s | sfx | a hover car bumps you aside (a friendly honk) | A cute cartoon retro-future car horn, a short bubbly double honk with a springy boing, friendly, no music. |
+| `robot_beep.mp3` | 1 s | sfx | a robot beeps (the greeter, the cleanbots) | A cheerful little 1950s tin toy robot beeping, three quick bright electronic boops, friendly, no music. |
+| `robot_alarm.mp3` | 1.5 s | sfx | the greeter robot beeps in alarm (Muscle Man tries to hug it) | A small cartoon robot panicking: frantic fast high-pitched beeps and a squeaky wobbly siren, comic, no music. |
+| `greeter_ready.mp3` | 3 s | sfx | the greeter robot: Your rocket is ready for departure! | A friendly cheerful 1950s cartoon robot voice saying clearly: Your rocket is ready for departure! Slightly metallic and bouncy, a little ding at the end, no music. |
+| `greeter_fuel.mp3` | 2 s | sfx | the launch hall greeter: Fuel cell missing! | A cartoon 1950s robot voice saying clearly: Fuel cell missing! A worried metallic voice with two low warning beeps, no music. |
+| `vacuum_slurp.mp3` | 1 s | sfx | a cleanbot vacuums up a shard | A small cartoon vacuum cleaner robot slurping something up with a quick hoovering suck and a glassy clink, comic, no music. |
+| `vacuum_cough.mp3` | 1.5 s | sfx | a bopped cleanbot coughs the shards back out | A cartoon vacuum cleaner robot coughing and sputtering, a choking whirr then a pop as things fly out with glassy tinkles, comic, no music. |
+| `walkway_hum.mp3` | 2 s | sfx | a moving walkway turned round (robot Kira) | A futuristic moving walkway powering up and changing direction, a smooth electric hum sliding up in pitch with a soft clunk, no music. |
+| `walkway_glitch.mp3` | 1 s | sfx | the malfunctioning walkway flips direction | A futuristic conveyor glitching, a stuttering electric buzz, a clunk and a spark crackle, short, no music. |
+| `neon_city_loop.mp3` | 12 s | loop | Tomorrowland ambience under the music (loops) | A calm retro-futuristic city at dusk: a soft hum of neon signs, distant gentle flying cars swooshing by, faint electronic chimes, continuous, no music. |
+| `plug_in.mp3` | 1.5 s | sfx | robot Kira plugs into a terminal | A small cute robot plugging into a computer terminal: a click, a rising electronic chirp and a cheerful data warble, no music. |
+| `wheel_whirr.mp3` | 1.5 s | sfx | robot Kira's wheel dash | Tiny robot wheels spinning up fast on a smooth floor, a high whirr and a zippy roll, playful, no music. |
+| `boost_ramp.mp3` | 1.2 s | sfx | a boost ramp launches robot Kira | A futuristic boost pad launching something small into the air, a springy electronic zap and a rising whoosh, no music. |
+| `air_dash.mp3` | 0.8 s | sfx | Abi's air dash | A quick airy dash whoosh in mid-air with a light sparkly swish, short and snappy, no music. |
+| `door_whoosh.mp3` | 1.2 s | sfx | a futuristic door slides open | A 1950s sci-fi sliding door opening with a smooth pneumatic whoosh and a soft chime, no music. |
+| `shimmer.mp3` | 2 s | sfx | the arrival shimmer (outfits change) | A magical shimmering transformation, a sparkly rising glissando of bells with a soft electronic sweep, fairytale, no music. |
+| `pink_shard_click.mp3` | 1.5 s | sfx | Dan places the pink shard in the rocket socket | A glowing crystal clicking into a metal socket, a satisfying click, then a rising power-up hum, no music. |
+| `dome_open.mp3` | 3 s | sfx | the launch hall dome slides open | A huge golden dome roof sliding open, a deep mechanical rumble with smooth servo whirring, big and grand, no music. |
+| `rocket_countdown.mp3` | 3 s | sfx | the countdown beeps before the launch | Retro rocket launch countdown beeps, five steady electronic beeps rising in pitch with a low building rumble, no voice, no music. |
+| `rocket_ignite.mp3` | 2 s | sfx | the rocket engines ignite | A big rocket engine igniting with a sharp burst of flame and a booming whump, powerful, no music. |
+| `rocket_roar.mp3` | 6 s | sfx | the rocket roars as it rises | A huge rocket roaring as it lifts off and climbs into the sky, a thunderous rumble fading upward, cinematic, no music. |
+| `chrome_violin.mp3` | 6 s | sfx | the Violinist plays his chrome electric violin (Tomorrowland: the air dash) | A short dreamy melody on a solo electric violin with a soft retro theremin shimmer, a few floating notes rising into a warm swell, solo instrument, music cue. |
+| `footstep_dust.mp3` | 0.6 s | sfx | a muffled step in moon dust | A single muffled soft footstep in fine powdery dust heard inside a spacesuit, very quiet and dampened, close, no music. |
+| `helmet_click.mp3` | 1 s | sfx | a bubble helmet clicks on | A glass space helmet clicking and locking onto a suit collar, a crisp click and a short pressurising hiss, no music. |
+| `breathing_loop.mp3` | 8 s | loop | slow breathing inside a helmet | Calm slow breathing heard from inside a space helmet, soft and steady with a faint radio hiss, continuous, no music. |
+| `radio_beep.mp3` | 1 s | sfx | a spacesuit radio beeps | A classic space radio transmission beep, two short chirps with a crackle of static, no music. |
+| `rocket_landing.mp3` | 4 s | sfx | the rocket touches down on the Moon | A rocket descending on its engine and touching down on the Moon, a roaring thrust easing off, a soft heavy thump and a puff of dust, no music. |
+| `airlock_hiss.mp3` | 2 s | sfx | the moon base airlock opens | A spaceship airlock door cycling open with a big pressurised hiss and a mechanical clunk, no music. |
+| `critter_boing.mp3` | 0.8 s | sfx | a moon critter bounces | A cute cartoon alien blob bouncing with a soft rubbery boing and a tiny squeak, comic, no music. |
+| `critter_roll.mp3` | 1.5 s | sfx | a bopped moon critter rolls away | A small round cartoon alien curling up and rolling away over dust, a soft rumbly roll with a happy little squeak, no music. |
+| `kira_float.mp3` | 1.5 s | sfx | space Kira floats up | A gentle floaty magical swell, a soft airy shimmer rising slowly, dreamy, no music. |
+| `rover_tone_1.mp3` | 0.6 s | sfx | the rover panel's first light | A single clean electronic tone, a pure low C note like a retro computer button, short, no music bed. |
+| `rover_tone_2.mp3` | 0.6 s | sfx | the rover panel's second light | A single clean electronic tone, a pure E note like a retro computer button, short, no music bed. |
+| `rover_tone_3.mp3` | 0.6 s | sfx | the rover panel's third light | A single clean electronic tone, a pure G note like a retro computer button, short, no music bed. |
+| `rover_tone_4.mp3` | 0.6 s | sfx | the rover panel's fourth light | A single clean electronic tone, a pure high C note like a retro computer button, short, no music bed. |
+| `rover_wrong.mp3` | 1 s | sfx | a wrong press on the rover panel | A soft friendly electronic try-again buzz, two low descending boops, not harsh, no music. |
+| `white_chime.mp3` | 2 s | sfx | the white shard answers | A pure bright crystal chime ringing and shimmering, clear and celestial, no music. |
+| `white_swell.mp3` | 5 s | sfx | all the shards light up together (WhiteShard) | A huge radiant magical swell, many crystal chimes ringing together rising into a bright shimmering glow, triumphant and warm, no words, no music. |
+| `moon_violin.mp3` | 6 s | sfx | the Violinist plays a slow floaty tune on the Moon | A slow floating dreamy melody on a solo violin with a soft echo, four gentle notes then six then eight like a pattern, peaceful and spacey, solo instrument, music cue. |
+| `moon_hush_loop.mp3` | 12 s | loop | the Moon ambience under the music (loops) | The deep calm of space on the Moon, a very soft low hum and faint distant radio static, continuous, no music. |

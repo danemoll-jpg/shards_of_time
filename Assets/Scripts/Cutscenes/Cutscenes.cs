@@ -32,6 +32,8 @@ namespace ShardsOfTime
             var prefab = Load(name);
             if (!prefab) { Debug.LogWarning("[Cutscene] missing " + name); yield break; }
             var inst = UnityEngine.Object.Instantiate(prefab, at, facing);
+            if (Game.InMoon) foreach (var an in inst.GetComponentsInChildren<Animator>(true))   // Round 13: every Moon actor in its bubble helmet
+                if (an.transform.parent && an.transform.parent.name == "Body") Helmet.Attach(an.gameObject, Helmet.KindFor(an.gameObject.name.ToLowerInvariant().Replace("model ", "")));
             inst.name = "Cutscene " + name;
             var dir = inst.GetComponent<PlayableDirector>();
             Director = dir; Playing = name; SkipHeld01 = 0; LastSkipped = false; Played++;

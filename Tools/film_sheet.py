@@ -18,6 +18,8 @@ CLIPS = ROOT / 'SourceArt' / 'Reference' / 'Clips'
 
 # scene -> (clip file, [(film seconds, game seconds, label), ...]): the matching moments, in the film's order
 MATCH = {
+    # Round 12: Tomorrowland (Dan's 6 s clip; the game's scene adds Dan placing the shard first, and the rise into the sky after)
+    'RocketLaunch': ('07-Tomorrowland_RocketLaunch.mp4', [(.5, 4.4, 'the four, small, the huge rocket'), (2, 7.6, 'the rocket alone'), (3.5, 8.8, 'the doors glow warmer'), (5.5, 10.4, 'the engines ignite')]),
     # Round 11: Victorian Steampunk (film seconds, game seconds, what)
     'SteampunkArrival': ('06-Steampunk_Arrival.mp4', [(1, 1, 'gear, teal streak'), (6, 5.5, 'teal spiral'), (12, 9, 'the big spiral'), (16, 10.8, 'over the domes'),
                           (18, 13.6, 'onto the chain'), (19, 15.2, 'into the bucket'), (23, 18, 'carried along'), (25, 20.4, 'tipped out')]),
@@ -52,7 +54,7 @@ MATCH = {
                        [(0.3, 3.8, 'held up'), (1.0, 5.4, 'it slips'), (1.5, 6.0, 'it falls'), (2.5, 7.4, 'it rolls'), (3.5, 8.6, 'rolling'), (4.5, 10.1, 'to the edge'),
                         (5.0, 11.0, 'over the side'), (5.5, 11.8, 'into the sea')]),
 }
-ROUND = {'PirateArrival': 'fix101', 'ShardOverboard': 'round10', 'SteampunkArrival': 'round11', 'MuscleManHero': 'round11'}
+ROUND = {'RocketLaunch': 'round12', 'PirateArrival': 'fix101', 'ShardOverboard': 'round10', 'SteampunkArrival': 'round11', 'MuscleManHero': 'round11'}
 
 
 def ffmpeg():

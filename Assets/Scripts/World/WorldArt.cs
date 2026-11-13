@@ -135,6 +135,30 @@ namespace ShardsOfTime
             ["Oil"] = (new Color(.05f, .05f, .07f), "Lit", .9f),
             ["Rubble"] = (new Color(.5f, .3f, .25f), "Lit", .1f),
             ["RedAlarm"] = (new Color(1f, .15f, .1f), "Glow", 0),
+            // Round 12: Tomorrowland (built in code: World/Tomorrowland.cs): chrome, pink and teal neon, lavender street, brick shops, gold hall
+            ["Chrome"] = (new Color(.83f, .86f, .92f), "Lit", .93f),
+            ["ChromeDark"] = (new Color(.5f, .54f, .62f), "Lit", .9f),
+            ["NeonPink"] = (new Color(1f, .3f, .78f), "Glow", 0),
+            ["NeonTeal"] = (new Color(.2f, 1f, .92f), "Glow", 0),
+            ["NeonYellow"] = (new Color(1f, .9f, .4f), "Glow", 0),
+            ["NeonLilac"] = (new Color(.78f, .55f, 1f), "Glow", 0),
+            ["TLStreet"] = (new Color(.27f, .22f, .34f), "Lit", .55f),
+            ["TLWalk"] = (new Color(.86f, .82f, .93f), "Lit", .45f),
+            ["TLPlaza"] = (new Color(.93f, .86f, .9f), "Lit", .4f),
+            ["ShopBrick"] = (new Color(.74f, .38f, .34f), "Lit", .15f),
+            ["ShopCream"] = (new Color(.97f, .92f, .84f), "Lit", .3f),
+            ["TealWindow"] = (new Color(.28f, .75f, .8f), "Lit", .92f),
+            ["HallGold"] = (new Color(.96f, .76f, .38f), "Lit", .8f),
+            ["PinkShard"] = (new Color(1f, .35f, .82f), "Glow", 0),
+            ["Walkway"] = (new Color(.55f, .6f, .72f), "Lit", .6f),
+            // Round 13: the Moon (built in code: World/Moon.cs)
+            ["MoonDust"] = (new Color(.6f, .6f, .62f), "Lit", .04f),
+            ["MoonRock"] = (new Color(.42f, .42f, .45f), "Lit", .08f),
+            ["BaseWhite"] = (new Color(.93f, .94f, .96f), "Lit", .5f),
+            ["BaseFloor"] = (new Color(.55f, .58f, .64f), "Lit", .4f),
+            ["GardenGreen"] = (new Color(.3f, .7f, .35f), "Lit", .2f),
+            ["WhiteShard"] = (new Color(.95f, .97f, 1f), "Glow", 0),
+            ["EarthBlue"] = (new Color(.3f, .55f, 1f), "Glow", 0),
         };
 
         public static Material Mat(string name)

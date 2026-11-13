@@ -130,6 +130,7 @@ namespace ShardsOfTime
         }
 
         public static void Message(string s, float seconds = 3.5f) { if (!I) return; I.messageText.text = s; I.messageUntil = Time.unscaledTime + seconds; LastMessage = s; PlayLog.Line("message: " + s); }
+        public static void ClearMessage(string s) { if (I && LastMessage == s) { I.messageUntil = 0; I.messageText.text = ""; LastMessage = ""; } }   // Round 12: a prompt goes when its job can't be done here
         public static void Flash() { if (I) I.flashT = 1f; }
         public static void Tint(Color c, float amount) { if (I) I.tint.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(amount)); }
         public static string TitleShown { get; private set; }

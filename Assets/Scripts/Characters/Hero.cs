@@ -72,12 +72,16 @@ namespace ShardsOfTime
             if (!CharacterModel.Exists(model) && outfit == Outfits.Pirate) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Medieval;   // Round 10: until the pirate models are in
             if (!CharacterModel.Exists(model) && outfit == Outfits.Steampunk) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Pirate;   // Round 11: until the steampunk models are in
             if (!CharacterModel.Exists(model) && outfit == Outfits.Steampunk) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Medieval;
+            // Rounds 12-13: until Dan's Mixamo rigs are in, Tomorrowland and the Moon wear the steampunk clothes (then pirate)
+            if (!CharacterModel.Exists(model) && (outfit == Outfits.Tomorrowland || outfit == Outfits.Moon)) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Steampunk;
+            if (!CharacterModel.Exists(model) && (outfit == Outfits.Tomorrowland || outfit == Outfits.Moon)) model = Stats.displayName.ToLowerInvariant() + "_" + Outfits.Pirate;
             if (!CharacterModel.Exists(model) && IsMuscleMan) model = "muscleman_medieval";   // Round 8: Muscle Man has one outfit, every world
             if (Model && Model.name == "Model " + model) { Outfit = outfit; return; }
             if (!CharacterModel.Exists(model)) { if (Outfit == null) PlayLog.Line($"{Stats.displayName}: no model {model}, graybox"); Outfit = outfit; return; }
             Outfit = outfit;
             if (Model) { Model.SetActive(false); Destroy(Model); Model = null; Anim = null; }
             Model = CharacterModel.Build(model, Body, Motor);
+            if (outfit == Outfits.Moon) Helmet.Attach(Model, Helmet.KindFor(model));   // Round 13: the bubble helmet
             Anim = Model.GetComponent<CreatureAnimator>();
             Anim.AttackClip = Stats.attackName == "Kick" ? "kick" : "punch";
             Graybox.gameObject.SetActive(false);
@@ -97,10 +101,12 @@ namespace ShardsOfTime
             Form = f;
             if (Model) { Destroy(Model); Model = null; Anim = null; }
             Model = CharacterModel.Build(CharacterModel.Exists(f.model) ? f.model : "kira", Body, Motor);   // Round 11: a form whose model isn't in yet: home Kira
+            if (f.id == KiraForm.Space) Helmet.Attach(Model, "kira");   // Round 13: her silver-rimmed bubble
             Anim = Model ? Model.GetComponent<CreatureAnimator>() : null;
             Graybox.gameObject.SetActive(!Model);
             if (Motor) Motor.CanGlide = HasAbility(Abilities.Glide);   // Round 8: dragon Kira's wings
-            if (Motor) { Motor.CanBellySlide = HasAbility(Abilities.BellySlide); Motor.Otter = HasAbility(Abilities.OtterSwim); Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive) || Motor.Otter; if (Motor.CanBellySlide) Motor.CanPounce = false; else if (Stats.displayName == "Kira") Motor.CanPounce = SaveGame.Current.Has(Abilities.Pounce); }   // Round 10: otter Kira
+            if (Motor) { Motor.Wheels = HasAbility(Abilities.WheelDash); Motor.CanFloat = HasAbility(Abilities.Float); }   // Rounds 12-13: robot Kira's wheels, space Kira's float
+            if (Motor) { Motor.CanBellySlide = HasAbility(Abilities.BellySlide) || HasAbility(Abilities.WheelDash); Motor.Otter = HasAbility(Abilities.OtterSwim); Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive) || Motor.Otter; if (Motor.CanBellySlide) Motor.CanPounce = false; else if (Stats.displayName == "Kira") Motor.CanPounce = SaveGame.Current.Has(Abilities.Pounce); }   // Round 10: otter Kira
             PlayLog.Line($"Kira's form: {f.displayName} ({(Model ? "model " + f.model : "graybox: no model")}, abilities [{string.Join(", ", f.abilities)}])");
         }
 
@@ -119,6 +125,10 @@ namespace ShardsOfTime
             if (e == "glide" && IsPlayer) Sfx.Play("wings_flap", .45f);
             if (e == "doublejump") { squash = -.18f; if (IsPlayer) Sfx.Play("jump", .6f, 1.3f); Placeholders.Puff(transform.position, Stats.color); }
             if (e == "splash" && IsPlayer) Sfx.Play("splash", .5f);
+            if (e == "airdash") { squash = -.15f; if (IsPlayer) Sfx.Play("air_dash", .6f); Placeholders.Puff(transform.position + Vector3.up * .8f, new Color(.9f, .95f, 1f)); if (Anim) Anim.Trigger("jump"); }   // Round 12
+            if (e == "slide" && Motor.Wheels && IsPlayer) Sfx.Play("wheel_whirr", .6f);   // Round 12: robot Kira's wheel dash
+            if (e == "boost" && IsPlayer) Sfx.Play("boost_ramp", .7f);
+            if (e == "float" && IsPlayer) Sfx.Play("kira_float", .5f);   // Round 13: space Kira floats
             if (e == "outofbreath" && IsPlayer) Health.Damage(1, Vector3.zero, "out of breath");
             if (e == "pound") Pound();
             if (e == "aim") { squash = .22f; if (Anim) Anim.Trigger("land"); }
@@ -256,5 +266,5 @@ namespace ShardsOfTime
     }
 
     // Dan's and Abi's outfits (Round 3): AreaData.outfit names one per area
-    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval", Pirate = "pirate", Steampunk = "steampunk"; }
+    public static class Outfits { public const string Home = "home", IceAge = "iceage", Egypt = "egypt", Bethlehem = "bethlehem", Medieval = "medieval", Pirate = "pirate", Steampunk = "steampunk", Tomorrowland = "tomorrowland", Moon = "moon"; }
 }

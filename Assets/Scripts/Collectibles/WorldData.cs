@@ -85,7 +85,7 @@ namespace ShardsOfTime
         // Fix 10.1: stepped thresholds: each world's = the previous world's + 25 (Ice Age 25, Egypt 50, Bethlehem 75, Medieval 100,
         // Pirate Seas 125, ...), and at least 15 from the world itself (AreaData.fromHere). Replaces Fix 8.1's 75 % rule.
         // Fix 6.1: the worlds in story order. Shards are one universal total (never spent); a world's requirement is a threshold on it.
-        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval, Pirate, Steampunk };   // Round 11: Victorian Steampunk
+        public static readonly string[] StoryOrder = { IceAge, Egypt, Bethlehem, Medieval, Pirate, Steampunk, Tomorrowland, Moon };   // Round 11: Victorian Steampunk; Rounds 12-13: Tomorrowland, the Moon
 
         public AreaData Area(string id) => areas.FirstOrDefault(a => a.id == id);
         public AreaData AreaAt(Vector3 p) => areas.FirstOrDefault(a => a.box.size != Vector3.zero && a.box.Contains(p));
@@ -202,11 +202,24 @@ namespace ShardsOfTime
                 L("SP-passage", "enclosed", new Vector3(-28.5f, .3f, 238), new Vector3(-28.5f, 0, 226), 7, "the passage behind the crates (Muscle Man lifts them)", Abilities.MuscleMan, opens: "SP-crates-passage");
                 L("SP-gear-yard", "enclosed", new Vector3(86, .3f, 200), new Vector3(62, 0, 200), 14, "the clockmaker's yard behind the great gear gate (mechanical Kira winds it open)", Abilities.WindUp, opens: "SP-geargate");
             }
+            else if (world == Tomorrowland)   // Round 12
+            {
+                L("TL-pit", "pit", new Vector3(-4, -2.3f, 50.5f), new Vector3(-4, 0, 40), 5, "the maintenance pit under the parked car (a ramp up its south side)", Abilities.MuscleMan, opens: "TL-car-hatch");
+                L("TL-courtyard", "enclosed", new Vector3(-30, .3f, 118), new Vector3(-9, 0, 117.75f), 8, "the courtyard behind the vending machine (out through the alley)", Abilities.MuscleMan, via: new Vector3(-19, 0, 117.75f), opens: "TL-vending");
+                L("TL-nook", "enclosed", new Vector3(27, .3f, 104.5f), new Vector3(9, 0, 104.5f), 6, "the nook behind the chrome bars", Abilities.MuscleMan, opens: "TL-bars-nook");
+                L("TL-diner", "enclosed", new Vector3(36, .3f, 186), new Vector3(23, 0, 186), 8, "inside the Atomic Diner (out of its door, west)", Abilities.PlugIn, opens: "TL-door-diner");
+                L("TL-shaft", "pit", new Vector3(-19, .3f, 63.2f), new Vector3(-8, 0, 63.2f), 6, "the narrow gap between the two tall shops (walk out the front)");
+                L("TL-hall", "enclosed", new Vector3(-10, .3f, 300), new Vector3(0, 0, 250), 30, "the launch hall (out through its south door)", via: new Vector3(0, 0, 263));
+            }
+            else if (world == Moon)   // Round 13
+            {
+                foreach (var s in MoonLowSpots()) l.Add(s);
+            }
             return l;
         }
 
-        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : id == Pirate ? PirateDefaults() : id == Steampunk ? SteampunkDefaults() : Defaults());
-        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval", Pirate = "PirateSeas", Steampunk = "Steampunk";
+        public static WorldData Load(string id) => Resources.Load<WorldData>("Data/Worlds/" + id) ?? (id == IceAge ? IceAgeDefaults() : id == Egypt ? EgyptDefaults() : id == Bethlehem ? BethlehemDefaults() : id == Medieval ? MedievalDefaults() : id == Pirate ? PirateDefaults() : id == Steampunk ? SteampunkDefaults() : id == Tomorrowland ? TomorrowlandDefaults() : id == Moon ? MoonDefaults() : Defaults());
+        public const string IceAge = "IceAge", Playground = "Playground", Egypt = "Egypt", Bethlehem = "Bethlehem", Medieval = "Medieval", Pirate = "PirateSeas", Steampunk = "Steampunk", Tomorrowland = "Tomorrowland", Moon = "Moon";
 
         // Round 5: 60 shards, 35 wake the necklace; the lake, the glacier and the hot-spring grotto; the gates later moves open (gates).
         // Round 4: the Ice Age, the first real world (World/IceAge.cs builds it; layout numbers in Tools/Blender/iceage_world.py). One
@@ -561,6 +574,7 @@ namespace ShardsOfTime
             S("S25", 44, 9, 183, "a cream house's roof (Muscle Man boosts Dan or Abi)", MM);
             S("S26", -30, 0, 194, "the square, by the clockwork horse"); S("S27", 30, 0, 219, "the square's north-east corner"); S("S28", -30, 0, 219, "the square's north-west corner");
             S("S29", 0, 0, 280, "the north street's end"); S("S30", -60, .3f, 200, "on the carriage turntable");
+            S("S31", 0, 3.6f, 277.5f, "the far lamp platform over the north street (Abi's air dash, Tomorrowland)", Abilities.AirDash);   // Round 12, item 7: an earlier world's air-dash gap
             void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
             G("SP-geardoor-boiler", "gear door", Abilities.WindUp, new Vector3(-24, 0, 6), "the boiler room's gear door (mechanical Kira winds it)", "F20", "F21", "SP-H1");
             G("SP-lift", "wind-up lift", Abilities.WindUp, new Vector3(-28, 0, 44), "the lift to the crane deck (mechanical Kira winds it)", "F22", "F23");
@@ -575,8 +589,136 @@ namespace ShardsOfTime
             G("SP-boost-roof", "boost", Abilities.MuscleMan, new Vector3(36.5f, 0, 183), "a cream house's roof (Muscle Man's boost)", "S25");
             G("SP-chimney-stack", "wall-jump chimney", Abilities.WallJump, new Vector3(27.2f, 0, 93), "the brick stack's shaft (wall jump, learned here)", "F18");
             G("SP-alley-west", "wall-jump alley", Abilities.WallJump, new Vector3(-14, 0, 139.2f), "the narrow alley between the tall houses (wall jump, learned here)", "S10");
+            G("SP-dash-gap", "air-dash gap", Abilities.AirDash, new Vector3(0, 3.6f, 262), "two lamp platforms over the north street, 12.5 m apart (Abi's air dash, Tomorrowland)", "S31");
             w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
             return w;
+        }
+
+        // Round 12: Tomorrowland (World/Tomorrowland.cs builds it in code on flat ground at 0): the neon avenue (z 0..150, shop roofs at 7), the
+        // hover-car lane (z 154), the square (z 160..230: the garden dome, the Atomic Diner, the air-dash pads, the Violinist), the towers (the
+        // Ring Tower's sky deck at 16 by the always-running car; the Orbit Tower's roof at 24 by the car robot Kira calls; the Skyline Tower's
+        // roof at 46: the pink story shard, its lift lit by the necklace) and the Rocket Terminal (the golden launch hall, z 260..320).
+        // Fix 10.1's rule: Steampunk's 150 + 25 = 175, and 15 from here. Rule 2: the first visit has the three heroes, robot Kira (plug-in,
+        // wheel dash) and Muscle Man; not the air dash (Abi learns it here) nor earlier learned moves.
+        public static WorldData TomorrowlandDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Tomorrowland; w.worldId = Tomorrowland; w.displayName = "Tomorrowland"; w.heightsAreHints = true;
+            w.violinistInstrument = "ChromeViolin"; w.violinistPlayClip = "violinist_play";   // item 7: a lounge musician with a chrome electric violin
+            w.areas.Add(new AreaData { id = "TL", name = "Tomorrowland", requirement = 175, fromHere = 15, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.PlugIn, Abilities.WheelDash, Abilities.MuscleMan },
+                storyShard = new Vector3(-70, 47f, 200), storyShardColor = new Color(1f, .35f, .82f), spawn = new Vector3(0, .1f, 10f), spawnYaw = 0,
+                kiraForm = KiraForm.Robot, outfit = Outfits.Tomorrowland, box = new Bounds(new Vector3(0, 40, 158), new Vector3(264, 160, 360)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "TL", position = new Vector3(x, y, z), requires = req, note = note });
+            string K = "Kira", PI = Abilities.PlugIn, WD = Abilities.WheelDash, MM = Abilities.MuscleMan;
+            // the neon avenue (street and walkways)
+            S("A01", 0, 0, 14, "the avenue"); S("A02", -4, 0, 26, "the avenue"); S("A03", 4, 0, 40, "the avenue"); S("A04", -2, 0, 60, "the avenue");
+            S("A05", 3, 0, 74, "the avenue"); S("A06", -4, 0, 100, "the avenue"); S("A07", 4, 0, 108, "the avenue"); S("A08", 0, 0, 140, "the avenue's north end");
+            S("A09", -11.25f, .2f, 40, "the malfunctioning walkway"); S("A10", 11.25f, .2f, 60, "the east walkway"); S("A11", 11.25f, .2f, 130, "the east walkway");
+            S("A12", -11.25f, .2f, 145, "the malfunctioning walkway's end");
+            // the rooftops
+            S("R01", 19, 7, 80, "the east roofs (robot Kira turns the escalator round)", K, PI); S("R02", 19, 7, 95, "the east roofs (robot Kira turns the escalator round)", K, PI);
+            S("R03", 19, 7, 112, "the east roofs (robot Kira turns the escalator round)", K, PI); S("R04", 19, 7, 128, "the east roofs (robot Kira turns the escalator round)", K, PI);
+            S("R05", 23.5f, 7, 87, "the escalator's top (robot Kira turns it round)", K, PI);
+            S("R06", -19, 7, 98, "the west roofs (Muscle Man's boost)", MM); S("R07", -19, 7, 111, "the west roofs (Muscle Man's boost)", MM); S("R08", -19, 7, 127, "the west roofs (Muscle Man's boost)", MM);
+            S("R09", -19, 12, 56, "a tall shop's roof (wall jump up the narrow gap)", Abilities.WallJump);
+            // Muscle Man's jobs
+            S("P01", -5.5f, -2.6f, 50, "the maintenance pit (Muscle Man lifts the parked car off its hatch)", MM); S("P02", -2.5f, -2.6f, 50, "the maintenance pit (Muscle Man lifts the parked car off its hatch)", MM);
+            S("V01", -30, 0, 112, "the courtyard behind the vending machine (Muscle Man pushes it aside)", MM); S("V02", -30, 0, 124, "the courtyard behind the vending machine (Muscle Man pushes it aside)", MM);
+            S("B01", 27, 0, 103.6f, "the nook behind the chrome bars (Muscle Man bends them)", MM); S("B02", 27, 0, 105.4f, "the nook behind the chrome bars (Muscle Man bends them)", MM);
+            // the billboard over the street (robot Kira's boost ramp)
+            S("K01", -2, 8.5f, 128.5f, "the billboard over the street (robot Kira's wheel dash up the boost ramp)", K, WD); S("K02", 0, 8.5f, 128.5f, "the billboard (boost ramp)", K, WD);
+            S("K03", 2, 8.5f, 128.5f, "the billboard (boost ramp)", K, WD);
+            // the square, the garden dome, the Atomic Diner, the air-dash pads
+            S("Q01", -12, 0, 172, "the square"); S("Q02", 12, 0, 180, "the square"); S("Q03", -14, 0, 210, "the square"); S("Q04", 14, 0, 218, "the square");
+            S("Q05", 0, 0, 226, "the square's north side"); S("Q06", 20, 0, 198, "the square, east");
+            S("G01", -32, 0, 186, "the garden dome"); S("G02", -29, 0, 191, "the garden dome"); S("G03", -35, 0, 182, "the garden dome");
+            S("D01", 32, 0, 182, "the Atomic Diner (robot Kira opens its door)", K, PI); S("D02", 32, 0, 190, "the Atomic Diner (robot Kira opens its door)", K, PI); S("D03", 39, 0, 191, "the Atomic Diner (robot Kira opens its door)", K, PI);
+            S("X01", -51.2f, 4, 211.4f, "the far air-dash pad (Abi's air dash, learned here)", Abilities.AirDash); S("X02", -52.3f, 4, 212.6f, "the far air-dash pad (Abi's air dash)", Abilities.AirDash);
+            // the towers
+            S("Y01", -40, 16, 114, "the Ring Tower's sky deck (the flying car from the square)"); S("Y02", -40, 16, 126, "the Ring Tower's sky deck"); S("Y03", -46, 16, 120, "the Ring Tower's sky deck"); S("Y04", -36, 16, 120, "the Ring Tower's sky deck");
+            S("O01", 60, 24, 196, "the Orbit Tower's roof (robot Kira calls its car)", K, PI); S("O02", 60, 24, 204, "the Orbit Tower's roof (robot Kira calls its car)", K, PI); S("O03", 64, 24, 200, "the Orbit Tower's roof (robot Kira calls its car)", K, PI);
+            // the Rocket Terminal
+            S("T01", 0, 0, 252, "the terminal's passage"); S("T02", -10, 0, 270, "the launch hall"); S("T03", 10, 0, 270, "the launch hall"); S("T04", 0, 0, 316, "the launch hall, behind the rocket");
+            S("T05", -13, 6, 294, "the west gantry (up its ramp)"); S("T06", -13, 6, 298, "the west gantry (up its ramp)");
+            S("T07", 13, 18, 294, "the east gantry's top (robot Kira starts its service lift)", K, PI); S("T08", 13, 18, 298, "the east gantry's top (robot Kira starts its service lift)", K, PI);
+            S("T09", 13, 12, 296, "the east gantry's middle deck (its service lift)", K, PI);
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("TL-escalator", "escalator", PI, new Vector3(12.8f, 0, 92.5f), "the escalator to the east roofs (robot Kira turns it round)", "R01", "R02", "R03", "R04", "R05");
+            G("TL-door-diner", "terminal door", PI, new Vector3(28, 0, 186), "the Atomic Diner's door (robot Kira)", "D01", "D02", "D03", "TL-H1");
+            G("TL-call-orbit", "flying car", PI, new Vector3(40, 0, 170), "the Orbit car (robot Kira calls it)", "O01", "O02", "O03", "TL-H2");
+            G("TL-gantry-lift", "service lift", PI, new Vector3(17.2f, 0, 290.5f), "the east gantry's service lift (robot Kira)", "T07", "T08", "T09");
+            G("TL-ramp", "boost ramp", WD, new Vector3(0, 0, 116), "the boost ramp to the billboard (robot Kira's wheel dash)", "K01", "K02", "K03");
+            G("TL-car-hatch", "parked car", MM, new Vector3(-4, 0, 48), "the parked car on the hatch (Muscle Man lifts it)", "P01", "P02");
+            G("TL-vending", "vending machine", MM, new Vector3(-15.2f, 0, 117.75f), "the vending machine in the alley (Muscle Man)", "V01", "V02");
+            G("TL-bars-nook", "chrome bars", MM, new Vector3(14.6f, 0, 104.5f), "the chrome bars (Muscle Man bends them)", "B01", "B02");
+            G("TL-boost-roofs", "boost", MM, new Vector3(-11.6f, 0, 98), "the west roofs (Muscle Man's boost)", "R06", "R07", "R08");
+            G("TL-shaft", "wall-jump gap", Abilities.WallJump, new Vector3(-19, 0, 63.2f), "the narrow gap between the tall shops (wall jump, Steampunk)", "R09");
+            G("TL-dash", "air-dash gap", Abilities.AirDash, new Vector3(-44, 4, 212), "the far pad 12.5 m off (Abi's air dash, learned here)", "X01", "X02");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
+            return w;
+        }
+
+        // Round 13: the Moon (World/Moon.cs builds it in code: a cratered heightfield under low gravity). The landing site and the landed
+        // rocket (0, 24), the crater field east (bouncy rims, the deep crater (100, 20), cave A behind a moon boulder, the float pillars), the
+        // moon base north-west (the airlock Muscle Man opens; hub, garden, lab), cave B (-20, 100), the mesa (30, -90: Muscle Man's boost), the
+        // ridge up to the rover's plateau (-60, -90: 16 m): the white story shard on the rover (the light puzzle: only Abi). Fix 10.1's rule:
+        // Tomorrowland's 175 + 25 = 200, and 15 from here. Rule 2: the first visit has the three heroes, space Kira (float), Muscle Man and the
+        // rocket (it is how you get here).
+        public static WorldData MoonDefaults()
+        {
+            var w = CreateInstance<WorldData>(); w.name = Moon; w.worldId = Moon; w.displayName = "The Moon"; w.heightsAreHints = true;
+            w.violinistInstrument = "ChromeViolin"; w.violinistPlayClip = "violinist_play";
+            w.areas.Add(new AreaData { id = "MO", name = "The Moon", requirement = 200, fromHere = 15, firstVisit = new[] { "Dan", "Abi", "Kira", Abilities.Float, Abilities.MuscleMan, Abilities.Rocket },
+                storyShard = new Vector3(-60, 19.4f, -90), storyShardColor = new Color(.95f, .97f, 1f), spawn = new Vector3(0, .2f, 8f), spawnYaw = 0,
+                kiraForm = KiraForm.Space, outfit = Outfits.Moon, box = new Bounds(new Vector3(0, 60, 0), new Vector3(620, 260, 620)) });
+            void S(string id, float x, float y, float z, string note, params string[] req) => w.shards.Add(new ShardSpot { id = id, area = "MO", position = new Vector3(x, y, z), requires = req, note = note });
+            string K = "Kira", FL = Abilities.Float, MM = Abilities.MuscleMan;
+            // the landing site
+            S("L01", 6, 0, 0, "the landing site"); S("L02", -6, 0, 4, "the landing site"); S("L03", 12, 0, 16, "by the rocket"); S("L04", -12, 0, 20, "by the rocket");
+            S("L05", 8, 0, 38, "behind the rocket"); S("L06", -8, 0, 38, "behind the rocket"); S("L07", 20, 0, -6, "the landing site"); S("L08", -20, 0, 0, "the landing site");
+            S("L09", 0, 0, -14, "the landing site, south"); S("L10", 16, 0, 46, "the landing site, north");
+            // the crater field
+            S("C01", 40, 0, 0, "the crater field"); S("C02", 50, 0, 15, "the crater field"); S("C03", 60, 0, -30, "in a small crater"); S("C04", 80, 0, 60, "in a crater");
+            S("C05", 70, 0, 40, "the crater field"); S("C06", 95, 0, 48, "the crater field"); S("C07", 118, 0, 42, "the crater field"); S("C08", 130, 0, -20, "in a small crater");
+            S("C09", 140, 0, 50, "in a small crater"); S("C10", 120, 0, -50, "the crater field, south"); S("C11", 55, 0, 30, "in a little crater"); S("C12", 160, 0, 20, "the crater field's far side");
+            // the deep crater
+            S("D01", 100, 0, 20, "the deep crater's floor"); S("D02", 94, 0, 14, "the deep crater"); S("D03", 106, 0, 26, "the deep crater"); S("D04", 100, 0, 10, "the deep crater");
+            S("D05", 92, 0, 25, "the deep crater"); S("D06", 108, 0, 15, "the deep crater");
+            // the float pillars (space Kira)
+            S("F01", 109.6f, 7.6f, 70, "a float pillar's top (space Kira floats up)", K, FL); S("F02", 110.4f, 7.6f, 70, "a float pillar's top (space Kira)", K, FL);
+            S("F03", 149.6f, 7.6f, 10, "a float pillar's top (space Kira)", K, FL); S("F04", 150.4f, 7.6f, 10, "a float pillar's top (space Kira)", K, FL);
+            S("F05", 69.6f, 7.6f, -70, "a float pillar's top (space Kira)", K, FL); S("F06", 70.4f, 7.6f, -70, "a float pillar's top (space Kira)", K, FL);
+            // the caves behind the moon boulders, the mesa
+            S("B01", 150.5f, 0, -58, "cave A behind its moon boulder (Muscle Man)", MM); S("B02", 151, 0, -62, "cave A (Muscle Man)", MM);
+            S("B03", -20, 0, 98.5f, "cave B behind its moon boulder (Muscle Man)", MM); S("B04", -18.5f, 0, 100.5f, "cave B (Muscle Man)", MM);
+            S("M01", 28, 10, -92, "the mesa's top (Muscle Man's boost)", MM); S("M02", 31, 10, -89, "the mesa's top (Muscle Man's boost)", MM); S("M03", 30, 10, -95, "the mesa's top (Muscle Man's boost)", MM);
+            // the moon base (Muscle Man opens its airlock)
+            S("K01", -94, .3f, 76, "the base's hub (Muscle Man opens the airlock)", MM); S("K02", -86, .3f, 84, "the base's hub", MM); S("K03", -90, .3f, 72, "the base's hub", MM); S("K04", -96, .3f, 86, "the base's hub", MM);
+            S("K05", -90, .3f, 110, "the garden dome", MM); S("K06", -86, .3f, 119, "the garden dome", MM); S("K07", -94, .3f, 119, "the garden dome", MM); S("K08", -90, .3f, 122, "the garden dome", MM);
+            S("K09", -60, .3f, 76, "the lab dome", MM); S("K10", -56, .3f, 80, "the lab dome", MM); S("K11", -64, .3f, 78, "the lab dome", MM); S("K12", -73, .3f, 80, "the corridor to the lab", MM);
+            // the ridge up to the rover
+            S("R01", -30, 0, -58, "the ridge's foot"); S("R02", -36, 0, -64, "up the ridge"); S("R03", -42, 0, -70, "up the ridge"); S("R04", -48, 0, -76, "up the ridge");
+            S("R05", -56, 16, -96, "the rover's plateau"); S("R06", -67, 16, -90, "the rover's plateau"); S("R07", -60, 16, -100, "the rover's plateau");
+            void G(string id, string kind, string needs, Vector3 at, string note, params string[] opens) => w.gates.Add(new GateData { id = id, kind = kind, needs = needs, position = at, note = note, opens = opens });
+            G("MO-airlock", "airlock door", MM, new Vector3(-90, 0, 57), "the moon base's jammed airlock door (Muscle Man)", "K01", "K02", "K03", "K04", "K05", "K06", "K07", "K08", "K09", "K10", "K11", "K12", "MO-H1");
+            G("MO-boulder-a", "moon boulder", MM, new Vector3(144.4f, 0, -60), "cave A's moon boulder (Muscle Man)", "B01", "B02");
+            G("MO-boulder-b", "moon boulder", MM, new Vector3(-20, 0, 105.6f), "cave B's moon boulder (Muscle Man)", "B03", "B04");
+            G("MO-boost-mesa", "boost", MM, new Vector3(30, 0, -78), "the mesa (Muscle Man's boost)", "M01", "M02", "M03", "MO-H2");
+            G("MO-pillars", "float pillars", FL, new Vector3(110, 0, 70), "the float pillars (space Kira floats up)", "F01", "F02", "F03", "F04", "F05", "F06");
+            w.lowSpots.AddRange(LowSpotDefaults(w.worldId));
+            return w;
+        }
+        static List<LowSpot> MoonLowSpots()
+        {
+            var l = new List<LowSpot>();
+            void L(string id, string kind, Vector3 drop, Vector3 exit, float radius, string note, string needs = "", Vector3 via = default, string opens = "") =>
+                l.Add(new LowSpot { id = id, kind = kind, drop = drop, via = via, exit = exit, radius = radius, note = note, needs = needs, opens = opens });
+            L("MO-crater-deep", "pit", new Vector3(100, -6.5f, 20), new Vector3(100, 0, -8), 20, "the deep crater (walk up its sides)");
+            L("MO-crater-a", "pit", new Vector3(60, -1.5f, -30), new Vector3(60, 0, -46), 10, "a small crater by the landing site (walk out)");
+            L("MO-crater-b", "pit", new Vector3(80, -2.5f, 60), new Vector3(80, 0, 78), 12, "a crater in the field (walk out)");
+            L("MO-base", "enclosed", new Vector3(-90, .6f, 80), new Vector3(-90, 0, 48), 20, "the moon base (out through the airlock)", Abilities.MuscleMan, new Vector3(-90, .3f, 63), "MO-airlock");
+            L("MO-cave-a", "enclosed", new Vector3(150, .3f, -60), new Vector3(137, 0, -60), 9, "cave A (out of its mouth, west)", Abilities.MuscleMan, opens: "MO-boulder-a");
+            L("MO-cave-b", "enclosed", new Vector3(-20, .3f, 100), new Vector3(-20, 0, 113), 9, "cave B (out of its mouth, north)", Abilities.MuscleMan, opens: "MO-boulder-b");
+            return l;
         }
 
         // The graybox playground's layout (positions match World/Playground.cs; 1 unit = 1 m). Area A at the origin, Area B at x = 400.

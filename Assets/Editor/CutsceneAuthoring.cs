@@ -22,7 +22,7 @@ namespace ShardsOfTime
 
         // Round 4: a cutscene made by an older version of this code is rebuilt (CutsceneVersion on its root). Bump Version when a
         // cutscene's code changes. Hand-edited cutscenes: set their CutsceneVersion to 999 to keep them.
-        public const int Version = 31;   // Fix 11.2: Dan's Steampunk rigs and Muscle Man's hold / throw / get-up / leap   // Fix 10.1: look-at in every scene with a line or reaction; PirateArrival's fall into the barrels
+        public const int Version = 35;   // Round 12: Tomorrowland's scenes (33: the arrival's tumble, the launch's actors)   // Fix 11.2: Dan's Steampunk rigs and Muscle Man's hold / throw / get-up / leap   // Fix 10.1: look-at in every scene with a line or reaction; PirateArrival's fall into the barrels
         //   // Round 9: the eight film scenes redone from Dan's clips (CutsceneAuthoring.Film.cs)
         public const int OldVersion = 19;   // Round 8: the Medieval cutscenes   // Fix 7.1: the Wise Men, Dan and Abi in their Bethlehem models   // Round 7: Bethlehem's cutscenes (11: Round 6's Egypt)
         static readonly (string name, System.Action build)[] All =
@@ -38,6 +38,8 @@ namespace ShardsOfTime
             ("ViolinistTeachesPirate", ViolinistTeachesPirate),   // Round 10
             ("SteampunkArrival", SteampunkArrival), ("MuscleManHero", MuscleManHero), ("ClockShard", ClockShard), ("NecklaceWakesSteampunk", NecklaceWakesSteampunk),
             ("ViolinistTeachesSteampunk", ViolinistTeachesSteampunk),   // Round 11
+            ("TomorrowlandArrival", TomorrowlandArrival), ("RocketLaunch", RocketLaunch), ("NecklaceWakesTomorrowland", NecklaceWakesTomorrowland),
+            ("ViolinistTeachesTomorrowland", ViolinistTeachesTomorrowland),   // Round 12
         };
 
         // Round 6: who plays in a world's story cutscenes (a model not in yet falls back: Dan's / Abi's home models, home Kira) and the

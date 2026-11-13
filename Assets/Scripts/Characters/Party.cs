@@ -63,7 +63,9 @@ namespace ShardsOfTime
             {
                 h.Motor.CanDoubleJump = h.Stats.lockedAbility == Abilities.DoubleJump && SaveGame.Current.Has(Abilities.DoubleJump);
                 h.Motor.CanGroundPound = h.Stats.lockedAbility == Abilities.GroundPound && SaveGame.Current.Has(Abilities.GroundPound);   // Round 4
-                h.Motor.CanBellySlide = h.HasAbility(Abilities.BellySlide);   // Round 10 (otter Kira)
+                h.Motor.CanBellySlide = h.HasAbility(Abilities.BellySlide) || h.HasAbility(Abilities.WheelDash);   // Round 10 (otter Kira); Round 12: robot Kira's wheel dash is the same slide, on wheels
+                h.Motor.Wheels = h.HasAbility(Abilities.WheelDash); h.Motor.CanFloat = h.HasAbility(Abilities.Float);   // Rounds 12-13
+                h.Motor.CanAirDash = h.Stats.displayName == "Abi" && SaveGame.Current.Has(Abilities.AirDash);   // Round 12 (Abi, Tomorrowland's Violinist)
                 h.Motor.Otter = h.HasAbility(Abilities.OtterSwim);
                 h.Motor.CanDeepDive = SaveGame.Current.Has(Abilities.DeepDive) || h.Motor.Otter;   // Round 5 (everyone); Round 10: otter Kira any depth
                 h.Motor.DeepBreath = SaveGame.Current.Has(Abilities.DeepDive);   // Round 10: the deep dive's longer breath

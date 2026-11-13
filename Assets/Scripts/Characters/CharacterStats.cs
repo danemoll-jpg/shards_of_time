@@ -93,11 +93,18 @@ namespace ShardsOfTime
         // Round 11: Victorian Steampunk
         public const string WindUp = "WindUp";               // mechanical Kira: standing on a gear socket she winds up a machine (lifts, catwalks, gear doors, the turntable)
         public const string MagnetPaws = "MagnetPaws";       // mechanical Kira: Jump at an iron pillar with a rivet strip = up it to the top
+        // Rounds 12-13: Tomorrowland and the Moon
+        public const string PlugIn = "PlugIn";               // robot Kira: on a glowing terminal pad she plugs in and takes over a machine (walkways, cars, doors, cleanbots)
+        public const string WheelDash = "WheelDash";         // robot Kira: Dive on the ground = a fast roll on her wheels (boost ramps launch her)
+        public const string AirDash = "AirDash";             // Abi, Tomorrowland's Violinist: Dive in the air = one quick dash the way the stick points
+        public const string Float = "Float";                 // space Kira (the Moon): hold Jump in the air = drift slowly upward for a while
+        public const string MoonTune = "MoonTune";           // not a move: the Moon's Violinist has played his floaty tune (it hints at the rover's light puzzle)
+        public const string Rocket = "Rocket";               // not a move: the launch is done (the Moon is reached by the rocket); rule 2 counts it on arrival there
         public const string PressDone = "PressDone";         // not a move: the press is gone (after MuscleManHero); rule 2 counts it on arrival (it comes before play)         // not a move: the deep sea is open (after ShardOverboard); rule 2 never counts it on arrival
         // the charged punch (Dan, Medieval: hold attack, release) is ChargedPunch above; MuscleMan = he has joined (after the stone)
 
         // Round 8: every move a hero can learn from the Violinist (Dan learns two)
         public static bool Learns(string hero, string id) =>
-            id == DeepDive || (hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump || id == WallJump : hero == "Kira" && id == Pounce);   // Round 11: Abi's wall jump   // Round 10: everyone learns the deep dive
+            id == DeepDive || (hero == "Dan" ? id == GroundPound || id == ChargedPunch : hero == "Abi" ? id == DoubleJump || id == WallJump || id == AirDash : hero == "Kira" && id == Pounce);   // Round 11: Abi's wall jump   // Round 10: everyone learns the deep dive
     }
 }

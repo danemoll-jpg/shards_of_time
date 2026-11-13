@@ -59,7 +59,7 @@ namespace ShardsOfTime
             }
         }
 
-        bool Harmless => (kind == Kind.Puffer && !Puffed) || ((kind == Kind.Deckhand || kind == Kind.Worker) && Time.time < tripUntil);
+        bool Harmless => FutureHarmless || (kind == Kind.Puffer && !Puffed) || ((kind == Kind.Deckhand || kind == Kind.Worker) && Time.time < tripUntil);
 
         // a goofy pirate deckhand (Mixamo model `pirate`: Dan's rig; shared people's clips)
         public static Enemy Deckhand(Transform parent, Vector3 a, Vector3 b)

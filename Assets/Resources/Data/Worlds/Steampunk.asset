@@ -375,6 +375,12 @@ MonoBehaviour:
     position: {x: -60, y: 0.3, z: 200}
     requires: []
     note: on the carriage turntable
+  - id: S31
+    area: SP
+    position: {x: 0, y: 3.6, z: 277.5}
+    requires:
+    - AirDash
+    note: the far lamp platform over the north street (Abi's air dash, Tomorrowland)
   gates:
   - id: SP-geardoor-boiler
     kind: gear door
@@ -480,6 +486,13 @@ MonoBehaviour:
     opens:
     - S10
     note: the narrow alley between the tall houses (wall jump, learned here)
+  - id: SP-dash-gap
+    kind: air-dash gap
+    needs: AirDash
+    position: {x: 0, y: 3.6, z: 262}
+    opens:
+    - S31
+    note: two lamp platforms over the north street, 12.5 m apart (Abi's air dash, Tomorrowland)
   lowSpots:
   - id: SP-belt
     kind: enclosed

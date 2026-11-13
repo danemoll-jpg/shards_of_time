@@ -24,8 +24,8 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Round 12: Tomorrowland (target 0.12.0), then Round 13: the Moon (target 0.13.0) in the same turn
-Round 11 and Fixes 11.1 / 11.2 are delivered (below). Do Round 12, publish 0.12.0, then go straight on to Round 13 and
+Current round — Round 13: the Moon (target 0.13.0); Round 12 delivered as 0.12.0 (below)
+Round 11, Fixes 11.1 / 11.2 and Round 12 are delivered. Do Round 12, publish 0.12.0, then go straight on to Round 13 and
 publish 0.13.0. Report per item: done / not done / deferred, and why. DEFAULT = planning chat's choice, Dan can overrule
 after playing. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in front of
 Dan); rule 12 (never stuck), the Fix 8.1 floor / platform / reach checks, the Fix 10.1 minimum-player check and the
@@ -153,6 +153,60 @@ there rather than fixing it piecemeal, unless it blocks play.
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 12: Tomorrowland (0.12.0, build 1200, 2026-11-12)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
+front): `local/round12/{tomorrowland2,stuck2,prompts2,fix81tl,perftl,perfdeck,tpose,minplayer}`; logs and sheets in `Data/screenshots/round12/checks/`.
+0. Carried from Fix 11.3: **done.** a) Egyptian Abi: the closed-mesh rebuild (Round 5) had fused her calves, thighs and the two ankle wings below the
+   hem; the walk stretched that into the dark spiky sheet. `close_person.py` now pushes the legs apart before the voxel solid and back after, cuts
+   faces joining the ankles, gives everything below the knees to one leg (`SPREAD`): 0 open edges, nothing between the legs in idle / walk / run /
+   jump (`Tools/Blender/skirt_check.py`, low front / side / back; `round12/skirts/`). Every skirt, dress and long coat checked the same way: the
+   Bethlehem Violinist's and the three Wise Men's robes swung out with their forearms: re-weighted (`Tools/Blender/fix_robe_weights.py`, cloth more
+   than 12 cm from the arm bones off them). Dan's steampunk coat, every Abi, Abi's new silver dress: fine. b) The prompt measured from the 12 m block's
+   centre (8.5 m) and never looked at the screen: now the player must be within 2.6 m of the object's own surface, it must be on screen with a clear
+   line from the camera, not behind the player (a boost spot: its ledge in front); the prompt goes the moment that stops and never shows for a done
+   job. The quarry's block was sandstone like the walls and only covered 12 of its 22 m doorway: now grey granite with rope bands, the doorway
+   closed. New exe check `prompts`: every job in every world (in front: shows; turned away, 6 m off: none; done: none; after a real reload: none;
+   Dan's quarry spot): 160 passed.
+1. Mixamo first: **done.** All 16 Tripo GLBs decimated (people 25k), textures out, cleaned up; the eight upload files; Dan's eight rigs imported
+   (both Abis closed, 0 open edges). Mixamo had no Hug and no Button Pushing: Muscle Man's hug = his cheer, a step in, `offer` (he hugs the air); Abi
+   at the rover's panel plays `offer` (Round 13). Robot Kira and space Kira: Code's rigs, 23 bones, no ear bones; **Kira lock OK** (robot: grey 41%,
+   white 0.2%, amber 0.06%; space: grey 43%, white 0.4%, amber 0.05%).
+2. Models and props: **done.** The rocket, the flying car (tinted; Tripo's solid canopy cut off, a see-through glass bubble on a chrome rim and arch:
+   it cut cleanly), the greeter and the cleanbot as static models with moving parts (`Tools/Blender/static_parts.py`: the greeter's propeller, arms
+   and wheel, the cleanbot's top). The city built in code (`World/Tomorrowland.cs`, `ProcMesh.cs`: ring tops, domes); the neon pink shard; the chrome
+   electric violin (`instruments.py` ChromeViolin, teal light strips).
+3. Layout: **done.** The neon avenue (shops, roofs at 7, walkways, the escalator, the wall-jump gap), the sky (the Ring Tower's sky deck by the
+   always-running car, the Orbit Tower by the car robot Kira calls, the gantries' lift), the square (fountain, garden dome, the Atomic Diner, the
+   air-dash pads), the Skyline Tower, the Rocket Terminal and its golden launch hall. 60 shards, 2 hearts.
+4. `TomorrowlandArrival` (16 s): **done.** The teal vortex, the tumble, the shimmer into the retro-future outfits (robot Kira), a flying car over
+   Muscle Man, the greeter's line, the necklace pink. `Recordings/TomorrowlandArrival.mp4`, frames `round12/TomorrowlandArrival_frames.jpg`.
+5. The fuel socket: **done.** "Fuel cell missing!" at the socket; the necklace wakes, the Skyline Tower's glass lift lights up, the pink shard on its
+   roof; carried to the socket.
+6. Robot Kira: **done.** Plug-in terminals: the escalator (runs down 9 m/s until she turns it: up 2.6), the diner's door, the Orbit car, the gantry's
+   service lift, the cleanbots' friendly switch; the wheel dash (13.5 m/s) up the boost ramp onto the billboard (8.6 m).
+7. Abi's air dash: **done.** The Violinist teaches it; Dive in the air, 13.5 m/s; the far pad 12.5 m off (X01, X02) and an earlier world's gap:
+   Steampunk's north street, two lamp platforms 12.5 m apart (new shard S31; `Steampunk.asset` remade).
+8. Muscle Man: **done.** The hug gag (above); lifts the parked car off the maintenance hatch (the pit's ramp out), pushes the vending machine, bends
+   the chrome bars, boosts onto the west roofs.
+9. Enemies: **done.** Cleanbots vacuum loose shards and cough them back out when bopped (then don't vacuum for 6 s); hover-car lane (a bump, no heart);
+   the malfunctioning walkway. No boss.
+10. Shards: **done.** 60 + 2 hearts; threshold 175 and 15 from here. Minimum player: arrives with 150, 57 of 60 reachable before the wake; `minplayer`
+   from New game: asleep at 174, wakes at 175, the pink shard, the launch. Completionist fine.
+11. `RocketLaunch` (15 s, Dan's clip): **done.** Dan places the shard; the four small before the rocket (the clip's framing); boarding; the hall
+   stays warm and closed, the doors glow; ignition, the dome halves part, it rises into the sky. Sheet `round12/RocketLaunch.jpg`. With Round 13 in,
+   it flies straight on to the Moon (0.12.0 alone: the vortex, the Moon to be continued; nine paths).
+12. Look and frame rate: **done.** 120 fps at the slowest place at 1080p (need 60), 83 on the Steam Deck setting (need 40); a first-view hitch (shaders).
+13. Sound: **done.** 47 ElevenLabs effects (both rounds' at once): cars, robot beeps and both greeter lines, vacuum and cough, walkways, neon city loop,
+   plug-in, wheels, air dash, the launch (countdown, ignition, roar), the chrome violin; the Moon's too. No music made by Code.
+14. Build / checks / publish: **done.** `tomorrowland` 93 passed (incl. the Steampunk air-dash gap), `stuck` (all seven worlds, 199), `fix81tl`,
+   `perftl` (+ Steam Deck), `prompts` (160), `tpose` (180 characters), `minplayer`: all passed. Published `game-1200`.
+
+Decisions Code made (Dan can overrule): the city built in code (no Blender world this time); robot Kira's terminals are glowing pads (the gear-socket
+pattern); the cleanbots stop vacuuming for 6 s after a cough; the roof gaps covered so nobody drops behind Muscle Man's gates; the diner's and the moon
+base's domes solid (no jumping in over the walls).
+**For Dan to check:** the avenue at dusk and the escalator; robot Kira's terminals and the boost ramp; Abi's air dash to the far pad; the hug gag; the
+two MP4s; Egyptian Abi from low angles.
+
 ### Fix 11.2: Dan's Steampunk rigs and Muscle Man's clips (0.11.2, build 1102, 2026-11-12)
 1. The five Mixamo rigs: **done.** `dan_steampunk`, `abi_steampunk` (closed by `close_person.py`: 0 open edges), `muscleman_steampunk`,
    `violinist_steampunk`, `factory_worker` replace their stand-ins (player's view: `local/fix112/steampunk/440_street_musician.png` Dan, Abi,
@@ -184,58 +238,6 @@ For Dan to check: MuscleManHero (the dip under the press, the heave); the Violin
    client dropped its connection: built again.)
 **For Dan to check:** mechanical Kira in the factory (wind a socket, climb a riveted pillar), the clockwork horses in the square, the great
 clock's teal gear; the five Mixamo uploads in `Docs/MODELS-NEEDED.md`.
-
-### Round 11: Victorian Steampunk (0.11.0, build 1100, 2026-11-12)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or
-in front): `local/round11/{steampunkF,theater,stucksteam,fix81steam2,perfsteam,perfdeck,minplayer2,tposeF}`. Evidence: `Data/screenshots/round11/`.
-0. Theater bug: **done.** The cause: after a scene from the title the world was rebuilt while the game still counted as "playing", so a necklace
-   ready to wake started its story on the title screen and held Busy for ever (every later pick did nothing; Continue then played the wake twice).
-   Now the title comes back before the rebuild, and a wake never waits on the title. `theater`: three scenes in a row from the title (on a save
-   whose necklace is ready but asleep, the bug's state), Continue (the wake once), two from the pause menu: all played.
-1. Mixamo first: **partly.** Meshy ran out of credits after three models: Dan, Abi, Muscle Man cleaned up, upload files ready, Dan told (plus Muscle
-   Man's two new clips and the three still open from Round 10; `Docs/MODELS-NEEDED.md`). **Not done:** the rigs (waiting on Dan); the Violinist's
-   and the worker's upload files (Meshy 402; Tripo tried: `Tools/tripo_generate.py` works but the API account's balance is 0). After the
-   release Dan made the Violinist on the Tripo website: decimated to 25k (`Tools/Blender/decimate_glb.py`), his upload file is ready too.
-2. The other models: **deferred (no credits).** Stand-ins: home Kira for mechanical Kira, the Medieval pony tinted copper for the clockwork horse,
-   the deckhand model for the workers, the pirate fiddler for the Violinist; the carriage, the clock, the press are Blender props. **Done:** every
-   prop by script (`Tools/Blender/steampunk_world.py`: the factory hall, belt, stampers, press frame / dome / wreck, bolt bucket, chain line, gear
-   doors and the great gear gate, sockets, riveted pillars, houses, lamps, the clock with its gear socket, the teal gear shard, carriages, the
-   turntable) and the steampunk violin (`instruments.py` SteamViolin).
-3. Two areas: **done.** The factory at night (blue-violet through the skylights, brass lamps) and the streets by day (golden morning), 30 + 30
-   shards, Dan's `steampunk.mp3`, the ambience switches factory / city. The hole the press makes joins them.
-4. `SteampunkArrival` (23 s): **done.** The gear and the teal streak, the flat teal spiral, over the roof, the gear wall, the chain line, the
-   bucket of bolts carried along, tipped onto the belt. Sheet `round11/SteampunkArrival.jpg`, `Recordings/SteampunkArrival.mp4`.
-5. Belt run + `MuscleManHero` (14 s): **done.** Carried toward the press at 2.4 m/s between screens, stampers (a bonk pushes you on, never back)
-   and steam jets (a hop), the gate opens at 30 s: the bot took 33 s, no heart lost. The scene: flat on the belt, the dome comes down, he holds it
-   up (red alarms, cables, sparks), heaves it out through the wall. Sheet `round11/MuscleManHero.jpg`.
-6. Mechanical Kira: **done.** Wind-up from brass sockets: the lift to the crane deck, the gantry's bridge, the boiler room's gear door, the great
-   gear gate, the carriage turntable; magnet paws up riveted pillars (two in the factory, two in the streets; Dan can't).
-7. Abi's wall jump: **done.** The Violinist (street musician, brass violin) teaches it; the bot wall-jumped up the narrow alley (11 jumps) and the
-   factory's brick shaft. Earlier gate checked: the Medieval village chimney (its ledge had been lost in a comment since Fix 8.1: J01 lay on the
-   ground; now on a ledge, reached by 4 wall jumps).
-8. Muscle Man: **done.** Bends the cage's bars and the alley's pipes, lifts the machine and the crates, holds the big stamper up, boosts onto a
-   roof; the horse gag (steam in his face) plays once.
-9. Enemies: **done.** Goofy workers (chase on their floor, slip on oil, reel from steam); stampers, steam jets, carriages (a bump; their roofs
-   ride: the moving-platform check passed). Horses friendly. No boss.
-10. Shards: **done.** 60 + 2 hearts; threshold 150 and 15 from here. Minimum player: arrives with 125, 58 of 60 reachable before the wake (needs
-   25); `minplayer` from New game: asleep at 149, wakes at 150. Completionist fine.
-11. The finale: **done.** The necklace leads to the great clock; `ClockShard` (Kira spots it, Muscle Man lifts Dan, he takes it), the teal vortex
-   -> the vortex (Home 6 of 8; Tomorrowland "to be continued"; eight paths 18 deg apart).
-12. Look and frame rate: **done.** 184 fps at the slowest place at 1080p (need 60), 206 on the Steam Deck setting (need 40). Known: a first-view
-   hitch of 250-360 ms (shaders warming up).
-13. Sound: **done.** 26 ElevenLabs effects (factory and city ambience, chain, bucket, belt, stampers, press thump / groan, alarm, cables, wall
-   smash, steam, gears, clock chime, horse hooves / puff, carriage, workers, Kira's metal steps / wind-up / magnet, bars, the violin tune, the
-   teal vortex). No music made by Code.
-14. Build / checks / publish: **done.** `steampunk`, `theater`, `stucksteam` (rule 12), `fix81steam`, `perfsteam`, `minplayer`, `tpose` (156
-   characters, none in its rest pose) passed; 0.11.0 published as `game-1100`. The Round 1 starter install in `local/sc` updated itself from GitHub to build
-   1100 and started (ready signal). Disk: 13.0 GB -> 12.5 GB.
-
-Decisions Code made (Dan can overrule): stampers on the belt bonk you forward (the round's "nothing sends you back"); the belt's gate opens at
-30 s; the clock's shard is taken by walking to the clock's foot once the necklace is awake; the necklace-wake scene and the finale are in the
-square; a carriage turntable that spins once wound (a toy, a shard on it).
-**For Dan to check:** the belt run and the press from the vortex path; the two sheets and MP4s; the streets by day; Abi's wall jump up the narrow
-alley; the Theater several times in a row. **Waiting on Dan:** the three rigs + Muscle Man's clips (Mixamo), Meshy or Tripo API credits for the
-other seven models.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

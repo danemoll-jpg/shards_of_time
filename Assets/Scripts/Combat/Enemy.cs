@@ -11,7 +11,7 @@ namespace ShardsOfTime
     [RequireComponent(typeof(CharacterController))]
     public sealed partial class Enemy : MonoBehaviour
     {
-        public enum Kind { Blob, Critter, Wolf, Mummy, Scarab, Guardian, Goat, Dog, Scorpion, Knight, Archer, Rat, Deckhand, Crab, Puffer, Worker }   // Round 11: the Steampunk factory workers (Combat/EnemySteampunk.cs)   // Round 10: the Pirate Seas' (Combat/EnemyPirate.cs)   // Round 8: the Medieval Kingdom's (Combat/EnemyMedieval.cs)   // Round 6: Egypt's (Combat/EnemyEgypt.cs); Round 7: Bethlehem's (EnemyBethlehem.cs)
+        public enum Kind { Blob, Critter, Wolf, Mummy, Scarab, Guardian, Goat, Dog, Scorpion, Knight, Archer, Rat, Deckhand, Crab, Puffer, Worker, Cleanbot, MoonCritter }   // Rounds 12-13: Tomorrowland's cleanbots, the Moon's critters (Combat/EnemyFuture.cs)   // Round 11: the Steampunk factory workers (Combat/EnemySteampunk.cs)   // Round 10: the Pirate Seas' (Combat/EnemyPirate.cs)   // Round 8: the Medieval Kingdom's (Combat/EnemyMedieval.cs)   // Round 6: Egypt's (Combat/EnemyEgypt.cs); Round 7: Bethlehem's (EnemyBethlehem.cs)
         public static readonly List<Enemy> All = new List<Enemy>();
         public Kind kind = Kind.Blob;
         public Vector3 a, b; public int hp = 2;
@@ -45,10 +45,10 @@ namespace ShardsOfTime
             var party = Party.I; if (!party || party.Frozen) return;
             var player = party.Player.transform.position;
             var pos = transform.position;
-            Vector3 move = kind == Kind.Wolf ? WolfMove(player, pos) : kind >= Kind.Deckhand ? PirateMove(player, pos) : kind >= Kind.Knight ? MedievalMove(player, pos) : kind >= Kind.Goat ? BethlehemMove(player, pos) : kind >= Kind.Mummy ? EgyptMove(player, pos) : PatrolMove(player, pos);
+            Vector3 move = kind == Kind.Wolf ? WolfMove(player, pos) : kind >= Kind.Cleanbot ? FutureMove(player, pos) : kind >= Kind.Deckhand ? PirateMove(player, pos) : kind >= Kind.Knight ? MedievalMove(player, pos) : kind >= Kind.Goat ? BethlehemMove(player, pos) : kind >= Kind.Mummy ? EgyptMove(player, pos) : PatrolMove(player, pos);
             if (stun > 0) { stun -= Time.deltaTime; move = Vector3.zero; if (!Anim) transform.Rotate(0, 400f * Time.deltaTime, 0); }
             speedNow = new Vector3(move.x, 0, move.z).magnitude;
-            vy = kind == Kind.Puffer ? 0f : cc.isGrounded ? -2f : vy - 30f * Time.deltaTime;   // Round 10: a pufferfish swims
+            vy = kind == Kind.Puffer ? 0f : cc.isGrounded && vy <= 0 ? -2f : vy - (kind == Kind.MoonCritter ? 9f : 30f) * Time.deltaTime;   // Round 13: a critter's hop under the Moon's gravity   // Round 10: a pufferfish swims
             cc.Move((move + Vector3.up * vy) * Time.deltaTime);
             if (move.sqrMagnitude > .01f && stun <= 0)
             {
@@ -61,7 +61,7 @@ namespace ShardsOfTime
             var d = player - pos; float h = d.y; d.y = 0;
             if (stun <= 0 && d.magnitude < reach && h > -pc.Stats.height && h < cc.height && Game.Playing)
             {
-                if ((kind != Kind.Mummy || Awake) && (kind != Kind.Guardian || Awake) && (kind != Kind.Goat || goat == G.Charge) && kind != Kind.Archer && !(kind == Kind.Rat && Scared) && !Harmless && Health.Damage(1, pos, kind == Kind.Worker ? "a grumpy factory worker" : kind == Kind.Deckhand ? "a pirate deckhand" : kind == Kind.Crab ? "a crab" : kind == Kind.Puffer ? "a pufferfish" : kind == Kind.Knight ? "a clumsy knight" : kind == Kind.Rat ? "a rat's nip" : kind == Kind.Wolf ? "wolf" : kind == Kind.Critter ? "snow critter" : kind == Kind.Mummy ? "a mummy's grab" : kind == Kind.Scarab ? "a scarab" : kind == Kind.Guardian ? "a temple guardian" : kind == Kind.Goat ? "a goat's headbutt" : kind == Kind.Dog ? "a guard dog's nip" : kind == Kind.Scorpion ? "a scorpion's snap" : "enemy")) { stun = .8f; if (kind == Kind.Wolf) { wolf = W.Recover; wolfT = 0; if (lunger == this) lunger = null; } if (kind == Kind.Goat) { goat = G.Shake; goatT = 0; party.Player.Motor.Knockback(chargeDir * 9f + Vector3.up * 6f); PlayLog.Line("a goat headbutts " + party.Player.Stats.displayName); } if (kind == Kind.Rat) { Scare(player); scaredUntil = Time.time + 2.5f; } }   // Round 8: a rat nips and scurries off
+                if ((kind != Kind.Mummy || Awake) && (kind != Kind.Guardian || Awake) && (kind != Kind.Goat || goat == G.Charge) && kind != Kind.Archer && !(kind == Kind.Rat && Scared) && !Harmless && Health.Damage(1, pos, kind == Kind.Cleanbot ? "a runaway cleanbot" : kind == Kind.Worker ? "a grumpy factory worker" : kind == Kind.Deckhand ? "a pirate deckhand" : kind == Kind.Crab ? "a crab" : kind == Kind.Puffer ? "a pufferfish" : kind == Kind.Knight ? "a clumsy knight" : kind == Kind.Rat ? "a rat's nip" : kind == Kind.Wolf ? "wolf" : kind == Kind.Critter ? "snow critter" : kind == Kind.Mummy ? "a mummy's grab" : kind == Kind.Scarab ? "a scarab" : kind == Kind.Guardian ? "a temple guardian" : kind == Kind.Goat ? "a goat's headbutt" : kind == Kind.Dog ? "a guard dog's nip" : kind == Kind.Scorpion ? "a scorpion's snap" : "enemy")) { stun = .8f; if (kind == Kind.Wolf) { wolf = W.Recover; wolfT = 0; if (lunger == this) lunger = null; } if (kind == Kind.Goat) { goat = G.Shake; goatT = 0; party.Player.Motor.Knockback(chargeDir * 9f + Vector3.up * 6f); PlayLog.Line("a goat headbutts " + party.Player.Stats.displayName); } if (kind == Kind.Rat) { Scare(player); scaredUntil = Time.time + 2.5f; } }   // Round 8: a rat nips and scurries off
             }
             if (flash > 0) { flash -= Time.deltaTime; if (rends.Length > 0) rends[0].material.color = flash > 0 ? Color.white : baseColor; }
             if (transform.position.y < Party.KillY) Die(false);
@@ -118,6 +118,8 @@ namespace ShardsOfTime
         {
             if (Dead) return;
             if (Blocks(dir)) return;   // Round 8: a knight's shield (from the front)
+            if (kind == Kind.MoonCritter) { HitsTaken++; RollAway(dir); Sfx.Play("hit", .4f); return; }   // Round 13: curls up and rolls away
+            if (kind == Kind.Cleanbot) Cough();   // Round 12: coughs its shards back out
             hp -= damage; HitsTaken++; flash = .12f; stun = Mathf.Max(stun, .5f);
             cc.Move(new Vector3(dir.x, 0, dir.z).normalized * .6f);
             PlayLog.Line($"{kind} hit by {by} ({damage}), hp {Mathf.Max(0, hp)}");

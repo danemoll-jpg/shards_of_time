@@ -26,11 +26,13 @@ namespace ShardsOfTime
         public static bool InMedieval => World && World.worldId == WorldData.Medieval;     // Round 8
         public static bool InPirate => World && World.worldId == WorldData.Pirate;         // Round 10
         public static bool InSteampunk => World && World.worldId == WorldData.Steampunk;   // Round 11
+        public static bool InTomorrowland => World && World.worldId == WorldData.Tomorrowland;   // Round 12
+        public static bool InMoon => World && World.worldId == WorldData.Moon;   // Round 13
         // the open world's vortex gate and ground (Round 6: two worlds; Round 7: three)
-        public static Portal Gate => InSteampunk ? Steampunk.Gate : InPirate ? Pirate.Gate : InMedieval ? Medieval.Gate : InBethlehem ? Bethlehem.Gate : InEgypt ? Egypt.Gate : IceAge.Gate;
-        public static Vector3 OnGround(float x, float z) => InSteampunk ? Steampunk.OnGround(x, z) : InPirate ? Pirate.OnGround(x, z) : InMedieval ? Medieval.OnGround(x, z, x > 300 ? 3f : 30f) : InBethlehem ? Bethlehem.OnGround(x, z) : InEgypt ? Egypt.OnGround(x, z) : IceAge.OnGround(x, z);
+        public static Portal Gate => InMoon ? Moon.Gate : InTomorrowland ? Tomorrowland.Gate : InSteampunk ? Steampunk.Gate : InPirate ? Pirate.Gate : InMedieval ? Medieval.Gate : InBethlehem ? Bethlehem.Gate : InEgypt ? Egypt.Gate : IceAge.Gate;
+        public static Vector3 OnGround(float x, float z) => InMoon ? Moon.OnGround(x, z) : InTomorrowland ? Tomorrowland.OnGround(x, z) : InSteampunk ? Steampunk.OnGround(x, z) : InPirate ? Pirate.OnGround(x, z) : InMedieval ? Medieval.OnGround(x, z, x > 300 ? 3f : 30f) : InBethlehem ? Bethlehem.OnGround(x, z) : InEgypt ? Egypt.OnGround(x, z) : IceAge.OnGround(x, z);
         // the save's world (the playground aside): Round 7, three of them
-        static string SavedWorld => SaveGame.Current.currentWorld == WorldData.Egypt || SaveGame.Current.currentWorld == WorldData.Bethlehem || SaveGame.Current.currentWorld == WorldData.Medieval || SaveGame.Current.currentWorld == WorldData.Pirate || SaveGame.Current.currentWorld == WorldData.Steampunk ? SaveGame.Current.currentWorld : WorldData.IceAge;
+        static string SavedWorld => SaveGame.Current.currentWorld == WorldData.Egypt || SaveGame.Current.currentWorld == WorldData.Bethlehem || SaveGame.Current.currentWorld == WorldData.Medieval || SaveGame.Current.currentWorld == WorldData.Pirate || SaveGame.Current.currentWorld == WorldData.Steampunk || SaveGame.Current.currentWorld == WorldData.Tomorrowland || SaveGame.Current.currentWorld == WorldData.Moon ? SaveGame.Current.currentWorld : WorldData.IceAge;
         public static readonly Vector3 HomeAnchor = new Vector3(0, 400f, -3000f);   // the living room of Act I (inside its cutscene)
 
         public Pickup StoryShard; public GameObject StoryBeam; public Portal PortalA;
@@ -73,7 +75,7 @@ namespace ShardsOfTime
             Look.ApplyWorld(World.worldId);
             NecklaceModel.Tint = TestArea ? new Color(.25f, .55f, 1f) : World.areas[0].storyShardColor;   // Round 6, item 6: the shard's colour per world
             if (TestArea) worldRoot = Playground.Build(World);
-            else { worldRoot = InSteampunk ? Steampunk.Build(World) : InPirate ? Pirate.Build(World) : InMedieval ? Medieval.Build(World) : InBethlehem ? Bethlehem.Build(World) : InEgypt ? Egypt.Build(World) : IceAge.Build(World); Vortex.Build(worldRoot); }
+            else { worldRoot = InMoon ? Moon.Build(World) : InTomorrowland ? Tomorrowland.Build(World) : InSteampunk ? Steampunk.Build(World) : InPirate ? Pirate.Build(World) : InMedieval ? Medieval.Build(World) : InBethlehem ? Bethlehem.Build(World) : InEgypt ? Egypt.Build(World) : IceAge.Build(World); Vortex.Build(worldRoot); }
             var a = World.areas[0];
             Party.Create(a.spawn, Quaternion.Euler(0, a.spawnYaw, 0));
             Health.Refill();
@@ -151,6 +153,8 @@ namespace ShardsOfTime
             if (InPirate && !prog.opened.Contains("PS-arrived")) StartCoroutine(ArriveInPirate());   // Round 10
             if (InSteampunk && !prog.opened.Contains(Steampunk.ArrivedFlag)) StartCoroutine(ArriveInSteampunk());   // Round 11
             else if (InSteampunk && !prog.opened.Contains(Steampunk.PressFlag)) Steampunk.StartBeltRun();   // stopped on the belt: the run again
+            if (InTomorrowland && !prog.opened.Contains(Tomorrowland.ArrivedFlag)) StartCoroutine(ArriveInTomorrowland());   // Round 12
+            if (InMoon && !prog.opened.Contains(Moon.ArrivedFlag)) StartCoroutine(ArriveOnMoon());   // Round 13
         }
 
         // Item 3: a new game plays the film's opening, then play starts at the landing spot
@@ -260,11 +264,13 @@ namespace ShardsOfTime
             (WorldData.Medieval, new[] { "MedievalArrival", "ViolinistTeachesMedieval", "NecklaceWakesMedieval", "TheStone" }),
             (WorldData.Pirate, new[] { "PirateArrival", "ViolinistTeachesPirate", "NecklaceWakesPirate", "ShardOverboard", "SeaVortex" }),
             (WorldData.Steampunk, new[] { "SteampunkArrival", "MuscleManHero", "ViolinistTeachesSteampunk", "NecklaceWakesSteampunk", "ClockShard" }),   // Round 11
+            (WorldData.Tomorrowland, new[] { "TomorrowlandArrival", "ViolinistTeachesTomorrowland", "NecklaceWakesTomorrowland", "RocketLaunch" }),   // Round 12
+            (WorldData.Moon, new[] { "MoonLanding", "KiraFloats", "ViolinistPlaysMoon", "NecklaceWakesMoon", "WhiteShard" }),   // Round 13
         };
         public static string TheaterLabel(string n) =>
             n == "ActOne" ? "Act I: the living room" : n.EndsWith("Arrival") ? "The arrival" : n.StartsWith("ViolinistTeaches") ? "The Violinist" :
             n.StartsWith("NecklaceWakes") ? "The necklace wakes" : n.StartsWith("VortexOpens") ? "The vortex opens" : n == "SphinxGag" ? "The Sphinx" :
-            n == "WiseMenArrive" ? "The Wise Men" : n == "TheStone" ? "The stone" : n == "ShardOverboard" ? "Overboard!" : n == "SeaVortex" ? "The sea vortex" : n == "MuscleManHero" ? "Muscle Man the hero" : n == "ClockShard" ? "The great clock" : n;
+            n == "WiseMenArrive" ? "The Wise Men" : n == "TheStone" ? "The stone" : n == "ShardOverboard" ? "Overboard!" : n == "SeaVortex" ? "The sea vortex" : n == "MuscleManHero" ? "Muscle Man the hero" : n == "ClockShard" ? "The great clock" : n == "RocketLaunch" ? "The launch" : n == "MoonLanding" ? "The landing" : n == "KiraFloats" ? "Kira floats" : n == "ViolinistPlaysMoon" ? "The Violinist" : n == "WhiteShard" ? "The white shard" : n;
         public Menu.Page TheaterPage(bool fromTitle)
         {
             var p = new Menu.Page { title = "Theater" };
@@ -367,6 +373,20 @@ namespace ShardsOfTime
                     titleCam.transform.position = c + Quaternion.Euler(0, 200f + Mathf.Sin(titleSpin * .05f) * 25f, 0) * new Vector3(0, 9f, 26f);
                     titleCam.transform.rotation = Quaternion.LookRotation(c - titleCam.transform.position);
                 }
+                else if (InMoon)
+                {
+                    // Round 13: the landing site, the rocket on the gray dust, Earth huge in the deep blue sky
+                    float s = Mathf.Sin(titleSpin * .04f);
+                    titleCam.transform.position = new Vector3(-16f + s * 6f, 4f, -22f);
+                    titleCam.transform.rotation = Quaternion.LookRotation(new Vector3(4f + s * 3f, 14f, 30f) - titleCam.transform.position);
+                }
+                else if (InTomorrowland)
+                {
+                    // Round 12: the neon avenue at dusk, the chrome towers, the Rocket Terminal far off
+                    float s = Mathf.Sin(titleSpin * .04f);
+                    titleCam.transform.position = new Vector3(-4f + s * 4f, 5f, 4f);
+                    titleCam.transform.rotation = Quaternion.LookRotation(new Vector3(0f + s * 3f, 9f, 120f) - titleCam.transform.position);
+                }
                 else if (InSteampunk)
                 {
                     // Round 11: the square in the morning, the great clock, the brick and cream terraces
@@ -455,8 +475,11 @@ namespace ShardsOfTime
             if (Cutscenes.Playing == "SeaVortex") { Music.Play(null, 1.2f); return; }
             if (Cutscenes.Playing == "SteampunkArrival" || Cutscenes.Playing == "MuscleManHero") { Music.Play("steampunk", .8f); return; }   // Round 11: Dan's steampunk song
             if (Cutscenes.Playing == "ClockShard") { Music.Play(null, 1.2f); return; }
+            if (Cutscenes.Playing == "TomorrowlandArrival") { Music.Play("tomorrowland", .8f); return; }   // Round 12: Dan's tomorrowland.mp3
+            if (Cutscenes.Playing == "RocketLaunch" || Cutscenes.Playing == "WhiteShard") { Music.Play(null, 1.2f); return; }   // their own sound
+            if (Cutscenes.Playing == "MoonLanding" || Cutscenes.Playing == "KiraFloats") { Music.Play("moon", .8f); return; }   // Round 13: Dan's moon.mp3
             if (State != Mode.Playing || !Party.I) return;   // paused: keep what plays
-            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : InSteampunk ? "steampunk" : InPirate ? (Pirate.Underwater ? "underwater" : "pirate") : InMedieval ? "medieval" : InBethlehem ? "bethlehem" : InEgypt ? "egypt" : "iceage");
+            Music.Play(Vortex.Inside(Party.I.Player.transform.position) ? "vortex" : InMoon ? "moon" : InTomorrowland ? "tomorrowland" : InSteampunk ? "steampunk" : InPirate ? (Pirate.Underwater ? "underwater" : "pirate") : InMedieval ? "medieval" : InBethlehem ? "bethlehem" : InEgypt ? "egypt" : "iceage");
         }
 
         // ---- progression
@@ -467,6 +490,8 @@ namespace ShardsOfTime
             else if (p.kind == Pickup.Kind.Shard) Party.I.Player.Cheer();
             if (Party.I.Companion && p.kind != Pickup.Kind.Heal) Party.I.Companion.Cheer();   // Round 8: Muscle Man cheers every pickup
             if (p.kind == Pickup.Kind.StoryShard && InPirate) { StartCoroutine(p.id == Pirate.ChestShardId ? Overboard() : SeaFinale()); return; }   // Round 10
+            if (p.kind == Pickup.Kind.StoryShard && InTomorrowland) { PinkShardTaken(); return; }   // Round 12: carried to the rocket's fuel socket
+            if (p.kind == Pickup.Kind.StoryShard && InMoon) return;   // Round 13: the white shard is the rover's puzzle (Moon.RoverPanel)
             if (p.kind == Pickup.Kind.StoryShard) StartCoroutine(TestArea ? OpenPortal() : InMedieval ? StoneFinale() : InBethlehem ? WiseMenFinale() : OpenVortex());
         }
 
@@ -488,10 +513,10 @@ namespace ShardsOfTime
             var at = player.position;
             if (Physics.Raycast(at + Vector3.up * .5f, Vector3.down, out var ground, 30f, ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << 4) | (1 << 2)), QueryTriggerInteraction.Ignore)) at = ground.point;   // on the ground, even mid-jump
             Sfx.Play("necklace", .7f);
-            yield return Cutscenes.Play(InSteampunk ? "NecklaceWakesSteampunk" : InPirate ? "NecklaceWakesPirate" : InMedieval ? "NecklaceWakesMedieval" : InBethlehem ? "NecklaceWakesBethlehem" : InEgypt ? "NecklaceWakesEgypt" : "NecklaceWakes", at, Quaternion.LookRotation(to.sqrMagnitude > .01f ? to : player.forward));
+            yield return Cutscenes.Play(InMoon ? "NecklaceWakesMoon" : InTomorrowland ? "NecklaceWakesTomorrowland" : InSteampunk ? "NecklaceWakesSteampunk" : InPirate ? "NecklaceWakesPirate" : InMedieval ? "NecklaceWakesMedieval" : InBethlehem ? "NecklaceWakesBethlehem" : InEgypt ? "NecklaceWakesEgypt" : "NecklaceWakes", at, Quaternion.LookRotation(to.sqrMagnitude > .01f ? to : player.forward));
             if (InPirate) Pirate.ShowStoryShard(); else { StoryShard.gameObject.SetActive(true); StoryBeam.SetActive(true); }   // Round 10: the chest first, the sea floor after it goes overboard
             if (InMedieval && Medieval.StuckShard) Medieval.StuckShard.SetActive(false);   // the pickup takes its place in the stone
-            Hud.Message(InSteampunk ? "The necklace is awake! It pulls toward the square... the great clock." : InPirate ? "The necklace is awake! It pulls toward the treasure chest by the rail..." : InMedieval ? "The necklace is awake! It pulls toward the courtyard... toward the stone." : InBethlehem ? "The necklace is awake! Follow it... back to the barn? Something is glowing in the manger." : "The necklace is awake! Follow it to the story shard.", 5f);
+            Hud.Message(InMoon ? "The necklace is awake! It pulls toward the ridge... the lunar rover." : InTomorrowland ? "The necklace is awake! It glows pink and pulls toward the Skyline Tower: its glass lift is lit." : InSteampunk ? "The necklace is awake! It pulls toward the square... the great clock." : InPirate ? "The necklace is awake! It pulls toward the treasure chest by the rail..." : InMedieval ? "The necklace is awake! It pulls toward the courtyard... toward the stone." : InBethlehem ? "The necklace is awake! Follow it... back to the barn? Something is glowing in the manger." : "The necklace is awake! Follow it to the story shard.", 5f);
             SaveGame.Save("necklace awake");
             Busy = false;
         }
@@ -647,9 +672,9 @@ namespace ShardsOfTime
         public void TakeVortexPath(Vortex.PathInfo path, VortexDoor door)
         {
             PlayLog.Line($"vortex path {path.id}{(door.Blocked ? " (blocked)" : "")}");
-            if (door.Blocked && (path.id == "Bethlehem" || path.id == "Medieval" || path.id == "PirateSeas" || path.id == "Steampunk" || path.id == "Tomorrowland"))
+            if (door.Blocked && (path.id == "Bethlehem" || path.id == "Medieval" || path.id == "PirateSeas" || path.id == "Steampunk" || path.id == "Tomorrowland" || path.id == "Moon"))
             {
-                Hud.Message(path.id == "Bethlehem" ? "The way to Bethlehem is still closed. Egypt's red story shard opens it." : path.id == "Medieval" ? "The way to the Medieval Kingdom is still closed. Bethlehem's golden story shard opens it." : path.id == "Steampunk" ? "The way to Victorian Steampunk is still closed. The Pirate Seas' green story shard opens it." : path.id == "Tomorrowland" ? "The way to Tomorrowland is still closed. Victorian Steampunk's teal story shard opens it." : "The way to the Pirate Seas is still closed. The Medieval Kingdom's purple story shard opens it.", 5f);
+                Hud.Message(path.id == "Bethlehem" ? "The way to Bethlehem is still closed. Egypt's red story shard opens it." : path.id == "Medieval" ? "The way to the Medieval Kingdom is still closed. Bethlehem's golden story shard opens it." : path.id == "Steampunk" ? "The way to Victorian Steampunk is still closed. The Pirate Seas' green story shard opens it." : path.id == "Tomorrowland" ? "The way to Tomorrowland is still closed. Victorian Steampunk's teal story shard opens it." : path.id == "Moon" ? "The way to the Moon is still closed. Only the rocket from Tomorrowland has been there yet." : "The way to the Pirate Seas is still closed. The Medieval Kingdom's purple story shard opens it.", 5f);
                 Sfx.Play("hurt", .3f, .6f);
                 var back2 = (Party.I.Player.transform.position - door.transform.position); back2.y = 0;
                 Party.I.Player.Motor.Knockback(back2.normalized * 6f + Vector3.up * 4f);
@@ -664,13 +689,13 @@ namespace ShardsOfTime
                 Party.I.Player.Motor.Knockback(back.normalized * 6f + Vector3.up * 4f);
                 return;
             }
-            if (path.id == "IceAge" || path.id == "Egypt" || path.id == "Bethlehem" || path.id == "Medieval" || path.id == "PirateSeas" || path.id == "Steampunk")
+            if (path.id == "IceAge" || path.id == "Egypt" || path.id == "Bethlehem" || path.id == "Medieval" || path.id == "PirateSeas" || path.id == "Steampunk" || path.id == "Tomorrowland" || (path.id == "Moon" && Moon.Real))
             {
                 string world = path.world;
-                string arrivedFlag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : null;
+                string arrivedFlag = world == WorldData.Egypt ? "EG-arrived" : world == WorldData.Bethlehem ? "BE-arrived" : world == WorldData.Medieval ? "ME-arrived" : world == WorldData.Pirate ? "PS-arrived" : world == WorldData.Steampunk ? Steampunk.ArrivedFlag : world == WorldData.Tomorrowland ? Tomorrowland.ArrivedFlag : world == WorldData.Moon ? Moon.ArrivedFlag : null;
                 bool first = arrivedFlag != null && !SaveGame.Current.World(world).opened.Contains(arrivedFlag);
                 string cp = world == WorldData.Egypt ? (first ? Egypt.Start : Egypt.VortexCp) : world == WorldData.Bethlehem ? (first ? Bethlehem.Start : Bethlehem.VortexCp)
-                    : world == WorldData.Medieval ? (first ? Medieval.Start : Medieval.VortexCp) : world == WorldData.Pirate ? (first ? Pirate.Start : Pirate.VortexCp) : world == WorldData.Steampunk ? (first ? Steampunk.Start : Steampunk.VortexCp) : "IA-vortex";
+                    : world == WorldData.Medieval ? (first ? Medieval.Start : Medieval.VortexCp) : world == WorldData.Pirate ? (first ? Pirate.Start : Pirate.VortexCp) : world == WorldData.Steampunk ? (first ? Steampunk.Start : Steampunk.VortexCp) : world == WorldData.Tomorrowland ? (first ? Tomorrowland.Start : Tomorrowland.VortexCp) : world == WorldData.Moon ? (first ? Moon.Start : Moon.VortexCp) : "IA-vortex";
                 if (!SaveGame.Current.worldsReached.Contains(world)) SaveGame.Current.worldsReached.Add(world);
                 StartCoroutine(GoToWorld(world, cp, first));
                 return;
@@ -706,7 +731,7 @@ namespace ShardsOfTime
             yield return null;
             Hud.SetFade(0f); Party.I.Frozen = false; Busy = false;
             if (!arrival && InSteampunk && !SaveGame.Current.World(world).opened.Contains(Steampunk.PressFlag)) Steampunk.StartBeltRun();   // Round 11: left mid-belt: the run again
-            if (arrival) yield return world == WorldData.Steampunk ? ArriveInSteampunk() : world == WorldData.Pirate ? ArriveInPirate() : world == WorldData.Medieval ? ArriveInMedieval() : world == WorldData.Bethlehem ? ArriveInBethlehem() : ArriveInEgypt();
+            if (arrival) yield return world == WorldData.Moon ? ArriveOnMoon() : world == WorldData.Tomorrowland ? ArriveInTomorrowland() : world == WorldData.Steampunk ? ArriveInSteampunk() : world == WorldData.Pirate ? ArriveInPirate() : world == WorldData.Medieval ? ArriveInMedieval() : world == WorldData.Bethlehem ? ArriveInBethlehem() : ArriveInEgypt();
             else OnAreaChanged();
         }
 
@@ -826,6 +851,79 @@ namespace ShardsOfTime
             Busy = false;
         }
 
+        // Round 12, item 4: Tomorrowland's arrival (TomorrowlandArrival, skippable; the film has none): the teal vortex drops all four onto the
+        // neon avenue at dusk; a shimmer, their retro-future outfits, Kira's robot body; Muscle Man gapes at a flying car; the greeter robot
+        // rolls up: "Your rocket is ready for departure!" and points at the Rocket Terminal sign; Dan's necklace glows pink.
+        IEnumerator ArriveInTomorrowland()
+        {
+            Busy = true;
+            var a = World.areas[0]; var face = Quaternion.Euler(0, a.spawnYaw, 0);
+            var at = Tomorrowland.ArriveAt;
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            foreach (var g in Greeter.All.ToArray()) if (g) g.gameObject.SetActive(false);
+            yield return Cutscenes.Play("TomorrowlandArrival", Tomorrowland.ArriveAt, Quaternion.identity);
+            foreach (var g in Greeter.All.ToArray()) if (g) g.gameObject.SetActive(true);
+            foreach (var g in Object.FindObjectsByType<Greeter>(FindObjectsInactive.Include, FindObjectsSortMode.None)) g.gameObject.SetActive(true);
+            Party.I.PlaceAll(at + Vector3.up * .1f, face); CameraRig.I.SnapBehind();
+            var prog = SaveGame.Current.World(WorldData.Tomorrowland); if (!prog.opened.Contains(Tomorrowland.ArrivedFlag)) prog.opened.Add(Tomorrowland.ArrivedFlag);
+            SaveGame.Current.checkpoint = Tomorrowland.Start; SaveGame.Save("arrived in Tomorrowland");
+            Hud.Message($"Tomorrowland! Kira is a little robot: on a glowing terminal pad she plugs in and takes over machines; {Controls.Btn(Controls.Act.Dive)} on the ground rolls her fast on her wheels. At {RuleText(a)}, the pink glow on Dan's necklace wakes ({Progress(a)}).", 9f);
+            Busy = false;
+        }
+
+        // Round 13: the Moon's arrival (MoonLanding): placeholder until Round 13
+        IEnumerator ArriveOnMoon() { yield break; }
+
+        // Round 12, item 5: the pink shard taken from the Skyline Tower's roof: it is the rocket's missing fuel cell (carried to the socket)
+        public int PinkShards { get; private set; }
+        void PinkShardTaken()
+        {
+            PinkShards++;
+            var prog = SaveGame.Current.World(World.worldId); prog.storyShard = true;
+            StoryBeam.transform.position = Tomorrowland.SocketAt + Vector3.up * 30f; StoryBeam.SetActive(true);   // the beam moves over the rocket's socket
+            SaveGame.Save("the pink shard");
+            PlayLog.Line("the pink shard: carried to the rocket's fuel socket");
+            Hud.Message("The neon pink shard! It hums like a power cell... \"Fuel cell missing!\" Take it to the rocket in the Terminal's launch hall.", 7f);
+        }
+
+        // Round 12, item 11: the fuel socket. RocketLaunch (skippable, Dan's clip): Dan places the pink shard; the four small before the huge rocket;
+        // aboard; the doors glow, the engines ignite; from below it rises into the starry dusk. It flies straight to the Moon (Round 13: the
+        // landing); Tomorrowland's way back to the vortex is open from then on.
+        public IEnumerator RocketFinale()
+        {
+            if (Busy) yield break;
+            Busy = true; Finales++;
+            var prog = SaveGame.Current.World(World.worldId); prog.storyShard = true;
+            if (!prog.opened.Contains(Tomorrowland.LaunchFlag)) prog.opened.Add(Tomorrowland.LaunchFlag);
+            StoryBeam.SetActive(false);
+            if (!SaveGame.Current.portals.Contains(Tomorrowland.Gate.id)) SaveGame.Current.portals.Add(Tomorrowland.Gate.id);
+            if (!SaveGame.Current.abilities.Contains(Abilities.Rocket)) SaveGame.Current.abilities.Add(Abilities.Rocket);
+            SaveGame.Save("story shard");
+            yield return new WaitForSeconds(.2f);
+            Party.I.PlaceAll(Tomorrowland.SocketAt + new Vector3(0, .05f, -3f), Quaternion.identity); CameraRig.I.SnapBehind();
+            foreach (var g in Greeter.All.ToArray()) if (g) g.gameObject.SetActive(false);
+            if (Tomorrowland.RocketModel) Tomorrowland.RocketModel.SetActive(false); if (Tomorrowland.HallDome) Tomorrowland.HallDome.SetActive(false);
+            yield return Cutscenes.Play("RocketLaunch", Tomorrowland.RocketAt, Quaternion.identity);
+            if (Tomorrowland.RocketModel) Tomorrowland.RocketModel.SetActive(true); if (Tomorrowland.HallDome) Tomorrowland.HallDome.SetActive(true);
+            foreach (var g in Object.FindObjectsByType<Greeter>(FindObjectsInactive.Include, FindObjectsSortMode.None)) g.gameObject.SetActive(true);
+            Tomorrowland.Gate.gameObject.SetActive(true);
+            if (!SaveGame.Current.worldsReached.Contains(WorldData.Moon)) SaveGame.Current.worldsReached.Add(WorldData.Moon);
+            PlayLog.Line("the rocket launches: straight to the Moon");
+            if (Moon.Real) { Busy = false; Party.I.Frozen = false; yield return GoToWorld(WorldData.Moon, Moon.Start, true); yield break; }
+            // (Round 12 alone: the Moon is to be continued; the launch ends in the vortex)
+            for (float t = 0; t < 1f; t += Time.deltaTime / .5f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(1f);
+            Hud.Title("The Moon", "To be continued..."); ToBeContinuedShown++;
+            yield return new WaitForSeconds(3f); Hud.Title(null, null);
+            SaveGame.Current.checkpoint = Vortex.Checkpoint; Checkpoint.RespawnParty(); CameraRig.I.SnapBehind();
+            SaveGame.Save("vortex");
+            yield return null;
+            for (float t = 1; t > 0; t -= Time.deltaTime / .6f) { Hud.SetFade(t); yield return null; }
+            Hud.SetFade(0f);
+            Hud.Message($"The pink shard powered the rocket! {SaveGame.Current.StoryShards} of {Vortex.StoryShardsTotal} story shards. The Moon is next...", 6f);
+            Busy = false;
+        }
+
         // Round 6, item 6: Egypt's arrival (EgyptArrival, skippable), then play starts on the plaza
         IEnumerator ArriveInEgypt()
         {
@@ -901,7 +999,9 @@ namespace ShardsOfTime
             bool med = name == "MedievalArrival" || name == "TheStone" || name.EndsWith("Medieval");   // Round 8
             bool sea = name == "PirateArrival" || name == "ShardOverboard" || name == "SeaVortex" || name.EndsWith("Pirate");   // Round 10
             bool steam = name == "SteampunkArrival" || name == "MuscleManHero" || name == "ClockShard" || name.EndsWith("Steampunk");   // Round 11
-            string want = steam ? WorldData.Steampunk : sea ? WorldData.Pirate : med ? WorldData.Medieval : beth ? WorldData.Bethlehem : egypt ? WorldData.Egypt : WorldData.IceAge;
+            bool tl = name == "TomorrowlandArrival" || name == "RocketLaunch" || name.EndsWith("Tomorrowland");   // Round 12
+            bool moon = name == "MoonLanding" || name == "KiraFloats" || name == "WhiteShard" || name.EndsWith("Moon");   // Round 13
+            string want = moon ? WorldData.Moon : tl ? WorldData.Tomorrowland : steam ? WorldData.Steampunk : sea ? WorldData.Pirate : med ? WorldData.Medieval : beth ? WorldData.Bethlehem : egypt ? WorldData.Egypt : WorldData.IceAge;
             if (World.worldId != want) { World = WorldData.Load(want); BuildWorld(); yield return null; }
             var a = World.areas[0];
             Vector3 at; Quaternion facing;
@@ -927,6 +1027,11 @@ namespace ShardsOfTime
             else if (name == "MuscleManHero") { Steampunk.SetPressGone(false); Steampunk.PrepareScene(); at = Steampunk.PressAt; facing = Quaternion.identity; }
             else if (name == "ClockShard") { at = Steampunk.ClockAt; facing = Quaternion.identity; if (Steampunk.ShardVisual) Steampunk.ShardVisual.SetActive(false); }
             else if (name == "NecklaceWakesSteampunk") { at = Steampunk.OnGround(0, 160); facing = Quaternion.identity; }
+            else if (name == "TomorrowlandArrival") { at = Tomorrowland.ArriveAt; facing = Quaternion.identity; foreach (var g in Greeter.All.ToArray()) if (g) g.gameObject.SetActive(false); }   // Round 12
+            else if (name == "RocketLaunch") { at = Tomorrowland.RocketAt; facing = Quaternion.identity; if (Tomorrowland.RocketModel) Tomorrowland.RocketModel.SetActive(false); if (Tomorrowland.HallDome) Tomorrowland.HallDome.SetActive(false); foreach (var g in Greeter.All.ToArray()) if (g) g.gameObject.SetActive(false); }
+            else if (name == "NecklaceWakesTomorrowland") { at = Tomorrowland.OnGround(0, 172); facing = Quaternion.Euler(0, -60, 0); }
+            else if (name == "ViolinistTeachesTomorrowland" || name == "ViolinistPlaysMoon") { var v = Violinist.I; at = v.transform.position; facing = v.transform.rotation; }
+            else if (name == "MoonLanding" || name == "KiraFloats" || name == "WhiteShard" || name == "NecklaceWakesMoon") { Moon.FilmSpot(name, out at, out facing); }   // Round 13
 
             else { at = OnGround(a.spawn.x, a.spawn.z); facing = Quaternion.Euler(0, a.spawnYaw, 0); }
             Party.I.PlaceAll(at, facing); CameraRig.I.SnapBehind();

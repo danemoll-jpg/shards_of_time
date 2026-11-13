@@ -23,7 +23,7 @@ namespace ShardsOfTime
         void OnDisable() { if (I == this) I = null; }
 
         public string instrument = "Fiddle";
-        bool IsFiddle => instrument == "Fiddle" || instrument == "SteamViolin";   // Round 11: the steampunk violin is held and bowed as the fiddle   // Round 6, item 4: per world (WorldData.violinistInstrument)
+        bool IsFiddle => instrument == "Fiddle" || instrument == "SteamViolin" || instrument == "ChromeViolin";   // Round 12: the chrome electric violin too   // Round 11: the steampunk violin is held and bowed as the fiddle   // Round 6, item 4: per world (WorldData.violinistInstrument)
         public string playClip = "violinist_play";   // Fix 6.1, item 2: per world (WorldData.violinistPlayClip): the fiddle's or the lyre's
 
         public static Violinist Make(Transform parent, Vector3 at, float yaw, string instrument = "Fiddle", string playClip = null)
@@ -59,7 +59,9 @@ namespace ShardsOfTime
         // Round 5: his Meshy model (Mixamo rig, Resources/Characters/violinist_iceage), his own clips (Clips/violinist_play, _bow, _nod)
         // and the shared idle / walk replace the placeholder figure, which stays hidden as the fallback. The bone fiddle rides his left hand.
         public const string Model = "violinist_iceage";   // the Ice Age's; Round 6: each world's own when it exists (ModelName)
-        public string ModelName => Game.InSteampunk ? (CharacterModel.Exists("violinist_steampunk") ? "violinist_steampunk" : CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : Model) : Game.InPirate && CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
+        public string ModelName => Game.InMoon ? (CharacterModel.Exists("violinist_moon") ? "violinist_moon" : CharacterModel.Exists("violinist_steampunk") ? "violinist_steampunk" : Model)
+            : Game.InTomorrowland ? (CharacterModel.Exists("violinist_tomorrowland") ? "violinist_tomorrowland" : CharacterModel.Exists("violinist_steampunk") ? "violinist_steampunk" : Model)   // Rounds 12-13
+            : Game.InSteampunk ? (CharacterModel.Exists("violinist_steampunk") ? "violinist_steampunk" : CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : Model) : Game.InPirate && CharacterModel.Exists("violinist_pirate") ? "violinist_pirate" : instrument == "Lute" && CharacterModel.Exists("violinist_medieval") ? "violinist_medieval" : instrument == "Harp" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : instrument == "Lute" && CharacterModel.Exists("violinist_bethlehem") ? "violinist_bethlehem" : (instrument == "Lyre" || instrument == "Harp") && CharacterModel.Exists("violinist_egypt") ? "violinist_egypt" : Model;   // Round 7: Bethlehem's (Egypt's until it is in)
         PlayableGraph graph; AnimationMixerPlayable mix; readonly Dictionary<string, int> clipIndex = new Dictionary<string, int>(); float[] weights;
         string loop = "idle", oneShot; float oneShotEnd;
         public string ClipNow => oneShot ?? loop;
@@ -73,6 +75,7 @@ namespace ShardsOfTime
             foreach (var c in kids) c.SetParent(gray, true);
             gray.gameObject.SetActive(false); bowArm = null; bow = null; head = null;
             var go = CharacterModel.Spawn(ModelName, transform);
+            if (Game.InMoon) Helmet.Attach(go, "violinist");   // Round 13: his bubble on its brass ring
             var anim = go.GetComponentInChildren<Animator>(); anim.applyRootMotion = false; anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             graph = PlayableGraph.Create("Violinist clips"); graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             var clips = new List<AnimationClip>();
@@ -334,16 +337,20 @@ namespace ShardsOfTime
         {
             Game.I.SetBusy(true); Playing = true;
             PlayLog.Line($"the Violinist plays for {hero.Stats.displayName}");
-            Sfx.Play(Game.InSteampunk ? "steam_violin" : Game.InPirate ? "fiddle_shanty" : instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
+            Sfx.Play(Game.InMoon ? "moon_violin" : Game.InTomorrowland ? "chrome_violin" : Game.InSteampunk ? "steam_violin" : Game.InPirate ? "fiddle_shanty" : instrument == "Lute" ? "lute_tune" : instrument == "Harp" ? "harp_tune" : instrument == "Lyre" ? "lyre_tune" : "violinist_tune", .8f);
             var face = Quaternion.LookRotation(Vector3.ProjectOnPlane(hero.transform.position - transform.position, Vector3.up).normalized);
             transform.rotation = face;
-            yield return Cutscenes.Play(Game.InSteampunk ? "ViolinistTeachesSteampunk" : Game.InPirate ? "ViolinistTeachesPirate" : Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
+            yield return Cutscenes.Play(Game.InMoon ? "ViolinistPlaysMoon" : Game.InTomorrowland ? "ViolinistTeachesTomorrowland" : Game.InSteampunk ? "ViolinistTeachesSteampunk" : Game.InPirate ? "ViolinistTeachesPirate" : Game.InMedieval ? "ViolinistTeachesMedieval" : Game.InBethlehem ? "ViolinistTeachesBethlehem" : Game.InEgypt ? "ViolinistTeachesEgypt" : "ViolinistTeaches", transform.position, face);
             Playing = false;
             OneShot("bow"); Game.I.StartCoroutine(NodLater());
             if (!SaveGame.Current.abilities.Contains(ability)) SaveGame.Current.abilities.Add(ability);
             Party.I.ApplyAbilities(); Taught++;
             Sfx.Play("story", .6f, 1.2f);
-            Hud.Message(ability == Abilities.DoubleJump
+            Hud.Message(ability == Abilities.MoonTune   // Round 13: no move left to learn: his slow floaty tune
+                ? "The Violinist plays a slow, floaty tune... four notes, then six, then eight. Somehow it sounds like blinking lights."
+                : ability == Abilities.AirDash   // Round 12
+                ? $"{hero.Stats.displayName} learned the {moveName}! In the air, press {Controls.Btn(Controls.Act.Dive)}: one quick dash the way you point. Jump, double jump, dash: long gaps everywhere are in reach (Steampunk's north street too)."
+                : ability == Abilities.DoubleJump
                 ? $"{hero.Stats.displayName} learned the {moveName}! Press {Controls.Btn(Controls.Act.Jump)} again in the air. High ledges everywhere are in reach now (the Ice Age's too)."
                 : ability == Abilities.ChargedPunch   // Round 8
                 ? $"{hero.Stats.displayName} learned the {moveName}! Hold {Controls.Btn(Controls.Act.Attack)}, let go when his fist glows. It breaks cracked walls (in every world: the Ice Age's grotto, Egypt's tomb, Bethlehem's courtyard) and knocks knights' shields away."

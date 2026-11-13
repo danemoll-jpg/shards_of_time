@@ -15,7 +15,64 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import closed_mesh
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-CORE = {'abi_iceage': 14}   # voxels: the widest opening into the body the core fill closes (her outfit's openings are wider)
+CORE = {'abi_iceage': 14}
+# Round 12 item 0a: legs pushed this far apart (metres, each side) before the solid is made, and back after: the voxel solid joined
+# Egyptian Abi's calves, thighs and ankle wings below her skirt, and the walk stretched that into a dark spiky sheet between her legs
+SPREAD = {'abi_egypt': .035, 'abi_tomorrowland': .035, 'abi_moon': .035}   # Round 12: the flared silver dress, the spacesuit's legs
+
+
+def one_leg_below_knees(ob, arm):
+    """Below the knees nothing belongs to both legs (Meshy's inner ankle wings touched and were weighted to both feet): a vertex there
+    keeps only the leg bones of the side it is on."""
+    M = ob.matrix_world
+    bones = {b.name: arm.matrix_world @ b.head_local for b in arm.data.bones}
+    knee = min(p.z for n, p in bones.items() if n.endswith('Leg') and not n.endswith('UpLeg'))
+    lx = [p.x for n, p in bones.items() if n.endswith('LeftUpLeg')][0]; rx = [p.x for n, p in bones.items() if n.endswith('RightUpLeg')][0]; mid = (lx + rx) / 2
+    legs = {g.index: ('Left' if 'Left' in g.name else 'Right') for g in ob.vertex_groups if any(k in g.name for k in ('UpLeg', 'Leg', 'Foot', 'Toe'))}
+    fixed = 0
+    for v in ob.data.vertices:
+        p = M @ v.co
+        if p.z >= knee: continue
+        l = sum(g.weight for g in v.groups if legs.get(g.group) == 'Left'); r = sum(g.weight for g in v.groups if legs.get(g.group) == 'Right')
+        mine = 'Left' if l > r else 'Right' if r > l else ('Left' if (p.x - mid) * (lx - mid) > 0 else 'Right')   # its heavier leg
+        wrong = [(g.group, g.weight) for g in v.groups if legs.get(g.group) and legs[g.group] != mine and g.weight > 0]
+        if not wrong: continue
+        for gi, w in wrong:
+            other = ob.vertex_groups.get(ob.vertex_groups[gi].name.replace(legs[gi], mine))
+            if other: other.add([v.index], w, 'ADD')
+            ob.vertex_groups[gi].remove([v.index])
+        fixed += 1
+    return fixed
+
+
+def cut_between_legs(ob, arm):
+    """Faces below the knees that join a left-leg vertex to a right-leg vertex (the wings' join) are cut out of the source."""
+    import bmesh
+    M = ob.matrix_world
+    knee = min((arm.matrix_world @ b.head_local).z for b in arm.data.bones if b.name.endswith('Leg') and not b.name.endswith('UpLeg'))
+    legs = {g.index: (1 if 'Left' in g.name else -1) for g in ob.vertex_groups if any(k in g.name for k in ('UpLeg', 'Leg', 'Foot', 'Toe'))}
+    side = []
+    for v in ob.data.vertices:
+        w = sum(g.weight * legs[g.group] for g in v.groups if g.group in legs); side.append(0 if abs(w) < .05 else (1 if w > 0 else -1))
+    bm = bmesh.new(); bm.from_mesh(ob.data)
+    cut = [f for f in bm.faces if {side[v.index] for v in f.verts} >= {1, -1} and all((M @ v.co).z < knee for v in f.verts)]
+    bmesh.ops.delete(bm, geom=cut, context='FACES'); bm.to_mesh(ob.data); bm.free(); ob.data.update()
+    return len(cut)
+
+
+def spread_legs(ob, arm, d):
+    """Moves every vertex sideways by d x (its left-leg weight - its right-leg weight): the legs apart, a skirt stretched evenly."""
+    M = ob.matrix_world; Mi = M.inverted()
+    side = 1 if (arm.matrix_world @ arm.data.bones[[b.name for b in arm.data.bones if b.name.endswith('LeftUpLeg')][0]].head_local).x > 0 else -1
+    legs = {g.index: (1 if 'Left' in g.name else -1) for g in ob.vertex_groups if any(k in g.name for k in ('UpLeg', 'Leg', 'Foot', 'Toe'))}
+    from mathutils import Vector
+    moved = 0
+    for v in ob.data.vertices:
+        w = sum(g.weight * legs[g.group] for g in v.groups if g.group in legs)
+        if abs(w) < 1e-4: continue
+        v.co = Mi @ ((M @ v.co) + Vector((d * w * side, 0, 0))); moved += 1
+    ob.data.update()
+    return moved   # voxels: the widest opening into the body the core fill closes (her outfit's openings are wider)
 
 
 def log(*a): print('PERSON', *a, flush=True)
@@ -39,6 +96,9 @@ def close(model, fbx):
         nm = nt.nodes.new('ShaderNodeNormalMap'); nt.links.new(tn.outputs['Color'], nm.inputs['Color']); nt.links.new(nm.outputs['Normal'], bsdf.inputs['Normal'])
     ob.data.materials.clear(); ob.data.materials.append(mat)
     zs = [(ob.matrix_world @ v.co).z for v in ob.data.vertices]; H = max(zs) - min(zs)
+    if SPREAD.get(model): log(f'{model}: {one_leg_below_knees(ob, arm)} vertices below the knees given to one leg')
+    if SPREAD.get(model): log(f'{model}: legs spread {SPREAD[model]} m each side ({spread_legs(ob, arm, SPREAD[model])} vertices), '
+                              f'{cut_between_legs(ob, arm)} faces joining the ankles cut')
     out = os.path.join(ROOT, 'SourceArt', 'Rigged', model)
     new = closed_mesh.rebuild(ob, .003, 25000, out, seal=1, core=CORE.get(model, 6), reach=.08, keep_src=True, log=log)
     # the skin: weights from the original, nearest face interpolated
@@ -51,6 +111,8 @@ def close(model, fbx):
     bpy.ops.object.vertex_group_limit_total(group_select_mode='ALL', limit=4)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     empty = sum(1 for v in new.data.vertices if not v.groups)
+    if SPREAD.get(model):   # back together (the closed mesh by its own new weights, the original too)
+        spread_legs(new, arm, -SPREAD[model]); spread_legs(ob, arm, -SPREAD[model])
     # into the original's place under the armature
     M = ob.matrix_world.copy()
     new.data.transform(M.inverted())

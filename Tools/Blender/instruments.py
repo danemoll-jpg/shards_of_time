@@ -87,9 +87,9 @@ def ball(name, c, r, parent, scale=(1, 1, 1)):
 
 
 # ---------------------------------------------------------------------------------------------------------------- the fiddle
-def fiddle(name='Fiddle', gears=False):
+def fiddle(name='Fiddle', gears=False, chrome=False):
     e = empty(name)
-    W = 'Wood' if gears else 'Bone'   # the steam violin: varnished wood, the Ice Age's: bone
+    W = 'Chrome' if chrome else 'Wood' if gears else 'Bone'   # Round 12: Tomorrowland's chrome electric violin   # the steam violin: varnished wood, the Ice Age's: bone
     L = .355   # the body, chin end at y 0
     def half(y):   # the body's half width along its length: two bouts and a waist (a violin's figure eight)
         lo = .105 * math.sqrt(max(0, 1 - ((y - .1) / .1) ** 2))
@@ -130,6 +130,12 @@ def fiddle(name='Fiddle', gears=False):
             gear_flat('Gear__Brass', (x, y, .052), r, .007, e, n)
         box('Plate__Copper', (0, -.003, .024), (.05, .008, .026), e)   # the end button's plate
         ball('Pin__Brass', (0, L + .205, .084), .008, e)
+    if chrome:   # Round 12: teal light strips down both edges and across the lower bout, a glowing tuning dot on the scroll
+        for s in (-1, 1):
+            box('Strip__NeonTeal', (s * .088, .1, .047), (.006, .11, .006), e, rot=(0, 0, math.radians(-s * 10)))
+            box('Strip__NeonTeal', (s * .07, .28, .047), (.006, .08, .006), e, rot=(0, 0, math.radians(s * 8)))
+        box('Strip__NeonTeal', (0, .03, .056), (.07, .006, .004), e)
+        ball('Dot__NeonPink', (0, L + .205, .084), .009, e)
     empty('M_Chin', e, (-.045, .02, .04)); empty('M_Scroll', e, (0, L + .21, .05)); empty('M_Up', e, (0, .15, .2))
     empty('M_Grip', e, (0, L + .1, .04)); empty('M_Bow', e, (0, .2, .08))
     return e
@@ -217,7 +223,7 @@ def lute():
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    roots = [fiddle(), bow(), lyre(), harp(), lute(), fiddle('SteamViolin', gears=True)]
+    roots = [fiddle(), bow(), lyre(), harp(), lute(), fiddle('SteamViolin', gears=True), fiddle('ChromeViolin', chrome=True)]
     roots[1].location = (.3, 0, 0); roots[2].location = (.75, 0, 0); roots[3].location = (1.2, 0, 0); roots[4].location = (1.65, 0, 0)
     roots[5].location = (2.05, 0, 0)
     bpy.context.view_layer.update()

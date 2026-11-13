@@ -23,16 +23,18 @@ namespace ShardsOfTime
             // Round 8: six paths, 24 deg apart (the Medieval Kingdom is real; the Pirate Seas next, to be continued once its purple shard is found)
             // Round 10: seven paths, 20 deg apart (the Pirate Seas are real; Victorian Steampunk next, to be continued once the green shard is found)
             // Round 11: eight paths, 18 deg apart (Victorian Steampunk is real; Tomorrowland next, to be continued once the teal shard is found)
-            new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -63f },
-            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -45f },
+            // Round 12: nine paths, 16 deg apart (Tomorrowland is real; the Moon next: the rocket goes there, its path opens on landing)
+            new PathInfo { id = "IceAge", label = "The Ice Age", world = WorldData.IceAge, color = new Color(.3f, .6f, 1f), yaw = -64f },
+            new PathInfo { id = "Egypt", label = "Ancient Egypt", world = WorldData.Egypt, color = new Color(1f, .62f, .2f), yaw = -48f },
             // Round 6: Egypt is real; Round 7: Bethlehem is real (open once Egypt's red story shard is found); the Medieval Kingdom is next
             // (to be continued once Bethlehem's golden story shard is found)
-            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = WorldData.Bethlehem, color = new Color(.95f, .9f, .55f), yaw = -27f },
-            new PathInfo { id = "Medieval", label = "The Medieval Kingdom", world = WorldData.Medieval, color = new Color(.65f, .45f, .95f), yaw = -9f },
-            new PathInfo { id = "PirateSeas", label = "The Pirate Seas", world = WorldData.Pirate, color = new Color(.25f, .8f, .55f), yaw = 9f },
-            new PathInfo { id = "Steampunk", label = "Victorian Steampunk", world = WorldData.Steampunk, color = new Color(.2f, .85f, .8f), yaw = 27f },
-            new PathInfo { id = "Tomorrowland", label = "Tomorrowland", world = "Tomorrowland", color = new Color(.85f, .9f, 1f), yaw = 45f },
-            new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 63f },
+            new PathInfo { id = "Bethlehem", label = "Bethlehem", world = WorldData.Bethlehem, color = new Color(.95f, .9f, .55f), yaw = -32f },
+            new PathInfo { id = "Medieval", label = "The Medieval Kingdom", world = WorldData.Medieval, color = new Color(.65f, .45f, .95f), yaw = -16f },
+            new PathInfo { id = "PirateSeas", label = "The Pirate Seas", world = WorldData.Pirate, color = new Color(.25f, .8f, .55f), yaw = 0f },
+            new PathInfo { id = "Steampunk", label = "Victorian Steampunk", world = WorldData.Steampunk, color = new Color(.2f, .85f, .8f), yaw = 16f },
+            new PathInfo { id = "Tomorrowland", label = "Tomorrowland", world = WorldData.Tomorrowland, color = new Color(1f, .45f, .85f), yaw = 32f },
+            new PathInfo { id = "Moon", label = "The Moon", world = WorldData.Moon, color = new Color(.85f, .9f, 1f), yaw = 48f },
+            new PathInfo { id = "Home", label = "Home", world = "Home", color = new Color(1f, .9f, .7f), yaw = 64f },
         };
 
         public static void Build(Transform root)
@@ -55,7 +57,7 @@ namespace ShardsOfTime
             for (int i = 0; i < 48; i++)
             {
                 float yaw = i * 7.5f;
-                if (Paths.Any(p => Mathf.Abs(Mathf.DeltaAngle(yaw, p.yaw)) < 9f)) continue;
+                if (Paths.Any(p => Mathf.Abs(Mathf.DeltaAngle(yaw, p.yaw)) < 8f)) continue;
                 var r = Placeholders.Prim(PrimitiveType.Cube, space, Quaternion.Euler(0, yaw, 0) * new Vector3(0, .3f, 7.8f), new Vector3(1.1f, .6f, .15f), rail, true, "Rail");
                 r.transform.localRotation = Quaternion.Euler(0, yaw, 0);
             }
@@ -82,7 +84,7 @@ namespace ShardsOfTime
                 tm.anchor = TextAnchor.MiddleCenter; tm.alignment = TextAlignment.Center; tm.color = Color.Lerp(p.color, Color.white, .5f);
                 label.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
                 var d = door.AddComponent<VortexDoor>(); d.info = p; d.label = tm;
-                if (p.id == "Home" || p.id == "Bethlehem" || p.id == "Medieval" || p.id == "PirateSeas" || p.id == "Steampunk" || p.id == "Tomorrowland")
+                if (p.id == "Home" || p.id == "Bethlehem" || p.id == "Medieval" || p.id == "PirateSeas" || p.id == "Steampunk" || p.id == "Tomorrowland" || p.id == "Moon")
                 {
                     var bar = Placeholders.Prim(PrimitiveType.Cube, door.transform, new Vector3(0, 2.4f, -.6f), new Vector3(4.6f, 4.6f, .2f), Placeholders.Mat(new Color(1f, .85f, .6f, .35f), "Water"), true, "Barrier");
                     d.barrier = bar;
@@ -159,7 +161,8 @@ namespace ShardsOfTime
                                (info.id == "Medieval" && !SaveGame.Current.World(WorldData.Bethlehem).storyShard) ||
                                (info.id == "PirateSeas" && !SaveGame.Current.World(WorldData.Medieval).storyShard) ||
                                (info.id == "Steampunk" && !SaveGame.Current.World(WorldData.Pirate).storyShard) ||   // Round 10
-                               (info.id == "Tomorrowland" && !SaveGame.Current.World(WorldData.Steampunk).storyShard);   // Round 11
+                               (info.id == "Tomorrowland" && !SaveGame.Current.World(WorldData.Steampunk).storyShard) ||   // Round 11
+                               (info.id == "Moon" && !SaveGame.Current.World(WorldData.Tomorrowland).opened.Contains(Tomorrowland.LaunchFlag));   // Round 12: the rocket went first
 
         void Update()
         {
@@ -169,6 +172,7 @@ namespace ShardsOfTime
             if (info.id == "PirateSeas" && label) label.text = Blocked ? "The Pirate Seas\n(after the Medieval purple shard)" : "The Pirate Seas";   // Round 8
             if (info.id == "Steampunk" && label) label.text = Blocked ? "Victorian Steampunk\n(after the Pirate Seas' green shard)" : "Victorian Steampunk";   // Round 10
             if (info.id == "Tomorrowland" && label) label.text = Blocked ? "Tomorrowland\n(after Steampunk's teal shard)" : "Tomorrowland";   // Round 11
+            if (info.id == "Moon" && label) label.text = Blocked ? "The Moon\n(the rocket from Tomorrowland)" : "The Moon";   // Round 12
             if (barrier) barrier.SetActive(Blocked);
             cool -= Time.deltaTime;
             if (cool > 0 || !Game.Playing || !Party.I || Game.I.Busy) return;

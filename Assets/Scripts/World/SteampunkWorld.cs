@@ -130,6 +130,7 @@ namespace ShardsOfTime
         public void Wind()
         {
             if (Powered) return;
+            if (string.IsNullOrEmpty(id)) { Winds++; PlayLog.Line($"Kira sets off {what} (again)"); Apply(false); return; }   // Round 12: a machine that can be set off again (no id)
             var prog = SaveGame.Current.World(Game.World.worldId); prog.opened.Add(id); Winds++;
             PlayLog.Line($"mechanical Kira winds up {what} ({id})");
             Sfx.Play("gears_tick", .55f);
@@ -144,6 +145,9 @@ namespace ShardsOfTime
     {
         public static readonly List<GearSocket> All = new List<GearSocket>();
         public WindUpMachine machine; public float radius = .95f;
+        // Round 12: robot Kira's terminals are the same kind of pad (ability PlugIn)
+        public string ability = Abilities.WindUp, hint = "A brass gear socket. Something small and clockwork could wind it... (mechanical Kira)", doing = "winds up", sound = "windup";
+        public float cooldown = 0f; float coolUntil;
         float on, hintAt = -10; Transform plate;
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
@@ -154,13 +158,14 @@ namespace ShardsOfTime
             var p = Party.I.Player; var d = p.transform.position - transform.position; float dy = d.y; d.y = 0;
             bool near = d.magnitude < radius && Mathf.Abs(dy) < .7f;
             if (machine.Powered) { if (plate) plate.Rotate(0, 90f * Time.deltaTime, 0, Space.World); return; }
-            bool kira = p.HasAbility(Abilities.WindUp);
-            if (!near) { on = 0; if (d.magnitude < 3f && Time.time > hintAt + 6f && !kira) { hintAt = Time.time; Hud.Message("A brass gear socket. Something small and clockwork could wind it... (mechanical Kira)", 3.5f); } return; }
+            bool kira = p.HasAbility(ability);
+            if (Time.time < coolUntil) return;
+            if (!near) { on = 0; if (d.magnitude < 3f && Time.time > hintAt + 6f && !kira) { hintAt = Time.time; Hud.Message(hint, 3.5f); } return; }
             if (!kira) return;
-            if (on == 0) { Sfx.Play("windup", .6f); Hud.Message($"Kira winds up {machine.what}...", 2f); if (p.Anim) p.Anim.Trigger("attack"); }
+            if (on == 0) { Sfx.Play(sound, .6f); Hud.Message($"Kira {doing} {machine.what}...", 2f); if (p.Anim) p.Anim.Trigger("attack"); }
             on += Time.deltaTime;
             if (plate) plate.Rotate(0, 400f * Time.deltaTime, 0, Space.World);
-            if (on > .9f) { machine.Wind(); on = 0; }
+            if (on > .9f) { machine.Wind(); on = 0; coolUntil = Time.time + cooldown; }
         }
     }
 

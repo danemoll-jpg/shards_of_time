@@ -32,7 +32,10 @@ NAMES = ["dan_home", "dan_iceage", "abi_home", "abi_iceage", "kira", "kira_saber
          # Round 10: the Pirate Seas (the people from Dan's Mixamo files; otter Kira: Code's rig)
          "dan_pirate", "abi_pirate", "muscleman_pirate", "violinist_pirate", "pirate", "kira_otter",
          # Round 11: Victorian Steampunk (the people from Dan's Mixamo files; mechanical Kira, the clockwork horse: Code's rigs)
-         "dan_steampunk", "abi_steampunk", "muscleman_steampunk", "violinist_steampunk", "factory_worker", "kira_mechanical", "clockwork_horse"]
+         "dan_steampunk", "abi_steampunk", "muscleman_steampunk", "violinist_steampunk", "factory_worker", "kira_mechanical", "clockwork_horse",
+         # Rounds 12-13: Tomorrowland and the Moon (the people from Dan's Mixamo files; robot Kira, space Kira: Code's rigs)
+         "dan_tomorrowland", "abi_tomorrowland", "muscleman_tomorrowland", "violinist_tomorrowland", "kira_robot",
+         "dan_moon", "abi_moon", "muscleman_moon", "violinist_moon", "kira_moon"]
 # Round 5: the Violinist's own Mixamo clips (SourceArt/Mixamo/violinist_iceage/<Mixamo name>.fbx -> Clips/violinist_<clip>.fbx);
 # his idle and walk are the shared Idle / Walking clips (Clips/idle.fbx, walk.fbx), like Dan's and Abi's
 VIOLINIST_CLIPS = {"play": "Playing The Violin", "bow": "Quick Informal Bow", "nod": "Head Nod Yes"}

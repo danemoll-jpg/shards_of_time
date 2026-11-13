@@ -1,0 +1,552 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0fe0e2eadbdf439e4c591f0f89082, type: 3}
+  m_Name: Tomorrowland
+  m_EditorClassIdentifier: Assembly-CSharp::ShardsOfTime.WorldData
+  worldId: Tomorrowland
+  displayName: Tomorrowland
+  heightsAreHints: 1
+  areas:
+  - id: TL
+    name: Tomorrowland
+    requirement: 175
+    fromHere: 15
+    firstVisit:
+    - Dan
+    - Abi
+    - Kira
+    - PlugIn
+    - WheelDash
+    - MuscleMan
+    storyShard: {x: -70, y: 47, z: 200}
+    storyShardColor: {r: 1, g: 0.35, b: 0.82, a: 1}
+    spawn: {x: 0, y: 0.1, z: 10}
+    spawnYaw: 0
+    kiraForm: Robot
+    outfit: tomorrowland
+    box:
+      m_Center: {x: 0, y: 40, z: 158}
+      m_Extent: {x: 132, y: 80, z: 180}
+  shards:
+  - id: A01
+    area: TL
+    position: {x: 0, y: 0, z: 14}
+    requires: []
+    note: the avenue
+  - id: A02
+    area: TL
+    position: {x: -4, y: 0, z: 26}
+    requires: []
+    note: the avenue
+  - id: A03
+    area: TL
+    position: {x: 4, y: 0, z: 40}
+    requires: []
+    note: the avenue
+  - id: A04
+    area: TL
+    position: {x: -2, y: 0, z: 60}
+    requires: []
+    note: the avenue
+  - id: A05
+    area: TL
+    position: {x: 3, y: 0, z: 74}
+    requires: []
+    note: the avenue
+  - id: A06
+    area: TL
+    position: {x: -4, y: 0, z: 100}
+    requires: []
+    note: the avenue
+  - id: A07
+    area: TL
+    position: {x: 4, y: 0, z: 108}
+    requires: []
+    note: the avenue
+  - id: A08
+    area: TL
+    position: {x: 0, y: 0, z: 140}
+    requires: []
+    note: the avenue's north end
+  - id: A09
+    area: TL
+    position: {x: -11.25, y: 0.2, z: 40}
+    requires: []
+    note: the malfunctioning walkway
+  - id: A10
+    area: TL
+    position: {x: 11.25, y: 0.2, z: 60}
+    requires: []
+    note: the east walkway
+  - id: A11
+    area: TL
+    position: {x: 11.25, y: 0.2, z: 130}
+    requires: []
+    note: the east walkway
+  - id: A12
+    area: TL
+    position: {x: -11.25, y: 0.2, z: 145}
+    requires: []
+    note: the malfunctioning walkway's end
+  - id: R01
+    area: TL
+    position: {x: 19, y: 7, z: 80}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east roofs (robot Kira turns the escalator round)
+  - id: R02
+    area: TL
+    position: {x: 19, y: 7, z: 95}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east roofs (robot Kira turns the escalator round)
+  - id: R03
+    area: TL
+    position: {x: 19, y: 7, z: 112}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east roofs (robot Kira turns the escalator round)
+  - id: R04
+    area: TL
+    position: {x: 19, y: 7, z: 128}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east roofs (robot Kira turns the escalator round)
+  - id: R05
+    area: TL
+    position: {x: 23.5, y: 7, z: 87}
+    requires:
+    - Kira
+    - PlugIn
+    note: the escalator's top (robot Kira turns it round)
+  - id: R06
+    area: TL
+    position: {x: -19, y: 7, z: 98}
+    requires:
+    - MuscleMan
+    note: the west roofs (Muscle Man's boost)
+  - id: R07
+    area: TL
+    position: {x: -19, y: 7, z: 111}
+    requires:
+    - MuscleMan
+    note: the west roofs (Muscle Man's boost)
+  - id: R08
+    area: TL
+    position: {x: -19, y: 7, z: 127}
+    requires:
+    - MuscleMan
+    note: the west roofs (Muscle Man's boost)
+  - id: R09
+    area: TL
+    position: {x: -19, y: 12, z: 56}
+    requires:
+    - WallJump
+    note: a tall shop's roof (wall jump up the narrow gap)
+  - id: P01
+    area: TL
+    position: {x: -5.5, y: -2.6, z: 50}
+    requires:
+    - MuscleMan
+    note: the maintenance pit (Muscle Man lifts the parked car off its hatch)
+  - id: P02
+    area: TL
+    position: {x: -2.5, y: -2.6, z: 50}
+    requires:
+    - MuscleMan
+    note: the maintenance pit (Muscle Man lifts the parked car off its hatch)
+  - id: V01
+    area: TL
+    position: {x: -30, y: 0, z: 112}
+    requires:
+    - MuscleMan
+    note: the courtyard behind the vending machine (Muscle Man pushes it aside)
+  - id: V02
+    area: TL
+    position: {x: -30, y: 0, z: 124}
+    requires:
+    - MuscleMan
+    note: the courtyard behind the vending machine (Muscle Man pushes it aside)
+  - id: B01
+    area: TL
+    position: {x: 27, y: 0, z: 103.6}
+    requires:
+    - MuscleMan
+    note: the nook behind the chrome bars (Muscle Man bends them)
+  - id: B02
+    area: TL
+    position: {x: 27, y: 0, z: 105.4}
+    requires:
+    - MuscleMan
+    note: the nook behind the chrome bars (Muscle Man bends them)
+  - id: K01
+    area: TL
+    position: {x: -2, y: 8.5, z: 128.5}
+    requires:
+    - Kira
+    - WheelDash
+    note: the billboard over the street (robot Kira's wheel dash up the boost ramp)
+  - id: K02
+    area: TL
+    position: {x: 0, y: 8.5, z: 128.5}
+    requires:
+    - Kira
+    - WheelDash
+    note: the billboard (boost ramp)
+  - id: K03
+    area: TL
+    position: {x: 2, y: 8.5, z: 128.5}
+    requires:
+    - Kira
+    - WheelDash
+    note: the billboard (boost ramp)
+  - id: Q01
+    area: TL
+    position: {x: -12, y: 0, z: 172}
+    requires: []
+    note: the square
+  - id: Q02
+    area: TL
+    position: {x: 12, y: 0, z: 180}
+    requires: []
+    note: the square
+  - id: Q03
+    area: TL
+    position: {x: -14, y: 0, z: 210}
+    requires: []
+    note: the square
+  - id: Q04
+    area: TL
+    position: {x: 14, y: 0, z: 218}
+    requires: []
+    note: the square
+  - id: Q05
+    area: TL
+    position: {x: 0, y: 0, z: 226}
+    requires: []
+    note: the square's north side
+  - id: Q06
+    area: TL
+    position: {x: 20, y: 0, z: 198}
+    requires: []
+    note: the square, east
+  - id: G01
+    area: TL
+    position: {x: -32, y: 0, z: 186}
+    requires: []
+    note: the garden dome
+  - id: G02
+    area: TL
+    position: {x: -29, y: 0, z: 191}
+    requires: []
+    note: the garden dome
+  - id: G03
+    area: TL
+    position: {x: -35, y: 0, z: 182}
+    requires: []
+    note: the garden dome
+  - id: D01
+    area: TL
+    position: {x: 32, y: 0, z: 182}
+    requires:
+    - Kira
+    - PlugIn
+    note: the Atomic Diner (robot Kira opens its door)
+  - id: D02
+    area: TL
+    position: {x: 32, y: 0, z: 190}
+    requires:
+    - Kira
+    - PlugIn
+    note: the Atomic Diner (robot Kira opens its door)
+  - id: D03
+    area: TL
+    position: {x: 39, y: 0, z: 191}
+    requires:
+    - Kira
+    - PlugIn
+    note: the Atomic Diner (robot Kira opens its door)
+  - id: X01
+    area: TL
+    position: {x: -51.2, y: 4, z: 211.4}
+    requires:
+    - AirDash
+    note: the far air-dash pad (Abi's air dash, learned here)
+  - id: X02
+    area: TL
+    position: {x: -52.3, y: 4, z: 212.6}
+    requires:
+    - AirDash
+    note: the far air-dash pad (Abi's air dash)
+  - id: Y01
+    area: TL
+    position: {x: -40, y: 16, z: 114}
+    requires: []
+    note: the Ring Tower's sky deck (the flying car from the square)
+  - id: Y02
+    area: TL
+    position: {x: -40, y: 16, z: 126}
+    requires: []
+    note: the Ring Tower's sky deck
+  - id: Y03
+    area: TL
+    position: {x: -46, y: 16, z: 120}
+    requires: []
+    note: the Ring Tower's sky deck
+  - id: Y04
+    area: TL
+    position: {x: -36, y: 16, z: 120}
+    requires: []
+    note: the Ring Tower's sky deck
+  - id: O01
+    area: TL
+    position: {x: 60, y: 24, z: 196}
+    requires:
+    - Kira
+    - PlugIn
+    note: the Orbit Tower's roof (robot Kira calls its car)
+  - id: O02
+    area: TL
+    position: {x: 60, y: 24, z: 204}
+    requires:
+    - Kira
+    - PlugIn
+    note: the Orbit Tower's roof (robot Kira calls its car)
+  - id: O03
+    area: TL
+    position: {x: 64, y: 24, z: 200}
+    requires:
+    - Kira
+    - PlugIn
+    note: the Orbit Tower's roof (robot Kira calls its car)
+  - id: T01
+    area: TL
+    position: {x: 0, y: 0, z: 252}
+    requires: []
+    note: the terminal's passage
+  - id: T02
+    area: TL
+    position: {x: -10, y: 0, z: 270}
+    requires: []
+    note: the launch hall
+  - id: T03
+    area: TL
+    position: {x: 10, y: 0, z: 270}
+    requires: []
+    note: the launch hall
+  - id: T04
+    area: TL
+    position: {x: 0, y: 0, z: 316}
+    requires: []
+    note: the launch hall, behind the rocket
+  - id: T05
+    area: TL
+    position: {x: -13, y: 6, z: 294}
+    requires: []
+    note: the west gantry (up its ramp)
+  - id: T06
+    area: TL
+    position: {x: -13, y: 6, z: 298}
+    requires: []
+    note: the west gantry (up its ramp)
+  - id: T07
+    area: TL
+    position: {x: 13, y: 18, z: 294}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east gantry's top (robot Kira starts its service lift)
+  - id: T08
+    area: TL
+    position: {x: 13, y: 18, z: 298}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east gantry's top (robot Kira starts its service lift)
+  - id: T09
+    area: TL
+    position: {x: 13, y: 12, z: 296}
+    requires:
+    - Kira
+    - PlugIn
+    note: the east gantry's middle deck (its service lift)
+  gates:
+  - id: TL-escalator
+    kind: escalator
+    needs: PlugIn
+    position: {x: 12.8, y: 0, z: 92.5}
+    opens:
+    - R01
+    - R02
+    - R03
+    - R04
+    - R05
+    note: the escalator to the east roofs (robot Kira turns it round)
+  - id: TL-door-diner
+    kind: terminal door
+    needs: PlugIn
+    position: {x: 28, y: 0, z: 186}
+    opens:
+    - D01
+    - D02
+    - D03
+    - TL-H1
+    note: the Atomic Diner's door (robot Kira)
+  - id: TL-call-orbit
+    kind: flying car
+    needs: PlugIn
+    position: {x: 40, y: 0, z: 170}
+    opens:
+    - O01
+    - O02
+    - O03
+    - TL-H2
+    note: the Orbit car (robot Kira calls it)
+  - id: TL-gantry-lift
+    kind: service lift
+    needs: PlugIn
+    position: {x: 17.2, y: 0, z: 290.5}
+    opens:
+    - T07
+    - T08
+    - T09
+    note: the east gantry's service lift (robot Kira)
+  - id: TL-ramp
+    kind: boost ramp
+    needs: WheelDash
+    position: {x: 0, y: 0, z: 116}
+    opens:
+    - K01
+    - K02
+    - K03
+    note: the boost ramp to the billboard (robot Kira's wheel dash)
+  - id: TL-car-hatch
+    kind: parked car
+    needs: MuscleMan
+    position: {x: -4, y: 0, z: 48}
+    opens:
+    - P01
+    - P02
+    note: the parked car on the hatch (Muscle Man lifts it)
+  - id: TL-vending
+    kind: vending machine
+    needs: MuscleMan
+    position: {x: -15.2, y: 0, z: 117.75}
+    opens:
+    - V01
+    - V02
+    note: the vending machine in the alley (Muscle Man)
+  - id: TL-bars-nook
+    kind: chrome bars
+    needs: MuscleMan
+    position: {x: 14.6, y: 0, z: 104.5}
+    opens:
+    - B01
+    - B02
+    note: the chrome bars (Muscle Man bends them)
+  - id: TL-boost-roofs
+    kind: boost
+    needs: MuscleMan
+    position: {x: -11.6, y: 0, z: 98}
+    opens:
+    - R06
+    - R07
+    - R08
+    note: the west roofs (Muscle Man's boost)
+  - id: TL-shaft
+    kind: wall-jump gap
+    needs: WallJump
+    position: {x: -19, y: 0, z: 63.2}
+    opens:
+    - R09
+    note: the narrow gap between the tall shops (wall jump, Steampunk)
+  - id: TL-dash
+    kind: air-dash gap
+    needs: AirDash
+    position: {x: -44, y: 4, z: 212}
+    opens:
+    - X01
+    - X02
+    note: the far pad 12.5 m off (Abi's air dash, learned here)
+  lowSpots:
+  - id: TL-pit
+    kind: pit
+    drop: {x: -4, y: -2.3, z: 49.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -4, y: 0, z: 40}
+    radius: 5
+    needs: MuscleMan
+    heroes: 
+    opens: TL-car-hatch
+    checkpoint: 
+    note: the maintenance pit under the parked car (steps up its south side)
+  - id: TL-courtyard
+    kind: enclosed
+    drop: {x: -30, y: 0.3, z: 118}
+    via: {x: -19, y: 0, z: 117.75}
+    exit: {x: -9, y: 0, z: 117.75}
+    radius: 8
+    needs: MuscleMan
+    heroes: 
+    opens: TL-vending
+    checkpoint: 
+    note: the courtyard behind the vending machine (out through the alley)
+  - id: TL-nook
+    kind: enclosed
+    drop: {x: 27, y: 0.3, z: 104.5}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 9, y: 0, z: 104.5}
+    radius: 6
+    needs: MuscleMan
+    heroes: 
+    opens: TL-bars-nook
+    checkpoint: 
+    note: the nook behind the chrome bars
+  - id: TL-diner
+    kind: enclosed
+    drop: {x: 36, y: 0.3, z: 186}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: 23, y: 0, z: 186}
+    radius: 8
+    needs: PlugIn
+    heroes: 
+    opens: TL-door-diner
+    checkpoint: 
+    note: inside the Atomic Diner (out of its door, west)
+  - id: TL-shaft
+    kind: pit
+    drop: {x: -19, y: 0.3, z: 63.2}
+    via: {x: 0, y: 0, z: 0}
+    exit: {x: -8, y: 0, z: 63.2}
+    radius: 6
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the narrow gap between the two tall shops (walk out the front)
+  - id: TL-hall
+    kind: enclosed
+    drop: {x: -10, y: 0.3, z: 300}
+    via: {x: 0, y: 0, z: 263}
+    exit: {x: 0, y: 0, z: 250}
+    radius: 30
+    needs: 
+    heroes: 
+    opens: 
+    checkpoint: 
+    note: the launch hall (out through its south door)
+  violinistInstrument: ChromeViolin
+  violinistPlayClip: violinist_play

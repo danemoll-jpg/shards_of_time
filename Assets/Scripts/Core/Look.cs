@@ -82,6 +82,18 @@ namespace ShardsOfTime
                     ambSky = new Color(.3f, .26f, .55f); ambEq = new Color(.28f, .22f, .38f); ambGround = new Color(.16f, .12f, .14f);
                 }
             }
+            else if (world == WorldData.Tomorrowland)   // Round 12, item 12: pink-lavender dusk, a low warm sun, the neon and chrome do the rest
+            {
+                Sky = new Color(.78f, .55f, .86f); FogColor = new Color(.82f, .6f, .85f); FogStart = 70f; FogEnd = 600f; FarClip = 900f;
+                Sun.color = new Color(1f, .7f, .7f); sunIntensity = .95f; Sun.transform.rotation = Quaternion.Euler(14f, -120f, 0);
+                ambSky = new Color(.62f, .5f, .82f); ambEq = new Color(.6f, .45f, .62f); ambGround = new Color(.28f, .22f, .34f);
+            }
+            else if (world == WorldData.Moon)   // Round 13, item 11: a stark white sun, black shadows, a deep blue sky with stars, no fog to speak of
+            {
+                Sky = new Color(.03f, .07f, .22f); FogColor = new Color(.05f, .08f, .22f); FogStart = 400f; FogEnd = 2400f; FarClip = 3000f;
+                Sun.color = new Color(1f, 1f, .98f); sunIntensity = 1.6f; Sun.transform.rotation = Quaternion.Euler(30f, -60f, 0);
+                ambSky = new Color(.16f, .2f, .34f); ambEq = new Color(.12f, .13f, .18f); ambGround = new Color(.06f, .06f, .07f);
+            }
             else   // the Ice Age (Dan's reference: a wide snowy valley, soft blue-white light, warm rock, fog for depth)
             {
                 Sky = new Color(.66f, .79f, .94f); FogColor = new Color(.8f, .87f, .95f); FogStart = 45f; FogEnd = 1700f; FarClip = 2200f;

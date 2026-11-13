@@ -37,15 +37,94 @@ namespace ShardsOfTime
 
         static bool Ready => Party.I && Party.I.Companion && SaveGame.Current.Has(Abilities.MuscleMan) && Game.Playing && !Game.I.Busy;
 
+        // Round 12 item 0b: a job is offered only when its object is there to be seen: the player within reach of the object's own
+        // surface (not its centre: the Egypt quarry's 12 m block offered itself from inside the walled quarry with the camera turned
+        // away), on the same level, the object on screen and nothing solid between the camera and it, and not behind the player's
+        // back. Once done (also after a reload: the save's opened list) it is never offered again.
+        protected virtual float SurfaceReach => 2.6f;
+        protected virtual bool UsesCentre => false;            // a boost spot is a place, not a thing: its centre and radius
+        protected virtual Vector3 SeeAt => transform.position;  // what has to be on screen for a place (a boost spot: where it lands you)
+        protected virtual Vector3 FaceTarget => transform.position + transform.forward * 3f;   // what a place's user faces (a boost spot: its ledge)
+
+        public Vector3 ClosestPoint(Vector3 pos)
+        {
+            Vector3 best = transform.position; float bd = float.MaxValue;
+            foreach (var c in GetComponentsInChildren<Collider>())
+            {
+                if (!c.enabled || c.isTrigger) continue;
+                var q = (c is MeshCollider mc && !mc.convex) ? c.bounds.ClosestPoint(pos) : c.ClosestPoint(pos);
+                float d = (q - pos).sqrMagnitude; if (d < bd) { bd = d; best = q; }
+            }
+            if (bd == float.MaxValue)
+                foreach (var r in GetComponentsInChildren<Renderer>())
+                {
+                    if (!r.enabled) continue;
+                    var q = r.bounds.ClosestPoint(pos); float d = (q - pos).sqrMagnitude; if (d < bd) { bd = d; best = q; }
+                }
+            return best;
+        }
+
+        // why it is or isn't offered (null = offered; the check logs the reason)
+        public string WhyNot(Hero player)
+        {
+            if (!this || !isActiveAndEnabled) return "inactive";
+            if (IsDone) return "done";
+            if (!Allowed(player)) return "not for this hero";
+            var pos = player.transform.position;
+            Vector3 at;
+            if (UsesCentre)
+            {
+                var d = pos - transform.position; if (Mathf.Abs(d.y) > 1.6f) return "another level"; d.y *= .5f;
+                if (d.magnitude > radius) return $"too far ({d.magnitude:0.0} m from the spot)";
+                at = SeeAt;
+                // a boost spot's thing is the ledge it throws you to: not with your back to it
+                var face = FaceTarget - pos; face.y = 0; var pf = player.transform.forward; pf.y = 0;
+                if (face.sqrMagnitude > .25f && Vector3.Dot(pf.normalized, face.normalized) < -.2f) return "facing away from the ledge";
+            }
+            else
+            {
+                at = ClosestPoint(pos + Vector3.up * .9f);
+                var d = at - pos; float dy = d.y; d.y = 0;
+                if (d.magnitude > SurfaceReach) return $"too far ({d.magnitude:0.0} m from its surface)";
+                if (dy < -1.6f || dy > 2.6f) return "another level";
+                // not behind the player's back
+                var fwd = player.transform.forward; fwd.y = 0;
+                if (d.sqrMagnitude > .25f && Vector3.Dot(fwd.normalized, d.normalized) < -.35f) return "behind the player";
+            }
+            var cam = CameraRig.I ? CameraRig.I.Cam : Camera.main;
+            if (cam)
+            {
+                // on screen and seen: any of a few points of it (its nearest surface, its middle, its top) in view with a clear line from the
+                // camera (a hit within 0.7 m of the point itself is its own frame or trim: still seen)
+                string why = "off screen";
+                var pts = new List<Vector3> { at };
+                var rs = GetComponentsInChildren<Renderer>(); if (rs.Length > 0) { var b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds); pts.Add(b.center); pts.Add(new Vector3(b.center.x, b.max.y - .1f, b.center.z)); }
+                foreach (var pt in pts)
+                {
+                    var vp = cam.WorldToViewportPoint(pt);
+                    if (vp.z < .2f || vp.x < .03f || vp.x > .97f || vp.y < .03f || vp.y > .97f) continue;
+                    var from = cam.transform.position; var dir = pt - from; float len = dir.magnitude;
+                    string block = null;
+                    foreach (var h in Physics.RaycastAll(from, dir / len, len, ~((1 << Hero.PlayerLayer) | (1 << Hero.FollowerLayer) | (1 << Hero.EnemyLayer) | (1 << 2) | (1 << 4)), QueryTriggerInteraction.Ignore))
+                        if (!h.collider.transform.IsChildOf(transform) && len - h.distance > .7f) { block = h.collider.name; break; }
+                    if (block == null) return null;
+                    why = $"hidden behind {block}";
+                }
+                return why;
+            }
+            return null;
+        }
+        public bool Offered(Hero player) => WhyNot(player) == null;
+        float Score(Hero player) => UsesCentre ? (player.transform.position - transform.position).magnitude : (ClosestPoint(player.transform.position + Vector3.up * .9f) - player.transform.position).magnitude;
+
         public static MuscleJob Near(Hero player)
         {
             MuscleJob best = null; float bd = float.MaxValue;
             foreach (var j in All)
             {
-                if (!j || !j.isActiveAndEnabled || j.IsDone || !j.Allowed(player)) continue;
-                var d = player.transform.position - j.transform.position; if (Mathf.Abs(d.y) > 1.6f) continue;   // Round 10: on the same level (not a deck below or above)
-                d.y *= .5f; float m = d.magnitude;
-                if (m < j.radius && m < bd) { bd = m; best = j; }
+                if (!j || !j.Offered(player)) continue;
+                float m = j.Score(player);
+                if (m < bd) { bd = m; best = j; }
             }
             return best;
         }
@@ -58,17 +137,22 @@ namespace ShardsOfTime
             return true;
         }
 
+        public string Prompt => $"{Controls.Btn(Controls.Act.Attack)}: Muscle Man {Verb}";
+        public static int PromptsShown { get; private set; }
+        public static MuscleJob Prompting { get; private set; }   // the job whose prompt is on screen now (checks)
+
         void Update()
         {
-            if (!Ready || !Party.I.Player || IsDone || Time.time < hintAt + 5f) return;
-            var p = Party.I.Player; if (!Allowed(p)) return;
-            var d = p.transform.position - transform.position; d.y *= .5f;
-            if (d.magnitude < radius) { hintAt = Time.time; Hud.Message($"{Controls.Btn(Controls.Act.Attack)}: Muscle Man {Verb}", 3.5f); }
+            if (Prompting == this && (!Ready || !Party.I.Player || !Offered(Party.I.Player))) { Hud.ClearMessage(Prompt); Prompting = null; hintAt = -10f; }
+            if (!Ready || !Party.I.Player || IsDone || Time.time < hintAt + 3f) return;
+            var p = Party.I.Player;
+            if (Near(p) == this) { hintAt = Time.time; Prompting = this; PromptsShown++; Hud.Message(Prompt, 3.5f); }
         }
 
         IEnumerator Run(Hero player)
         {
             var mm = Party.I.Companion;
+            Hud.ClearMessage(Prompt); if (Prompting == this) Prompting = null;
             Game.I.SetBusy(true); Jobs++; Done++;
             PlayLog.Line($"Muscle Man's job: {GetType().Name} {id} ({Verb})");
             mm.Follower.enabled = false;
@@ -99,7 +183,7 @@ namespace ShardsOfTime
         protected override float Reach => Mathf.Max(1.8f, Mathf.Max(transform.lossyScale.x, transform.lossyScale.z) * .5f);
         public static event System.Action<Boulder, Hero> Tried;   // someone pushed it without Muscle Man (the rival laughs)
 
-        void Start() { radius = Mathf.Max(radius, Reach + 2.5f); if (IsDone) Opened(); }
+        void Start() { if (IsDone) Opened(); }
         protected override void Opened() { transform.position += Offset; Free(); }
         Vector3 Offset => aside.sqrMagnitude > .01f ? aside : Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized * 3.5f;
         void Free() { foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false; }
@@ -179,6 +263,9 @@ namespace ShardsOfTime
         protected override string Clip => "mm_boost";
         protected override bool Allowed(Hero player) => player.IsPerson;
         protected override float Reach => .9f;
+        protected override bool UsesCentre => true;
+        protected override Vector3 SeeAt => transform.position + Vector3.up * .3f;   // the spot where you stand (marked on the ground)
+        protected override Vector3 FaceTarget => landAt != Vector3.zero ? landAt : transform.position + transform.forward * 3f;
         protected override Vector3 StandAt(Hero player) => transform.position - transform.forward * .9f;
 
         protected override IEnumerator Work(Hero player, Hero mm)

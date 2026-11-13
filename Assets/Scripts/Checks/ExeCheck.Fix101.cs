@@ -165,8 +165,29 @@ namespace ShardsOfTime
             yield return WaitFor(() => Vortex.Inside(Player.transform.position), 6f);
             Ok(SaveGame.Current.World(WorldData.Steampunk).storyShard && Vortex.Inside(Player.transform.position), $"the teal shard (ClockShard), in the vortex ({SaveGame.Current.StoryShards} story shards)");
             var tl = VortexDoor.All.FirstOrDefault(d => d.info.id == "Tomorrowland");
-            Ok(tl && !tl.Blocked, "the Tomorrowland path is open (to be continued)");
+            Ok(tl && !tl.Blocked, "the Tomorrowland path is open");
             yield return Shot("min_done_steampunk");
+            // Round 12: on into Tomorrowland: the arrival (skipped), 25 more, the necklace, the Skyline Tower's lift, the pink shard, the launch
+            yield return TakePath("Tomorrowland", "to Tomorrowland");
+            yield return MinimumHere("Tomorrowland");
+            Ok(SaveGame.Current.Total == 175, $"the minimum player wakes Tomorrowland's necklace at {SaveGame.Current.Total} shards in all (7 x 25)");
+            Health.Refill(); yield return TakeStory("Tomorrowland (the pink shard)");
+            Ok(SaveGame.Current.World(WorldData.Tomorrowland).storyShard, "the pink shard taken from the Skyline Tower's roof");
+            Tp(Tomorrowland.SocketAt + new Vector3(0, .1f, -2f), 0);
+            yield return WaitFor(() => Game.I.Busy || Game.InCutscene, 4f); yield return UntilFree(80f);
+            yield return MinAfterLaunch();
+            Log($"  Theater after the run: [{string.Join(", ", SaveGame.Current.seen)}]");
+        }
+        IEnumerator MinAfterLaunch()
+        {
+            if (!Moon.Real)
+            {
+                yield return WaitFor(() => Vortex.Inside(Player.transform.position), 8f);
+                Ok(SaveGame.Current.World(WorldData.Tomorrowland).opened.Contains(Tomorrowland.LaunchFlag) && Vortex.Inside(Player.transform.position), $"RocketLaunch, in the vortex, the Moon to be continued ({SaveGame.Current.StoryShards} story shards)");
+                yield return Shot("min_done_tomorrowland");
+                yield break;
+            }
+            yield return MinOnMoon();
             Log($"  Theater after the run: [{string.Join(", ", SaveGame.Current.seen)}]");
         }
 
@@ -256,7 +277,7 @@ namespace ShardsOfTime
             yield return EnsurePlaying(false);
             if (!P.Companion) P.AddCompanion(Player.transform.position + Vector3.back * 3f, Quaternion.identity);
             var rest = new Dictionary<string, string>(); var seen = new Dictionary<string, int>();
-            foreach (var (wid, cp) in new[] { (WorldData.IceAge, "IA-vortex"), (WorldData.Egypt, Egypt.VortexCp), (WorldData.Bethlehem, Bethlehem.VortexCp), (WorldData.Medieval, Medieval.VortexCp), (WorldData.Pirate, Pirate.VortexCp), (WorldData.Steampunk, Steampunk.FactoryCp) })
+            foreach (var (wid, cp) in new[] { (WorldData.IceAge, "IA-vortex"), (WorldData.Egypt, Egypt.VortexCp), (WorldData.Bethlehem, Bethlehem.VortexCp), (WorldData.Medieval, Medieval.VortexCp), (WorldData.Pirate, Pirate.VortexCp), (WorldData.Steampunk, Steampunk.FactoryCp), (WorldData.Tomorrowland, Tomorrowland.Start) })
             {
                 SaveGame.Current.checkpoint = cp;
                 if (Game.World.worldId != wid) yield return ToWorld(wid, cp);

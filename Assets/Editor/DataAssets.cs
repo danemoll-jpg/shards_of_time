@@ -50,8 +50,12 @@ namespace ShardsOfTime
             if (!File.Exists(ps)) AssetDatabase.CreateAsset(WorldData.PirateDefaults(), ps);
             string sp = Data + "/Worlds/" + WorldData.Steampunk + ".asset";   // Round 11
             if (!File.Exists(sp)) AssetDatabase.CreateAsset(WorldData.SteampunkDefaults(), sp);
+            string tl = Data + "/Worlds/" + WorldData.Tomorrowland + ".asset";   // Round 12
+            if (!File.Exists(tl)) AssetDatabase.CreateAsset(WorldData.TomorrowlandDefaults(), tl);
+            string mo = Data + "/Worlds/" + WorldData.Moon + ".asset";   // Round 13
+            if (Moon.Real && !File.Exists(mo)) AssetDatabase.CreateAsset(WorldData.MoonDefaults(), mo);
             // Fix 7.2: the never-stuck spots (new defaults added to an existing world asset by id)
-            foreach (var wp2 in new[] { ia, eg, be, me, ps, sp })
+            foreach (var wp2 in new[] { ia, eg, be, me, ps, sp, tl, mo })
             {
                 var wd = AssetDatabase.LoadAssetAtPath<WorldData>(wp2); if (!wd) continue;
                 int n = 0;
@@ -64,7 +68,7 @@ namespace ShardsOfTime
                 if (n > 0) { EditorUtility.SetDirty(wd); Debug.Log($"DataAssets: {wd.worldId}.asset: {n} never-stuck spot(s) added"); }
             }
             Directory.CreateDirectory(Data + "/KiraForms");
-            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb, KiraForm.Dragon, KiraForm.Otter, KiraForm.Mechanical })
+            foreach (var f in new[] { KiraForm.Home, KiraForm.Sabertooth, KiraForm.Mummy, KiraForm.Lamb, KiraForm.Dragon, KiraForm.Otter, KiraForm.Mechanical, KiraForm.Robot, KiraForm.Space })
             {
                 string path = $"{Data}/KiraForms/{f}.asset";
                 if (!File.Exists(path)) AssetDatabase.CreateAsset(KiraForm.Defaults(f), path);

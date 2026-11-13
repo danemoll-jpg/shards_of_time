@@ -114,7 +114,9 @@ namespace ShardsOfTime
 
         IEnumerator MMJob(Vector3 from, float yaw, string id)
         {
+            yield return WaitFor(() => !Game.I.Busy && !Game.InCutscene, 20f);   // (Round 12: a necklace waking mid-test)
             yield return SwitchTo(0);
+            foreach (var e in Enemy.All) if (e && !e.Dead && Vector3.Distance(e.transform.position, from) < 12f) e.Stun(10f);   // (Round 12: a cleanbot's bump mid-press)
             yield return TpSettle(from, yaw); yield return Wait(1.2f);
             yield return Press(AttackBtn); yield return WaitFor(() => Game.I.Busy, 3f); yield return WaitFor(() => !Game.I.Busy, 9f);
             bool done = SaveGame.Current.World(Game.World.worldId).opened.Contains(id);

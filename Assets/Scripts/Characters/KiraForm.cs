@@ -18,7 +18,7 @@ namespace ShardsOfTime
 
         public bool Has(string ability) => abilities != null && abilities.Contains(ability);
 
-        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb", Dragon = "Dragon", Otter = "Otter", Mechanical = "Mechanical";
+        public const string Home = "Home", Sabertooth = "Sabertooth", Mummy = "Mummy", Lamb = "Lamb", Dragon = "Dragon", Otter = "Otter", Mechanical = "Mechanical", Robot = "Robot", Space = "Space";
 
         public static KiraForm Load(string id)
         {
@@ -54,6 +54,14 @@ namespace ShardsOfTime
                 case Mechanical:   // Round 11
                     f.displayName = "Mechanical Kira"; f.model = "kira_mechanical"; f.abilities = new[] { Abilities.WindUp, Abilities.MagnetPaws };
                     f.note = "Victorian Steampunk: a little clockwork cat of gunmetal and brass with her own face (folded ears, amber eyes). Standing on a gear socket she winds up machines (lifts, catwalks, gear doors, the turntable); her magnet paws carry her up iron pillars marked with rivets (Jump at one).";
+                    break;
+                case Robot:   // Round 12
+                    f.displayName = "Robot Kira"; f.model = "kira_robot"; f.abilities = new[] { Abilities.PlugIn, Abilities.WheelDash };
+                    f.note = "Tomorrowland: a shiny gunmetal robot cat with her own face (folded ears, amber eyes) and little wheels on her feet. On a glowing terminal pad she plugs in and takes over machines (walkways, flying cars, doors, cleanbots); Dive on the ground rolls her fast on her wheels, and boost ramps launch her.";
+                    break;
+                case Space:   // Round 13
+                    f.displayName = "Space Kira"; f.model = "kira_moon"; f.abilities = new[] { Abilities.Float };
+                    f.note = "The Moon: Kira in a little silver spacesuit and bubble helmet (her own gray face, folded ears, amber eyes). Hold Jump in the air and she floats slowly upward for a moment, paddling her paws: high ledges.";
                     break;
                 default:
                     f.displayName = "Kira"; f.model = "kira"; f.abilities = new string[0];
