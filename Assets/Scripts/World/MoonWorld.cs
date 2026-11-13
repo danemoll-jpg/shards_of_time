@@ -95,7 +95,7 @@ namespace ShardsOfTime
             // the steps: up to 8 dots along the top; the round under the diamond
             dotOn = Placeholders.Mat(new Color(1f, .97f, .85f), "Glow"); dotOff = Placeholders.Mat(new Color(.25f, .27f, .32f)); dotNow = Placeholders.Mat(new Color(.6f, .9f, 1f), "Glow");
             for (int k = 0; k < 8; k++) { var dd = Placeholders.Prim(PrimitiveType.Sphere, board, new Vector3(-1.05f + k * .3f, 1.05f, .09f), Vector3.one * .14f, dotOff, false, "Step dot"); dots.Add(dd.GetComponent<Renderer>()); }
-            var rt = new GameObject("Round"); rt.transform.SetParent(board, false); rt.transform.localPosition = new Vector3(0, -1.08f, .115f); rt.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            var rt = new GameObject("Round"); rt.transform.SetParent(board, false); rt.transform.localPosition = new Vector3(0, -1.17f, .115f); rt.transform.localRotation = Quaternion.Euler(0, 180, 0);
             roundText = rt.AddComponent<TextMesh>(); roundText.font = UiKit.Font; roundText.fontSize = 64; roundText.characterSize = .028f; roundText.anchor = TextAnchor.MiddleCenter; roundText.color = new Color(.85f, .9f, 1f); UiKit.WorldText(roundText);
             Restyle(true); Dots();
         }

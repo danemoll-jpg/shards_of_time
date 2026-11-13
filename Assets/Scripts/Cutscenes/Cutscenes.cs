@@ -29,13 +29,14 @@ namespace ShardsOfTime
 
         // Round 14: reverseFrom >= 0 plays the scene backwards from that time to reverseTo (HomeAgain: Act I backwards), named `label`
         public static bool Reversed { get; private set; }
+        static readonly System.Collections.Generic.HashSet<string> NoHelmets = new System.Collections.Generic.HashSet<string> { "Farewell", "TheKing", "HomeAgain", "ActOne" };   // the ending: their own clothes (the vortex is in the Moon's build)
         public static IEnumerator Play(string name, Vector3 at, Quaternion facing, float reverseFrom = -1f, float reverseTo = 0f, string label = null)
         {
             var prefab = Load(name);
             bool back = reverseFrom >= 0f;
             if (!prefab) { Debug.LogWarning("[Cutscene] missing " + name); yield break; }
             var inst = UnityEngine.Object.Instantiate(prefab, at, facing);
-            if (Game.InMoon) foreach (var an in inst.GetComponentsInChildren<Animator>(true))   // Round 13: every Moon actor in its bubble helmet
+            if (Game.InMoon && !NoHelmets.Contains(label ?? name)) foreach (var an in inst.GetComponentsInChildren<Animator>(true))   // Round 13: every Moon actor in its bubble helmet
                 if (an.transform.parent && an.transform.parent.name == "Body") Helmet.Attach(an.gameObject, Helmet.KindFor(an.gameObject.name.ToLowerInvariant().Replace("model ", "")));
             inst.name = "Cutscene " + name;
             UiKit.WorldTexts_In(inst);   // Fix 13.2: world text in a cutscene (the ornament's initials) is depth tested too

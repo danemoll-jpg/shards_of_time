@@ -116,7 +116,7 @@ namespace ShardsOfTime
             Lamp(k, "Portal light", new Vector3(0, 3.4f, -1.6f), new Color(.7f, .45f, 1f), 9f, 3f, 0f, 3.2f);
             _ = portal;
             var land = new Vector3(0, 0, -1.7f); var ready = new Vector3(0, 0, -.72f);
-            Path(k, mm, (0f, new Vector3(0, 3.3f, -.95f), 180f), (1.0f, new Vector3(0, 3.3f, -.95f), 180f), (1.55f, land, 0f), (8.6f, land, 0f), (9.8f, ready, 0f), (L, ready, 0f));
+            Path(k, mm, (0f, new Vector3(0, 3.3f, -.95f), 180f), (1.0f, new Vector3(0, 3.3f, -.95f), 180f), (1.55f, land, 0f), (8.6f, land, 0f), (9.8f, ready, 0f), (11.7f, ready, 0f), (12.5f, ready + new Vector3(0, 0, -.3f), 180f), (L, ready + new Vector3(0, 0, -.3f), 180f));   // he turns to the crowd
             Appear(k, mm, 1.0f, L, L);
             AnimationClip MM(string n, string f) => PeopleClip(n) ?? PeopleClip(f);
             k.Clips(mm, (PeopleClip("fall"), 1.0f), (MM("mm_fall", "fall_back"), 1.5f), (MM("mm_getup", "idle"), 5.0f), (PeopleClip("idle"), 8.2f), (PeopleClip("walk"), 8.6f), (PeopleClip("idle"), 9.8f),
@@ -148,8 +148,8 @@ namespace ShardsOfTime
             k.Shot("Flat on the cobbles", 1.7f, 5.0f, new Vector3(2.4f, .55f, -3.4f), land + new Vector3(0, .3f, 0), 46f);
             k.Shot("He gets up and sees it", 5.0f, 9.0f, new Vector3(-1.5f, 1.8f, -4.4f), new Vector3(0, 1.35f, -.2f), 44f, new Vector3(-1.2f, 1.8f, -3.8f));
             k.Shot("He pulls it out", 9.0f, 11.8f, new Vector3(1.4f, 1.65f, 1.7f), new Vector3(0, 1.5f, -.7f), 42f);
-            k.Shot("The crowd roars", 11.8f, 15.6f, new Vector3(.2f, 3.1f, 3.6f), new Vector3(0, 1.6f, -5f), 58f, new Vector3(.2f, 3.3f, 4.2f));
-            k.Shot("King! King! King!", 15.6f, L, new Vector3(.45f, .8f, -3.5f), new Vector3(0, 2.3f, -.7f), 50f, new Vector3(.35f, .9f, -2.9f));
+            k.Shot("The crowd roars", 11.8f, 15.6f, new Vector3(.2f, 3.1f, 3.6f), new Vector3(0, 1.4f, -5f), 58f, new Vector3(.2f, 3.3f, 4.2f));
+            k.Shot("King! King! King!", 15.6f, L, new Vector3(.5f, 1.0f, -3.9f), new Vector3(0, 1.9f, -1.0f), 50f, new Vector3(.4f, 1.05f, -3.3f));   // low, in front of him: the sword up, the castle behind
             TintC(k, Color.white, (0f, 0f), (19.3f, 0f), (19.9f, 1f), (L, 1f));
             k.Save();
         }
@@ -169,7 +169,7 @@ namespace ShardsOfTime
         // Plays after Act I has run backwards (Game.HomeAgainScene). The root is Game.HomeAnchor (the room), as ActOne. The window's night
         // backdrop goes: outside is a snowy garden where the Violinist stands (Game places the real Violinist there: his fiddle by IK).
         public const float HomeAgainLength = 23.5f;
-        public static readonly Vector3 HomeViolinistAt = new Vector3(2f, 0, 8.4f);
+        public static readonly Vector3 HomeViolinistAt = new Vector3(1.5f, 0, 8.4f);   // framed in the window's left pane (its centre bar is at x 2)
         public static void HomeAgain()
         {
             DataAssets.Ensure(); lastQ.Clear();
@@ -251,9 +251,9 @@ namespace ShardsOfTime
             k.Shot("The ornament, whole", 5.4f, 7.9f, orn + new Vector3(-.15f, .08f, -.95f), orn, 30f, orn + new Vector3(-.12f, .06f, -.75f));
             k.Shot("A dream?", 7.9f, 10.2f, new Vector3(-1.4f, 1.5f, 1.85f), new Vector3(-1.85f, 1.4f, 3.6f), 44f);
             k.Shot("A violin", 10.2f, 12.6f, new Vector3(.2f, 1.55f, .9f), new Vector3(2.0f, 1.35f, 4.4f), 50f);
-            k.Shot("The Violinist outside", 12.6f, 16.5f, new Vector3(2.0f, 1.75f, 2.9f), HomeViolinistAt + new Vector3(0, 1.4f, 0), 38f, new Vector3(2.0f, 1.7f, 3.4f));
-            k.Shot("It wasn't a dream", 16.5f, 19.4f, new Vector3(2.0f, 1.55f, 6.8f), new Vector3(2.0f, 1.5f, 4.3f), 40f);
-            k.Shot("They turn round", 19.4f, 20.9f, new Vector3(2.75f, 1.35f, 2.1f), new Vector3(2.0f, 1.45f, 4.3f), 46f);
+            k.Shot("The Violinist outside", 12.6f, 16.5f, new Vector3(1.5f, 1.8f, 3.9f), HomeViolinistAt + new Vector3(0, 1.3f, 0), 30f, new Vector3(1.5f, 1.78f, 4.2f));
+            k.Shot("It wasn't a dream", 16.5f, 19.4f, new Vector3(.35f, 1.5f, 3.3f), new Vector3(2.0f, 1.5f, 4.3f), 44f);
+            k.Shot("They turn round", 19.4f, 20.9f, new Vector3(.4f, 1.4f, 2.2f), new Vector3(2.0f, 1.4f, 4.3f), 48f);
             k.Shot("Kira leaps", 20.9f, L, new Vector3(1.25f, .95f, .85f), Vector3.Lerp(kiraTree, orn, .6f), 52f);
             TintC(k, Color.black, (0f, 1f), (1.2f, 0f), (21.45f, 0f), (21.5f, 1f), (L, 1f));
             k.Save();

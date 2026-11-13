@@ -14,7 +14,7 @@ namespace ShardsOfTime
     public sealed partial class Game
     {
         public const float ActOneBackFrom = 49f, ActOneBackTo = 9.8f;            // ActOne's warp tunnel ends at 49 s; Kira leaps at 9.85 s
-        public static readonly Vector3 HomeViolinistAt = new Vector3(2f, 0, 8.4f);   // outside the living-room window (CutsceneAuthoring.HomeAgain)
+        public static readonly Vector3 HomeViolinistAt = new Vector3(1.5f, 0, 8.4f);   // outside the living-room window (CutsceneAuthoring.HomeAgain)
         public int EndingsPlayed { get; private set; }
         public string EndingStep { get; private set; } = "";
         public bool CreditsRolling { get; private set; }
@@ -25,7 +25,7 @@ namespace ShardsOfTime
         public static string CreditsText { get; private set; } = "";
         public Violinist HomeViolinist { get; private set; }
         public static bool HomeAgainNoBackwards;
-        public const bool EndingReal = false;   // Round 14: the Home path plays the ending (false: "to be continued", the 0.13.2 build)
+        public const bool EndingReal = true;    // Round 14: the Home path plays the ending (false: "to be continued", the 0.13.2 build)
         static string creditsTrack;   // Dan's credits song when he has made one (Docs/MUSIC.md), else his title song
         public static string CreditsTrack => creditsTrack ??= Resources.Load<AudioClip>("Music/credits") ? "credits" : "title";   // the T-pose sweep samples the waking scene alone
 
@@ -84,8 +84,18 @@ namespace ShardsOfTime
 
         IEnumerator FarewellScene()
         {
+            yield return UnderBlack(Cutscenes.Play("Farewell", Vortex.Centre, Quaternion.identity));
+        }
+
+        // a scene starts under black: the screen clears once its own camera has taken over (no frame of play between the scenes)
+        IEnumerator UnderBlack(IEnumerator play)
+        {
+            Hud.SetFade(1f);
+            var co = StartCoroutine(play);
+            yield return null; yield return null;
             Hud.SetFade(0f);
-            yield return Cutscenes.Play("Farewell", Vortex.Centre, Quaternion.identity);
+            yield return co;
+            Hud.SetFade(1f);
         }
 
         // the Medieval courtyard: the world is built for it (its enemies and the rival out of the way)
@@ -98,18 +108,16 @@ namespace ShardsOfTime
             var at = new Vector3(Medieval.StoneAt.x, Medieval.Ground(0, 31f, 3f), Medieval.StoneAt.z);
             Party.I.PlaceAll(at + new Vector3(0, .1f, -6f), Quaternion.identity); Party.I.Frozen = true;
             yield return null;
-            Hud.SetFade(0f);
-            yield return Cutscenes.Play("TheKing", at, Quaternion.identity);
+            yield return UnderBlack(Cutscenes.Play("TheKing", at, Quaternion.identity));
         }
 
         // Act I backwards (music too), then the waking scene with the Violinist outside the window
         public IEnumerator HomeAgainScene()
         {
-            Hud.SetFade(0f);
-            if (!HomeAgainNoBackwards) yield return Cutscenes.Play("ActOne", HomeAnchor, Quaternion.identity, ActOneBackFrom, ActOneBackTo, "HomeAgain");
+            if (!HomeAgainNoBackwards) yield return UnderBlack(Cutscenes.Play("ActOne", HomeAnchor, Quaternion.identity, ActOneBackFrom, ActOneBackTo, "HomeAgain"));
             HomeViolinist = Violinist.Make(worldRoot, HomeAnchor + HomeViolinistAt, 180f, "Fiddle", "violinist_play");
             HomeViolinist.serenade = true;
-            yield return Cutscenes.Play("HomeAgain", HomeAnchor, Quaternion.identity);
+            yield return UnderBlack(Cutscenes.Play("HomeAgain", HomeAnchor, Quaternion.identity));
             if (HomeViolinist) Destroy(HomeViolinist.gameObject);
             Hud.SetFade(1f);   // (it ends on black)
         }

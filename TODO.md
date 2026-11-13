@@ -24,76 +24,84 @@ in `Docs/Design/design-decisions.md`)
 - Publish a release every round.
 
 ---------------------------------------------------------------------------
-Current round — Fix 13.2: Dan's play-test of Tomorrowland and the Moon (target 0.13.2)
-Rounds 12 / 13 and Fix 13.1 are delivered (below); their plan is in `TODO-ARCHIVE.md`. Report per item: done / not done /
-deferred, and why. Testing rules as always (`Tools/quiet.py`, muted with the level reported, never a window in front of
-Dan). Don't end your turn until 0.14.0 is published unless truly blocked (say so). Then Round 14 (below) in the same turn: the
-ending and the credits. After that, the big clean-up round.
-
-1. **A yellow rectangle stays behind when Muscle Man moves a parked flying car** (both cars in Tomorrowland). Whatever
-   it is (the hatch marker, a shadow / decal, the job's highlight, a collider made visible), it must move with the car,
-   go once the car is moved, or show the uncovered hatch properly. Then check every Muscle Man job in all worlds for the
-   same leftover (boulders, crates, the anchor, the airlock door, the moon boulders, the press).
-2. **Signs can be read from behind and through walls.** Sign text (and any other world text: labels, neon words, shop
-   names, prompts placed in the world) must be hidden by walls like any other object and show only on its front face
-   (blank or mirrored from behind). Check every world's signs, not only Tomorrowland's.
-3. **When Muscle Man moves something it looks like he is swimming.** Find which clip his jobs play (lift, push, carry,
-   roll) and why it reads as swimming (a swim / Treading Water clip mapped by mistake, or the wrong frames of a lift
-   clip); give every job a proper clip from his folders and the shared ones (Lifting Object, Pushing, Carrying, Pull
-   Heavy Object, the Overhead Squat hold). Check each job in every world on screen.
-4. **The Moon's light puzzle is redone (Dan: "it sux").** Instead of the stick, the panel's lights **are the
-   controller's face buttons**: four lights shaped and coloured like the pad's buttons (Xbox: A green, B red, X blue,
-   Y yellow; PlayStation: cross, circle, square, triangle in their colours, matching the pad in use; on the keyboard the
-   four keys). **Each light shows its letter / symbol big and clear** (A, B, X, Y; the PlayStation shapes; the key
-   names): the colours only help, the letters are what Dan reads. The pattern flashes the buttons; Abi answers by pressing the same buttons; each press
-   lights that button on the panel, plays its tone and Abi's press. Keep three rounds (4, 6, 8); a wrong press just
-   replays the pattern. Easy to read: big lights, a clear pause between flashes, the current step shown.
-5. **Nobody runs in place.** During the puzzle (and any time the party stands still: waits, talking, prompts, menus)
-   the followers and the player stand in their idle, never play run / walk while not moving. Find the cause (followers'
-   speed not reaching zero, an animator parameter not reset, the input lock keeping the run state) and fix it
-   everywhere; add a check that no character plays a walk / run clip while its speed stays under a small threshold for
-   more than half a second, in every world.
-6. Build, check (new checks for 1, 2 and 5 in every world; the puzzle played through with the pad and the keyboard;
-   `tpose`), publish 0.13.2, update `TODO.md` / `CLAUDE.md`.
-
-### Round 14: the ending (Acts X and XI) and the credits (target 0.14.0; straight on after 0.13.2, same turn)
-
-Dan (2026-11-13): no new art is needed: both places (the Medieval courtyard with the stone, the home living room) and
-everyone's end-of-film outfits (Muscle Man's Medieval clothes from when we first meet him; Dan, Abi and Kira in their
-Act I clothes and Kira's own body) are already in the game. The home path in the vortex opens after `WhiteShard`.
-
-1. **Through the Home path: `Farewell` (Act X, first half; DEFAULT from the film synopsis, short):** the restored
-   shards open portals to the eras around the vortex; Muscle Man spots the purple one to his medieval home, hugs Dan
-   (or tries: his air hug is fine), still sure Dan is the greatest hero who ever lived, and steps through.
-2. **`TheKing` (Act X, Dan's description):** the Medieval courtyard; Muscle Man, back in his first Medieval clothes,
-   falls out of the purple portal flat on the ground right in front of the sword in the stone; he stands up, takes
-   the sword and pulls it out easily; the crowd roars and chants "King! King! King!" (ElevenLabs crowd chant).
-   Music: `medieval.mp3`.
-3. **`HomeAgain` (Act XI, Dan's description):** literally **Act I played backwards, music included**: `ActOne`
-   reversed (picture and `act1.mp3` reversed) from the warp tunnel back to just before Kira knocks the ornament off
-   the tree, so the ornament is whole on the tree again. Cut to Dan and Abi waking up on the couch (Kira with them):
-   it seems it was all a dream. They hear a violin, go to the window and see the Violinist outside playing (DEFAULT his
-   look from his first concept sheet): it wasn't a dream. They turn around just in time to see Kira leaping at the
-   ornament; "NO, KIRA, NO!" (canon line, Dan's voice via ElevenLabs; DEFAULT, drop it if Dan prefers the silent cut)
-   and cut to black on her mid-leap. Same outfits and set as Act I.
-4. **The credits** (after `HomeAgain`, skippable): a gentle scroll over stills from each world, music `title.mp3`
-   (DEFAULT; Dan may make a credits song later). Text (Dan can edit): "Shards of Time", "Based on the film *The Shards of
-   Time* by Dan Moll", then design / story by Dan Moll; built with Claude Code; music by Dan Moll (Suno); characters
-   from Dan's concept art (Meshy, Tripo), animation (Mixamo), sounds (ElevenLabs); made with Unity.
-5. **After the credits: free roam** (design decision): back in the vortex with every path open, **Muscle Man rejoins
-   the party** for the secrets that need him; the save remembers the ending is seen. The Theater gets the four new
-   scenes.
-6. Build, check (a full run … the Moon → WhiteShard → vortex → Home → Farewell → TheKing → HomeAgain → credits →
-   free roam with Muscle Man; `tpose` over the new scenes; render the new MP4s from the exe), publish 0.14.0, update
-   `TODO.md` / `CLAUDE.md`.
-
-Later: **a big clean-up round after the Moon** (Dan, 2026-11-12), especially the environments (all eight worlds: plain
-walls and floors like the Egypt room in Dan's screenshot, rough edges, empty corners). Note anything found on the way
-there rather than fixing it piecemeal, unless it blocks play.
+Current round — none. Fix 13.2 and Round 14 are delivered (below); their plan is in `TODO-ARCHIVE.md`.
+---------------------------------------------------------------------------
+Next (the planning chat writes it): **the big clean-up round after the Moon** (Dan, 2026-11-12), especially the environments (all
+eight worlds: plain walls and floors like the Egypt room in Dan's screenshot, rough edges, empty corners). Notes Code made on the way
+(not fixed piecemeal): the Medieval world looks like night in TheKing (its own look; the film's courtyard is by day); the credits' stills
+are cropped check screenshots (Dan may want proper key art); the living room's couch is a box couch; Dan and Abi "asleep" sit with their
+eyes open (no Mixamo sleeping-sitting clip in the set: `Sitting Idle` only).
 
 ---------------------------------------------------------------------------
 Last deliveries
 ---------------------------------------------------------------------------
+### Round 14: the ending (Acts X and XI) and the credits (0.14.0, build 1400, 2026-11-13)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
+front): `local/round14/{ending,tpose,minplayer}`; shots `Data/screenshots/round14/` (70x_*.jpg, HomeAgain_frames.jpg); MP4s in `Recordings/`.
+1. `Farewell` (20.5 s, the vortex): **done.** The eight portals open round the platform in the story shards' colours; Muscle Man spots the purple
+   one and points, hugs Dan (his air hug, "My hero!"), walks to it, waves, steps through; Dan, Abi and Kira wave him off. Everyone in their Act I
+   clothes (no Moon helmets: the first shots had them, fixed). Dan's vortex song.
+2. `TheKing` (20 s, the Medieval courtyard; the world is built for it, its enemies and the rival hidden): **done.** He shoots out of a purple
+   portal, lands and topples flat on his back in front of the stone, gets up, sees the sword (new: a sword in the stone), pulls it out with no
+   effort (the sword parented to his right hand), turns to the crowd (knights, archers, the wagon driver, the bard) who roar "King! King!
+   King!" (ElevenLabs chant). Dan's medieval song.
+3. `HomeAgain`: **done.** Act I played backwards (the director driven by hand from 49 s, the end of the warp tunnel, back to 9.8 s, just before
+   Kira's leap) with Dan's act1.mp3 reversed (`Music/act1_reversed.mp3`, ffmpeg); then the living room: Dan and Abi on the couch with Kira,
+   awake with a start, the ornament whole on the tree, a laugh; a violin: at the window the Violinist (his Ice Age look, the real one with his
+   fiddle by IK) plays in the snow outside; they smile; they turn just as Kira leaps at the ornament: "No, Kira, no!" (DEFAULT: an ElevenLabs
+   voice, not Dan's own), cut to black mid-leap. Same outfits and set as Act I (the window's backdrop replaced by a snowy garden).
+4. The credits: **done.** 62 s, skippable (hold Skip): a scroll over stills from all eight worlds, Dan's title song (or `credits.mp3` if he
+   makes one: Suno prompt in `Docs/MUSIC.md`). Text in `Assets/Resources/Data/Credits.txt` (Dan can edit it): the title, "Based on the film The
+   Shards of Time by Dan Moll", design / story / music by Dan Moll, Meshy / Tripo / Mixamo / ElevenLabs, built with Claude Code, made with Unity,
+   the cast, the launcher's licences, "And Kira... no!".
+5. Free roam: **done.** Back in the vortex of the world the party left, every path open, Muscle Man in the party again (into the Medieval
+   Kingdom with him), `SaveGame.endingSeen` (survives a reload). The Theater's new group "The ending": Farewell, TheKing, HomeAgain, the credits.
+   The Home path plays the whole ending again any time.
+6. Build / checks / publish: **done.** `ending` (28 passed), `tpose` (221 characters, the three new scenes), `minplayer` (New game through all
+   eight worlds, the white shard, the Home path, the ending, the credits, free roam: passed), `moon`; MP4s rendered from the exe
+   (`Recordings/Farewell.mp4`, `TheKing.mp4`, `HomeAgain.mp4` 63 s, `Credits.mp4`). Published `game-1400`.
+
+Decisions Code made (Dan can overrule): the staging of all three scenes (no film clip); TheKing's crowd is the kingdom's own people; the sword
+is a simple new prop; Muscle Man turns to the crowd after pulling it; the HomeAgain Violinist stands in the window's left pane; each ending
+scene starts under black; Act I backwards plays at normal speed (39 s); the credits' stills are cropped from earlier check shots.
+**For Dan to check:** the four MP4s in `Recordings/` (above all HomeAgain: the backwards part and the music); the Home path in the game (a save
+with all eight story shards); `Credits.txt` (names, wording); whether you'd like your own "No, Kira, no!" or the silent cut.
+
+### Fix 13.2: Dan's play-test of Tomorrowland and the Moon (0.13.2, build 1302, 2026-11-13)
+Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run and build; no window ever visible or in
+front): `local/fix132/{fix132,jobs3,moon,tpose}`; shots `Data/screenshots/fix132/`.
+1. The yellow rectangle: **done.** It was the parked car's hatch cover (`Hatch`, a neon-yellow plate over the pit), left floating over the open
+   pit when Muscle Man lifted the car (you fell through it). `Boulder.goneWhenMoved / shownWhenMoved`: the cover goes with the job, the opened
+   pit shows a neon rim. The car pads (solid yellow plates, read as leftovers when their car was away) are dark pads with a neon edge. Every
+   job in every world checked: nothing left inside the object's old footprint (new check in `fix132`, before / after shots `510_* / 511_*`).
+2. Signs through walls: **done.** World text used the font's own material (GUI/Text Shader: drawn over everything, both sides). New
+   `Shaders/WorldText` (depth tested, nothing drawn from behind) for every TextMesh: shop signs, NO ROOM, the vortex labels, the playground's
+   signs, the ornament's initials in cutscenes (`UiKit.WorldText`). Pixel test in `fix132`: a sign from the front shows (166-5016 px), from
+   behind 0 px, from its front with a wall between 0 px (Tomorrowland, Bethlehem, the vortex).
+3. Muscle Man "swimming": **done.** A job teleported him beside the object, which left his motor "in the air" while nothing stepped it: he
+   played his fall loop, arms flailing like a swimmer (the job clip was a one-shot cancelled at once; the bend job's loop was skipped). Now
+   each job holds its own clip the whole time (`CreatureAnimator.Hold`): boulders rolled = Pushing, lifted (crates, cannon, anchor, car, moon
+   boulders, the airlock door) = Lifting Object, portcullis = the Overhead Squat's drive up, bars / pipes = Pull Heavy Object, boost = Throw;
+   a landing can't cut it. Found on the way: in tight places (the ship's hold, a factory lane) he stood between the player and the object, so
+   the close camera hid him as a too-near follower: he now stands beside the object in view (`MuscleJob.Beside`) and is never hidden while
+   working. Check: every job in all eight worlds plays its clip and he is in view (fix132: 277 passed).
+4. The light puzzle: **done.** The rover's panel is an upright board with the pad's four face buttons in its diamond (Y top, X left, B right,
+   A bottom), coloured like the pad, each with its letter big on it; PlayStation pads: the cross / circle / square / triangle shapes; keyboard:
+   I J K L in the same diamond (new "Panel" action map). The pattern flashes one button at a time (0.55 s on, 0.35 s off, 1 s lead-in), a row
+   of dots shows the steps, "Round n of 3: watch... / your turn"; Abi answers on the same buttons (each lights, its tone, her Button Pushing);
+   three rounds (4, 6, 8); a wrong press replays the pattern; push the stick to step back. Check `moon`: round 1 on the keyboard, rounds 2-3
+   on the pad, the labels switch with the device. The first board showed the diamond mirrored and Abi's helmet hid the A: fixed (bigger,
+   higher), shots `652f / 652k / 652p`.
+5. Nobody runs in place: **done.** The animator followed the motor's last velocity, which a frozen or held party keeps: everyone ran on the
+   spot during the puzzle. Now the clips follow how fast the body really moves, and a motor nobody steps stands. Check: in every world the
+   party frozen with speed left in their motors, and input held off with the stick pushed: all idle; and every exe check now counts any
+   character on a walk / run clip for more than 0.5 s without moving: 0 in every run.
+6. Build / checks / publish: **done.** `fix132`, `moon`, `tpose` (221 characters, the new ending scenes included) passed. Published
+   `game-1302` (the ending's code was in but switched off: `Game.EndingReal`).
+
+**For Dan to check:** the light puzzle on your pad (and on a PlayStation pad if you have one); Muscle Man's jobs in the hold and the factory;
+the shop signs from the roofs; the car on the hatch.
+
 ### Fix 13.1: Abi's Button Pushing and Muscle Man's air hug (0.13.1, build 1301, 2026-11-13)
 1. Abi at the rover panel: **done.** Dan's `Button Pushing.fbx` was in `SourceArt/Mixamo/` itself, not `abi_moon/` (Code only looked
    there in Round 13). Imported as `Clips/button` (frames 25-58: her hand at the panel, 1.1 s), played once on each press. Round 13's
@@ -104,94 +112,6 @@ Last deliveries
 3. Checks muted (0.000 RMS), no windows. Published `game-1301`.
 
 For Dan to check: Abi at the rover's panel; Muscle Man's hug in the avenue.
-
-### Round 13: the Moon (0.13.0, build 1300, 2026-11-13)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
-front): `local/round13/{moon,tomorrowland,stuck,fix81moon,perfmoon,perfdeck,prompts,tpose,minplayer}`; logs and sheets in `Data/screenshots/round13/`.
-1. Models: **done.** Space Kira (Code's rig, 23 bones, no ear bones; Kira lock OK: grey 43%, white 0.4%, amber 0.05%); the moon critter (static,
-   wobbling eye stalks), the lunar rover (static, its panel's lights blink), the bubble helmets (`Characters/Helmet.cs`: see-through, on the head
-   bone of every Moon character in play and in every Moon cutscene: round for Dan / Abi / Muscle Man, the Violinist's on a brass ring, Kira's small and
-   silver-rimmed); Dan's four Moon rigs. The Moon built in code (`World/Moon.cs`: a 600 m cratered heightfield, Earth, stars), the landed rocket (the
-   Tomorrowland model), the moon base, the white story shard; the Violinist's chrome violin again.
-2. `MoonLanding` (17 s): **done.** RocketLaunch flies straight on (no vortex): the descent on its flame, the dust, helmets click on in the cabin, the
-   hatch, the four bound down in slow motion, Earth behind them, Muscle Man's big slow jump and laugh. The Moon's path in the vortex opens on landing.
-3. Low gravity: **done.** One `LowGravityVolume` (gravity x0.35, take-off x0.8): Dan's jump 2.9 m and 1.5 s (on Earth 1.6 m, 0.6 s); shard reach and the
-   stuck check re-run with it.
-4. `KiraFloats` + space Kira's float: **done.** The gag plays once at the ridge's foot; hold Jump in the air: up at 2 m/s for 2.8 s (`CharacterMotor`
-   `Float`): she reaches the 7.6 m float pillars; Abi's double jump tops out at 3.8 m there.
-5. Layout: **done.** The landing site, the crater field (glowing bouncy rims, the deep crater, cave A), the moon base (airlock, hub, garden, lab,
-   corridors; solid domes), cave B, the mesa, the ridge and the rover's plateau. 60 shards, 2 hearts.
-6. The Violinist: **done.** In his cream spacesuit on a rock by the base; a slow floaty tune (no move left), its hint at the light puzzle.
-7. Muscle Man: **done.** Carries the jammed airlock door aside, lifts the moon boulders off both caves, boosts onto the mesa; big floaty jumps.
-8. Enemies: **done.** Moon critters hop at you (a bump: knocked back, no heart lost); bopped, they curl up and roll away. No boss.
-9. Shards: **done.** 60 + 2 hearts; threshold 200 and 15 from here; minimum player: arrives with 175, all 60 reachable before the wake.
-10. The finale: **done.** The necklace leads to the rover; Dan / Muscle Man / Kira puzzle over the panel ("Switch to Abi"); Abi: three rounds (4, 6, 8
-   lights) on the stick, a wrong press plays the pattern again (Fix 13.1: Dan's Button Pushing on each press); `WhiteShard`: the shard
-   answers, all eight shards light round Dan's necklace, light fills the Moon -> the vortex with Home open ("to be continued": Acts X / XI next).
-11. Look and frame rate: **done.** Stark white sun, deep blue starry sky, Earth; 216 fps at the slowest place at 1080p (need 60), Steam Deck below.
-12. Sound: **done.** In Round 12's batch: dust steps, helmet clicks, breathing, radio, the landing, the airlock, critter boings and rolls, four panel
-   tones and a soft wrong buzz, the shard's chime, the WhiteShard swell, the floaty violin tune, the Moon's hush. No music made by Code.
-13. Build / checks / publish: **done.** `moon`, `tomorrowland` (the launch now goes on to the Moon), `stuck` (all eight worlds), `fix81moon`, `perfmoon` (+
-   Steam Deck), `prompts` (eight worlds), `tpose` (201 characters), `minplayer` (New game to the white shard). Published `game-1300`.
-
-Decisions Code made (Dan can overrule): the puzzle's lights are answered with the stick (up, right, down, left = left to right); the patterns are the
-same every time; low gravity everywhere on the Moon (inside the base too); the critters never cost a heart.
-**For Dan to check:** MoonLanding and WhiteShard (MP4s in `Recordings/`); the light puzzle as Abi; Kira floating up a pillar; the helmets (sizes are
-guesses on the new rigs); the base through the airlock.
-
-### Round 12: Tomorrowland (0.12.0, build 1200, 2026-11-12)
-Checks (built exe, batch mode, muted, never-shown desktop, virtual pad; audio 0.000 RMS in every run, build and render; no window ever visible or in
-front): `local/round12/{tomorrowland2,stuck2,prompts2,fix81tl,perftl,perfdeck,tpose,minplayer}`; logs and sheets in `Data/screenshots/round12/checks/`.
-0. Carried from Fix 11.3: **done.** a) Egyptian Abi: the closed-mesh rebuild (Round 5) had fused her calves, thighs and the two ankle wings below the
-   hem; the walk stretched that into the dark spiky sheet. `close_person.py` now pushes the legs apart before the voxel solid and back after, cuts
-   faces joining the ankles, gives everything below the knees to one leg (`SPREAD`): 0 open edges, nothing between the legs in idle / walk / run /
-   jump (`Tools/Blender/skirt_check.py`, low front / side / back; `round12/skirts/`). Every skirt, dress and long coat checked the same way: the
-   Bethlehem Violinist's and the three Wise Men's robes swung out with their forearms: re-weighted (`Tools/Blender/fix_robe_weights.py`, cloth more
-   than 12 cm from the arm bones off them). Dan's steampunk coat, every Abi, Abi's new silver dress: fine. b) The prompt measured from the 12 m block's
-   centre (8.5 m) and never looked at the screen: now the player must be within 2.6 m of the object's own surface, it must be on screen with a clear
-   line from the camera, not behind the player (a boost spot: its ledge in front); the prompt goes the moment that stops and never shows for a done
-   job. The quarry's block was sandstone like the walls and only covered 12 of its 22 m doorway: now grey granite with rope bands, the doorway
-   closed. New exe check `prompts`: every job in every world (in front: shows; turned away, 6 m off: none; done: none; after a real reload: none;
-   Dan's quarry spot): 160 passed.
-1. Mixamo first: **done.** All 16 Tripo GLBs decimated (people 25k), textures out, cleaned up; the eight upload files; Dan's eight rigs imported
-   (both Abis closed, 0 open edges). Mixamo had no Hug and no Button Pushing: Muscle Man's hug = his cheer, a step in, `offer` (he hugs the air); Abi
-   at the rover's panel plays `offer` (Round 13). Robot Kira and space Kira: Code's rigs, 23 bones, no ear bones; **Kira lock OK** (robot: grey 41%,
-   white 0.2%, amber 0.06%; space: grey 43%, white 0.4%, amber 0.05%).
-2. Models and props: **done.** The rocket, the flying car (tinted; Tripo's solid canopy cut off, a see-through glass bubble on a chrome rim and arch:
-   it cut cleanly), the greeter and the cleanbot as static models with moving parts (`Tools/Blender/static_parts.py`: the greeter's propeller, arms
-   and wheel, the cleanbot's top). The city built in code (`World/Tomorrowland.cs`, `ProcMesh.cs`: ring tops, domes); the neon pink shard; the chrome
-   electric violin (`instruments.py` ChromeViolin, teal light strips).
-3. Layout: **done.** The neon avenue (shops, roofs at 7, walkways, the escalator, the wall-jump gap), the sky (the Ring Tower's sky deck by the
-   always-running car, the Orbit Tower by the car robot Kira calls, the gantries' lift), the square (fountain, garden dome, the Atomic Diner, the
-   air-dash pads), the Skyline Tower, the Rocket Terminal and its golden launch hall. 60 shards, 2 hearts.
-4. `TomorrowlandArrival` (16 s): **done.** The teal vortex, the tumble, the shimmer into the retro-future outfits (robot Kira), a flying car over
-   Muscle Man, the greeter's line, the necklace pink. `Recordings/TomorrowlandArrival.mp4`, frames `round12/TomorrowlandArrival_frames.jpg`.
-5. The fuel socket: **done.** "Fuel cell missing!" at the socket; the necklace wakes, the Skyline Tower's glass lift lights up, the pink shard on its
-   roof; carried to the socket.
-6. Robot Kira: **done.** Plug-in terminals: the escalator (runs down 9 m/s until she turns it: up 2.6), the diner's door, the Orbit car, the gantry's
-   service lift, the cleanbots' friendly switch; the wheel dash (13.5 m/s) up the boost ramp onto the billboard (8.6 m).
-7. Abi's air dash: **done.** The Violinist teaches it; Dive in the air, 13.5 m/s; the far pad 12.5 m off (X01, X02) and an earlier world's gap:
-   Steampunk's north street, two lamp platforms 12.5 m apart (new shard S31; `Steampunk.asset` remade).
-8. Muscle Man: **done.** The hug gag (above); lifts the parked car off the maintenance hatch (the pit's ramp out), pushes the vending machine, bends
-   the chrome bars, boosts onto the west roofs.
-9. Enemies: **done.** Cleanbots vacuum loose shards and cough them back out when bopped (then don't vacuum for 6 s); hover-car lane (a bump, no heart);
-   the malfunctioning walkway. No boss.
-10. Shards: **done.** 60 + 2 hearts; threshold 175 and 15 from here. Minimum player: arrives with 150, 57 of 60 reachable before the wake; `minplayer`
-   from New game: asleep at 174, wakes at 175, the pink shard, the launch. Completionist fine.
-11. `RocketLaunch` (15 s, Dan's clip): **done.** Dan places the shard; the four small before the rocket (the clip's framing); boarding; the hall
-   stays warm and closed, the doors glow; ignition, the dome halves part, it rises into the sky. Sheet `round12/RocketLaunch.jpg`. With Round 13 in,
-   it flies straight on to the Moon (0.12.0 alone: the vortex, the Moon to be continued; nine paths).
-12. Look and frame rate: **done.** 120 fps at the slowest place at 1080p (need 60), 83 on the Steam Deck setting (need 40); a first-view hitch (shaders).
-13. Sound: **done.** 47 ElevenLabs effects (both rounds' at once): cars, robot beeps and both greeter lines, vacuum and cough, walkways, neon city loop,
-   plug-in, wheels, air dash, the launch (countdown, ignition, roar), the chrome violin; the Moon's too. No music made by Code.
-14. Build / checks / publish: **done.** `tomorrowland` 93 passed (incl. the Steampunk air-dash gap), `stuck` (all seven worlds, 199), `fix81tl`,
-   `perftl` (+ Steam Deck), `prompts` (160), `tpose` (180 characters), `minplayer`: all passed. Published `game-1200`.
-
-Decisions Code made (Dan can overrule): the city built in code (no Blender world this time); robot Kira's terminals are glowing pads (the gear-socket
-pattern); the cleanbots stop vacuuming for 6 s after a cough; the roof gaps covered so nobody drops behind Muscle Man's gates; the diner's and the moon
-base's domes solid (no jumping in over the walls).
-**For Dan to check:** the avenue at dusk and the escalator; robot Kira's terminals and the boost ramp; Abi's air dash to the far pad; the hug gag; the
-two MP4s; Egyptian Abi from low angles.
 
 ---------------------------------------------------------------------------
 Next rounds (do not start yet)

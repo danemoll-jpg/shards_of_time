@@ -20,6 +20,13 @@ namespace ShardsOfTime
             foreach (var a in new[] { Abilities.MuscleMan, Abilities.Rocket }) if (!SaveGame.Current.Has(a)) SaveGame.Current.abilities.Add(a);
             SaveGame.Current.checkpoint = Vortex.Checkpoint; yield return StartWorld(WorldData.Moon); yield return WaitFor(() => !Game.I.Busy, 10f); yield return Wait(1f);
             if (!P.Companion) P.AddCompanion(Player.transform.position + Vector3.back * 3f, Quaternion.identity);
+            yield return EndingWalk();
+        }
+
+        // from the vortex with all eight story shards: the Home path to free roam (also the end of minplayer)
+        IEnumerator EndingWalk()
+        {
+            Cutscenes.Started -= OnPlayed; Cutscenes.Started += OnPlayed;
             float t0 = Time.time;
             Head("Round 14: the vortex with all eight story shards: the Home path");
             var home = VortexDoor.All.First(d => d.info.id == "Home");

@@ -224,6 +224,7 @@ namespace ShardsOfTime
             yield return WaitFor(() => Vortex.Inside(Player.transform.position), 8f);
             Ok(SaveGame.Current.World(WorldData.Moon).storyShard && Vortex.Inside(Player.transform.position) && SaveGame.Current.StoryShards == 8, $"the white shard (the light puzzle, WhiteShard), in the vortex with all {SaveGame.Current.StoryShards} story shards");
             yield return Shot("min_done_moon");
+            if (Game.EndingReal) yield return EndingWalk();   // Round 14: on to the ending, the credits and free roam
         }
 
         IEnumerator StuckMoon() { yield return EnsurePlaying(false); yield return MoonEnter(Moon.Start); yield return StuckWorld(WorldData.Moon, null); }

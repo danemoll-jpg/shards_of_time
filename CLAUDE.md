@@ -224,7 +224,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   player (Round 4, about 9 min), `fixes` = see-through pixels of Kira's forms and Abi's outfits in the game's renderer +
   running shots, `perf` = the Ice Age's frame rate with the view drawn every frame (3 places), `all` = those three (about 13 min;
   use `--minutes 40`). Round 6: `full` = `play` + the Egypt route + Egypt's frame rate (about 35 min, `--minutes 60`); `egypt` (Egypt
-  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 10.1: `minplayer` (the minimum player from New game to the Pirate Seas' green shard, with Pause > Return to the vortex and Pause > Theater mid-Pirate, ~25 min, `--minutes 60`), `tpose` (every animated character in every world and every cutscene vs its bind pose), `sails` (the see-through sails view), `theater` (the title's Theater; with `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"` it also proves an old save fills in what it has seen), `fix101` = minplayer + tpose + sails. Round 11: `steampunk` (from the vortex with five worlds done to the teal shard, ~12 min, `--minutes 30`), `stucksteam`, `fix81steam`, `perfsteam`, `steamdiag`, `walljump`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
+  alone), `tomb`, `camel`, `perfegypt`, `straight`, `underice`, `heads`, `violinist`, `zones`, `tour`, `film`. Round 7: `bethlehem` (from the vortex with the Ice Age and Egypt done, about 20 min), `fullbeth` (`play` + the Egypt route + the Bethlehem route + its frame rate, about 60 min, `--minutes 100`), `perfbeth`, `bethdiag` (teleport looks). Fix 7.2: `fix72`, `stuck`, `well` (never stuck, rule 12; `stuck` now sweeps the Medieval Kingdom too). Round 8: `medieval` (from the vortex with three worlds done, about 25 min, `--minutes 45`), `perfmed`, `meddiag` (teleport looks), `stuckmed` (the Medieval never-stuck sweep alone). Round 9: `r9` (the film scenes' hand-offs, ~5 min). Fix 8.1: `fix81` (all four worlds: feet vs the visible floor, invisible colliders, every moving platform with every hero, the bot walking to every shard, the necklace rule; about 45 min, `--minutes 90`), `fix81med` (the Medieval alone, ~12 min), `floors`, `platforms`, `reach`, `rule81`. **Run `fix81` (or its parts) for every new world.** Round 10: `pirate` (from the vortex with four worlds done to the green shard, ~10 min, `--minutes 30`), `stuckpirate`, `fix81pirate`, `seareach`, `perfpirate`, `piratediag`, `deepgate`. Fix 10.1: `minplayer` (the minimum player from New game to the Pirate Seas' green shard, with Pause > Return to the vortex and Pause > Theater mid-Pirate, ~25 min, `--minutes 60`), `tpose` (every animated character in every world and every cutscene vs its bind pose), `sails` (the see-through sails view), `fix132` (Fix 13.2: every Muscle Man job in all eight worlds: his clip, in view, nothing left behind; signs pixel-tested from front / behind / through a wall; the party held still in every world; ~30 min, `--minutes 50`), `fix132jobs` (the Pirate Seas' and Steampunk's jobs alone), `ending` (Round 14: from the vortex with eight story shards through Farewell, TheKing, Act I backwards, HomeAgain, the credits to free roam, ~6 min). Every check ends with "nobody ran in place" (walk / run clips on a body not moving). `theater` (the title's Theater; with `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"` it also proves an old save fills in what it has seen), `fix101` = minplayer + tpose + sails. Round 11: `steampunk` (from the vortex with five worlds done to the teal shard, ~12 min, `--minutes 30`), `stucksteam`, `fix81steam`, `perfsteam`, `steamdiag`, `walljump`. Fix 6.1: `fix61` (the lyre close-ups + 0.6.0 saves; needs
   `--extra "-oldSave <repo>/Data/fixtures/save_0.6.0_after_egypt.json"`). The test area (Round 1-3 checks): `playground`, `models`, `measure`, `perfplayground`. `diag` = quick
   teleport probes (edit `Diag()` as needed). Writes
   `exe_check.txt` (ends with `RESULT:` and the measured audio output level) and screenshots. Check runs cap at 144 fps
@@ -273,7 +273,7 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
   then `python Tools/Publish-LauncherRelease.py Builds/LauncherRelease-100 --publish --confirm-repository danemoll-jpg/shards-of-time-releases`
   (gh: Racer's `Builds/PublisherTools`; a new draft may not be listed at once: re-run with `--resume-draft`).
   **Next rounds** publish the game alone: `python Tools/Prepare-ComponentUpdate.py game --source Builds/ShardsOfTime --previous-catalog Builds/LauncherRelease-<last>/assets/update-catalog.json --previous-manifest Builds/LauncherRelease-<last>/assets/game-manifest.json --out Builds/LauncherRelease-<build> --build <build> --version 0.<round>.<fix> --notes "..."`
-  (tag `game-<build>`; Fix 13.1: `game-1301`, previous `Builds/LauncherRelease-1301`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
+  (tag `game-<build>`; Round 14: `game-1400`, previous `Builds/LauncherRelease-1400`); keep the last release folder (it is the next one's "previous"; `cleanup_round.py` keeps the
   newest). **Starter package** (what a new player downloads):
   `python Tools/Package-LauncherStarter.py --game <installed game folder> --game-manifest <its signed game-manifest.json> --music <soundtrack folder> --music-manifest <its soundtrack-manifest.json> --out Builds/LauncherStarter-<n> --zip-name ShardsOfTime-Starter.zip --tag starter-<n> --title "..." --notes "..." --not-latest`,
   published the same way. Starter README: `Docs/Starter/README-LAUNCHER.md`. Check a fresh install against GitHub:
@@ -282,6 +282,41 @@ Heavy jobs one at a time, Below Normal, 3 worker threads: `python Tools/unity_ba
 - **Clean-up at the end of a round:** `python Tools/cleanup_round.py [--dry-run]`.
 
 ## Where things stand
+**Round 14 delivered: 0.14.0 (build 1400), 2026-11-13.** The ending: the Home path (all eight story shards) plays `Farewell` (the vortex: portals
+to every era, Muscle Man's air hug, "My hero!", through the purple one), `TheKing` (the Medieval courtyard: out of the portal flat on the
+cobbles, the sword from the stone, "King! King! King!"), `HomeAgain` (Act I played backwards with Dan's act1 reversed, then the living room:
+awake on the couch, the ornament whole, the Violinist in the snow outside, "No, Kira, no!", black), the credits, free roam with Muscle Man.
+Published `game-1400`. Report and "For Dan to check": `TODO.md`.
+
+Standing facts from Round 14:
+- `Game.Ending.cs` (Game is partial now): `Ending()` -> `EndingFilm` (FarewellScene, KingScene (builds the Medieval world, hides its enemies and
+  the rival), HomeAgainScene, `Credits()`) -> free roam (the save's world rebuilt, checkpoint `VX`, `SaveGame.endingSeen`, Muscle Man in the
+  party). `Game.EndingReal` (false = Home says "to be continued"). The Home path plays the whole ending every time.
+- Backwards: `Cutscenes.Play(name, at, facing, reverseFrom, reverseTo, label)` (Manual director, `Cutscenes.Reversed`); `Music/act1_reversed.mp3`
+  (act1.mp3 9.8-49 s reversed by ffmpeg); `Game.ActOneBackFrom` 49 / `ActOneBackTo` 9.8.
+- Cutscenes `Assets/Editor/CutsceneAuthoring.Ending.cs` (Farewell, TheKing, HomeAgain; `CutsceneAuthoring.Version` still 37: rebuild one by
+  deleting its prefab). The HomeAgain Violinist is the real one (`Violinist.Make`, `serenade`) at `Game.HomeViolinistAt` (1.5, 0, 8.4) from
+  `HomeAnchor`. `Cutscenes.NoHelmets`: the ending's scenes never get Moon helmets.
+- Credits: `Resources/Data/Credits.txt` (Dan edits it: `# ` title, `## ` heading lines), stills `Resources/Credits/*.jpg` (in name order),
+  62 s, hold Skip; music `Game.CreditsTrack` = `Music/credits.mp3` if Dan makes it (prompt in `Docs/MUSIC.md`), else `title`.
+- Theater group "The ending" (`Game.EndingGroup`): Farewell, TheKing, HomeAgain, Credits (played by `Game.FilmEnding`; the film render
+  records them until `Game.FilmBusy` ends: `python Tools/render_cutscene.py Farewell TheKing HomeAgain Credits`, or `Ending`).
+- Sounds: `king_chant`, `crowd_gasp`, `portal_whoosh`, `no_kira` (Dan's line by an ElevenLabs voice: DEFAULT), `sword_draw`, `vortex_portals`.
+
+**Fix 13.2 delivered: 0.13.2 (build 1302), 2026-11-13.** The light puzzle on the pad's face buttons, signs hidden by walls, Muscle Man's job
+clips and place, the car's hatch cover, nobody runs in place. Published `game-1302`.
+Standing facts from Fix 13.2:
+- World text: every TextMesh uses `UiKit.WorldText(tm)` (shader `Resources/Shaders/WorldText`: depth tested, nothing from behind; a TextMesh
+  reads from its -z side). `Cutscenes.Play` applies it to cutscene text too.
+- Animation: `CreatureAnimator` clips follow the body's real speed (`RealSpeed`), a motor not stepped for 0.15 s stands
+  (`CharacterMotor.LastStepTime`); `Hold(clip, s)` / `Release()` play any clip (loops too) for a while, not cut by moving or landing;
+  `RunInPlaceCount` (every exe check reports it).
+- Muscle Man's jobs: each holds its own clip (`MuscleJob.Clip`: Boulder rolled `mm_push`, lifted `mm_lift`; Portcullis `mm_throw`; BendJob
+  `mm_heave`; BoostSpot `mm_boost`); a boulder-like job stands him beside the object in view (`MuscleJob.Beside`, `LastStand`); `Hero.Working`
+  keeps him shown near the camera. `Boulder.goneWhenMoved / shownWhenMoved` for what stays at the old spot / what it uncovers.
+- Input: action map "Panel" (`Controls.Face[0..3]` = A / B / X / Y, keys K / L / J / I); `Controls.Style` (Xbox / PlayStation / Keyboard),
+  `FaceName`, `FaceColor`. The rover panel: `RoverPanel.BuildBoard` (diamond in board space: seen from the front, -x is on the right).
+
 **Fix 13.1 delivered: 0.13.1 (build 1301), 2026-11-13.** Abi plays Dan's Button Pushing (`Clips/button`, frames 25-58) on each press at the
 rover's panel; Muscle Man's air hug plays (`offer`, cut to 1.8 s). `CreatureAnimator.Trigger` only plays clips in its `OneShots` list (others are
 skipped silently): add a new triggered clip there; `Trigger(clip, maxSeconds)` cuts a long one short. Dan sometimes saves Mixamo clips in
@@ -309,7 +344,7 @@ Standing facts from Round 13:
 - Cutscenes `Assets/Editor/CutsceneAuthoring.Moon.cs` (MoonLanding, KiraFloats, WhiteShard, NecklaceWakesMoon, ViolinistPlaysMoon);
   `CutsceneAuthoring.Version` 37.
 - Exe check modes: `moon` (~7 min, from Tomorrowland's socket), `stuckmoon`, `fix81moon`, `perfmoon`, `moondiag`; `stuck`, `fix81`, `prompts`,
-  `tpose`, `minplayer` (now to the white shard, ~90 min, `--minutes 100`) include the Moon.
+  `tpose`, `minplayer` (Round 14: New game to the white shard, then the ending to free roam, ~110 min, `--minutes 140`) include the Moon.
 
 **Round 12 delivered: 0.12.0 (build 1200), 2026-11-12.** Tomorrowland, the seventh world, built in code: the neon avenue at dusk, the sky (towers,
 flying cars), the square, the Rocket Terminal; robot Kira (plug-in terminals, wheel dash), Abi's air dash, the cleanbots, the greeter, the pink
